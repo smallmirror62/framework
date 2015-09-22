@@ -8,35 +8,23 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Leaps;
+namespace Leaps\Core;
 
-class Kernel
+/**
+ * 访问未知对象属性引起的异常。
+ *
+ * @author Tongle Xu <xutongle@gmail.com>
+ * @since 4.0
+ */
+class UnknownPropertyException extends \Leaps\Core\Exception
 {
 	/**
-	 * 测试环境
+	 * 返回用户友好的异常名称
 	 *
-	 * @var string constant used for when in testing mode
+	 * @return string
 	 */
-	const TEST = 'test';
-
-	/**
-	 * 开发环境
-	 *
-	 * @var string
-	 */
-	const DEVELOPMENT = 'development';
-
-	/**
-	 * 生产环境
-	 *
-	 * @var string
-	 */
-	const PRODUCTION = 'production';
-
-	/**
-	 * 框架执行环境
-	 *
-	 * @var string
-	 */
-	public static $env = Kernel::PRODUCTION;
+	public function getName()
+	{
+		return 'Unknown Property';
+	}
 }

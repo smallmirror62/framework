@@ -8,35 +8,3 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Leaps;
-
-class Kernel
-{
-	/**
-	 * 测试环境
-	 *
-	 * @var string constant used for when in testing mode
-	 */
-	const TEST = 'test';
-
-	/**
-	 * 开发环境
-	 *
-	 * @var string
-	 */
-	const DEVELOPMENT = 'development';
-
-	/**
-	 * 生产环境
-	 *
-	 * @var string
-	 */
-	const PRODUCTION = 'production';
-
-	/**
-	 * 框架执行环境
-	 *
-	 * @var string
-	 */
-	public static $env = Kernel::PRODUCTION;
-}

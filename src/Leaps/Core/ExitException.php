@@ -8,35 +8,28 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Leaps;
+namespace Leaps\Core;
 
-class Kernel
+class ExitException extends \Leaps\Core\Exception
 {
 	/**
-	 * 测试环境
+	 * 退出状态代码
 	 *
-	 * @var string constant used for when in testing mode
+	 * @var integer
 	 */
-	const TEST = 'test';
+	public $statusCode;
 
 	/**
-	 * 开发环境
+	 * 构造方法
 	 *
-	 * @var string
+	 * @param integer $status 退出状态代码
+	 * @param string $message 错误消息
+	 * @param integer $code 错误代码
+	 * @param \Exception $previous
 	 */
-	const DEVELOPMENT = 'development';
-
-	/**
-	 * 生产环境
-	 *
-	 * @var string
-	 */
-	const PRODUCTION = 'production';
-
-	/**
-	 * 框架执行环境
-	 *
-	 * @var string
-	 */
-	public static $env = Kernel::PRODUCTION;
+	public function __construct($status = 0, $message = null, $code = 0, \Exception $previous = null)
+	{
+		$this->statusCode = $status;
+		parent::__construct ( $message, $code, $previous );
+	}
 }
