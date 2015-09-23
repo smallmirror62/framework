@@ -16,7 +16,7 @@ namespace Leaps\Core;
  * @author Tongle Xu <xutongle@gmail.com>
  * @since 4.0
  */
-class InvalidCallException extends \Leaps\Core\Exception
+class InvalidCallException extends Exception
 {
 	/**
 	 * 返回用户友好的异常名称

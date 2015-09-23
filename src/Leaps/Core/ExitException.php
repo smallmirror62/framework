@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Core;
 
-class ExitException extends \Leaps\Core\Exception
+class ExitException extends Exception
 {
 	/**
 	 * 退出状态代码

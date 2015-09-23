@@ -8,23 +8,8 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Leaps\Core;
+namespace Leaps\Application;
 
-/**
- * 访问未知对象的方法引起的异常。
- *
- * @author Tongle Xu <xutongle@gmail.com>
- * @since 4.0
- */
-class UnknownMethodException extends Exception
-{
-	/**
-	 * 返回用户友好的异常名称
-	 *
-	 * @return string
-	 */
-	public function getName()
-	{
-		return 'Unknown Method';
-	}
+class Web extends Application{
+
 }

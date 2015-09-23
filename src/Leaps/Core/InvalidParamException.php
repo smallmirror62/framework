@@ -11,12 +11,12 @@
 namespace Leaps\Core;
 
 /**
- * 访问未知对象的方法引起的异常。
+ * 一个无效的参数传递给方法造成的异常。
  *
  * @author Tongle Xu <xutongle@gmail.com>
  * @since 4.0
  */
-class UnknownMethodException extends Exception
+class InvalidParamException extends Exception
 {
 	/**
 	 * 返回用户友好的异常名称
@@ -25,6 +25,6 @@ class UnknownMethodException extends Exception
 	 */
 	public function getName()
 	{
-		return 'Unknown Method';
+		return 'Invalid Parameter';
 	}
 }
