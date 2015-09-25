@@ -10,6 +10,7 @@
 // +----------------------------------------------------------------------
 namespace Leaps;
 
+use Leaps\Core\InvalidConfigException;
 use Leaps\Core\UnknownClassException;
 use Leaps\Core\InvalidParamException;
 class Kernel
@@ -62,6 +63,82 @@ class Kernel
 	 * @var Leaps\Core\Application
 	 */
 	private static $_application;
+
+	/**
+	 * 创建新的对象
+	 * 直接传类名来创建对象
+	 * \Leaps\Kernel::createObject('Leaps\HttpClient\Adapter\Curl');
+	 * //直接传匿名方法来创建支持参数
+	 * \Leaps\Kernel::createObject(function(){
+	 * return new \Leaps\HttpClient\Adapter\Curl();
+	 * },[]);
+	 * 使用类构造方法来创建对象
+	 * \Leaps\Kernel::createObject(['className'=>'Leaps\HttpClient\Adapter\Curl','hostIp'=>'127.0.0.1']);
+	 *
+	 * @param string/array $definition
+	 * @param array $parameters
+	 * @throws InvalidConfigException
+	 * @return object
+	 */
+	public static function createObject($definition, $parameters = [], $throwException = true)
+	{
+		$instance = null;
+		if (is_string ( $definition )) {
+			if (class_exists ( $definition )) {
+				$reflection = new \ReflectionClass ( $definition );
+				if (is_array ( $parameters )) {
+					$instance = $reflection->newInstanceArgs ( $parameters );
+				} else {
+					$instance = $reflection->newInstance ();
+				}
+			}
+		} elseif (is_object ( $definition )) {
+			if ($definition instanceof \Closure) {
+				if (is_array ( $definition )) {
+					$instance = call_user_func_array ( $definition, $parameters );
+				} else {
+					$instance = call_user_func ( $definition );
+				}
+			} else {
+				$instance = $definition;
+			}
+		} elseif (is_array ( $definition ) && isset ( $definition ['className'] )) {
+			$className = $definition ['className'];
+			unset ( $definition ['className'] );
+			$reflection = new \ReflectionClass ( $className );
+			if (! empty ( $parameters )) { // 模块初始化
+				$parameters [] = $definition;
+				$instance = $reflection->newInstanceArgs ( $parameters );
+			} else {
+				if (empty ( $definition )) {
+					$instance = $reflection->newInstance ();
+				} else {
+					$instance = $reflection->newInstanceArgs ( [ $definition ] );
+				}
+			}
+		} elseif (is_array ( $definition ) && $throwException) {
+			throw new InvalidConfigException ( 'Object configuration must be an array containing a "className" element.' );
+		} elseif ($throwException) {
+			throw new InvalidConfigException ( "Unsupported configuration type: " . gettype ( $definition ) );
+		}
+
+		/**
+		 * 如果实现了 \Leaps\Di\InjectionAwareInterface 就把DI实例射进去
+		 */
+		if (is_object ( $instance ) && method_exists ( $instance, "setDI" )) {
+			$instance->setDI ( static::getDi () );
+		}
+
+		return $instance;
+	}
+
+	/**
+	 * 返回Di容器实例
+	 */
+	public static function getDi()
+	{
+		return \Leaps\Di\Container::getDefault ();
+	}
 
 	/**
 	 * 自动装载器

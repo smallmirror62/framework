@@ -10,8 +10,6 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Core;
 
-use Leaps\Kernel;
-
 class Module extends Base
 {
 	/**
