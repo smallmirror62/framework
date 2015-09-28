@@ -82,7 +82,7 @@ abstract class Application extends Module
 	 * 运行时文件目录
 	 *
 	 * @var string
-	*/
+	 */
 	private $_runtimePath;
 
 	/**
@@ -93,36 +93,204 @@ abstract class Application extends Module
 	private $_vendorPath;
 
 	/**
+	 * 应用程序配置
+	 * @var array 应用程序配置数组
+	 */
+	private $_config;
+
+	/**
 	 * 构造方法
 	 *
 	 * @param array $config
 	 */
-	public function __construct($client = 'Web',$config = [])
+	public function __construct($config = [])
 	{
 		Kernel::setApp ( $this );
-		if (! empty ( $config ) && is_array($config)) {
-			foreach ( $config as $name => $value ) {
-				$this->$name = $value;
-			}
-		}
-		$this->preInit ( $config );
-		$this->init ();
+		$this->_config = $config;
+		$this->preInit ();
+		//$this->registerErrorHandler($config);
 	}
 
 	/**
 	 * 前置初始化
+	 *
 	 * @param array $config
 	 */
-	public function preInit($config){
+	public function preInit()
+	{
+		if (isset ( $this->_config ['charset'] )) {
+			$this->charset = $this->_config ['charset'];
+			unset ( $this->_config ['charset'] );
+		}
 
+		if (isset ( $this->_config ['language'] )) {
+			$this->language = $this->_config ['language'];
+			unset ( $this->_config ['language'] );
+		}
+
+		if (isset ( $this->_config ['layout'] )) {
+			$this->layout = $this->_config ['layout'];
+			unset ( $this->_config ['layout'] );
+		}
+
+		if (isset ( $this->_config ['basePath'] )) {
+			$this->setBasePath ( $this->_config ['basePath'] );
+			unset ( $this->_config ['basePath'] );
+		} else {
+			throw new InvalidConfigException ( 'The "basePath" configuration for the Application is required.' );
+		}
+
+		if (isset ( $this->_config ['vendorPath'] )) {
+			$this->setVendorPath ( $this->_config ['vendorPath'] );
+			unset ( $this->_config ['vendorPath'] );
+		} else {
+			// set "@vendor"
+			$this->getVendorPath ();
+		}
+
+		if (isset ( $this->_config ['runtimePath'] )) {
+			$this->setRuntimePath ( $this->_config ['runtimePath'] );
+			unset ( $this->_config ['runtimePath'] );
+		} else {
+			// set "@runtime"
+			$this->getRuntimePath ();
+		}
+		if (isset ( $this->_config ['timeZone'] )) {
+			$this->setTimeZone ( $this->_config ['timeZone'] );
+			unset ( $this->_config ['timeZone'] );
+		} elseif (! ini_get ( 'date.timezone' )) {
+			$this->setTimeZone ( 'UTC' );
+		}
+
+		// merge core components with custom services
+		foreach ( $this->coreServices () as $id => $service ) {
+			if (! isset ( $this->_config ['services'] [$id] )) {
+				$this->_config ['services'] [$id] = $service;
+			} elseif (is_array ( $this->_config ['services'] [$id] ) && ! isset ( $this->_config ['services'] [$id] ['className'] )) {
+				$this->_config ['services'] [$id] ['className'] = $service ['className'];
+			}
+		}
+
+		/**
+		 * if (Leaps_ENABLE_ERROR_HANDLER) {
+		 * if (!isset($this->_config['components']['errorHandler']['class'])) {
+		 * echo "Error: no errorHandler component is configured.\n";
+		 * exit(1);
+		 * }
+		 * $this->set('errorHandler', $config['components']['errorHandler']);
+		 * unset($this->_config['components']['errorHandler']);
+		 * $this->getErrorHandler()->register();
+		 * }
+		 */
+		\Leaps\Kernel::getDi()->setServices ( $this->_config ['services'] );
+	}
+
+	/**
+	 * 初始化错误处理
+	 */
+	public function registerErrorHandler(){
+
+	}
+
+	/**
+	 * 返回应用程序的唯一ID
+	 *
+	 * @return string the unique ID of the module.
+	 */
+	public function getUniqueId()
+	{
+		return '';
+	}
+
+	/**
+	 * 设置应用程序的根目录和@App别名。
+	 *
+	 * @param string $path 应用程序跟目录
+	 * @property string 应用程序跟目录文件夹
+	 * @throws InvalidParamException 如果文件夹不存在抛出异常
+	 */
+	public function setBasePath($path)
+	{
+		parent::setBasePath ( $path );
+		Kernel::setAlias ( '@App', $this->getBasePath () );
+		Kernel::setAlias ( '@Module', $this->getBasePath () . '/Module' );
+	}
+
+	/**
+	 * 返回存储运行时文件的目录。
+	 *
+	 * @return
+	 *
+	 */
+	public function getRuntimePath()
+	{
+		if ($this->_runtimePath === null) {
+			$this->setRuntimePath ( $this->getBasePath () . DIRECTORY_SEPARATOR . 'Runtime' );
+		}
+		return $this->_runtimePath;
+	}
+
+	/**
+	 * 设置存储运行时文件的目录。
+	 *
+	 * @param string $path
+	 */
+	public function setRuntimePath($path)
+	{
+		$this->_runtimePath = Kernel::getAlias ( $path );
+		Kernel::setAlias ( '@Runtime', $this->_runtimePath );
+	}
+
+	/**
+	 * 返回第三方组件目录
+	 *
+	 * @return string the directory that stores vendor files.
+	 *         Defaults to "vendor" directory under [[basePath]].
+	 */
+	public function getVendorPath()
+	{
+		if ($this->_vendorPath === null) {
+			$this->setVendorPath ( $this->getBasePath () . DIRECTORY_SEPARATOR . 'Vendor' );
+		}
+		return $this->_vendorPath;
+	}
+
+	/**
+	 * 设置第三方组件目录
+	 *
+	 * @param string $path the directory that stores vendor files.
+	 */
+	public function setVendorPath($path)
+	{
+		$this->_vendorPath = Kernel::getAlias ( $path );
+		Kernel::setAlias ( '@Vendor', $this->_vendorPath );
+		Kernel::setAlias ( '@Bower', $this->_vendorPath . DIRECTORY_SEPARATOR . 'Bower' );
+		Kernel::setAlias ( '@Npm', $this->_vendorPath . DIRECTORY_SEPARATOR . 'Npm' );
 	}
 
 	/**
 	 * 执行应用程序
 	 */
-	public function run(){
-
+	public function run()
+	{
+		try {
+			$response = $this->handleRequest ( $this->getRequest () );
+			$response->send ();
+			return $response->exitStatus;
+		} catch ( ExitException $e ) {
+			return $e->statusCode;
+		}
 	}
+
+	/**
+	 * 处理指定的请求
+	 *
+	 * 此方法返回 [[Response]] 实例或其子类来表示处理请求的结果。
+	 *
+	 * @param Request $request the request to be handled
+	 * @return Response the resulting response
+	 */
+	abstract public function handleRequest($request);
 
 	/**
 	 * 返回应用程序时区
@@ -144,5 +312,15 @@ abstract class Application extends Module
 	public function setTimeZone($value)
 	{
 		date_default_timezone_set ( $value );
+	}
+
+	/**
+	 * 核心服务
+	 *
+	 * @return multitype:multitype:string
+	 */
+	public function coreServices()
+	{
+		return [ "file" => [ "className" => "Leaps\\Filesystem\\Filesystem" ],"crypt" => [ "className" => "Leaps\\Crypt\\Crypt" ],"cache" => [ "className" => "Leaps\\Cache\\FileCache" ],"registry" => [ "className" => "Leaps\\Registry" ],"filter" => [ "className" => "Leaps\\Filter\\Filter" ],"event" => [ "className" => "Leaps\\Events\\Dispatcher" ] ];
 	}
 }

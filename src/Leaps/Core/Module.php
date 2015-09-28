@@ -83,4 +83,35 @@ class Module extends Base
 	{
 		return $this->module ? ltrim ( $this->module->getUniqueId () . '/' . $this->id, '/' ) : $this->id;
 	}
+
+	/**
+	 * 返回模块跟文件夹
+	 *
+	 * @return string the root directory of the module.
+	 */
+	public function getBasePath()
+	{
+		if ($this->_basePath === null) {
+			$class = new \ReflectionClass ( $this );
+			$this->_basePath = dirname ( $class->getFileName () );
+		}
+		return $this->_basePath;
+	}
+
+	/**
+	 * 设置模块文件夹
+	 *
+	 * @param string $path the root directory of the module. This can be either a directory name or a path alias.
+	 * @throws InvalidParamException if the directory does not exist.
+	 */
+	public function setBasePath($path)
+	{
+		$path = \Leaps\Kernel::getAlias ( $path );
+		$p = realpath ( $path );
+		if ($p !== false && is_dir ( $p )) {
+			$this->_basePath = $p;
+		} else {
+			throw new InvalidParamException ( "The directory does not exist: $path" );
+		}
+	}
 }
