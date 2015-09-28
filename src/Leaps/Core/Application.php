@@ -97,9 +97,9 @@ abstract class Application extends Module
 	 *
 	 * @param array $config
 	 */
-	public function __construct($config = [])
+	public function __construct($client = 'Web',$config = [])
 	{
-		Kernel::setApplication ( $this );
+		Kernel::setApp ( $this );
 		if (! empty ( $config ) && is_array($config)) {
 			foreach ( $config as $name => $value ) {
 				$this->$name = $value;
@@ -107,6 +107,21 @@ abstract class Application extends Module
 		}
 		$this->preInit ( $config );
 		$this->init ();
+	}
+
+	/**
+	 * 前置初始化
+	 * @param array $config
+	 */
+	public function preInit($config){
+
+	}
+
+	/**
+	 * 执行应用程序
+	 */
+	public function run(){
+
 	}
 
 	/**

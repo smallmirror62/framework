@@ -8,8 +8,19 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Leaps\Application;
+namespace Leaps\WeChat;
 
-class WeChat extends Application
+class Application extends \Leaps\Core\Application
 {
+
+	/**
+	 * (non-PHPdoc)
+	 *
+	 * @param resource Leaps\Http\Request
+	 * @see \Leaps\Core\Application::handleRequest()
+	 */
+	public function handleRequest($request)
+	{
+
+	}
 }

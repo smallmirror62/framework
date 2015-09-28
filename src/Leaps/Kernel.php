@@ -13,6 +13,7 @@ namespace Leaps;
 use Leaps\Core\InvalidConfigException;
 use Leaps\Core\UnknownClassException;
 use Leaps\Core\InvalidParamException;
+
 class Kernel
 {
 	/**
@@ -44,6 +45,13 @@ class Kernel
 	public static $env = Kernel::PRODUCTION;
 
 	/**
+	 * 客户端
+	 *
+	 * @var string
+	 */
+	public static $client = Kernel::PRODUCTION;
+
+	/**
 	 * 路径别名集合
 	 *
 	 * @var array
@@ -54,7 +62,7 @@ class Kernel
 	 * classMap
 	 *
 	 * @var array
-	*/
+	 */
 	private static $_classMap = [ ];
 
 	/**
@@ -63,6 +71,32 @@ class Kernel
 	 * @var Leaps\Core\Application
 	 */
 	private static $_application;
+
+	/**
+	 * 设置应用程序实例
+	 *
+	 * @param \Leaps\Core\Application $application
+	 * @throws InvalidParamException
+	 */
+	public static function setApp($application)
+	{
+		if (static::$_application !== null)
+			throw new InvalidParamException ( 'application invalid' );
+		static::$_application = $application;
+	}
+
+	/**
+	 * 返回应用程序实例
+	 *
+	 * @return Leaps\Core\Application 应用程序实例
+	 */
+	public static function app()
+	{
+		if (static::$_application == null) {
+			throw new InvalidParamException ( 'application invalid' );
+		}
+		return static::$_application;
+	}
 
 	/**
 	 * 创建新的对象
