@@ -8,22 +8,30 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Leaps\Application\Console;
+namespace Leaps\Http\Response;
 
-use Leaps\Core\UserException;
+use Leaps\Di\Injectable;
 
-/**
- * 控制台命令异常
- *
- * @author Tongle Xu <xutongle@gmail.com>
- * @since 4.0
- */
-class Exception extends UserException {
+class HtmlFormatter extends Injectable implements ResponseFormatterInterface
+{
 	/**
-	 * 返回用户友好的异常名称
-	 * @return string
+	 * 响应的内容类型
+	 *
+	 * @var string
 	 */
-	public function getName() {
-		return 'System Error';
+	public $contentType = 'text/html';
+
+	/**
+	 * 格式化指定的响应
+	 *
+	 * @param Response $response
+	 */
+	public function format($response)
+	{
+		if (stripos ( $this->contentType, 'charset' ) === false) {
+			$this->contentType .= '; charset=' . $response->charset;
+		}
+		$response->getHeaders ()->set ( 'Content-Type', $this->contentType );
+		$response->content = $response->data;
 	}
 }

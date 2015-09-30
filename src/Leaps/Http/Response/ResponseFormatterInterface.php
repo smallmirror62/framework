@@ -8,22 +8,14 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Leaps\Application\Console;
+namespace Leaps\Http\Response;
 
-use Leaps\Core\UserException;
-
-/**
- * 控制台命令异常
- *
- * @author Tongle Xu <xutongle@gmail.com>
- * @since 4.0
- */
-class Exception extends UserException {
+interface ResponseFormatterInterface
+{
 	/**
-	 * 返回用户友好的异常名称
-	 * @return string
+	 * 格式化响应
+	 *
+	 * @param Response $response 待格式化的响应实例
 	 */
-	public function getName() {
-		return 'System Error';
-	}
+	public function format($response);
 }
