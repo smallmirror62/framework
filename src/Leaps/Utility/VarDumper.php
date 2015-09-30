@@ -8,9 +8,9 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Leaps\Debug;
+namespace Leaps\Utility;
 
-class Dump
+class VarDumper
 {
 	private static $_objects;
 	private static $_output;
