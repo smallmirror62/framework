@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Application;
 
-class WebApplication extends \Leaps\Core\Application
+class WeChatApplication extends \Leaps\Core\Application
 {
 
 	/**

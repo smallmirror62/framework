@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Application;
 
-class WebApplication extends \Leaps\Core\Application
+class MobileApplication extends \Leaps\Core\Application
 {
 
 	/**
