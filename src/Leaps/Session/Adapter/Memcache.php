@@ -16,12 +16,12 @@ use Leaps\Session\AdapterInterface;
 use Leaps\Core\InvalidConfigException;
 
 /**
- * Phalcon\Session\Adapter\Memcache
+ * Leaps\Session\Adapter\Memcache
  *
  * This adapter store sessions in memcache
  *
  * <code>
- * $session = new \Phalcon\Session\Adapter\Memcache(array(
+ * $session = new \Leaps\Session\Adapter\Memcache(array(
  * 'uniqueId' => 'my-private-app'
  * 'host' => '127.0.0.1',
  * 'port' => 11211,

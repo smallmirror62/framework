@@ -22,7 +22,7 @@ abstract class Adapter
 	protected $_options;
 
 	/**
-	 * Leaps\Session\Adapter constructor
+	 * 构造方法
 	 *
 	 * @param array options
 	 */
@@ -31,7 +31,6 @@ abstract class Adapter
 		if (is_array ( $options )) {
 			$this->setOptions ( $options );
 		}
-
 		$this->init ();
 	}
 
@@ -43,7 +42,7 @@ abstract class Adapter
 	}
 
 	/**
-	 * Starts the session (if headers are already sent the session will not be started)
+	 * 启动Session
 	 *
 	 * @return boolean
 	 */
@@ -58,7 +57,7 @@ abstract class Adapter
 	}
 
 	/**
-	 * Sets session's options
+	 * 设置Session参数
 	 *
 	 * <code>
 	 * session->setOptions(array(
@@ -77,7 +76,7 @@ abstract class Adapter
 	}
 
 	/**
-	 * Get internal options
+	 * 获取Session参数
 	 *
 	 * @return array
 	 */
@@ -87,7 +86,7 @@ abstract class Adapter
 	}
 
 	/**
-	 * Gets a session variable from an application context
+	 * 获取Session
 	 *
 	 * @param string index
 	 * @param mixed defaultValue
@@ -110,7 +109,7 @@ abstract class Adapter
 	}
 
 	/**
-	 * Sets a session variable in an application context
+	 * 设置Session
 	 *
 	 * <code>
 	 * session->set('auth', 'yes');
@@ -125,7 +124,7 @@ abstract class Adapter
 	}
 
 	/**
-	 * Check whether a session variable is set in an application context
+	 * 检查Session是否存在
 	 *
 	 * <code>
 	 * var_dump($session->has('auth'));
@@ -139,7 +138,7 @@ abstract class Adapter
 	}
 
 	/**
-	 * Removes a session variable from an application context
+	 * 删除Session
 	 *
 	 * <code>
 	 * $session->remove('auth');
@@ -151,7 +150,7 @@ abstract class Adapter
 	}
 
 	/**
-	 * Returns active session id
+	 * 返回SessionID
 	 *
 	 * <code>
 	 * echo $session->getId();
@@ -163,7 +162,7 @@ abstract class Adapter
 	}
 
 	/**
-	 * Set the current session id
+	 * 设置SessionID
 	 *
 	 * <code>
 	 * $session->setId($id);
