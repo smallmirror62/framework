@@ -10,6 +10,8 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Core;
 
+use Leaps\Kernel;
+
 class Module extends Base
 {
 	/**
@@ -27,13 +29,6 @@ class Module extends Base
 	public $module;
 
 	/**
-	 * 模块基础路径
-	 *
-	 * @var string
-	 */
-	private $_basePath;
-
-	/**
 	 * 默认路由
 	 *
 	 * @var string
@@ -46,6 +41,15 @@ class Module extends Base
 	 * @var string
 	 */
 	public $controllerNamespace;
+
+	/**
+	 * 模块基础路径
+	 *
+	 * @var string
+	 */
+	private $_basePath;
+	private $_viewPath;
+	private $_layoutPath;
 
 	/**
 	 * 构造方法
@@ -113,5 +117,62 @@ class Module extends Base
 		} else {
 			throw new InvalidParamException ( "The directory does not exist: $path" );
 		}
+	}
+
+	/**
+	 * 获取控制器路径
+	 *
+	 * @return string 包含控制器类的目录
+	 * @throws InvalidParamException if there is no alias defined for the root namespace of [[controllerNamespace]].
+	 */
+	public function getControllerPath()
+	{
+		return Kernel::getAlias ( '@' . str_replace ( '\\', '/', $this->controllerNamespace ) );
+	}
+
+	/**
+	 * 获取模块视图路径
+	 * @return string the root directory of view files. Defaults to "[[basePath]]/views".
+	 */
+	public function getViewPath()
+	{
+		if ($this->_viewPath !== null) {
+			return $this->_viewPath;
+		} else {
+			return $this->_viewPath = $this->getBasePath() . DIRECTORY_SEPARATOR . 'View';
+		}
+	}
+
+	/**
+	 * 设置模块视图路径
+	 * @param string $path the root directory of view files.
+	 * @throws InvalidParamException if the directory is invalid
+	 */
+	public function setViewPath($path)
+	{
+		$this->_viewPath = Kernel::getAlias($path);
+	}
+
+	/**
+	 * 获取模块布局路径
+	 * @return string the root directory of layout files. Defaults to "[[viewPath]]/layouts".
+	 */
+	public function getLayoutPath()
+	{
+		if ($this->_layoutPath !== null) {
+			return $this->_layoutPath;
+		} else {
+			return $this->_layoutPath = $this->getViewPath() . DIRECTORY_SEPARATOR . 'layouts';
+		}
+	}
+
+	/**
+	 * 设置模块布局路径
+	 * @param string $path the root directory or path alias of layout files.
+	 * @throws InvalidParamException if the directory is invalid
+	 */
+	public function setLayoutPath($path)
+	{
+		$this->_layoutPath = Kernel::getAlias($path);
 	}
 }

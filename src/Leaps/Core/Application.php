@@ -44,6 +44,13 @@ abstract class Application extends Module
 	public $layout = 'main';
 
 	/**
+	 * 控制器命名空间
+	 *
+	 * @var string
+	 */
+	public $controllerNamespace = 'App\\Module';
+
+	/**
 	 * 当前活跃的控制器实例
 	 *
 	 * @var Controller
@@ -79,21 +86,8 @@ abstract class Application extends Module
 	public $loadedModules = [ ];
 
 	/**
-	 * 运行时文件目录
-	 *
-	 * @var string
-	 */
-	private $_runtimePath;
-
-	/**
-	 * 第三方组件目录
-	 *
-	 * @var string
-	 */
-	private $_vendorPath;
-
-	/**
 	 * 应用程序配置
+	 *
 	 * @var array 应用程序配置数组
 	 */
 	private $_config;
@@ -109,6 +103,7 @@ abstract class Application extends Module
 		$this->_config = $config;
 		$this->preInit ();
 		//$this->registerErrorHandler($config);
+		\Leaps\Kernel::getDi ()->setServices ( $this->_config ['services'] );
 	}
 
 	/**
@@ -118,21 +113,6 @@ abstract class Application extends Module
 	 */
 	public function preInit()
 	{
-		if (isset ( $this->_config ['charset'] )) {
-			$this->charset = $this->_config ['charset'];
-			unset ( $this->_config ['charset'] );
-		}
-
-		if (isset ( $this->_config ['language'] )) {
-			$this->language = $this->_config ['language'];
-			unset ( $this->_config ['language'] );
-		}
-
-		if (isset ( $this->_config ['layout'] )) {
-			$this->layout = $this->_config ['layout'];
-			unset ( $this->_config ['layout'] );
-		}
-
 		if (isset ( $this->_config ['basePath'] )) {
 			$this->setBasePath ( $this->_config ['basePath'] );
 			unset ( $this->_config ['basePath'] );
@@ -155,6 +135,7 @@ abstract class Application extends Module
 			// set "@runtime"
 			$this->getRuntimePath ();
 		}
+
 		if (isset ( $this->_config ['timeZone'] )) {
 			$this->setTimeZone ( $this->_config ['timeZone'] );
 			unset ( $this->_config ['timeZone'] );
@@ -170,26 +151,22 @@ abstract class Application extends Module
 				$this->_config ['services'] [$id] ['className'] = $service ['className'];
 			}
 		}
-
-		/**
-		 * if (Leaps_ENABLE_ERROR_HANDLER) {
-		 * if (!isset($this->_config['components']['errorHandler']['class'])) {
-		 * echo "Error: no errorHandler component is configured.\n";
-		 * exit(1);
-		 * }
-		 * $this->set('errorHandler', $config['components']['errorHandler']);
-		 * unset($this->_config['components']['errorHandler']);
-		 * $this->getErrorHandler()->register();
-		 * }
-		 */
-		\Leaps\Kernel::getDi()->setServices ( $this->_config ['services'] );
 	}
 
 	/**
 	 * 初始化错误处理
 	 */
-	public function registerErrorHandler(){
-
+	public function registerErrorHandler()
+	{
+		if (LEAPS_ENABLE_ERROR_HANDLER) {
+			if (! isset ( $this->_config ['services'] ['errorHandler'] ['className'] )) {
+				echo "Error: no errorHandler service is configured.\n";
+				exit ( 1 );
+			}
+			$this->set ( 'errorHandler', $this->_config ['services'] ['errorHandler'] );
+			unset ( $this->_config ['services'] ['errorHandler'] );
+			$this->getErrorHandler ()->register ();
+		}
 	}
 
 	/**
@@ -217,6 +194,37 @@ abstract class Application extends Module
 	}
 
 	/**
+	 * 执行应用程序
+	 */
+	public function run()
+	{
+		try {
+			$response = $this->handleRequest ( $this->getRequest () );
+			$response->send ();
+			return $response->exitStatus;
+		} catch ( ExitException $e ) {
+			return $e->statusCode;
+		}
+	}
+
+	/**
+	 * 处理指定的请求
+	 *
+	 * 此方法返回 [[Response]] 实例或其子类来表示处理请求的结果。
+	 *
+	 * @param Request $request the request to be handled
+	 * @return Response the resulting response
+	 */
+	abstract public function handleRequest($request);
+
+	/**
+	 * 运行时文件目录
+	 *
+	 * @var string
+	 */
+	private $_runtimePath;
+
+	/**
 	 * 返回存储运行时文件的目录。
 	 *
 	 * @return
@@ -240,6 +248,13 @@ abstract class Application extends Module
 		$this->_runtimePath = Kernel::getAlias ( $path );
 		Kernel::setAlias ( '@Runtime', $this->_runtimePath );
 	}
+
+	/**
+	 * 第三方组件目录
+	 *
+	 * @var string
+	 */
+	private $_vendorPath;
 
 	/**
 	 * 返回第三方组件目录
@@ -269,30 +284,6 @@ abstract class Application extends Module
 	}
 
 	/**
-	 * 执行应用程序
-	 */
-	public function run()
-	{
-		try {
-			$response = $this->handleRequest ( $this->getRequest () );
-			$response->send ();
-			return $response->exitStatus;
-		} catch ( ExitException $e ) {
-			return $e->statusCode;
-		}
-	}
-
-	/**
-	 * 处理指定的请求
-	 *
-	 * 此方法返回 [[Response]] 实例或其子类来表示处理请求的结果。
-	 *
-	 * @param Request $request the request to be handled
-	 * @return Response the resulting response
-	 */
-	abstract public function handleRequest($request);
-
-	/**
 	 * 返回应用程序时区
 	 *
 	 * @return string the time zone used by this application.
@@ -315,12 +306,31 @@ abstract class Application extends Module
 	}
 
 	/**
-	 * 核心服务
+	 * 系统默认核心服务
 	 *
-	 * @return multitype:multitype:string
+	 * @return array
 	 */
 	public function coreServices()
 	{
-		return [ "file" => [ "className" => "Leaps\\Filesystem\\Filesystem" ],"crypt" => [ "className" => "Leaps\\Crypt\\Crypt" ],"cache" => [ "className" => "Leaps\\Cache\\FileCache" ],"registry" => [ "className" => "Leaps\\Registry" ],"filter" => [ "className" => "Leaps\\Filter\\Filter" ],"event" => [ "className" => "Leaps\\Events\\Dispatcher" ] ];
+		return [
+				"file" => [
+						"className" => "Leaps\\Filesystem\\Filesystem"
+				],
+				"crypt" => [
+						"className" => "Leaps\\Crypt\\Crypt"
+				],
+				"cache" => [
+						"className" => "Leaps\\Cache\\ArrayCache"
+				],
+				"registry" => [
+						"className" => "Leaps\\Core\\Registry"
+				],
+				"filter" => [
+						"className" => "Leaps\\Filter\\Filter"
+				],
+				"event" => [
+						"className" => "Leaps\\Events\\Dispatcher"
+				]
+		];
 	}
 }
