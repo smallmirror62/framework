@@ -50,7 +50,7 @@ abstract class ErrorHandler extends Injectable
 	 */
 	public function register()
 	{
-		ini_set ( 'display_errors', false );
+		ini_set ( 'display_errors', true );
 		set_exception_handler ( [
 				$this,
 				'handleException'
@@ -181,7 +181,6 @@ abstract class ErrorHandler extends Injectable
 			require_once (__DIR__ . '/ErrorException.php');
 		}
 		$error = error_get_last ();
-
 		if (ErrorException::isFatalError ( $error )) {
 			$exception = new ErrorException ( $error ['message'], $error ['type'], $error ['type'], $error ['file'], $error ['line'] );
 			$this->exception = $exception;
@@ -191,7 +190,7 @@ abstract class ErrorHandler extends Injectable
 			}
 			$this->renderException ( $exception );
 			// need to explicitly flush logs because exit() next will terminate the app immediately
-			Kernel::getDi ()->flush ( true );
+			//Kernel::app()->log->flush ( true );
 			exit ( 1 );
 		}
 	}

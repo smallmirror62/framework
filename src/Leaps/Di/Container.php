@@ -10,16 +10,19 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Di;
 
-class Container implements \ArrayAccess, ContainerInterface
+use Leaps\Core\Base;
+
+class Container extends Base implements \ArrayAccess, ContainerInterface
 {
-	private $_services;
 	protected $_sharedInstances;
 	protected $_freshInstance = false;
+	private $_services;
 	protected static $_default;
+
 	/**
-	 * 构造方法
+	 * 初始化
 	 */
-	public function __construct(array $config = [])
+	public function init()
 	{
 		if (! static::$_default) {
 			static::$_default = $this;
@@ -66,9 +69,7 @@ class Container implements \ArrayAccess, ContainerInterface
 	}
 
 	/**
-	 * Attempts to register a service in the services container
-	 * Only is successful if a service hasn"t been registered previously
-	 * with the same name
+	 * 如果服务未注册，则在容器中注册服务，否则返回false
 	 *
 	 * @param string name 服务器名称
 	 * @param mixed definition 服务定义
@@ -86,7 +87,7 @@ class Container implements \ArrayAccess, ContainerInterface
 	}
 
 	/**
-	 * Sets a service using a raw Leaps\Di\Service definition
+	 * 设置一个原始服务定义到容器
 	 *
 	 * @param string name 服务名称
 	 * @param Leaps\Di\ServiceInterface rawDefinition
@@ -99,7 +100,7 @@ class Container implements \ArrayAccess, ContainerInterface
 	}
 
 	/**
-	 * Returns a service definition without resolving
+	 * 从容器获取原始服务定义
 	 *
 	 * @param string name
 	 * @return mixed
@@ -156,7 +157,7 @@ class Container implements \ArrayAccess, ContainerInterface
 	}
 
 	/**
-	 * Resolves a service, the resolved service is stored in the DI, subsequent requests for this service will return the same instance
+	 * 解析服务并存储在容器返回该服务的实例
 	 *
 	 * @param string name
 	 * @param array parameters
@@ -185,7 +186,7 @@ class Container implements \ArrayAccess, ContainerInterface
 	}
 
 	/**
-	 * Check whether the DI contains a service by a name
+	 * 检查容器是否包含服务
 	 *
 	 * @param string name
 	 * @return boolean

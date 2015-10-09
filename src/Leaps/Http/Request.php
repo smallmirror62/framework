@@ -37,10 +37,8 @@ class Request extends Injectable implements RequestInterface
 	 * @var string
 	 */
 	protected $_rawBody;
+
 	protected $_putCache;
-	protected $_getCache;
-	protected $_postCache;
-	protected $_requestCache;
 
 	/**
 	 * 请求头
@@ -67,16 +65,6 @@ class Request extends Injectable implements RequestInterface
 	protected $_pathInfo;
 
 	/**
-	 * 初始化
-	 */
-	public function init()
-	{
-		$this->_getCache = $_GET;
-		$this->_postCache = $_POST;
-		$this->_requestCache = $_REQUEST;
-	}
-
-	/**
 	 * (non-PHPdoc)
 	 *
 	 * @see \Leaps\Http\RequestInterface::resolve()
@@ -89,8 +77,8 @@ class Request extends Injectable implements RequestInterface
 		$result = $this->_router->parseRequest ( $this );
 		if ($result !== false) {
 			list ( $route, $params ) = $result;
-			$this->_getCache = array_merge ( $this->_getCache, $params );
-			return [ $route,$this->_getCache ];
+			$_GET = array_merge ( $_GET, $params );
+			return [ $route,$_GET ];
 		} else {
 			throw new \Exception ( "Page not found." );
 		}
@@ -109,7 +97,7 @@ class Request extends Injectable implements RequestInterface
 	 */
 	public function input($name = null, $filters = null, $defaultValue = null, $notAllowEmpty = false, $noRecursive = false)
 	{
-		return $this->getHelper ( $this->_requestCache, $name, $filters, $defaultValue, $notAllowEmpty, $noRecursive );
+		return $this->getHelper ( $_REQUEST, $name, $filters, $defaultValue, $notAllowEmpty, $noRecursive );
 	}
 
 	/**
@@ -125,11 +113,11 @@ class Request extends Injectable implements RequestInterface
 	 */
 	public function getPost($name = null, $filters = null, $defaultValue = null, $notAllowEmpty = false, $noRecursive = false)
 	{
-		return $this->getHelper ( $this->_postCache, $name, $filters, $defaultValue, $notAllowEmpty, $noRecursive );
+		return $this->getHelper ( $_POST, $name, $filters, $defaultValue, $notAllowEmpty, $noRecursive );
 	}
 
 	/**
-	 * Gets a variable from put request
+	 * 从PUT请求中获取一个变量
 	 *
 	 * <code>
 	 * //Returns value from $_PUT["user_email"] without sanitizing
@@ -144,7 +132,7 @@ class Request extends Injectable implements RequestInterface
 		$put = $this->_putCache;
 		if (! is_array ( $put )) {
 			$put = [ ];
-			parse_str ( file_get_contents ( "php://input" ), $put );
+			parse_str ( $this->getRawBody(), $put );
 			$this->_putCache = $put;
 		}
 		return $this->getHelper ( $put, $name, $filters, $defaultValue, $notAllowEmpty, $noRecursive );
@@ -167,7 +155,7 @@ class Request extends Injectable implements RequestInterface
 	 */
 	public function getQuery($name = null, $filters = null, $defaultValue = null, $notAllowEmpty = false, $noRecursive = false)
 	{
-		return $this->getHelper ( $this->_getCache, $name, $filters, $defaultValue, $notAllowEmpty, $noRecursive );
+		return $this->getHelper ( $_GET, $name, $filters, $defaultValue, $notAllowEmpty, $noRecursive );
 	}
 
 	/**
@@ -182,6 +170,7 @@ class Request extends Injectable implements RequestInterface
 		if (! isset ( $source [$name] )) {
 			return $defaultValue;
 		}
+		$value = '';
 		if (! is_null ( $filters )) {
 			if (! is_object ( $this->_filter )) {
 				$this->_filter = $this->_dependencyInjector->getShared ( $this->_filter );
@@ -332,7 +321,7 @@ class Request extends Injectable implements RequestInterface
 	}
 
 	/**
-	 * Gets most possible client IPv4 Address.
+	 * 获取请求的客户端的IPV4地址
 	 * This method search in _SERVER['REMOTE_ADDR'] and optionally in _SERVER['HTTP_X_FORWARDED_FOR']
 	 */
 	public function getUserIp($trustForwardedHeader = false)
@@ -381,7 +370,7 @@ class Request extends Injectable implements RequestInterface
 	}
 
 	/**
-	 * Gets attached files as Leaps\Http\Request\File instances
+	 * 从 Leaps\Http\Request\File 实例获取附加文件
 	 */
 	public function getUploadedFiles($onlySuccessful = false)
 	{

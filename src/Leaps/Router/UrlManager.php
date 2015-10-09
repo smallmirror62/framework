@@ -214,7 +214,7 @@ class UrlManager extends Injectable
 
 			return [ $pathInfo,[ ] ];
 		} else {
-			$route = $request->getQueryParam ( $this->routeParam, '' );
+			$route = $request->getQuery ( $this->routeParam, null,'' );
 			if (is_array ( $route )) {
 				$route = '';
 			}

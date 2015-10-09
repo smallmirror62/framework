@@ -15,7 +15,6 @@ use Leaps\Utility\Str;
 use Leaps\Di\Injectable;
 use Leaps\Filesystem\MimeType;
 use Leaps\Http\ResponseInterface;
-use Leaps\Http\Response\Exception;
 use Leaps\Core\InvalidParamException;
 use Leaps\Core\InvalidConfigException;
 use Leaps\Http\Response\ResponseFormatterInterface;
@@ -236,7 +235,7 @@ class Response extends Injectable implements ResponseInterface
 			}
 		}
 		if ($this->charset === null) {
-			$this->charset = Kernel::getApplication ()->charset;
+			$this->charset = Kernel::app ()->charset;
 		}
 		$formatters = $this->defaultFormatters ();
 		$this->formatters = empty ( $this->formatters ) ? $formatters : array_merge ( $formatters, $this->formatters );
@@ -576,7 +575,7 @@ class Response extends Injectable implements ResponseInterface
 		$range = $this->getHttpRange ( $contentLength );
 		if ($range === false) {
 			$headers->set ( 'Content-Range', "bytes */$contentLength" );
-			throw new \Leaps\Web\HttpException ( 416, 'Requested range not satisfiable' );
+			throw new \Leaps\Application\Web\HttpException ( 416, 'Requested range not satisfiable' );
 		}
 		list ( $begin, $end ) = $range;
 		if ($begin != 0 || $end != $contentLength - 1) {
@@ -642,7 +641,7 @@ class Response extends Injectable implements ResponseInterface
 		$range = $this->getHttpRange ( $fileSize );
 		if ($range === false) {
 			$headers->set ( 'Content-Range', "bytes */$fileSize" );
-			throw new \Leaps\Web\HttpException ( 416, 'Requested range not satisfiable' );
+			throw new \Leaps\Application\Web\HttpException ( 416, 'Requested range not satisfiable' );
 		}
 		list ( $begin, $end ) = $range;
 		if ($begin != 0 || $end != $fileSize - 1) {
@@ -702,11 +701,11 @@ class Response extends Injectable implements ResponseInterface
 	protected function defaultFormatters()
 	{
 		return [
-				self::FORMAT_HTML => "Leaps\\Http\Response\\HtmlFormatter",
-				self::FORMAT_XML => "Leaps\\Http\\Response\\XmlFormatter",
-				self::FORMAT_JSON => "Leaps\\Http\Response\\JsonFormatter",
+				self::FORMAT_HTML => "\\Leaps\\Http\\Response\\HtmlFormatter",
+				self::FORMAT_XML => "\\Leaps\\Http\\Response\\XmlFormatter",
+				self::FORMAT_JSON => "\\Leaps\\Http\\Response\\JsonFormatter",
 				self::FORMAT_JSONP => [
-						"className" => "Leaps\\Http\\Response\\JsonFormatter",
+						"className" => "\\Leaps\\Http\\Response\\JsonFormatter",
 						"useJsonp" => true
 				]
 		];

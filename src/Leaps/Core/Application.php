@@ -48,7 +48,7 @@ abstract class Application extends Module
 	 *
 	 * @var string
 	 */
-	public $controllerNamespace = 'App\\Module';
+	public $controllerNamespace = 'App\\Controller';
 
 	/**
 	 * 当前活跃的控制器实例
@@ -102,8 +102,8 @@ abstract class Application extends Module
 		Kernel::setApp ( $this );
 		$this->_config = $config;
 		$this->preInit ();
-		//$this->registerErrorHandler($config);
-		\Leaps\Kernel::getDi ()->setServices ( $this->_config ['services'] );
+		$this->registerErrorHandler($config);
+		$this->setServices ( $this->_config ['services'] );
 	}
 
 	/**
@@ -159,13 +159,13 @@ abstract class Application extends Module
 	public function registerErrorHandler()
 	{
 		if (LEAPS_ENABLE_ERROR_HANDLER) {
-			if (! isset ( $this->_config ['services'] ['errorHandler'] ['className'] )) {
-				echo "Error: no errorHandler service is configured.\n";
+			if (! isset ( $this->_config ['services'] ['errorhandler'] ['className'] )) {
+				echo "Error: no errorhandler service is configured.\n";
 				exit ( 1 );
 			}
-			$this->set ( 'errorHandler', $this->_config ['services'] ['errorHandler'] );
-			unset ( $this->_config ['services'] ['errorHandler'] );
-			$this->getErrorHandler ()->register ();
+			$this->set ( 'errorhandler', $this->_config ['services'] ['errorhandler'] );
+			unset ( $this->_config ['services'] ['errorhandler'] );
+			$this->getErrorhandler ()->register ();
 		}
 	}
 

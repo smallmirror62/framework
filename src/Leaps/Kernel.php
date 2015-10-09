@@ -160,18 +160,10 @@ class Kernel
 		 * 如果实现了 \Leaps\Di\InjectionAwareInterface 就把DI实例射进去
 		 */
 		if (is_object ( $instance ) && method_exists ( $instance, "setDI" )) {
-			$instance->setDI ( static::getDi () );
+			$instance->setDI ( static::app () );
 		}
 
 		return $instance;
-	}
-
-	/**
-	 * 返回Di容器实例
-	 */
-	public static function getDi()
-	{
-		return \Leaps\Di\Container::getDefault ();
 	}
 
 	/**
@@ -385,6 +377,14 @@ class Kernel
 	public static function getVersion()
 	{
 		return Version::get ();
+	}
+
+	public static function trace(){
+
+	}
+
+	public static function error(){
+
 	}
 
 	/**
