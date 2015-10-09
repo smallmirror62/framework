@@ -10,8 +10,24 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Application;
 
+use Leaps\Kernel;
+use Leaps\Http\Response;
+use Leaps\Router\Exception as RouteException;
+use Leaps\Application\Web\NotFoundHttpException;
+
 class MobileApplication extends \Leaps\Core\Application
 {
+	/**
+	 *
+	 * @var string the default route of this application. Defaults to 'site'.
+	 */
+	public $defaultRoute = 'site';
+
+	/**
+	 *
+	 * @var Controller the currently active controller instance
+	 */
+	public $controller;
 
 	/**
 	 * (non-PHPdoc)
@@ -21,6 +37,54 @@ class MobileApplication extends \Leaps\Core\Application
 	 */
 	public function handleRequest($request)
 	{
+		Kernel::setAlias ( '@Webroot', dirname ( $request->getScriptFile () ) );
+		Kernel::setAlias ( '@Web', $request->getBaseUrl () );
+		list ( $route, $params ) = $request->resolve ();
+		try {
+			kernel::trace ( "Route requested: '$route'", __METHOD__ );
+			$this->requestedRoute = $route;
+			$result = $this->runAction ( $route, $params );
+			if ($result instanceof Response) {
+				return $result;
+			} else {
+				$response = $this->getShared ( 'response' );
+				if ($result !== null) {
+					$response->data = $result;
+				}
+				return $response;
+			}
+		} catch ( RouteException $e ) {
+			throw new NotFoundHttpException ( 'Page not found.', $e->getCode (), $e );
+		}
+	}
+	private $_homeUrl;
+
+	/**
+	 * 获取首页URL
+	 *
+	 * @return string
+	 */
+	public function getHomeUrl()
+	{
+		if ($this->_homeUrl === null) {
+			if ($this->getRouter ()->showScriptName) {
+				return $this->getRequest ()->getScriptUrl ();
+			} else {
+				return $this->getRequest ()->getBaseUrl () . '/';
+			}
+		} else {
+			return $this->_homeUrl;
+		}
+	}
+
+	/**
+	 * 设置首页URL
+	 *
+	 * @param string $value
+	 */
+	public function setHomeUrl($value)
+	{
+		$this->_homeUrl = $value;
 	}
 
 	/**
@@ -39,6 +103,15 @@ class MobileApplication extends \Leaps\Core\Application
 				],
 				"response" => [
 						"className" => "\\Leaps\\Http\\Response"
+				],
+				'router' => [
+						'className' => 'Leaps\Router\UrlManager'
+				],
+				'session' => [
+						'className' => "\\Leaps\\Session\\Files"
+				],
+				'errorhandler' => [
+						'className' => "\\Leaps\\Application\\Web\\ErrorHandler"
 				]
 		];
 	}
