@@ -32,7 +32,7 @@ class ErrorHandler extends \Leaps\Core\ErrorHandler {
 			throw new \Leaps\Di\Exception ( "A dependency injection object is required to access the 'response' service" );
 		}
 		$response = $this->_dependencyInjector->getShared ( "response" );
-		$useErrorView = $response->format === Response::FORMAT_HTML && (Kernel::$env != Kernel::DEVELOPMENT || $exception instanceof UserException);
+		$useErrorView = $response->format === Response::FORMAT_HTML && (Kernel::$env != Kernel::DEVELOPMENT && $exception instanceof UserException);
 		if ($response->format === Response::FORMAT_HTML) {
 			if (Kernel::$env == Kernel::TEST || isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
 				// AJAX request
@@ -238,6 +238,18 @@ class ErrorHandler extends \Leaps\Core\ErrorHandler {
 		}
 
 		return '';
+	}
+
+	/**
+	 * 创建HTTP状态码连接
+	 *
+	 * @param integer $statusCode to be used to generate information link.
+	 * @param string $statusDescription Description to display after the the status code.
+	 * @return string generated HTML with HTTP status code information.
+	 */
+	public function createHttpStatusLink($statusCode, $statusDescription)
+	{
+		return '<a href="http://en.wikipedia.org/wiki/List_of_HTTP_status_codes#' . ( int ) $statusCode . '" target="_blank">HTTP ' . ( int ) $statusCode . ' &ndash; ' . $statusDescription . '</a>';
 	}
 
 	/**

@@ -100,14 +100,13 @@ abstract class ErrorHandler extends Injectable
 		if (PHP_SAPI !== 'cli') {
 			http_response_code ( 500 );
 		}
-
 		try {
 			$this->logException ( $exception );
 			if ($this->discardExistingOutput) {
 				$this->clearOutput ();
 			}
 			$this->renderException ( $exception );
-			if (! LEAPS_ENV_TEST) {
+			if (Kernel::$env != Kernel::TEST) {
 				exit ( 1 );
 			}
 		} catch ( \Exception $e ) {
@@ -116,7 +115,7 @@ abstract class ErrorHandler extends Injectable
 			$msg .= ( string ) $e;
 			$msg .= "\nPrevious exception:\n";
 			$msg .= ( string ) $exception;
-			if (LEAPS_DEBUG) {
+			if (Kernel::$env == Kernel::DEVELOPMENT) {
 				if (PHP_SAPI === 'cli') {
 					echo $msg . "\n";
 				} else {
@@ -253,9 +252,9 @@ abstract class ErrorHandler extends Injectable
 	 */
 	public static function convertExceptionToString($exception)
 	{
-		if ($exception instanceof Exception && ($exception instanceof UserException || ! LEAPS_DEBUG)) {
+		if ($exception instanceof Exception && ($exception instanceof UserException || Kernel::$env != Kernel::DEVELOPMENT)) {
 			$message = "{$exception->getName()}: {$exception->getMessage()}";
-		} elseif (LEAPS_DEBUG) {
+		} elseif (Kernel::$env == Kernel::DEVELOPMENT) {
 			if ($exception instanceof Exception) {
 				$message = "Exception ({$exception->getName()})";
 			} elseif ($exception instanceof ErrorException) {
