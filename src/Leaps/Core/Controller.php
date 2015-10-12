@@ -75,8 +75,8 @@ class Controller extends Base{
 
     	Kernel::trace("Route to run: " . $action->getUniqueId(), __METHOD__);
 
-    	if (Kernel::$app->requestedAction === null) {
-    		Kernel::$app->requestedAction = $action;
+    	if (Kernel::app()->requestedAction === null) {
+    		Kernel::app()->requestedAction = $action;
     	}
 
     	$oldAction = $this->action;
@@ -116,7 +116,7 @@ class Controller extends Base{
     }
 
     /**
-     * Runs a request specified in terms of a route.
+     * 执行指定的路由请求
      * The route can be either an ID of an action within this controller or a complete route consisting
      * of module IDs, controller ID and action ID. If the route starts with a slash '/', the parsing of
      * the route will start from the application; otherwise, it will start from the parent module of this controller.
@@ -133,12 +133,12 @@ class Controller extends Base{
     	} elseif ($pos > 0) {
     		return $this->module->runAction($route, $params);
     	} else {
-    		return Kernel::$app->runAction(ltrim($route, '/'), $params);
+    		return Kernel::app()->runAction(ltrim($route, '/'), $params);
     	}
     }
 
     /**
-     * Binds the parameters to the action.
+     * 绑定参数到操作
      * This method is invoked by [[Action]] when it begins to run with the given parameters.
      * @param Action $action the action to be bound with parameters.
      * @param array $params the parameters to be bound to the action.
@@ -150,13 +150,12 @@ class Controller extends Base{
     }
 
     /**
-     * Creates an action based on the given action ID.
-     * The method first checks if the action ID has been declared in [[actions()]]. If so,
+     * 创建一个操作
      * it will use the configuration declared there to create the action object.
      * If not, it will look for a controller method whose name is in the format of `actionXyz`
      * where `Xyz` stands for the action ID. If found, an [[InlineAction]] representing that
      * method will be created and returned.
-     * @param string $id the action ID.
+     * @param string $id 操作的ID
      * @return Action the newly created action instance. Null if the ID doesn't resolve into any action.
      */
     public function createAction($id)
@@ -164,10 +163,7 @@ class Controller extends Base{
     	if ($id === '') {
     		$id = $this->defaultAction;
     	}
-    	$actionMap = $this->actions();
-    	if (isset($actionMap[$id])) {
-    		return Kernel::createObject($actionMap[$id], [$id, $this]);
-    	} elseif (preg_match('/^[a-z0-9\\-_]+$/', $id) && strpos($id, '--') === false && trim($id, '-') === $id) {
+    	if (preg_match('/^[a-z0-9\\-_]+$/', $id) && strpos($id, '--') === false && trim($id, '-') === $id) {
     		$methodName = str_replace(' ', '', ucwords(implode(' ', explode('-', $id)))).'Action';
     		if (method_exists($this, $methodName)) {
     			$method = new \ReflectionMethod($this, $methodName);

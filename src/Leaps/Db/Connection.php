@@ -14,14 +14,14 @@ class Connection
 {
 
 	/**
-	 * The raw PDO connection instance.
+	 * 原始的PDO实例
 	 *
 	 * @var PDO
 	 */
 	public $pdo;
 
 	/**
-	 * The connection configuration array.
+	 * 数据库连接配置
 	 *
 	 * @var array
 	 */

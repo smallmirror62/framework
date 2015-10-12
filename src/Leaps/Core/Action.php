@@ -44,7 +44,7 @@ class Action extends Base
 	}
 
 	/**
-	 * Returns the unique ID of this action among the whole application.
+	 * 返回应用的唯一标示
 	 *
 	 * @return string the unique ID of this action among the whole application.
 	 */
@@ -54,8 +54,8 @@ class Action extends Base
 	}
 
 	/**
-	 * Runs this action with the specified parameters.
-	 * This method is mainly invoked by the controller.
+	 * 用指定的参数执行操作
+	 * 该方法由控制器调用
 	 *
 	 * @param array $params the parameters to be bound to the action's run() method.
 	 * @return mixed the result of the action
@@ -68,8 +68,8 @@ class Action extends Base
 		}
 		$args = $this->controller->bindActionParams ( $this, $params );
 		Kernel::trace ( 'Running action: ' . get_class ( $this ) . '::run()', __METHOD__ );
-		if (Kernel::$app->requestedParams === null) {
-			Kernel::$app->requestedParams = $args;
+		if (Kernel::app()->requestedParams === null) {
+			Kernel::app()->requestedParams = $args;
 		}
 		if ($this->beforeRun ()) {
 			$result = call_user_func_array ( [

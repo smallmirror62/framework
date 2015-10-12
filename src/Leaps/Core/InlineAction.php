@@ -15,15 +15,17 @@ use Leaps\Kernel;
 class InlineAction extends Action
 {
 	/**
+	 * 操作方法
 	 *
 	 * @var string the controller method that this inline action is associated with
 	 */
 	public $actionMethod;
 
 	/**
+	 * 构造方法
 	 *
-	 * @param string $id the ID of this action
-	 * @param Controller $controller the controller that owns this action
+	 * @param string $id 操作ID
+	 * @param Controller $controller 拥有该操作的控制器
 	 * @param string $actionMethod the controller method that this inline action is associated with
 	 * @param array $config name-value pairs that will be used to initialize the object properties
 	 */
@@ -34,22 +36,19 @@ class InlineAction extends Action
 	}
 
 	/**
-	 * Runs this action with the specified parameters.
-	 * This method is mainly invoked by the controller.
+	 * 用指定的参数执行本操作
+	 * 该方法主要由控制器调用。
 	 *
-	 * @param array $params action parameters
-	 * @return mixed the result of the action
+	 * @param array $params 操作参数
+	 * @return mixed 操作的结果
 	 */
 	public function runWithParams($params)
 	{
 		$args = $this->controller->bindActionParams ( $this, $params );
 		Kernel::trace ( 'Running action: ' . get_class ( $this->controller ) . '::' . $this->actionMethod . '()', __METHOD__ );
-		if (Kernel::$app->requestedParams === null) {
-			Kernel::$app->requestedParams = $args;
+		if (Kernel::app ()->requestedParams === null) {
+			Kernel::app ()->requestedParams = $args;
 		}
-		return call_user_func_array ( [
-				$this->controller,
-				$this->actionMethod
-		], $args );
+		return call_user_func_array ( [ $this->controller,$this->actionMethod ], $args );
 	}
 }
