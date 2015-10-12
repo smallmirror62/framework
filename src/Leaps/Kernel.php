@@ -14,6 +14,33 @@ use Leaps\Core\InvalidConfigException;
 use Leaps\Core\UnknownClassException;
 use Leaps\Core\InvalidParamException;
 
+/**
+ * Gets the application start timestamp.
+ */
+defined ( 'LEAPS_BEGIN_TIME' ) or define ( 'LEAPS_BEGIN_TIME', microtime ( true ) );
+
+/**
+ * This constant defines the framework installation directory.
+ */
+defined ( 'LEAPS_PATH' ) or define ( 'LEAPS_PATH', dirname ( dirname ( __DIR__ ) ) );
+
+/**
+ * This constant defines whether the application should be in debug mode or not.
+ * Defaults to false.
+ */
+defined ( 'LEAPS_DEBUG' ) or define ( 'LEAPS_DEBUG', false );
+
+/**
+ * This constant defines whether error handling should be enabled.
+ * Defaults to true.
+ */
+defined ( 'LEAPS_ENABLE_ERROR_HANDLER' ) or define ( 'LEAPS_ENABLE_ERROR_HANDLER', true );
+
+/**
+ * Leaps 基类
+ * @author xutongle
+ *
+ */
 class Kernel
 {
 	/**
@@ -147,7 +174,9 @@ class Kernel
 				if (empty ( $definition )) {
 					$instance = $reflection->newInstance ();
 				} else {
-					$instance = $reflection->newInstanceArgs ( [ $definition ] );
+					$instance = $reflection->newInstanceArgs ( [
+							$definition
+					] );
 				}
 			}
 		} elseif (is_array ( $definition ) && $throwException) {
@@ -211,13 +240,18 @@ class Kernel
 				if ($pos === false) {
 					static::$_aliases [$root] = $path;
 				} else {
-					static::$_aliases [$root] = [ $alias => $path ];
+					static::$_aliases [$root] = [
+							$alias => $path
+					];
 				}
 			} elseif (is_string ( static::$_aliases [$root] )) {
 				if ($pos === false) {
 					static::$_aliases [$root] = $path;
 				} else {
-					static::$_aliases [$root] = [ $alias => $path,$root => static::$_aliases [$root] ];
+					static::$_aliases [$root] = [
+							$alias => $path,
+							$root => static::$_aliases [$root]
+					];
 				}
 			} else {
 				static::$_aliases [$root] [$alias] = $path;
@@ -378,13 +412,11 @@ class Kernel
 	{
 		return Version::get ();
 	}
-
-	public static function trace(){
-
+	public static function trace()
+	{
 	}
-
-	public static function error(){
-
+	public static function error()
+	{
 	}
 
 	/**
