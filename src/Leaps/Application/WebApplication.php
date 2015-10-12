@@ -12,7 +12,6 @@ namespace Leaps\Application;
 
 use Leaps\Kernel;
 use Leaps\Http\Response;
-use Leaps\Router\Exception as RouteException;
 use Leaps\Application\Web\NotFoundHttpException;
 
 class WebApplication extends \Leaps\Core\Application
@@ -53,7 +52,8 @@ class WebApplication extends \Leaps\Core\Application
 				}
 				return $response;
 			}
-		} catch ( RouteException $e ) {
+		} catch ( \Leaps\Router\Exception $e ) {
+			print_r($e);exit;
 			throw new NotFoundHttpException ( 'Page not found.', $e->getCode (), $e );
 		}
 	}

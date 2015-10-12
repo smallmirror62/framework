@@ -407,6 +407,7 @@ class Module extends Container
 		}
 		$className = str_replace ( ' ', '', ucwords ( str_replace ( '-', ' ', $className ) ) ) . 'Controller';
 		$className = ltrim ( $this->controllerNamespace . '\\' . str_replace ( '/', '\\', $prefix ) . $className, '\\' );
+		echo $className;exit;
 		if (strpos ( $className, '-' ) !== false || ! class_exists ( $className )) {
 			return null;
 		}
