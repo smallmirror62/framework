@@ -45,6 +45,7 @@ class Controller extends Base{
 	public $action;
 
 	/**
+	 * 构造方法
      * @param string $id 控制器ID
      * @param Module $module 该控制器所属模块
      * @param array $config 用来初始化对象属性的数组
@@ -56,14 +57,12 @@ class Controller extends Base{
         parent::__construct($config);
     }
 
-
     /**
-     * Runs an action within this controller with the specified action ID and parameters.
-     * If the action ID is empty, the method will use [[defaultAction]].
-     * @param string $id the ID of the action to be executed.
-     * @param array $params the parameters (name-value pairs) to be passed to the action.
-     * @return mixed the result of the action.
-     * @throws InvalidRouteException if the requested action ID cannot be resolved into an action successfully.
+     * 在该控制器执行指定的操作
+     * @param string $id 操作ID
+     * @param array $params 绑定到该操作的参数
+     * @return mixed 操作执行结果
+     * @throws InvalidRouteException 如果该请求操作不能成功解析
      * @see createAction()
      */
     public function runAction($id, $params = [])
@@ -87,17 +86,19 @@ class Controller extends Base{
 
     	// call beforeAction on modules
     	foreach ($this->getModules() as $module) {
+    		print_r($module);
     		if ($module->beforeAction($action)) {
     			array_unshift($modules, $module);
     		} else {
+    			echo 888;
     			$runAction = false;
     			break;
     		}
     	}
 
     	$result = null;
-
     	if ($runAction && $this->beforeAction($action)) {
+    		echo 999;
     		// run the action
     		$result = $action->runWithParams($params);
 
@@ -113,6 +114,10 @@ class Controller extends Base{
     	$this->action = $oldAction;
 
     	return $result;
+    }
+	public function afterAction(){}
+    public function beforeAction($action){
+
     }
 
     /**
@@ -164,7 +169,7 @@ class Controller extends Base{
     		$id = $this->defaultAction;
     	}
     	if (preg_match('/^[a-z0-9\\-_]+$/', $id) && strpos($id, '--') === false && trim($id, '-') === $id) {
-    		$methodName = str_replace(' ', '', ucwords(implode(' ', explode('-', $id)))).'Action';
+    		$methodName = str_replace(' ', '', implode(' ', explode('-', $id))).'Action';
     		if (method_exists($this, $methodName)) {
     			$method = new \ReflectionMethod($this, $methodName);
     			if ($method->isPublic() && $method->getName() === $methodName) {
@@ -173,5 +178,37 @@ class Controller extends Base{
     		}
     	}
     	return null;
+    }
+
+    /**
+     * 返回该控制器所有的父模块
+     * @return Module[] 该控制器所有的父模块
+     */
+    public function getModules()
+    {
+    	$modules = [$this->module];
+    	$module = $this->module;
+    	while ($module->module !== null) {
+    		array_unshift($modules, $module->module);
+    		$module = $module->module;
+    	}
+    	return $modules;
+    }
+
+    /**
+     * @return string the controller ID that is prefixed with the module ID (if any).
+     */
+    public function getUniqueId()
+    {
+    	return $this->module instanceof Application ? $this->id : $this->module->getUniqueId() . '/' . $this->id;
+    }
+
+    /**
+     * 返回该请求的路由
+     * @return string the route (module ID, controller ID and action ID) of the current request.
+     */
+    public function getRoute()
+    {
+    	return $this->action !== null ? $this->action->getUniqueId() : $this->getUniqueId();
     }
 }

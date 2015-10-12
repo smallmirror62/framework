@@ -32,9 +32,9 @@ class ErrorHandler extends \Leaps\Core\ErrorHandler {
 			throw new \Leaps\Di\Exception ( "A dependency injection object is required to access the 'response' service" );
 		}
 		$response = $this->_dependencyInjector->getShared ( "response" );
-		$useErrorView = $response->format === Response::FORMAT_HTML && (Kernel::$env != Kernel::DEVELOPMENT && $exception instanceof UserException);
+		$useErrorView = $response->format === Response::FORMAT_HTML && (!LEAPS_DEBUG || $exception instanceof UserException);
 		if ($response->format === Response::FORMAT_HTML) {
-			if (Kernel::$env == Kernel::TEST || isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+			if (!LEAPS_DEBUG || isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
 				// AJAX request
 				$response->data = '<pre>' . $this->htmlEncode($this->convertExceptionToString($exception)) . '</pre>';
 			} else {

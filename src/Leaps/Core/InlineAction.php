@@ -26,8 +26,8 @@ class InlineAction extends Action
 	 *
 	 * @param string $id 操作ID
 	 * @param Controller $controller 拥有该操作的控制器
-	 * @param string $actionMethod the controller method that this inline action is associated with
-	 * @param array $config name-value pairs that will be used to initialize the object properties
+	 * @param string $actionMethod 操作方法
+	 * @param array $config 初始化配置
 	 */
 	public function __construct($id, $controller, $actionMethod, $config = [])
 	{

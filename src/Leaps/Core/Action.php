@@ -16,14 +16,14 @@ class Action extends Base
 {
 
 	/**
-	 * Action ID
+	 * 操作 ID
 	 *
 	 * @var string
 	 */
 	public $id;
 
 	/**
-	 * the controller that owns this action
+	 * 拥有该操作的控制器实例
 	 *
 	 * @var Controller|\Leaps\Core\Controller
 	 */
@@ -32,21 +32,21 @@ class Action extends Base
 	/**
 	 * 构造方法
 	 *
-	 * @param string $id the ID of this action
-	 * @param Controller $controller the controller that owns this action
-	 * @param array $config name-value pairs that will be used to initialize the object properties
+	 * @param string $id 操作ID
+	 * @param Controller $controller 拥有该操作的控制器实例
+	 * @param array $config 初始化配置数组
 	 */
 	public function __construct($id, $controller, $config = [])
 	{
 		$this->id = $id;
 		$this->controller = $controller;
-		parent::__construct($config);
+		parent::__construct ( $config );
 	}
 
 	/**
 	 * 返回应用的唯一标示
 	 *
-	 * @return string the unique ID of this action among the whole application.
+	 * @return string 返回应用程序唯一标示
 	 */
 	public function getUniqueId()
 	{
@@ -57,9 +57,9 @@ class Action extends Base
 	 * 用指定的参数执行操作
 	 * 该方法由控制器调用
 	 *
-	 * @param array $params the parameters to be bound to the action's run() method.
-	 * @return mixed the result of the action
-	 * @throws InvalidConfigException if the action class does not have a run() method
+	 * @param array $params 要绑定到Action的参数
+	 * @return mixed Action执行结果
+	 * @throws InvalidConfigException 如果Action类没有run()方法
 	 */
 	public function runWithParams($params)
 	{
@@ -68,14 +68,11 @@ class Action extends Base
 		}
 		$args = $this->controller->bindActionParams ( $this, $params );
 		Kernel::trace ( 'Running action: ' . get_class ( $this ) . '::run()', __METHOD__ );
-		if (Kernel::app()->requestedParams === null) {
-			Kernel::app()->requestedParams = $args;
+		if (Kernel::app ()->requestedParams === null) {
+			Kernel::app ()->requestedParams = $args;
 		}
 		if ($this->beforeRun ()) {
-			$result = call_user_func_array ( [
-					$this,
-					'run'
-			], $args );
+			$result = call_user_func_array ( [ $this,'run' ], $args );
 			$this->afterRun ();
 			return $result;
 		} else {

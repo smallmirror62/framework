@@ -53,7 +53,6 @@ class WebApplication extends \Leaps\Core\Application
 				return $response;
 			}
 		} catch ( \Leaps\Router\Exception $e ) {
-			print_r($e);exit;
 			throw new NotFoundHttpException ( 'Page not found.', $e->getCode (), $e );
 		}
 	}

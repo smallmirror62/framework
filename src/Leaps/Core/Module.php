@@ -238,8 +238,6 @@ class Module extends Container
 			$module = $this->getModule ( substr ( $id, 0, $pos ) );
 			return $module === null ? null : $module->getModule ( substr ( $id, $pos + 1 ), $load );
 		}
-		print_r($this->_modules);
-		echo $id;
 		if (isset ( $this->_modules [$id] )) {
 			if ($this->_modules [$id] instanceof Module) {
 				return $this->_modules [$id];
@@ -317,7 +315,7 @@ class Module extends Container
 			list ( $controller, $actionID ) = $parts;
 			$oldController = Kernel::app ()->controller;
 			Kernel::app ()->controller = $controller;
-			$result = $controller->runActionInstance ( $actionID, $params );
+			$result = $controller->runAction ( $actionID, $params );
 			Kernel::app ()->controller = $oldController;
 			return $result;
 		} else {
@@ -328,12 +326,9 @@ class Module extends Container
 	/**
 	 * 根据控制器ID创建控制器
 	 *
-	 * The controller ID is relative to this module. The controller class
-	 * should be namespaced under [[controllerNamespace]].
+	 * 控制器标识是相对于该模块的。
 	 *
-	 * Note that this method does not check [[modules]] or [[controllerMap]].
-	 *
-	 * @param string $id the controller ID
+	 * @param string $id 控制器ID
 	 * @return Controller the newly created controller instance, or null if the controller ID is invalid.
 	 * @throws InvalidConfigException if the controller class and its file name do not match.
 	 *         This exception is only thrown when in debug mode.
@@ -379,12 +374,7 @@ class Module extends Container
 	/**
 	 * 根据控制器ID创建控制器
 	 *
-	 * The controller ID is relative to this module. The controller class
-	 * should be namespaced under [[controllerNamespace]].
-	 *
-	 * Note that this method does not check [[modules]] or [[controllerMap]].
-	 *
-	 * @param string $id the controller ID
+	 * @param string $id 控制器ID
 	 * @return Controller the newly created controller instance, or null if the controller ID is invalid.
 	 * @throws InvalidConfigException if the controller class and its file name do not match.
 	 *         This exception is only thrown when in debug mode.
@@ -407,16 +397,20 @@ class Module extends Container
 		}
 		$className = str_replace ( ' ', '', ucwords ( str_replace ( '-', ' ', $className ) ) ) . 'Controller';
 		$className = ltrim ( $this->controllerNamespace . '\\' . str_replace ( '/', '\\', $prefix ) . $className, '\\' );
-		echo $className;exit;
 		if (strpos ( $className, '-' ) !== false || ! class_exists ( $className )) {
 			return null;
 		}
 		if (is_subclass_of ( $className, 'Leaps\Core\Controller' )) {
 			return Kernel::createObject ( $className, [$id,$this] );
-		} elseif (Kernel::$env == Kernel::DEVELOPMENT) {
+		} elseif (LEAPS_DEBUG) {
 			throw new InvalidConfigException ( "Controller class must extend from \\Leaps\\Core\\Controller." );
 		} else {
 			return null;
 		}
+	}
+
+	public function beforeAction($action)
+	{
+		return true;
 	}
 }
