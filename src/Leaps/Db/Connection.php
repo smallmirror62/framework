@@ -28,24 +28,24 @@ class Connection
 	public $config;
 
 	/**
-	 * The query grammar instance for the connection.
+	 * 该连接的数据库查询语法实例
 	 *
 	 * @var Query\Grammars\Grammar
 	 */
 	protected $grammar;
 
 	/**
-	 * All of the queries that have been executed on all connections.
+	 * 所有已经执行的查询(所有连接)
 	 *
 	 * @var array
 	 */
 	public static $queries = [];
 
 	/**
-	 * Create a new database connection instance.
+	 * 创建一个新的数据库连接实例
 	 *
 	 * @param PDO $pdo
-	 * @param array $config
+	 * @param array $config 数据库连接配置
 	 * @return void
 	 */
 	public function __construct(\PDO $pdo, $config)

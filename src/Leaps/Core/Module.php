@@ -298,7 +298,6 @@ class Module extends Container
 		}
 	}
 
-
 	/**
 	 * 从路由执行控制器操作
 	 *

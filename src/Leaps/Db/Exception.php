@@ -55,7 +55,6 @@ class Exception extends \Leaps\Core\Exception {
 	protected function setMessage($sql, $bindings)
 	{
 		$this->message = $this->inner->getMessage();
-
 		$this->message .= "\n\nSQL: ".$sql."\n\nBindings: ".var_export($bindings, true);
 	}
 
