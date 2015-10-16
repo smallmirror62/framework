@@ -12,7 +12,7 @@ namespace Leaps\Core;
 
 use Leaps\Kernel;
 
-class Controller extends Base{
+class Controller extends Base {
 
 	/**
 	 * 控制器ID
@@ -67,6 +67,9 @@ class Controller extends Base{
      */
     public function runAction($id, $params = [])
     {
+		$db = $this->module->getDb();
+		print_r($db->table('user')->get());
+    	exit;
     	$action = $this->createAction($id);
     	if ($action === null) {
     		throw new InvalidRouteException('Unable to resolve the request: ' . $this->getUniqueId() . '/' . $id);

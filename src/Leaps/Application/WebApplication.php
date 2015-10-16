@@ -93,7 +93,7 @@ class WebApplication extends \Leaps\Core\Application
 	 */
 	public function coreServices()
 	{
-		return [
+		return array_merge(parent::coreServices(),[
 				"cookie" => [
 						"className" => "\\Leaps\\Http\\Cookies"
 				],
@@ -112,6 +112,6 @@ class WebApplication extends \Leaps\Core\Application
 				'errorhandler' => [
 						'className' => "\\Leaps\\Application\\Web\\ErrorHandler"
 				]
-		];
+		]);
 	}
 }

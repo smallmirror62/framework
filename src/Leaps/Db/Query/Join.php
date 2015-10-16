@@ -59,7 +59,6 @@ class Join
 	public function on($column1, $operator, $column2, $connector = 'AND')
 	{
 		$this->clauses [] = compact ( 'column1', 'operator', 'column2', 'connector' );
-
 		return $this;
 	}
 
@@ -71,7 +70,7 @@ class Join
 	 * @param string $column2
 	 * @return Join
 	 */
-	public function or_on($column1, $operator, $column2)
+	public function orOn($column1, $operator, $column2)
 	{
 		return $this->on ( $column1, $operator, $column2, 'OR' );
 	}

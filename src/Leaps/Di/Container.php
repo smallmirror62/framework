@@ -16,6 +16,7 @@ class Container extends Base implements \ArrayAccess, ContainerInterface
 {
 	protected $_sharedInstances;
 	protected $_freshInstance = false;
+
 	private $_services;
 	protected static $_default;
 

@@ -329,7 +329,10 @@ abstract class Application extends Module
 						"className" => "Leaps\\Filter\\Filter"
 				],
 				"event" => [
-						"className" => "Leaps\\Events\\Dispatcher"
+					"className" => "Leaps\\Events\\Dispatcher"
+				],
+				"db"=>[
+					"className" => "Leaps\\Db\\Db"
 				]
 		];
 	}

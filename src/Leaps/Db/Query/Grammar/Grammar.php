@@ -8,12 +8,11 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Leaps\Database\Query\Grammars;
+namespace Leaps\Db\Query\Grammar;
 
-use Leaps\Database\Query;
-use Leaps\Database\Expression;
+use Leaps\Db\Query;
 
-class Grammar extends \Leaps\Database\Grammar
+class Grammar extends \Leaps\Db\Grammar
 {
 
 	/**
@@ -68,7 +67,6 @@ class Grammar extends \Leaps\Database\Grammar
 				), $query );
 			}
 		}
-
 		return ( array ) $sql;
 	}
 
@@ -80,8 +78,7 @@ class Grammar extends \Leaps\Database\Grammar
 	 */
 	final protected function concatenate($components)
 	{
-		return implode ( ' ', array_filter ( $components, function ($value)
-		{
+		return implode ( ' ', array_filter ( $components, function ($value) {
 			return ( string ) $value !== '';
 		} ) );
 	}
@@ -96,9 +93,7 @@ class Grammar extends \Leaps\Database\Grammar
 	{
 		if (! is_null ( $query->aggregate ))
 			return;
-
 		$select = ($query->distinct) ? 'SELECT DISTINCT ' : 'SELECT ';
-
 		return $select . $this->columnize ( $query->selects );
 	}
 
@@ -114,7 +109,6 @@ class Grammar extends \Leaps\Database\Grammar
 		if ($query->distinct and $column !== '*') {
 			$column = 'DISTINCT ' . $column;
 		}
-
 		return 'SELECT ' . $query->aggregate ['aggregator'] . '(' . $column . ') AS ' . $this->wrap ( 'aggregate' );
 	}
 
@@ -126,7 +120,7 @@ class Grammar extends \Leaps\Database\Grammar
 	 */
 	protected function from(Query $query)
 	{
-		return 'FROM ' . $this->wrap_table ( $query->from );
+		return 'FROM ' . $this->wrapTable ( $query->from );
 	}
 
 	/**
@@ -138,29 +132,20 @@ class Grammar extends \Leaps\Database\Grammar
 	protected function joins(Query $query)
 	{
 		foreach ( $query->joins as $join ) {
-			$table = $this->wrap_table ( $join->table );
-
+			$table = $this->wrapTable ( $join->table );
 			$clauses = array ();
-
 			foreach ( $join->clauses as $clause ) {
 				extract ( $clause );
-
 				$column1 = $this->wrap ( $column1 );
-
 				$column2 = $this->wrap ( $column2 );
-
 				$clauses [] = "{$connector} {$column1} {$operator} {$column2}";
 			}
-
 			$search = array (
 					'AND ',
 					'OR '
 			);
-
 			$clauses [0] = str_replace ( $search, '', $clauses [0] );
-
 			$clauses = implode ( ' ', $clauses );
-
 			$sql [] = "{$join->type} JOIN {$table} ON {$clauses}";
 		}
 		return implode ( ' ', $sql );
@@ -176,13 +161,10 @@ class Grammar extends \Leaps\Database\Grammar
 	{
 		if (is_null ( $query->wheres ))
 			return '';
-
 		foreach ( $query->wheres as $where ) {
 			$sql [] = $where ['connector'] . ' ' . $this->{$where ['type']} ( $where );
 		}
-
 		if (isset ( $sql )) {
-
 			return 'WHERE ' . preg_replace ( '/AND |OR /', '', implode ( ' ', $sql ), 1 );
 		}
 	}
@@ -193,7 +175,7 @@ class Grammar extends \Leaps\Database\Grammar
 	 * @param array $where
 	 * @return string
 	 */
-	protected function where_nested($where)
+	protected function whereNested($where)
 	{
 		return '(' . substr ( $this->wheres ( $where ['query'] ), 6 ) . ')';
 	}
@@ -207,7 +189,6 @@ class Grammar extends \Leaps\Database\Grammar
 	protected function where($where)
 	{
 		$parameter = $this->parameter ( $where ['value'] );
-
 		return $this->wrap ( $where ['column'] ) . ' ' . $where ['operator'] . ' ' . $parameter;
 	}
 
@@ -217,10 +198,9 @@ class Grammar extends \Leaps\Database\Grammar
 	 * @param array $where
 	 * @return string
 	 */
-	protected function where_in($where)
+	protected function whereIn($where)
 	{
 		$parameters = $this->parameterize ( $where ['values'] );
-
 		return $this->wrap ( $where ['column'] ) . ' IN (' . $parameters . ')';
 	}
 
@@ -230,10 +210,9 @@ class Grammar extends \Leaps\Database\Grammar
 	 * @param array $where
 	 * @return string
 	 */
-	protected function where_not_in($where)
+	protected function whereNotIn($where)
 	{
 		$parameters = $this->parameterize ( $where ['values'] );
-
 		return $this->wrap ( $where ['column'] ) . ' NOT IN (' . $parameters . ')';
 	}
 
@@ -243,11 +222,10 @@ class Grammar extends \Leaps\Database\Grammar
 	 * @param array $where
 	 * @return string
 	 */
-	protected function where_between($where)
+	protected function whereBetween($where)
 	{
 		$min = $this->parameter ( $where ['min'] );
 		$max = $this->parameter ( $where ['max'] );
-
 		return $this->wrap ( $where ['column'] ) . ' BETWEEN ' . $min . ' AND ' . $max;
 	}
 
@@ -257,7 +235,7 @@ class Grammar extends \Leaps\Database\Grammar
 	 * @param array $where
 	 * @return string
 	 */
-	protected function where_not_between($where)
+	protected function whereNotBetween($where)
 	{
 		$min = $this->parameter ( $where ['min'] );
 		$max = $this->parameter ( $where ['max'] );
@@ -271,7 +249,7 @@ class Grammar extends \Leaps\Database\Grammar
 	 * @param array $where
 	 * @return string
 	 */
-	protected function where_null($where)
+	protected function whereNull($where)
 	{
 		return $this->wrap ( $where ['column'] ) . ' IS NULL';
 	}
@@ -282,7 +260,7 @@ class Grammar extends \Leaps\Database\Grammar
 	 * @param array $where
 	 * @return string
 	 */
-	protected function where_not_null($where)
+	protected function whereNotNull($where)
 	{
 		return $this->wrap ( $where ['column'] ) . ' IS NOT NULL';
 	}
@@ -293,7 +271,7 @@ class Grammar extends \Leaps\Database\Grammar
 	 * @param array $where
 	 * @return string
 	 */
-	final protected function where_raw($where)
+	final protected function whereRaw($where)
 	{
 		return $where ['sql'];
 	}
@@ -319,11 +297,9 @@ class Grammar extends \Leaps\Database\Grammar
 	{
 		if (is_null ( $query->havings ))
 			return '';
-
 		foreach ( $query->havings as $having ) {
 			$sql [] = 'AND ' . $this->wrap ( $having ['column'] ) . ' ' . $having ['operator'] . ' ' . $this->parameter ( $having ['value'] );
 		}
-
 		return 'HAVING ' . preg_replace ( '/AND /', '', implode ( ' ', $sql ), 1 );
 	}
 
@@ -338,7 +314,6 @@ class Grammar extends \Leaps\Database\Grammar
 		foreach ( $query->orderings as $ordering ) {
 			$sql [] = $this->wrap ( $ordering ['column'] ) . ' ' . strtoupper ( $ordering ['direction'] );
 		}
-
 		return 'ORDER BY ' . implode ( ', ', $sql );
 	}
 
@@ -375,28 +350,14 @@ class Grammar extends \Leaps\Database\Grammar
 	 */
 	public function insert(Query $query, $values)
 	{
-		$table = $this->wrap_table ( $query->from );
-
-		// Force every insert to be treated like a batch insert. This simply makes
-		// creating the SQL syntax a little easier on us since we can always treat
-		// the values as if it contains multiple inserts.
+		$table = $this->wrapTable ( $query->from );
 		if (! is_array ( reset ( $values ) ))
 			$values = array (
 					$values
 			);
-
-			// Since we only care about the column names, we can pass any of the insert
-			// arrays into the "columnize" method. The columns should be the same for
-			// every record inserted into the table.
 		$columns = $this->columnize ( array_keys ( reset ( $values ) ) );
-
-		// Build the list of parameter place-holders of values bound to the query.
-		// Each insert should have the same number of bound parameters, so we can
-		// just use the first array of values.
 		$parameters = $this->parameterize ( reset ( $values ) );
-
 		$parameters = implode ( ', ', array_fill ( 0, count ( $values ), "($parameters)" ) );
-
 		return "INSERT INTO {$table} ({$columns}) VALUES {$parameters}";
 	}
 
@@ -408,7 +369,7 @@ class Grammar extends \Leaps\Database\Grammar
 	 * @param string $column
 	 * @return string
 	 */
-	public function insert_get_id(Query $query, $values, $column)
+	public function insertGetID(Query $query, $values, $column)
 	{
 		return $this->insert ( $query, $values );
 	}
@@ -422,12 +383,10 @@ class Grammar extends \Leaps\Database\Grammar
 	 */
 	public function update(Query $query, $values)
 	{
-		$table = $this->wrap_table ( $query->from );
-
+		$table = $this->wrapTable ( $query->from );
 		foreach ( $values as $column => $value ) {
 			$columns [] = $this->wrap ( $column ) . ' = ' . $this->parameter ( $value );
 		}
-
 		$columns = implode ( ', ', $columns );
 		return trim ( "UPDATE {$table} SET {$columns} " . $this->wheres ( $query ) );
 	}
@@ -440,8 +399,7 @@ class Grammar extends \Leaps\Database\Grammar
 	 */
 	public function delete(Query $query)
 	{
-		$table = $this->wrap_table ( $query->from );
-
+		$table = $this->wrapTable ( $query->from );
 		return trim ( "DELETE FROM {$table} " . $this->wheres ( $query ) );
 	}
 
@@ -458,14 +416,11 @@ class Grammar extends \Leaps\Database\Grammar
 			for($i = 0; $i < count ( $bindings ); $i ++) {
 				if (is_array ( $bindings [$i] )) {
 					$parameters = $this->parameterize ( $bindings [$i] );
-
 					array_splice ( $bindings, $i, 1, $bindings [$i] );
-
 					$sql = preg_replace ( '~\(\.\.\.\)~', "({$parameters})", $sql, 1 );
 				}
 			}
 		}
-
 		return trim ( $sql );
 	}
 }
