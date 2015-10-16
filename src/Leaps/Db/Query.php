@@ -21,14 +21,14 @@ class Query
 	/**
 	 * 数据库连接
 	 *
-	 * @var Connection
+	 * @var \Leaps\Db\Connection
 	 */
 	public $connection;
 
 	/**
 	 * 查询语法实例
 	 *
-	 * @var Query\Grammars\Grammar
+	 * @var \Leaps\Db\Query\Grammar\Grammar
 	 */
 	public $grammar;
 
@@ -83,6 +83,7 @@ class Query
 
 	/**
 	 * HAVING 子句
+	 *
 	 * @var array
 	 */
 	public $havings;
@@ -123,7 +124,7 @@ class Query
 	 * @param string $table
 	 * @return void
 	 */
-	public function __construct(Connection $connection, \Leaps\Db\Query\Grammar\Grammar $grammar, $table)
+	public function __construct(\Leaps\Db\Connection $connection, \Leaps\Db\Query\Grammar\Grammar $grammar, $table)
 	{
 		$this->from = $table;
 		$this->grammar = $grammar;
@@ -191,13 +192,13 @@ class Query
 	}
 
 	/**
-	 * Reset the where clause to its initial state.
+	 * 重置Where查询条件
 	 *
 	 * @return void
 	 */
 	public function resetWhere()
 	{
-		list ( $this->wheres, $this->bindings ) = [[ ],[ ]];
+		list ( $this->wheres, $this->bindings ) = [ [ ],[ ] ];
 	}
 
 	/**
@@ -210,11 +211,7 @@ class Query
 	 */
 	public function rawWhere($where, $bindings = [], $connector = 'AND')
 	{
-		$this->wheres [] = [
-				'type' => 'where_raw',
-				'connector' => $connector,
-				'sql' => $where
-		];
+		$this->wheres [] = [ 'type' => 'whereRaw','connector' => $connector,'sql' => $where ];
 		$this->bindings = array_merge ( $this->bindings, $bindings );
 		return $this;
 	}
@@ -226,9 +223,9 @@ class Query
 	 * @param array $bindings
 	 * @return Query
 	 */
-	public function raw_or_where($where, $bindings = [])
+	public function rawOrWhere($where, $bindings = [])
 	{
-		return $this->raw_where ( $where, $bindings, 'OR' );
+		return $this->rawWhere ( $where, $bindings, 'OR' );
 	}
 
 	/**
@@ -243,7 +240,7 @@ class Query
 	public function where($column, $operator = null, $value = null, $connector = 'AND')
 	{
 		if ($column instanceof Closure) {
-			return $this->where_nested ( $column, $connector );
+			return $this->whereNested ( $column, $connector );
 		}
 		$type = 'where';
 		$this->wheres [] = compact ( 'type', 'column', 'operator', 'value', 'connector' );
@@ -259,7 +256,7 @@ class Query
 	 * @param mixed $value
 	 * @return Query
 	 */
-	public function or_where($column, $operator = null, $value = null)
+	public function orWhere($column, $operator = null, $value = null)
 	{
 		return $this->where ( $column, $operator, $value, 'OR' );
 	}
@@ -270,9 +267,9 @@ class Query
 	 * @param mixed $value
 	 * @return Query
 	 */
-	public function or_where_id($value)
+	public function orWhereID($value)
 	{
-		return $this->or_where ( 'id', '=', $value );
+		return $this->orWhere ( 'id', '=', $value );
 	}
 
 	/**
@@ -339,9 +336,9 @@ class Query
 	 * @param boolean $not
 	 * @return Query
 	 */
-	public function where_between($column, $min, $max, $connector = 'AND', $not = false)
+	public function whereBetween($column, $min, $max, $connector = 'AND', $not = false)
 	{
-		$type = ($not) ? 'where_not_between' : 'where_between';
+		$type = ($not) ? 'whereNotBetween' : 'whereBetween';
 		$this->wheres [] = compact ( 'type', 'column', 'min', 'max', 'connector' );
 		$this->bindings [] = $min;
 		$this->bindings [] = $max;
@@ -356,9 +353,9 @@ class Query
 	 * @param mixed $max
 	 * @return Query
 	 */
-	public function or_where_between($column, $min, $max)
+	public function orWhereBetween($column, $min, $max)
 	{
-		return $this->where_between ( $column, $min, $max, 'OR' );
+		return $this->whereBetween ( $column, $min, $max, 'OR' );
 	}
 
 	/**
@@ -369,9 +366,9 @@ class Query
 	 * @param mixed $max
 	 * @return Query
 	 */
-	public function where_not_between($column, $min, $max, $connector = 'AND')
+	public function whereNotBetween($column, $min, $max, $connector = 'AND')
 	{
-		return $this->where_between ( $column, $min, $max, $connector, true );
+		return $this->whereBetween ( $column, $min, $max, $connector, true );
 	}
 
 	/**
@@ -382,9 +379,9 @@ class Query
 	 * @param mixed $max
 	 * @return Query
 	 */
-	public function or_where_not_between($column, $min, $max)
+	public function orWhereNotBetween($column, $min, $max)
 	{
-		return $this->where_not_between ( $column, $min, $max, 'OR' );
+		return $this->whereNotBetween ( $column, $min, $max, 'OR' );
 	}
 
 	/**
@@ -395,12 +392,10 @@ class Query
 	 * @param bool $not
 	 * @return Query
 	 */
-	public function where_null($column, $connector = 'AND', $not = false)
+	public function whereNull($column, $connector = 'AND', $not = false)
 	{
-		$type = ($not) ? 'where_not_null' : 'where_null';
-
+		$type = ($not) ? 'whereNotNull' : 'whereNull';
 		$this->wheres [] = compact ( 'type', 'column', 'connector' );
-
 		return $this;
 	}
 
@@ -410,9 +405,9 @@ class Query
 	 * @param string $column
 	 * @return Query
 	 */
-	public function or_where_null($column)
+	public function orWhereNull($column)
 	{
-		return $this->where_null ( $column, 'OR' );
+		return $this->whereNull ( $column, 'OR' );
 	}
 
 	/**
@@ -422,9 +417,9 @@ class Query
 	 * @param string $connector
 	 * @return Query
 	 */
-	public function where_not_null($column, $connector = 'AND')
+	public function whereNotNull($column, $connector = 'AND')
 	{
-		return $this->where_null ( $column, $connector, true );
+		return $this->whereNull ( $column, $connector, true );
 	}
 
 	/**
@@ -433,9 +428,9 @@ class Query
 	 * @param string $column
 	 * @return Query
 	 */
-	public function or_where_not_null($column)
+	public function orWhereNotNull($column)
 	{
-		return $this->where_not_null ( $column, 'OR' );
+		return $this->whereNotNull ( $column, 'OR' );
 	}
 
 	/**
@@ -445,9 +440,9 @@ class Query
 	 * @param string $connector
 	 * @return Query
 	 */
-	public function where_nested($callback, $connector = 'AND')
+	public function whereNested($callback, $connector = 'AND')
 	{
-		$type = 'where_nested';
+		$type = 'whereNested';
 		$query = new Query ( $this->connection, $this->grammar, $this->from );
 		call_user_func ( $callback, $query );
 		if ($query->wheres !== null) {
@@ -464,7 +459,7 @@ class Query
 	 * @param array $parameters
 	 * @return Query
 	 */
-	private function dynamic_where($method, $parameters)
+	private function dynamicWhere($method, $parameters)
 	{
 		$finder = substr ( $method, 6 );
 		$flags = PREG_SPLIT_DELIM_CAPTURE;
@@ -558,38 +553,36 @@ class Query
 	}
 
 	/**
-	 * Find a record by the primary key.
+	 * 查询主键
 	 *
 	 * @param int $id
 	 * @param array $columns
 	 * @return object
 	 */
-	public function find($id, $columns = array('*'))
+	public function find($id, $columns = ['*'])
 	{
 		return $this->where ( 'id', '=', $id )->first ( $columns );
 	}
 
 	/**
-	 * Execute the query as a SELECT statement and return a single column.
+	 * 获取一列
 	 *
 	 * @param string $column
 	 * @return mixed
 	 */
 	public function only($column)
 	{
-		$sql = $this->grammar->select ( $this->select ( array (
-				$column
-		) ) );
+		$sql = $this->grammar->select ( $this->select ( [ $column ] ) );
 		return $this->connection->only ( $sql, $this->bindings );
 	}
 
 	/**
-	 * Execute the query as a SELECT statement and return the first result.
+	 * 获取一条数据
 	 *
 	 * @param array $columns
 	 * @return mixed
 	 */
-	public function first($columns = array('*'))
+	public function first($columns = ['*'])
 	{
 		$columns = ( array ) $columns;
 		$results = $this->take ( 1 )->get ( $columns );
@@ -605,28 +598,23 @@ class Query
 	 */
 	public function lists($column, $key = null)
 	{
-		$columns = (is_null ( $key )) ? [
-				$column
-		] : [
-				$column,
-				$key
-		];
-
+		$columns = (is_null ( $key )) ? [ $column ] : [ $column,$key ];
 		$results = $this->get ( $columns );
-		$values = array_map ( function ($row) use($column) {
+		$values = array_map ( function ($row) use($column)
+		{
 			return $row->$column;
 		}, $results );
 		if (! is_null ( $key ) && count ( $results )) {
-			return array_combine ( array_map ( function ($row) use($key) {
+			return array_combine ( array_map ( function ($row) use($key)
+			{
 				return $row->$key;
 			}, $results ), $values );
 		}
-
 		return $values;
 	}
 
 	/**
-	 * Execute the query as a SELECT statement.
+	 * 获取查询结果实例
 	 *
 	 * @param array $columns
 	 * @return array
@@ -638,7 +626,8 @@ class Query
 		$sql = $this->grammar->select ( $this );
 		$results = $this->connection->query ( $sql, $this->bindings );
 		if ($this->offset > 0 and $this->grammar instanceof SQLServer) {
-			array_walk ( $results, function ($result) {
+			array_walk ( $results, function ($result)
+			{
 				unset ( $result->rownum );
 			} );
 		}
@@ -647,7 +636,7 @@ class Query
 	}
 
 	/**
-	 * Get an aggregate value.
+	 * 获取字段的合
 	 *
 	 * @param string $aggregator
 	 * @param array $columns
@@ -663,18 +652,15 @@ class Query
 	}
 
 	/**
-	 * Get the paginated query results as a Paginator instance.
+	 * 获取分页
 	 *
 	 * @param int $per_page
 	 * @param array $columns
 	 * @return Paginator
 	 */
-	public function paginate($per_page = 20, $columns = array('*'))
+	public function paginate($per_page = 20, $columns = ['*'])
 	{
-		list ( $orderings, $this->orderings ) = array (
-				$this->orderings,
-				null
-		);
+		list ( $orderings, $this->orderings ) = [ $this->orderings,null ];
 		$total = $this->count ( reset ( $columns ) );
 		$page = Paginator::page ( $total, $per_page );
 		$this->orderings = $orderings;
@@ -683,18 +669,16 @@ class Query
 	}
 
 	/**
-	 * Insert an array of values into the database table.
+	 * 插入数据
 	 *
 	 * @param array $values
 	 * @return bool
 	 */
 	public function insert($values)
 	{
-		if (! is_array ( reset ( $values ) ))
-			$values = [
-					$values
-			];
-
+		if (! is_array ( reset ( $values ) )) {
+			$values = [ $values ];
+		}
 		$bindings = [ ];
 		foreach ( $values as $value ) {
 			$bindings = array_merge ( $bindings, array_values ( $value ) );
@@ -704,7 +688,7 @@ class Query
 	}
 
 	/**
-	 * Insert an array of values into the database table and return the key.
+	 * 获取插入的ID
 	 *
 	 * @param array $values
 	 * @param string $column
@@ -725,7 +709,7 @@ class Query
 	}
 
 	/**
-	 * Increment the value of a column by a given amount.
+	 * 字段加一
 	 *
 	 * @param string $column
 	 * @param int $amount
@@ -737,7 +721,7 @@ class Query
 	}
 
 	/**
-	 * Decrement the value of a column by a given amount.
+	 * 字段减一
 	 *
 	 * @param string $column
 	 * @param int $amount
@@ -760,9 +744,7 @@ class Query
 	{
 		$wrapped = $this->grammar->wrap ( $column );
 		$value = new Expression ( $wrapped . $operator . $amount );
-		return $this->update ( [
-				$column => $value
-		]);
+		return $this->update ( [ $column => $value ] );
 	}
 
 	/**
@@ -779,9 +761,9 @@ class Query
 	}
 
 	/**
-	 * Execute the query as a DELETE statement.
+	 * 执行一个删除查询
 	 *
-	 * Optionally, an ID may be passed to the method do delete a specific row.
+	 * 或者指定ID
 	 *
 	 * @param int $id
 	 * @return int
@@ -796,26 +778,18 @@ class Query
 	}
 
 	/**
-	 * Magic Method for handling dynamic functions.
-	 *
-	 * This method handles calls to aggregates as well as dynamic where clauses.
+	 * 魔术方法，实现动态查询
 	 */
 	public function __call($method, $parameters)
 	{
 		if (strpos ( $method, 'where' ) === 0) {
 			return $this->dynamicWhere ( $method, $parameters, $this );
 		}
-		if (in_array ( $method, [
-				'count',
-				'min',
-				'max',
-				'avg',
-				'sum'
-		] )) {
+		if (in_array ( $method, [ 'count','min','max','avg','sum' ] )) {
 			if (count ( $parameters ) == 0)
 				$parameters [0] = '*';
 			return $this->aggregate ( strtoupper ( $method ), ( array ) $parameters [0] );
 		}
-		throw new \Exception ( "Method [$method] is not defined on the Query class." );
+		throw new \Leaps\Db\Exception ( "Method [$method] is not defined on the Query class." );
 	}
 }

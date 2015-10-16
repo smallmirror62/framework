@@ -21,34 +21,38 @@ class Db extends Base
 {
 	/**
 	 * 开启数据库查询日志
+	 *
 	 * @var boolean
 	 */
 	public $profile = false;
 
 	/**
 	 * PDO 获取风格
+	 *
 	 * @var Ambiguous $fetch
 	 */
 	public $fetch = PDO::FETCH_CLASS;
 
 	/**
 	 * 默认数据库连接
+	 *
 	 * @var string
 	 */
 	public $defaultConnection = 'mysql';
 
 	/**
 	 * 数据库连接配置
+	 *
 	 * @var array
 	 */
-	public $connections = [];
+	public $connections = [ ];
 
 	/**
 	 * 已建立的数据库连接
 	 *
 	 * @var array
 	 */
-	private $connectionInstance   = [ ];
+	private $connectionInstance = [ ];
 
 	/**
 	 * 第三方驱动程序
@@ -75,15 +79,15 @@ class Db extends Base
 	 */
 	public function connection($connection = null)
 	{
-		if (is_null ( $connection )){
+		if (is_null ( $connection )) {
 			$connection = $this->defaultConnection;
 		}
 		if (! isset ( $this->connectionInstance [$connection] )) {
-			$config = $this->connections[$connection];
+			$config = $this->connections [$connection];
 			if (is_null ( $config )) {
 				throw new \Exception ( "Database connection is not defined for [$connection]." );
 			}
-			$this->connectionInstance [$connection] = Kernel::createObject('\Leaps\Db\Connection',[$this->connect ( $config ),$config]);
+			$this->connectionInstance [$connection] = Kernel::createObject ( '\Leaps\Db\Connection', [ $this->connect ( $config ),$config ] );
 		}
 		return $this->connectionInstance [$connection];
 	}
@@ -198,7 +202,7 @@ class Db extends Base
 	 */
 	public function extend($name, Closure $connector, $query = null, $schema = null)
 	{
-		if (is_null ( $query )){
+		if (is_null ( $query )) {
 			$query = '\Leaps\Db\Query\Grammar\Grammar';
 		}
 		static::$registrar [$name] = compact ( 'connector', 'query', 'schema' );
@@ -217,9 +221,6 @@ class Db extends Base
 	 */
 	public function __call($method, $parameters)
 	{
-		return call_user_func_array ( [
-				$this->connection (),
-				$method
-		], $parameters );
+		return call_user_func_array ( [ $this->connection (),$method ], $parameters );
 	}
 }

@@ -115,6 +115,109 @@ class Connection extends Injectable
 	}
 
 	/**
+	 * 执行一个SQL查询并返回一个列的结果
+	 *
+	 * <code>
+	 * // Get the total number of rows on a table
+	 * $count = DB::connection()->only('select count(*) from users');
+	 *
+	 * // Get the sum of payment amounts from a table
+	 * $sum = DB::connection()->only('select sum(amount) from payments')
+	 * </code>
+	 *
+	 * @param string $sql
+	 * @param array $bindings
+	 * @return mixed
+	 */
+	public function only($sql, array $bindings = [])
+	{
+		$results = ( array ) $this->first ( $sql, $bindings );
+		return reset ( $results );
+	}
+
+	/**
+	 * 执行一个SQL查询并返回一行
+	 *
+	 * <code>
+	 * // Execute a query against the database connection
+	 * $user = DB::connection()->first('select * from users');
+	 *
+	 * // Execute a query with bound parameters
+	 * $user = DB::connection()->first('select * from users where id = ?', array($id));
+	 * </code>
+	 *
+	 * @param string $sql
+	 * @param array $bindings
+	 * @return object
+	 */
+	public function first($sql, array $bindings = [])
+	{
+		if (count ( $results = $this->query ( $sql, $bindings ) ) > 0) {
+			return $results [0];
+		}
+	}
+
+	/**
+	 * 执行一个SQL查询返回的stdClass对象数组。
+	 *
+	 * @param string $sql
+	 * @param array $bindings
+	 * @return array
+	 */
+	public function query($sql, $bindings = [])
+	{
+		$sql = trim ( $sql );
+		list ( $statement, $result ) = $this->execute ( $sql, $bindings );
+		if (stripos ( $sql, 'select' ) === 0 || stripos ( $sql, 'show' ) === 0) {
+			return $this->fetch ( $statement, Config::get ( 'database.fetch' ) );
+		} elseif (stripos ( $sql, 'update' ) === 0 or stripos ( $sql, 'delete' ) === 0) {
+			return $statement->rowCount ();
+		} elseif (stripos ( $sql, 'insert' ) === 0 and stripos ( $sql, 'returning' ) !== false) {
+			return $this->fetch ( $statement, Config::get ( 'database.fetch' ) );
+		} else {
+			return $result;
+		}
+	}
+
+	/**
+	 * 执行Mysql查询
+	 *
+	 * The PDO statement and boolean result will be returned in an array.
+	 *
+	 * @param string $sql
+	 * @param array $bindings
+	 * @return array
+	 */
+	protected function execute($sql, $bindings = [])
+	{
+		$bindings = ( array ) $bindings;
+		$bindings = array_filter ( $bindings, function ($binding)
+		{
+			return ! $binding instanceof Expression;
+		} );
+		$bindings = array_values ( $bindings );
+		$sql = $this->grammar ()->shortcut ( $sql, $bindings );
+		$datetime = $this->grammar ()->datetime;
+		for($i = 0; $i < count ( $bindings ); $i ++) {
+			if ($bindings [$i] instanceof \DateTime) {
+				$bindings [$i] = $bindings [$i]->format ( $datetime );
+			}
+		}
+		try {
+			$statement = $this->pdo->prepare ( $sql );
+			$start = microtime ( true );
+			$result = $statement->execute ( $bindings );
+		} catch ( \Exception $exception ) {
+			$exception = new Exception ( $sql, $bindings, $exception );
+			throw $exception;
+		}
+		if (Config::get ( 'database.profile' )) {
+			$this->log ( $sql, $bindings, $start );
+		}
+		return [ $statement,$result ];
+	}
+
+	/**
 	 * 执行数据库事务
 	 *
 	 * @param callback $callback
@@ -162,11 +265,7 @@ class Connection extends Injectable
 		if (! is_object ( $this->event )) {
 			$this->event = $this->_dependencyInjector->getShared ( $this->event );
 		}
-		$this->event->trigger ( 'leaps.query', [
-				$sql,
-				$bindings,
-				$time
-		] );
+		$this->event->trigger ( 'leaps.query', [ $sql,$bindings,$time ] );
 		static::$queries [] = compact ( 'sql', 'bindings', 'time' );
 	}
 
