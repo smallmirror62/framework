@@ -15,50 +15,44 @@ use Leaps\Di\Injectable;
 class Logger extends Injectable
 {
 	/**
-	 * Error message level.
-	 * An error message is one that indicates the abnormal termination of the
-	 * application and may require developer's handling.
+	 * Error 级别
 	 */
 	const LEVEL_ERROR = 0x01;
+
 	/**
-	 * Warning message level.
-	 * A warning message is one that indicates some abnormal happens but
-	 * the application is able to continue to run. Developers should pay attention to this message.
+	 * Warning 级别
 	 */
 	const LEVEL_WARNING = 0x02;
+
 	/**
-	 * Informational message level.
-	 * An informational message is one that includes certain information
-	 * for developers to review.
+	 * Informational 级别
 	 */
 	const LEVEL_INFO = 0x04;
+
 	/**
-	 * Tracing message level.
-	 * An tracing message is one that reveals the code execution flow.
+	 * Tracing 级别
 	 */
 	const LEVEL_TRACE = 0x08;
+
 	/**
-	 * Profiling message level.
-	 * This indicates the message is for profiling purpose.
+	 * Profiling 级别
 	 */
 	const LEVEL_PROFILE = 0x40;
+
 	/**
-	 * Profiling message level.
-	 * This indicates the message is for profiling purpose. It marks the
-	 * beginning of a profiling block.
+	 * Profiling 级别
 	 */
 	const LEVEL_PROFILE_BEGIN = 0x50;
+
 	/**
-	 * Profiling message level.
-	 * This indicates the message is for profiling purpose. It marks the
-	 * end of a profiling block.
+	 * Profiling 级别
 	 */
 	const LEVEL_PROFILE_END = 0x60;
 
 	/**
-	 *
-	 * @var array logged messages. This property is managed by [[log()]] and [[flush()]].
-	 *      Each log message is of the following structure:
+	 * 日志消息
+	 * @var array 日志消息
+	 *      每个日志消息都是以下结构:
 	 *
 	 *      ~~~
 	 *      [
@@ -71,54 +65,42 @@ class Logger extends Injectable
 	 *      ~~~
 	 */
 	public $messages = [ ];
+
 	/**
-	 *
+	 * 在刷新内存和发送到目标之前，应记录多少信息。
 	 * @var integer how many messages should be logged before they are flushed from memory and sent to targets.
-	 *      Defaults to 1000, meaning the [[flush]] method will be invoked once every 1000 messages logged.
-	 *      Set this property to be 0 if you don't want to flush messages until the application terminates.
-	 *      This property mainly affects how much memory will be taken by the logged messages.
-	 *      A smaller value means less memory, but will increase the execution time due to the overhead of [[flush()]].
 	 */
 	public $flushInterval = 1000;
+
 	/**
-	 *
+	 * 每一条消息应记录多少调用堆栈信息（文件名和行数）。
 	 * @var integer how much call stack information (file name and line number) should be logged for each message.
-	 *      If it is greater than 0, at most that number of call stacks will be logged. Note that only application
-	 *      call stacks are counted.
 	 */
 	public $traceLevel = 0;
+
 	/**
-	 *
-	 * @var Dispatcher the message dispatcher
+	 * 消息调度器
+	 * @var Dispatcher
 	 */
 	public $dispatcher;
 
 	/**
-	 * Initializes the logger by registering [[flush()]] as a shutdown function.
+	 * 初始化
 	 */
 	public function init()
 	{
-		parent::init ();
 		register_shutdown_function ( function () {
-			// make regular flush before other shutdown functions, which allows session data collection and so on
 			$this->flush ();
-			// make sure log entries written by shutdown functions are also flushed
-			// ensure "flush()" is called last when there are multiple shutdown functions
 			register_shutdown_function ( [ $this,'flush' ], true );
 		} );
 	}
 
 	/**
-	 * Logs a message with the given type and category.
-	 * If [[traceLevel]] is greater than 0, additional call stack information about
-	 * the application code will be logged as well.
+	 * 记录指定类型和类别的消息。
 	 *
-	 * @param string|array $message the message to be logged. This can be a simple string or a more
-	 *        complex data structure that will be handled by a [[Target|log target]].
-	 * @param integer $level the level of the message. This must be one of the following:
-	 *        `Logger::LEVEL_ERROR`, `Logger::LEVEL_WARNING`, `Logger::LEVEL_INFO`, `Logger::LEVEL_TRACE`,
-	 *        `Logger::LEVEL_PROFILE_BEGIN`, `Logger::LEVEL_PROFILE_END`.
-	 * @param string $category the category of the message.
+	 * @param string|array $message 消息内容
+	 * @param integer $level 消息类别
+	 * @param string $category 消息分类
 	 */
 	public function log($message, $level, $category = 'application')
 	{
@@ -145,7 +127,7 @@ class Logger extends Injectable
 	}
 
 	/**
-	 * Flushes log messages from memory to targets.
+	 * 将日志发送给记录器
 	 *
 	 * @param boolean $final whether this is a final call during a request.
 	 */
@@ -161,10 +143,7 @@ class Logger extends Injectable
 	}
 
 	/**
-	 * Returns the total elapsed time since the start of the current request.
-	 * This method calculates the difference between now and the timestamp
-	 * defined by constant `YII_BEGIN_TIME` which is evaluated at the beginning
-	 * of [[\yii\BaseYii]] class file.
+	 * 返回当前请求的总共时间
 	 *
 	 * @return float the total elapsed time in seconds for current request.
 	 */
@@ -174,11 +153,7 @@ class Logger extends Injectable
 	}
 
 	/**
-	 * Returns the profiling results.
-	 *
-	 * By default, all profiling results will be returned. You may provide
-	 * `$categories` and `$excludeCategories` as parameters to retrieve the
-	 * results that you are interested in.
+	 * 返回分析结果
 	 *
 	 * @param array $categories list of categories that you are interested in.
 	 *        You can use an asterisk at the end of a category to do a prefix match.
@@ -226,9 +201,7 @@ class Logger extends Injectable
 	}
 
 	/**
-	 * Returns the statistical results of DB queries.
-	 * The results returned include the number of SQL statements executed and
-	 * the total time spent.
+	 * 返回数据库查询的统计结果
 	 *
 	 * @return array the first element indicates the number of SQL statements executed,
 	 *         and the second element the total time spent in SQL execution.
@@ -241,12 +214,11 @@ class Logger extends Injectable
 		foreach ( $timings as $timing ) {
 			$time += $timing ['duration'];
 		}
-
 		return [ $count,$time ];
 	}
 
 	/**
-	 * Calculates the elapsed time for the given log messages.
+	 * 计算指定日志消息的运行时间
 	 *
 	 * @param array $messages the log messages obtained from profiling
 	 * @return array timings. Each element is an array consisting of these elements:
@@ -256,7 +228,6 @@ class Logger extends Injectable
 	{
 		$timings = [ ];
 		$stack = [ ];
-
 		foreach ( $messages as $i => $log ) {
 			list ( $token, $level, $category, $timestamp, $traces ) = $log;
 			$log [5] = $i;
@@ -268,14 +239,12 @@ class Logger extends Injectable
 				}
 			}
 		}
-
 		ksort ( $timings );
-
 		return array_values ( $timings );
 	}
 
 	/**
-	 * Returns the text display of the specified level.
+	 * 获取日志级别对应的可读字符串
 	 *
 	 * @param integer $level the message level, e.g. [[LEVEL_ERROR]], [[LEVEL_WARNING]].
 	 * @return string the text display of the level
@@ -283,7 +252,6 @@ class Logger extends Injectable
 	public static function getLevelName($level)
 	{
 		static $levels = [ self::LEVEL_ERROR => 'error',self::LEVEL_WARNING => 'warning',self::LEVEL_INFO => 'info',self::LEVEL_TRACE => 'trace',self::LEVEL_PROFILE_BEGIN => 'profile begin',self::LEVEL_PROFILE_END => 'profile end' ];
-
 		return isset ( $levels [$level] ) ? $levels [$level] : 'unknown';
 	}
 }

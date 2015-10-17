@@ -10,6 +10,7 @@
 // +----------------------------------------------------------------------
 namespace Leaps;
 
+use Leaps\Log\Logger;
 use Leaps\Core\InvalidConfigException;
 use Leaps\Core\UnknownClassException;
 use Leaps\Core\InvalidParamException;
@@ -38,6 +39,7 @@ defined ( 'LEAPS_ENABLE_ERROR_HANDLER' ) or define ( 'LEAPS_ENABLE_ERROR_HANDLER
 
 /**
  * Leaps 基类
+ *
  * @author xutongle
  *
  */
@@ -174,9 +176,7 @@ class Kernel
 				if (empty ( $definition )) {
 					$instance = $reflection->newInstance ();
 				} else {
-					$instance = $reflection->newInstanceArgs ( [
-							$definition
-					] );
+					$instance = $reflection->newInstanceArgs ( [ $definition ] );
 				}
 			}
 		} elseif (is_array ( $definition ) && $throwException) {
@@ -240,18 +240,13 @@ class Kernel
 				if ($pos === false) {
 					static::$_aliases [$root] = $path;
 				} else {
-					static::$_aliases [$root] = [
-							$alias => $path
-					];
+					static::$_aliases [$root] = [ $alias => $path ];
 				}
 			} elseif (is_string ( static::$_aliases [$root] )) {
 				if ($pos === false) {
 					static::$_aliases [$root] = $path;
 				} else {
-					static::$_aliases [$root] = [
-							$alias => $path,
-							$root => static::$_aliases [$root]
-					];
+					static::$_aliases [$root] = [ $alias => $path,$root => static::$_aliases [$root] ];
 				}
 			} else {
 				static::$_aliases [$root] [$alias] = $path;
@@ -412,11 +407,109 @@ class Kernel
 	{
 		return Version::get ();
 	}
-	public static function trace()
+	private static $_logger;
+
+	/**
+	 * 日志消息记录器
+	 *
+	 * @return Logger message logger
+	 */
+	public static function getLogger()
 	{
+		if (self::$_logger !== null) {
+			return self::$_logger;
+		} else {
+			return self::$_logger = static::createObject ( 'Leaps\Log\Logger' );
+		}
 	}
-	public static function error()
+
+	/**
+	 * 设置日志消息记录器
+	 *
+	 * @param Logger $logger the logger object.
+	 */
+	public static function setLogger($logger)
 	{
+		self::$_logger = $logger;
+	}
+
+	/**
+	 * 记录跟踪日志
+	 *
+	 * @param string $message 消息内容
+	 * @param string $category 消息分类
+	 */
+	public static function trace($message, $category = 'application')
+	{
+		if (LEAPS_DEBUG) {
+			static::getLogger ()->log ( $message, Logger::LEVEL_TRACE, $category );
+		}
+	}
+
+	/**
+	 * 记录错误日志
+	 *
+	 * @param string $message 消息内容
+	 * @param string $category 消息分类
+	 */
+	public static function error($message, $category = 'application')
+	{
+		static::getLogger ()->log ( $message, Logger::LEVEL_ERROR, $category );
+	}
+
+	/**
+	 * 记录警告日志
+	 *
+	 * @param string $message 消息内容
+	 * @param string $category 消息分类
+	 */
+	public static function warning($message, $category = 'application')
+	{
+		static::getLogger ()->log ( $message, Logger::LEVEL_WARNING, $category );
+	}
+
+	/**
+	 * 记录信息日志
+	 *
+	 * @param string $message 消息内容
+	 * @param string $category 消息分类
+	 */
+	public static function info($message, $category = 'application')
+	{
+		static::getLogger ()->log ( $message, Logger::LEVEL_INFO, $category );
+	}
+
+	/**
+	 * 标志分析代码块开始
+	 *
+	 * ~~~
+	 * \Leaps\Kernel::beginProfile('block1');
+	 * // some code to be profiled
+	 * \Leaps\Kernel::beginProfile('block2');
+	 * // some other code to be profiled
+	 * \Leaps\Kernel::endProfile('block2');
+	 * \Leaps\Kernel::endProfile('block1');
+	 * ~~~
+	 *
+	 * @param string $token 代码块令牌
+	 * @param string $category 消息分类
+	 * @see endProfile()
+	 */
+	public static function beginProfile($token, $category = 'application')
+	{
+		static::getLogger ()->log ( $token, Logger::LEVEL_PROFILE_BEGIN, $category );
+	}
+
+	/**
+	 * 标志分析代码块结束
+	 *
+	 * @param string $token 代码块令牌
+	 * @param string $category 消息分类
+	 * @see beginProfile()
+	 */
+	public static function endProfile($token, $category = 'application')
+	{
+		static::getLogger ()->log ( $token, Logger::LEVEL_PROFILE_END, $category );
 	}
 
 	/**

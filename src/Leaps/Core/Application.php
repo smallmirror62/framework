@@ -316,6 +316,9 @@ abstract class Application extends Module
 				"file" => [
 						"className" => "Leaps\\Filesystem\\Filesystem"
 				],
+				"log" => [
+						"className" => "Leaps\\Log\\Dispatcher"
+				],
 				"crypt" => [
 						"className" => "Leaps\\Crypt\\Crypt"
 				],
