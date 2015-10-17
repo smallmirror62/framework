@@ -10,37 +10,35 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Db\Eloquent;
 
-use Laravel\Str;
-use Laravel\Event;
-use Leaps\Database;
-use Leaps\Database\Eloquent\Relationships\Has_Many_And_Belongs_To;
+use Leaps\Utility\Str;
+use Leaps\Db\Db;
 
 abstract class Model
 {
 
 	/**
-	 * All of the model's attributes.
+	 * 模型属性
 	 *
 	 * @var array
 	 */
 	public $attributes = [ ];
 
 	/**
-	 * The model's attributes in their original state.
+	 * 原始模型属性
 	 *
 	 * @var array
 	 */
 	public $original = [ ];
 
 	/**
-	 * The relationships that have been loaded for the query.
+	 * 已经加载的查询关系
 	 *
 	 * @var array
 	 */
-	public $relationships = [ ];
+	public $relationship = [ ];
 
 	/**
-	 * Indicates if the model exists in the database.
+	 * 数据库中是否存在该模型
 	 *
 	 * @var bool
 	 */
@@ -51,81 +49,81 @@ abstract class Model
 	 *
 	 * @var array
 	 */
-	public $includes = array ();
+	public $include = [ ];
 
 	/**
-	 * The primary key for the model on the database table.
+	 * 主键名称
 	 *
 	 * @var string
 	 */
 	public static $key = 'id';
 
 	/**
-	 * The attributes that are accessible for mass assignment.
+	 * 可批量赋值的属性
 	 *
 	 * @var array
 	 */
 	public static $accessible;
 
 	/**
-	 * The attributes that should be excluded from to_array.
+	 * 隐藏的字段
 	 *
 	 * @var array
 	 */
 	public static $hidden = [ ];
 
 	/**
-	 * Indicates if the model has update and creation timestamps.
+	 * 自动创建模型创建和更新时间戳
 	 *
 	 * @var bool
 	 */
 	public static $timestamps = true;
 
 	/**
-	 * The name of the table associated with the model.
+	 * 模型表明
 	 *
 	 * @var string
 	 */
 	public static $table;
 
 	/**
-	 * The name of the database connection that should be used for the model.
+	 * 模型的数据库连接
 	 *
 	 * @var string
 	 */
 	public static $connection;
 
 	/**
-	 * The name of the sequence associated with the model.
+	 * 与模型关联序列的名称
 	 *
 	 * @var string
 	 */
 	public static $sequence;
 
 	/**
-	 * The default number of models to show per page when paginating.
+	 * 默认每页的分页数量
 	 *
 	 * @var int
 	 */
 	public static $perPage = 20;
 
 	/**
-	 * Create a new Eloquent model instance.
+	 * 构造方法
 	 *
-	 * @param array $attributes
-	 * @param bool $exists
+	 * @param array $attribute 属性
+	 * @param bool $exist 是否存在
 	 * @return void
 	 */
-	public function __construct($attributes = [], $exists = false)
+	public function __construct($attributes = [], $exist = false)
 	{
-		$this->exists = $exists;
+		$this->exist = $exist;
 		$this->fill ( $attributes );
 	}
 
 	/**
-	 * Hydrate the model with an array of attributes.
+	 * 用一个数组来模拟模型
 	 *
-	 * @param array $attributes
+	 * @param array $attributes 属性数组
 	 * @param bool $raw
 	 * @return Model
 	 */
@@ -151,11 +149,9 @@ abstract class Model
 	}
 
 	/**
-	 * Fill the model with the contents of the array.
+	 * 用数组内容填充模型
 	 *
-	 * No mutators or accessibility checks will be accounted for.
-	 *
-	 * @param array $attributes
+	 * @param array $attributes 属性数组
 	 * @return Model
 	 */
 	public function fillRaw(array $attributes)
@@ -164,25 +160,24 @@ abstract class Model
 	}
 
 	/**
-	 * Set the accessible attributes for the given model.
+	 * 设置模型的可访问属性
 	 *
-	 * @param array $attributes
+	 * @param array $attributes 属性
 	 * @return void
 	 */
 	public static function accessible($attributes = null)
 	{
-		if (is_null ( $attributes ))
+		if (is_null ( $attributes )) {
 			return static::$accessible;
+		}
 		static::$accessible = $attributes;
 	}
 
 	/**
-	 * Create a new model and store it in the database.
+	 * 创建一个新的模型到数据库
 	 *
-	 * If save is successful, the model will be returned, otherwise false.
-	 *
-	 * @param array $attributes
-	 * @return Model|false
+	 * @param array $attributes 模型属性
+	 * @return Model|false 如果成功返回模型实例，否者返回false
 	 */
 	public static function create($attributes)
 	{
@@ -192,47 +187,49 @@ abstract class Model
 	}
 
 	/**
-	 * Update a model instance in the database.
+	 * 更新模型实例到数据库
 	 *
-	 * @param mixed $id
-	 * @param array $attributes
+	 * @param mixed $id 主键ID
+	 * @param array $attributes 模型属性
 	 * @return int
 	 */
 	public static function update($id, $attributes)
 	{
-		$model = new static ( array (), true );
+		$model = new static ( [ ], true );
 		$model->fill ( $attributes );
-		if (static::$timestamps)
+		if (static::$timestamps) {
 			$model->timestamp ();
+		}
 		return $model->query ()->where ( $model->key (), '=', $id )->update ( $model->attributes );
 	}
 
 	/**
-	 * Get all of the models in the database.
+	 * 从数据库获取所有模型
 	 *
 	 * @return array
 	 */
 	public static function all()
 	{
-		return with ( new static () )->query ()->get ();
+		$res = new static ();
+		return $res->query ()->get ();
 	}
 
 	/**
-	 * The relationships that should be eagerly loaded by the query.
+	 * 设置查询关系
 	 *
 	 * @param array $includes
 	 * @return Model
 	 */
 	public function _with($includes)
 	{
-		$this->includes = ( array ) $includes;
+		$this->include = ( array ) $includes;
 		return $this;
 	}
 
 	/**
-	 * Get the query for a one-to-one association.
+	 * 获得一对一关联的查询
 	 *
-	 * @param string $model
+	 * @param string $model 模型
 	 * @param string $foreign
 	 * @return Relationship
 	 */
@@ -242,7 +239,7 @@ abstract class Model
 	}
 
 	/**
-	 * Get the query for a one-to-many association.
+	 * 获得一对多关联的查询
 	 *
 	 * @param string $model
 	 * @param string $foreign
@@ -263,15 +260,15 @@ abstract class Model
 	 */
 	protected function hasOneOrMany($type, $model, $foreign)
 	{
-		if ($type == 'has_one') {
-			return new Relationship\HasOne ( $this, $model, $foreign );
+		if ($type == 'hasOne') {
+			return new \Leaps\Db\Eloquent\Relationship\HasOne ( $this, $model, $foreign );
 		} else {
-			return new Relationship\HasMany ( $this, $model, $foreign );
+			return new \Leaps\Db\Eloquent\Relationship\HasMany ( $this, $model, $foreign );
 		}
 	}
 
 	/**
-	 * Get the query for a one-to-one (inverse) relationship.
+	 * 得到一对一的查询（反向）关系
 	 *
 	 * @param string $model
 	 * @param string $foreign
@@ -281,15 +278,13 @@ abstract class Model
 	{
 		if (is_null ( $foreign )) {
 			list ( , $caller ) = debug_backtrace ( false );
-
 			$foreign = "{$caller['function']}_id";
 		}
-
-		return new Relationship\BelongsTo ( $this, $model, $foreign );
+		return new \Leaps\Db\Eloquent\Relationship\BelongsTo ( $this, $model, $foreign );
 	}
 
 	/**
-	 * Get the query for a many-to-many relationship.
+	 * 获取一个多对多关系的查询
 	 *
 	 * @param string $model
 	 * @param string $table
@@ -299,20 +294,20 @@ abstract class Model
 	 */
 	public function HasManyAndBelongsTo($model, $table = null, $foreign = null, $other = null)
 	{
-		return new HasManyAndBelongsTo ( $this, $model, $table, $foreign, $other );
+		return new \Leaps\Db\Eloquent\Relationship\HasManyAndBelongsTo ( $this, $model, $table, $foreign, $other );
 	}
 
 	/**
-	 * Save the model and all of its relations to the database.
+	 * 保存模型及其所有关系到数据库
 	 *
 	 * @return bool
 	 */
 	public function push()
 	{
 		$this->save ();
-		foreach ( $this->relationships as $name => $models ) {
+		foreach ( $this->relationship as $name => $models ) {
 			if (! is_array ( $models )) {
-				$models = array ($models );
+				$models = [$models];
 			}
 			foreach ( $models as $model ) {
 				$model->push ();
@@ -321,18 +316,19 @@ abstract class Model
 	}
 
 	/**
-	 * Save the model instance to the database.
+	 * 保存模型实例到数据库
 	 *
 	 * @return bool
 	 */
 	public function save()
 	{
-		if (! $this->dirty ())
+		if (! $this->dirty ()){
 			return true;
+		}
 		if (static::$timestamps) {
 			$this->timestamp ();
 		}
-		$this->fire_event ( 'saving' );
+		$this->fireEvent ( 'saving' );
 		if ($this->exists) {
 			$query = $this->query ()->where ( static::$key, '=', $this->getKey () );
 			$result = $query->update ( $this->getDirty () ) === 1;
@@ -353,7 +349,7 @@ abstract class Model
 	}
 
 	/**
-	 * Delete the model from the database.
+	 * 从数据库删除模型
 	 *
 	 * @return int
 	 */
@@ -492,10 +488,10 @@ abstract class Model
 	}
 
 	/**
-	 * Set an attribute's value on the model.
+	 * 设置模型属性
 	 *
-	 * @param string $key
-	 * @param mixed $value
+	 * @param string $key 名称
+	 * @param mixed $value 值
 	 * @return void
 	 */
 	public function setAttribute($key, $value)
@@ -528,7 +524,7 @@ abstract class Model
 			}
 		}
 
-		foreach ( $this->relationships as $name => $models ) {
+		foreach ( $this->relationship as $name => $models ) {
 			if (in_array ( $name, static::$hidden ))
 				continue;
 			if ($models instanceof Model) {
@@ -566,12 +562,12 @@ abstract class Model
 	 */
 	public function __get($key)
 	{
-		if (array_key_exists ( $key, $this->relationships )) {
-			return $this->relationships [$key];
+		if (array_key_exists ( $key, $this->relationship )) {
+			return $this->relationship [$key];
 		} elseif (array_key_exists ( $key, $this->attributes )) {
-			return $this->{"get_{$key}"} ();
+			return $this->{"get{$key}"} ();
 		} elseif (method_exists ( $this, $key )) {
-			return $this->relationships [$key] = $this->$key ()->results ();
+			return $this->relationship [$key] = $this->$key ()->results ();
 		} else {
 			return $this->{"get_{$key}"} ();
 		}
@@ -586,7 +582,7 @@ abstract class Model
 	 */
 	public function __set($key, $value)
 	{
-		$this->{"set_{$key}"} ( $value );
+		$this->{"set{$key}"} ( $value );
 	}
 
 	/**
@@ -597,7 +593,7 @@ abstract class Model
 	 */
 	public function __isset($key)
 	{
-		foreach ( [ 'attributes','relationships' ] as $source ) {
+		foreach ( [ 'attributes','relationship' ] as $source ) {
 			if (array_key_exists ( $key, $this->{$source} ))
 				return ! empty ( $this->{$source} [$key] );
 		}
@@ -612,13 +608,13 @@ abstract class Model
 	 */
 	public function __unset($key)
 	{
-		foreach ( array ('attributes','relationships' ) as $source ) {
+		foreach ( array ('attributes','relationship' ) as $source ) {
 			unset ( $this->{$source} [$key] );
 		}
 	}
 
 	/**
-	 * Handle dynamic method calls on the model.
+	 * 动态调用模型方法
 	 *
 	 * @param string $method
 	 * @param array $parameters
@@ -626,25 +622,25 @@ abstract class Model
 	 */
 	public function __call($method, $parameters)
 	{
-		$meta = array ('key','table','connection','sequence','per_page','timestamps' );
+		$meta = ['key','table','connection','sequence','perPage','timestamps'];
 		if (in_array ( $method, $meta )) {
 			return static::$method;
 		}
-		$underscored = array ('with','query' );
+		$underscored = ['with','query'];
 		if (in_array ( $method, $underscored )) {
-			return call_user_func_array ( array ($this,'_' . $method ), $parameters );
+			return call_user_func_array ( [$this,'_' . $method ], $parameters );
 		}
-		if (starts_with ( $method, 'get_' )) {
-			return $this->get_attribute ( substr ( $method, 4 ) );
-		} elseif (starts_with ( $method, 'set_' )) {
-			$this->set_attribute ( substr ( $method, 4 ), $parameters [0] );
+		if (Str::startsWith ( $method, 'get' )) {
+			return $this->getAttribute ( substr ( $method, 3 ) );
+		} elseif (Str::startsWith ( $method, 'set' )) {
+			$this->setAttribute ( substr ( $method, 3 ), $parameters [0] );
 		} else {
-			return call_user_func_array ( array ($this->query (),$method ), $parameters );
+			return call_user_func_array ( [$this->query (),$method ], $parameters );
 		}
 	}
 
 	/**
-	 * Dynamically handle static method calls on the model.
+	 * 静态调用模型动态方法
 	 *
 	 * @param string $method
 	 * @param array $parameters

@@ -8,9 +8,9 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Laravel\Database\Eloquent\Relationships;
+namespace Leaps\Db\Eloquent\Relationship;
 
-class HasOne extends Has_One_Or_Many {
+class HasOne extends HasOneOrMany {
 
 	/**
 	 * Get the properly hydrated results for the relationship.

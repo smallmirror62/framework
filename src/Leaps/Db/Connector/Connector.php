@@ -44,7 +44,7 @@ abstract class Connector
 	 * @param array $config
 	 * @return array
 	 */
-	protected function options($config)
+	protected function options(array $config)
 	{
 		$options = (isset ( $config ['options'] )) ? $config ['options'] : [ ];
 		return $options + $this->options;

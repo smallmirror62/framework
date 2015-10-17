@@ -8,11 +8,11 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Laravel\Database\Eloquent\Relationships;
+namespace Leaps\Db\Eloquent\Relationship;
 
 use Laravel\Str;
-use Laravel\Database\Eloquent\Model;
-use Laravel\Database\Eloquent\Pivot;
+use Leaps\Db\Eloquent\Model;
+use Leaps\Db\Eloquent\Pivot;
 
 class HasManyAndBelongsTo extends Relationship {
 

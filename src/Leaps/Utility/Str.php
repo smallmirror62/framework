@@ -62,8 +62,7 @@ class Str
 	}
 
 	/**
-	 * Returns the portion of string specified by the start and length parameters.
-	 * This method ensures the string is treated as a byte array by using `mb_substr()`.
+	 * 截取指定长度的字符串
 	 *
 	 * @param string $string the input string. Must be one character or longer.
 	 * @param integer $start the starting position
@@ -79,11 +78,10 @@ class Str
 	}
 
 	/**
-	 * Generates a random string based on the given type.
-	 * Type is one of the RANDOM_* constants
+	 * 创建一个随机字符串
 	 *
 	 * <code>
-	 * echo Leaps\Str::random(Leaps\Str::RANDOM_ALNUM); //"aloiwkqz"
+	 * echo Leaps\Utility\Str::random(Leaps\Utility\Str::RANDOM_ALNUM); //"aloiwkqz"
 	 * </code>
 	 *
 	 * @param int type
@@ -115,13 +113,10 @@ class Str
 				$pool = array_merge ( range ( 0, 9 ), range ( "a", "z" ), range ( "A", "Z" ) );
 				break;
 		}
-
 		$end = count ( $pool ) - 1;
-
 		while ( strlen ( $str ) < $length ) {
 			$str .= $pool [mt_rand ( 0, $end )];
 		}
-
 		return $str;
 	}
 
@@ -139,7 +134,23 @@ class Str
 	}
 
 	/**
-	 * 判断一个字符串里是否包含另一个字符串
+	 * 判断一个字符串是否包含另一个字符串
+	 *
+	 * @param string $haystack
+	 * @param string $needle
+	 * @return bool
+	 */
+	public static function contain($haystack, $needle, $ignoreCase = true)
+	{
+		if ($ignoreCase == true) {
+			return strpos ( $haystack, $needle ) !== false;
+		} else {
+			return stripos ( $haystack, $needle ) !== false;
+		}
+	}
+
+	/**
+	 * 判断一个字符串开头是否是指定开头
 	 *
 	 * <code>
 	 * echo Leaps\Str::startsWith("Hello", "He"); // true
@@ -147,17 +158,33 @@ class Str
 	 * echo Leaps\Str::startsWith("Hello", "he", false); // true
 	 * </code>
 	 *
-	 * @param string str 字符串
-	 * @param string start 要查找的字符串
-	 * @param boolean ignoreCase 是否区分大小写
+	 * @param string $haystack 字符串
+	 * @param string $needle 要查找的字符串
+	 * @param boolean $ignoreCase 是否忽略大小写
 	 * @return boolean 结果
 	 */
-	public static function startsWith($str, $start, $ignoreCase = true)
+	public static function startsWith($haystack, $needle, $ignoreCase = true)
 	{
 		if ($ignoreCase == true) {
-			return strpos ( $str, $start ) !== false;
+			return strpos ( $haystack, $needle ) === 0;
 		} else {
-			return stripos ( $str, $start ) !== false;
+			return stripos ( $haystack, $needle ) === 0;
+		}
+	}
+
+	/**
+	 * 判断字符串是否是指定结尾
+	 *
+	 * @param unknown $haystack 字符串
+	 * @param unknown $needle 要查找的字符串
+	 * @param string $ignoreCase 是否忽略大小写
+	 */
+	public static function endsWith($haystack, $needle, $ignoreCase = true)
+	{
+		if ($ignoreCase == true) {
+			return strcmp ( substr ( $haystack, strlen ( $haystack ) - strlen ( $needle ) ), $needle ) == 0;
+		} else {
+			return $needle == substr ( $haystack, strlen ( $haystack ) - strlen ( $needle ) );
 		}
 	}
 

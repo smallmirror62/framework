@@ -9,7 +9,7 @@
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
 namespace Leaps\Db\Eloquent\Relationship;
-
+use Leaps\Db\Eloquent\Model;
 class BelongsTo extends Relationship
 {
 
@@ -31,9 +31,8 @@ class BelongsTo extends Relationship
 	 */
 	public function update($attributes)
 	{
-		$attributes = ($attributes instanceof Model) ? $attributes->get_dirty () : $attributes;
-
-		return $this->model->update ( $this->foreign_value (), $attributes );
+		$attributes = ($attributes instanceof Model) ? $attributes->getDirty () : $attributes;
+		return $this->model->update ( $this->foreignValue (), $attributes );
 	}
 
 	/**
@@ -43,7 +42,7 @@ class BelongsTo extends Relationship
 	 */
 	protected function constrain()
 	{
-		$this->table->where ( $this->model->key (), '=', $this->foreign_value () );
+		$this->table->where ( $this->model->key (), '=', $this->foreignValue () );
 	}
 
 	/**
@@ -66,7 +65,7 @@ class BelongsTo extends Relationship
 	 * @param array $results
 	 * @return void
 	 */
-	public function eagerly_constrain($results)
+	public function eagerlyConstrain($results)
 	{
 		$keys = array ();
 
@@ -74,7 +73,7 @@ class BelongsTo extends Relationship
 		// parent models and use those keys when setting the constraint since we
 		// are looking for the parent of a child model in this relationship.
 		foreach ( $results as $result ) {
-			if (! is_null ( $key = $result->{$this->foreign_key ()} )) {
+			if (! is_null ( $key = $result->{$this->foreignKey ()} )) {
 				$keys [] = $key;
 			}
 		}
@@ -82,7 +81,7 @@ class BelongsTo extends Relationship
 		if (count ( $keys ) == 0)
 			$keys = array (0 );
 
-		$this->table->where_in ( $this->model->key (), array_unique ( $keys ) );
+		$this->table->whereIn ( $this->model->key (), array_unique ( $keys ) );
 	}
 
 	/**
@@ -94,14 +93,11 @@ class BelongsTo extends Relationship
 	 */
 	public function match($relationship, &$children, $parents)
 	{
-		$foreign = $this->foreign_key ();
-
-		$dictionary = array ();
-
+		$foreign = $this->foreignKey ();
+		$dictionary = [];
 		foreach ( $parents as $parent ) {
-			$dictionary [$parent->get_key ()] = $parent;
+			$dictionary [$parent->getKey ()] = $parent;
 		}
-
 		foreach ( $children as $child ) {
 			if (array_key_exists ( $child->$foreign, $dictionary )) {
 				$child->relationships [$relationship] = $dictionary [$child->$foreign];
@@ -114,9 +110,9 @@ class BelongsTo extends Relationship
 	 *
 	 * @return mixed
 	 */
-	public function foreign_value()
+	public function foreignValue()
 	{
-		return $this->base->get_attribute ( $this->foreign );
+		return $this->base->getAttribute ( $this->foreign );
 	}
 
 	/**
@@ -127,7 +123,6 @@ class BelongsTo extends Relationship
 	public function bind($id)
 	{
 		$this->base->fill ( array ($this->foreign => $id ) )->save ();
-
 		return $this->base;
 	}
 }

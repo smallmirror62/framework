@@ -8,9 +8,9 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Laravel\Database\Eloquent\Relationships;
+namespace Leaps\Db\Eloquent\Relationship;
 
-use Laravel\Database\Eloquent\Model;
+use Leaps\Db\Eloquent\Model;
 
 class HasOneOrMany extends Relationship {
 
@@ -27,7 +27,6 @@ class HasOneOrMany extends Relationship {
 		if ($attributes instanceof Model)
 		{
 			$attributes->set_attribute($this->foreign_key(), $this->base->get_key());
-
 			return $attributes->save() ? $attributes : false;
 		}
 		else

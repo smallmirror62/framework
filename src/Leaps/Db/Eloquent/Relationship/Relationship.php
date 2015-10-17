@@ -17,14 +17,14 @@ abstract class Relationship extends Query
 {
 
 	/**
-	 * The base model for the relationship.
+	 * 关系的基础模型
 	 *
 	 * @var Model
 	 */
 	protected $base;
 
 	/**
-	 * Create a new has one or many association instance.
+	 * 创建一个有一个或多个关联新的实例
 	 *
 	 * @param Model $model
 	 * @param string $associated
@@ -34,21 +34,17 @@ abstract class Relationship extends Query
 	public function __construct($model, $associated, $foreign)
 	{
 		$this->foreign = $foreign;
-
 		if ($associated instanceof Model) {
 			$this->model = $associated;
 		} else {
 			$this->model = new $associated ();
 		}
-
 		if ($model instanceof Model) {
 			$this->base = $model;
 		} else {
 			$this->base = new $model ();
 		}
-
 		$this->table = $this->table ();
-
 		$this->constrain ();
 	}
 
@@ -61,12 +57,12 @@ abstract class Relationship extends Query
 	 */
 	public static function foreign($model, $foreign = null)
 	{
-		if (! is_null ( $foreign ))
+		if (! is_null ( $foreign )){
 			return $foreign;
+		}
 		if (is_object ( $model )) {
 			$model = class_basename ( $model );
 		}
-
 		return strtolower ( basename ( $model ) . '_id' );
 	}
 
@@ -76,10 +72,9 @@ abstract class Relationship extends Query
 	 * @param array $attributes
 	 * @return Model
 	 */
-	protected function fresh_model($attributes = array())
+	protected function freshModel($attributes = [])
 	{
 		$class = get_class ( $this->model );
-
 		return new $class ( $attributes );
 	}
 
@@ -88,7 +83,7 @@ abstract class Relationship extends Query
 	 *
 	 * @return string
 	 */
-	public function foreign_key()
+	public function foreignKey()
 	{
 		return static::foreign ( $this->base, $this->foreign );
 	}
@@ -101,12 +96,10 @@ abstract class Relationship extends Query
 	 */
 	public function keys($results)
 	{
-		$keys = array ();
-
+		$keys = [];
 		foreach ( $results as $result ) {
-			$keys [] = $result->get_key ();
+			$keys [] = $result->getKey ();
 		}
-
 		return array_unique ( $keys );
 	}
 
@@ -119,7 +112,6 @@ abstract class Relationship extends Query
 	public function with($includes)
 	{
 		$this->model->includes = ( array ) $includes;
-
 		return $this;
 	}
 }
