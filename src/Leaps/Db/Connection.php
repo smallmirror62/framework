@@ -86,7 +86,7 @@ class Connection extends Injectable
 	/**
 	 * 为连接创建新的查询语法
 	 *
-	 * @return Query\Grammars\Grammar
+	 * @return \Leaps\Db\Query\Grammar\Grammar
 	 */
 	protected function grammar()
 	{

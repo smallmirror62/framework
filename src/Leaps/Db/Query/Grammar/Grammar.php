@@ -16,29 +16,18 @@ class Grammar extends \Leaps\Db\Grammar
 {
 
 	/**
-	 * The format for properly saving a DateTime.
+	 * 保存的时间戳格式
 	 *
 	 * @var string
 	 */
 	public $datetime = 'Y-m-d H:i:s';
 
 	/**
-	 * All of the query components in the order they should be built.
+	 * 所有查询组件
 	 *
 	 * @var array
 	 */
-	protected $components = [
-			'aggregate',
-			'selects',
-			'from',
-			'joins',
-			'wheres',
-			'groupings',
-			'havings',
-			'orderings',
-			'limit',
-			'offset'
-	];
+	protected $components = [ 'aggregate','selects','from','joins','wheres','groupings','havings','orderings','limit','offset' ];
 
 	/**
 	 * Compile a SQL SELECT statement from a Query instance.
@@ -52,7 +41,7 @@ class Grammar extends \Leaps\Db\Grammar
 	}
 
 	/**
-	 * Generate the SQL for every component of the query.
+	 * 生成的SQL查询的每一部分
 	 *
 	 * @param Query $query
 	 * @return array
@@ -61,10 +50,7 @@ class Grammar extends \Leaps\Db\Grammar
 	{
 		foreach ( $this->components as $component ) {
 			if (! is_null ( $query->$component )) {
-				$sql [$component] = call_user_func ( array (
-						$this,
-						$component
-				), $query );
+				$sql [$component] = call_user_func ( [$this,$component], $query );
 			}
 		}
 		return ( array ) $sql;
@@ -78,27 +64,29 @@ class Grammar extends \Leaps\Db\Grammar
 	 */
 	final protected function concatenate($components)
 	{
-		return implode ( ' ', array_filter ( $components, function ($value) {
+		return implode ( ' ', array_filter ( $components, function ($value)
+		{
 			return ( string ) $value !== '';
 		} ) );
 	}
 
 	/**
-	 * Compile the SELECT clause for a query.
+	 * 编译 SELECT 子句
 	 *
 	 * @param Query $query
 	 * @return string
 	 */
 	protected function selects(Query $query)
 	{
-		if (! is_null ( $query->aggregate ))
+		if (! is_null ( $query->aggregate )) {
 			return;
+		}
 		$select = ($query->distinct) ? 'SELECT DISTINCT ' : 'SELECT ';
 		return $select . $this->columnize ( $query->selects );
 	}
 
 	/**
-	 * Compile an aggregating SELECT clause for a query.
+	 * 编译聚合 SELECT 子句
 	 *
 	 * @param Query $query
 	 * @return string
@@ -113,7 +101,7 @@ class Grammar extends \Leaps\Db\Grammar
 	}
 
 	/**
-	 * Compile the FROM clause for a query.
+	 * 编译 FROM 子句
 	 *
 	 * @param Query $query
 	 * @return string
@@ -124,7 +112,7 @@ class Grammar extends \Leaps\Db\Grammar
 	}
 
 	/**
-	 * Compile the JOIN clauses for a query.
+	 * 编译JOIN子句
 	 *
 	 * @param Query $query
 	 * @return string
@@ -140,10 +128,7 @@ class Grammar extends \Leaps\Db\Grammar
 				$column2 = $this->wrap ( $column2 );
 				$clauses [] = "{$connector} {$column1} {$operator} {$column2}";
 			}
-			$search = array (
-					'AND ',
-					'OR '
-			);
+			$search = array ('AND ','OR ' );
 			$clauses [0] = str_replace ( $search, '', $clauses [0] );
 			$clauses = implode ( ' ', $clauses );
 			$sql [] = "{$join->type} JOIN {$table} ON {$clauses}";
@@ -152,15 +137,16 @@ class Grammar extends \Leaps\Db\Grammar
 	}
 
 	/**
-	 * Compile the WHERE clause for a query.
+	 * 编译查询WHERE
 	 *
 	 * @param Query $query
 	 * @return string
 	 */
 	final protected function wheres(Query $query)
 	{
-		if (is_null ( $query->wheres ))
+		if (is_null ( $query->wheres )) {
 			return '';
+		}
 		foreach ( $query->wheres as $where ) {
 			$sql [] = $where ['connector'] . ' ' . $this->{$where ['type']} ( $where );
 		}
@@ -170,7 +156,7 @@ class Grammar extends \Leaps\Db\Grammar
 	}
 
 	/**
-	 * Compile a nested WHERE clause.
+	 * 编译嵌套 WHERE 子句
 	 *
 	 * @param array $where
 	 * @return string
@@ -181,7 +167,7 @@ class Grammar extends \Leaps\Db\Grammar
 	}
 
 	/**
-	 * Compile a simple WHERE clause.
+	 * 编译标准 WHERE 子句
 	 *
 	 * @param array $where
 	 * @return string
@@ -193,7 +179,7 @@ class Grammar extends \Leaps\Db\Grammar
 	}
 
 	/**
-	 * Compile a WHERE IN clause.
+	 * 编译 WHERE IN 子句
 	 *
 	 * @param array $where
 	 * @return string
@@ -205,7 +191,7 @@ class Grammar extends \Leaps\Db\Grammar
 	}
 
 	/**
-	 * Compile a WHERE NOT IN clause.
+	 * 编译 WHERE NOT IN 子句
 	 *
 	 * @param array $where
 	 * @return string
@@ -217,7 +203,7 @@ class Grammar extends \Leaps\Db\Grammar
 	}
 
 	/**
-	 * Compile a WHERE BETWEEN clause
+	 * 编译 WHERE BETWEEN 子句
 	 *
 	 * @param array $where
 	 * @return string
@@ -230,7 +216,7 @@ class Grammar extends \Leaps\Db\Grammar
 	}
 
 	/**
-	 * Compile a WHERE NOT BETWEEN clause
+	 * 编译 WHERE NOT BETWEEN 子句
 	 *
 	 * @param array $where
 	 * @return string
@@ -239,12 +225,11 @@ class Grammar extends \Leaps\Db\Grammar
 	{
 		$min = $this->parameter ( $where ['min'] );
 		$max = $this->parameter ( $where ['max'] );
-
 		return $this->wrap ( $where ['column'] ) . ' NOT BETWEEN ' . $min . ' AND ' . $max;
 	}
 
 	/**
-	 * Compile a WHERE NULL clause.
+	 * 编译 WHERE NULL 子句
 	 *
 	 * @param array $where
 	 * @return string
@@ -255,7 +240,7 @@ class Grammar extends \Leaps\Db\Grammar
 	}
 
 	/**
-	 * Compile a WHERE NULL clause.
+	 * 编译 WHERE NULL 子句
 	 *
 	 * @param array $where
 	 * @return string
@@ -266,7 +251,7 @@ class Grammar extends \Leaps\Db\Grammar
 	}
 
 	/**
-	 * Compile a raw WHERE clause.
+	 * 编译 原始SQL 子句
 	 *
 	 * @param array $where
 	 * @return string
@@ -277,7 +262,7 @@ class Grammar extends \Leaps\Db\Grammar
 	}
 
 	/**
-	 * Compile the GROUP BY clause for a query.
+	 * 编译 GROUP BY 子句
 	 *
 	 * @param Query $query
 	 * @return string
@@ -288,7 +273,7 @@ class Grammar extends \Leaps\Db\Grammar
 	}
 
 	/**
-	 * Compile the HAVING clause for a query.
+	 * 编译 HAVING 子句
 	 *
 	 * @param Query $query
 	 * @return string
@@ -304,7 +289,7 @@ class Grammar extends \Leaps\Db\Grammar
 	}
 
 	/**
-	 * Compile the ORDER BY clause for a query.
+	 * 编译 ORDER BY 子句
 	 *
 	 * @param Query $query
 	 * @return string
@@ -318,7 +303,7 @@ class Grammar extends \Leaps\Db\Grammar
 	}
 
 	/**
-	 * Compile the LIMIT clause for a query.
+	 * 编译 LIMIT 子句
 	 *
 	 * @param Query $query
 	 * @return string
@@ -329,7 +314,7 @@ class Grammar extends \Leaps\Db\Grammar
 	}
 
 	/**
-	 * Compile the OFFSET clause for a query.
+	 * 编译 OFFSET 子句
 	 *
 	 * @param Query $query
 	 * @return string
@@ -340,9 +325,7 @@ class Grammar extends \Leaps\Db\Grammar
 	}
 
 	/**
-	 * Compile a SQL INSERT statement from a Query instance.
-	 *
-	 * This method handles the compilation of single row inserts and batch inserts.
+	 * 编译插入的SQL查询语句实例
 	 *
 	 * @param Query $query
 	 * @param array $values
@@ -352,9 +335,7 @@ class Grammar extends \Leaps\Db\Grammar
 	{
 		$table = $this->wrapTable ( $query->from );
 		if (! is_array ( reset ( $values ) ))
-			$values = array (
-					$values
-			);
+			$values = [ $values ];
 		$columns = $this->columnize ( array_keys ( reset ( $values ) ) );
 		$parameters = $this->parameterize ( reset ( $values ) );
 		$parameters = implode ( ', ', array_fill ( 0, count ( $values ), "($parameters)" ) );
@@ -362,9 +343,9 @@ class Grammar extends \Leaps\Db\Grammar
 	}
 
 	/**
-	 * Compile a SQL INSERT and get ID statement from a Query instance.
+	 * 编译插入的SQL查询语句实例并获取主键ID
 	 *
-	 * @param Query $query
+	 * @param \Leaps\Db\Query $query
 	 * @param array $values
 	 * @param string $column
 	 * @return string
@@ -375,9 +356,9 @@ class Grammar extends \Leaps\Db\Grammar
 	}
 
 	/**
-	 * Compile a SQL UPDATE statement from a Query instance.
+	 * 编译更新的SQL查询语句实例
 	 *
-	 * @param Query $query
+	 * @param \Leaps\Db\Query $query
 	 * @param array $values
 	 * @return string
 	 */
@@ -392,9 +373,9 @@ class Grammar extends \Leaps\Db\Grammar
 	}
 
 	/**
-	 * Compile a SQL DELETE statement from a Query instance.
+	 * 编译删除的SQL查询语句实例。
 	 *
-	 * @param Query $query
+	 * @param \Leaps\Db\Query $query
 	 * @return string
 	 */
 	public function delete(Query $query)
