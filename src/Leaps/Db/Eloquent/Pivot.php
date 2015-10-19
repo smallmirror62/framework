@@ -14,21 +14,21 @@ class Pivot extends Model
 {
 
 	/**
-	 * The name of the pivot table's table.
+	 * 透视表的表名称
 	 *
 	 * @var string
 	 */
 	protected $pivotTable;
 
 	/**
-	 * The database connection used for this model.
+	 * 用于此模型的数据库连接
 	 *
 	 * @var \Leaps\Db\Connection
 	 */
 	protected $pivotConnection;
 
 	/**
-	 * Indicates if the model has update and creation timestamps.
+	 * 自动设置模型更新和创建时间
 	 *
 	 * @var bool
 	 */
