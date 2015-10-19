@@ -14,31 +14,31 @@ class Join
 {
 
 	/**
-	 * The type of join being performed.
+	 * 类型
 	 *
 	 * @var string
 	 */
 	public $type;
 
 	/**
-	 * The table the join clause is joining to.
+	 * 表
 	 *
 	 * @var string
 	 */
 	public $table;
 
 	/**
-	 * The ON clauses for the join.
+	 * 加入联合的子句
 	 *
 	 * @var array
 	 */
 	public $clauses = [ ];
 
 	/**
-	 * Create a new query join instance.
+	 * 创建一个新的联合查询实例
 	 *
-	 * @param string $type
-	 * @param string $table
+	 * @param string $type 联合类型
+	 * @param string $table 联合的表
 	 * @return void
 	 */
 	public function __construct($type, $table)

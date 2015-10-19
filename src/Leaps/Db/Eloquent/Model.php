@@ -63,7 +63,7 @@ abstract class Model
 	 *
 	 * @var array
 	 */
-	public static $accessible;
+	public static $fillable;
 
 	/**
 	 * 隐藏的字段
@@ -134,8 +134,8 @@ abstract class Model
 				$this->setAttribute ( $key, $value );
 				continue;
 			}
-			if (is_array ( static::$accessible )) {
-				if (in_array ( $key, static::$accessible )) {
+			if (is_array ( static::$fillable )) {
+				if (in_array ( $key, static::$fillable )) {
 					$this->$key = $value;
 				}
 			} else {
@@ -168,9 +168,9 @@ abstract class Model
 	public static function accessible($attributes = null)
 	{
 		if (is_null ( $attributes )) {
-			return static::$accessible;
+			return static::$fillable;
 		}
-		static::$accessible = $attributes;
+		static::$fillable = $attributes;
 	}
 
 	/**
