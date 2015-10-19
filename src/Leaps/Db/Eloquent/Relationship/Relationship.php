@@ -10,6 +10,7 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Db\Eloquent\Relationship;
 
+use Leaps;
 use Leaps\Db\Eloquent\Model;
 use Leaps\Db\Eloquent\Query;
 
@@ -57,11 +58,11 @@ abstract class Relationship extends Query
 	 */
 	public static function foreign($model, $foreign = null)
 	{
-		if (! is_null ( $foreign )){
+		if (! is_null ( $foreign )) {
 			return $foreign;
 		}
 		if (is_object ( $model )) {
-			$model = class_basename ( $model );
+			$model = Leaps::classBasename ( $model );
 		}
 		return strtolower ( basename ( $model ) . '_id' );
 	}
@@ -96,7 +97,7 @@ abstract class Relationship extends Query
 	 */
 	public function keys($results)
 	{
-		$keys = [];
+		$keys = [ ];
 		foreach ( $results as $result ) {
 			$keys [] = $result->getKey ();
 		}

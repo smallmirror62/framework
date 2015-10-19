@@ -10,8 +10,8 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Db\Eloquent;
 
-use Leaps\Utility\Str;
 use Leaps\Db\Db;
+use Leaps\Utility\Str;
 
 abstract class Model
 {
@@ -45,7 +45,7 @@ abstract class Model
 	public $exists = false;
 
 	/**
-	 * The relationships that should be eagerly loaded.
+	 * 模型关系
 	 *
 	 * @var array
 	 */
@@ -307,7 +307,7 @@ abstract class Model
 		$this->save ();
 		foreach ( $this->relationship as $name => $models ) {
 			if (! is_array ( $models )) {
-				$models = [$models];
+				$models = [ $models ];
 			}
 			foreach ( $models as $model ) {
 				$model->push ();
@@ -322,7 +322,7 @@ abstract class Model
 	 */
 	public function save()
 	{
-		if (! $this->dirty ()){
+		if (! $this->dirty ()) {
 			return true;
 		}
 		if (static::$timestamps) {
@@ -364,7 +364,7 @@ abstract class Model
 	}
 
 	/**
-	 * Set the update and creation timestamps on the model.
+	 * 设置模型的更新和创建时间
 	 *
 	 * @return void
 	 */
@@ -376,7 +376,7 @@ abstract class Model
 	}
 
 	/**
-	 * Updates the timestamp on the model and immediately saves it.
+	 * 更新模型的时间戳并立即保存
 	 *
 	 * @return void
 	 */
@@ -387,7 +387,7 @@ abstract class Model
 	}
 
 	/**
-	 * Get a new fluent query builder instance for the model.
+	 * 获取模型的一个新的流利查询生成器实例
 	 *
 	 * @return Query
 	 */
@@ -415,7 +415,7 @@ abstract class Model
 	 */
 	public function changed($attribute)
 	{
-		return array_get ( $this->attributes, $attribute ) != array_get ( $this->original, $attribute );
+		return $this->attributes [$attribute] != $this->original [$attribute];
 	}
 
 	/**
@@ -457,17 +457,17 @@ abstract class Model
 	}
 
 	/**
-	 * Get the value of the primary key for the model.
+	 * 获取模型主键
 	 *
 	 * @return int
 	 */
 	public function getKey()
 	{
-		return array_get ( $this->attributes, static::$key );
+		return $this->attributes [static::$key];
 	}
 
 	/**
-	 * Set the value of the primary key for the model.
+	 * 设置模型主键
 	 *
 	 * @param int $value
 	 * @return void
@@ -478,13 +478,13 @@ abstract class Model
 	}
 
 	/**
-	 * Get a given attribute from the model.
+	 * 获取模型属性
 	 *
 	 * @param string $key
 	 */
 	public function getAttribute($key)
 	{
-		return array_get ( $this->attributes, $key );
+		return $this->attributes [$key];
 	}
 
 	/**
@@ -500,7 +500,7 @@ abstract class Model
 	}
 
 	/**
-	 * Remove an attribute from the model.
+	 * 从模型中删除属性
 	 *
 	 * @param string $key
 	 */
@@ -511,13 +511,13 @@ abstract class Model
 	}
 
 	/**
-	 * Get the model attributes and relationships in array form.
+	 * 获取数组形式的模型属性和关系
 	 *
 	 * @return array
 	 */
 	public function toArray()
 	{
-		$attributes = array ();
+		$attributes = [ ];
 		foreach ( array_keys ( $this->attributes ) as $attribute ) {
 			if (! in_array ( $attribute, static::$hidden )) {
 				$attributes [$attribute] = $this->$attribute;
@@ -543,7 +543,7 @@ abstract class Model
 	}
 
 	/**
-	 * Fire a given event for the model.
+	 * 触发模型事件
 	 *
 	 * @param string $event
 	 * @return array
@@ -555,7 +555,7 @@ abstract class Model
 	}
 
 	/**
-	 * Handle the dynamic retrieval of attributes and associations.
+	 * 处理属性和关联的动态检索
 	 *
 	 * @param string $key
 	 * @return mixed
@@ -622,20 +622,20 @@ abstract class Model
 	 */
 	public function __call($method, $parameters)
 	{
-		$meta = ['key','table','connection','sequence','perPage','timestamps'];
+		$meta = [ 'key','table','connection','sequence','perPage','timestamps' ];
 		if (in_array ( $method, $meta )) {
 			return static::$method;
 		}
-		$underscored = ['with','query'];
+		$underscored = [ 'with','query' ];
 		if (in_array ( $method, $underscored )) {
-			return call_user_func_array ( [$this,'_' . $method ], $parameters );
+			return call_user_func_array ( [ $this,'_' . $method ], $parameters );
 		}
 		if (Str::startsWith ( $method, 'get' )) {
 			return $this->getAttribute ( substr ( $method, 3 ) );
 		} elseif (Str::startsWith ( $method, 'set' )) {
 			$this->setAttribute ( substr ( $method, 3 ), $parameters [0] );
 		} else {
-			return call_user_func_array ( [$this->query (),$method ], $parameters );
+			return call_user_func_array ( [ $this->query (),$method ], $parameters );
 		}
 	}
 

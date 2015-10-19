@@ -17,21 +17,21 @@ class Query
 {
 
 	/**
-	 * The model instance being queried.
+	 * 被查询的模型实例
 	 *
-	 * @var Model
+	 * @var \Leaps\Db\Model
 	 */
 	public $model;
 
 	/**
-	 * The fluent query builder for the query instance.
+	 * 表查询实例
 	 *
 	 * @var Query
 	 */
 	public $table;
 
 	/**
-	 * The relationships that should be eagerly loaded by the query.
+	 * 查询的关系
 	 *
 	 * @var array
 	 */
@@ -45,7 +45,7 @@ class Query
 	public $passthru = [ 'lists','only','insert','insert_get_id','update','increment','delete','decrement','count','min','max','avg','sum' ];
 
 	/**
-	 * Creat a new query instance for a model.
+	 * 从模型创建查询
 	 *
 	 * @param Model $model
 	 * @return void
@@ -57,7 +57,7 @@ class Query
 	}
 
 	/**
-	 * Find a model by its primary key.
+	 * 查找主键
 	 *
 	 * @param mixed $id
 	 * @param array $columns
@@ -71,19 +71,19 @@ class Query
 	}
 
 	/**
-	 * Get the first model result for the query.
+	 * 获取查询的第一个模型结果
 	 *
-	 * @param array $columns
+	 * @param array $columns 字段
 	 * @return mixed
 	 */
 	public function first($columns = ['*'])
 	{
 		$results = $this->hydrate ( $this->model, $this->table->take ( 1 )->get ( $columns ) );
-		return (count ( $results ) > 0) ? head ( $results ) : null;
+		return (count ( $results ) > 0) ? reset ( $results ) : null;
 	}
 
 	/**
-	 * Get all of the model results for the query.
+	 * 获得查询的所有模型结果
 	 *
 	 * @param array $columns
 	 * @return array
@@ -94,7 +94,7 @@ class Query
 	}
 
 	/**
-	 * Get an array of paginated model results.
+	 * 获取分页模型结果数组
 	 *
 	 * @param int $per_page
 	 * @param array $columns
@@ -102,7 +102,7 @@ class Query
 	 */
 	public function paginate($per_page = null, $columns = ['*'])
 	{
-		$per_page = $per_page ?  : $this->model->per_page ();
+		$per_page = $per_page ?  : $this->model->perPage ();
 		$paginator = $this->table->paginate ( $per_page, $columns );
 		$paginator->results = $this->hydrate ( $this->model, $paginator->results );
 		return $paginator;
@@ -122,19 +122,18 @@ class Query
 		foreach ( ( array ) $results as $result ) {
 			$result = ( array ) $result;
 			$new = new $class ( [ ], true );
-			$new->fill_raw ( $result );
+			$new->fillRaw ( $result );
 			$models [] = $new;
 		}
-
 		if (count ( $results ) > 0) {
-			foreach ( $this->model_includes () as $relationship => $constraints ) {
-				if (str_contains ( $relationship, '.' )) {
+			foreach ( $this->modelInclude () as $relationship => $constraints ) {
+				if (\Leaps\Utility\Str::contain ( $relationship, '.' )) {
 					continue;
 				}
 				$this->load ( $models, $relationship, $constraints );
 			}
 		}
-		if ($this instanceof Relationship\HasManyAndBelongsTo) {
+		if ($this instanceof \Leaps\Db\Eloquent\Relationship\HasManyAndBelongsTo) {
 			$this->hydratePivot ( $models );
 		}
 
@@ -152,9 +151,9 @@ class Query
 	protected function load(&$results, $relationship, $constraints)
 	{
 		$query = $this->model->$relationship ();
-		$query->model->includes = $this->nestedInclude ( $relationship );
+		$query->model->include = $this->nestedInclude ( $relationship );
 		$query->table->resetWhere ();
-		$query->eagerly_constrain ( $results );
+		$query->eagerlyConstrain ( $results );
 		if (! is_null ( $constraints )) {
 			$query->table->whereNested ( $constraints );
 		}
@@ -163,7 +162,7 @@ class Query
 	}
 
 	/**
-	 * Gather the nested includes for a given relationship.
+	 * 集合嵌套包含一个给定的关系
 	 *
 	 * @param string $relationship
 	 * @return array
@@ -172,35 +171,32 @@ class Query
 	{
 		$nested = array ();
 		foreach ( $this->modelInclude () as $include => $constraints ) {
-			if (starts_with ( $include, $relationship . '.' )) {
+			if (\Leaps\Utility\Str::contain ( $include, $relationship . '.' )) {
 				$nested [substr ( $include, strlen ( $relationship . '.' ) )] = $constraints;
 			}
 		}
-
 		return $nested;
 	}
 
 	/**
-	 * Get the eagerly loaded relationships for the model.
+	 * 得到模型关系
 	 *
 	 * @return array
 	 */
 	protected function modelInclude()
 	{
 		$includes = [ ];
-		foreach ( $this->model->includes as $relationship => $constraints ) {
+		foreach ( $this->model->include as $relationship => $constraints ) {
 			if (is_numeric ( $relationship )) {
 				list ( $relationship, $constraints ) = [ $constraints,null ];
 			}
-
 			$includes [$relationship] = $constraints;
 		}
-
 		return $includes;
 	}
 
 	/**
-	 * Get a fluent query builder for the model.
+	 * 获取模型的一个流利的查询生成器
 	 *
 	 * @return Query
 	 */
@@ -220,10 +216,10 @@ class Query
 	}
 
 	/**
-	 * Handle dynamic method calls to the query.
+	 * 动态调用查询魔术方法
 	 *
-	 * @param string $method
-	 * @param array $parameters
+	 * @param string $method 方法名称
+	 * @param array $parameters 参数
 	 * @return mixed
 	 */
 	public function __call($method, $parameters)

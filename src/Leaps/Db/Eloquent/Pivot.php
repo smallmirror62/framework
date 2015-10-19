@@ -35,10 +35,10 @@ class Pivot extends Model
 	public static $timestamps = true;
 
 	/**
-	 * Create a new pivot table instance.
+	 * 创建一个新的透视表实例
 	 *
-	 * @param string $table
-	 * @param string $connection
+	 * @param string $table 表名
+	 * @param string $connection 连接
 	 * @return void
 	 */
 	public function __construct($table, $connection = null)
@@ -49,7 +49,7 @@ class Pivot extends Model
 	}
 
 	/**
-	 * Get the name of the pivot table.
+	 * 获取透视表表名
 	 *
 	 * @return string
 	 */
@@ -59,7 +59,7 @@ class Pivot extends Model
 	}
 
 	/**
-	 * Get the connection used by the pivot table.
+	 * 获取透视表数据库连接
 	 *
 	 * @return string
 	 */

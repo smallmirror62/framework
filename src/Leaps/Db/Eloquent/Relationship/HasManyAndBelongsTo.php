@@ -10,11 +10,12 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Db\Eloquent\Relationship;
 
-use Laravel\Str;
+use Leaps;
 use Leaps\Db\Eloquent\Model;
 use Leaps\Db\Eloquent\Pivot;
 
-class HasManyAndBelongsTo extends Relationship {
+class HasManyAndBelongsTo extends Relationship
+{
 
 	/**
 	 * The name of the intermediate, joining table.
@@ -24,7 +25,8 @@ class HasManyAndBelongsTo extends Relationship {
 	protected $joining;
 
 	/**
-	 * The other or "associated" key. This is the foreign key of the related model.
+	 * The other or "associated" key.
+	 * This is the foreign key of the related model.
 	 *
 	 * @var string
 	 */
@@ -35,35 +37,27 @@ class HasManyAndBelongsTo extends Relationship {
 	 *
 	 * @var array
 	 */
-	protected $with = array('id');
+	protected $with = [ 'id' ];
 
 	/**
 	 * Create a new many to many relationship instance.
 	 *
-	 * @param  Model   $model
-	 * @param  string  $associated
-	 * @param  string  $table
-	 * @param  string  $foreign
-	 * @param  string  $other
+	 * @param Model $model
+	 * @param string $associated
+	 * @param string $table
+	 * @param string $foreign
+	 * @param string $other
 	 * @return void
 	 */
 	public function __construct($model, $associated, $table, $foreign, $other)
 	{
 		$this->other = $other;
-
-		$this->joining = $table ?: $this->joining($model, $associated);
-
-		// If the Pivot table is timestamped, we'll set the timestamp columns to be
-		// fetched when the pivot table models are fetched by the developer else
-		// the ID will be the only "extra" column fetched in by default.
-		if (Pivot::$timestamps)
-		{
-			$this->with[] = 'created_at';
-
-			$this->with[] = 'updated_at';
+		$this->joining = $table ?  : $this->joining ( $model, $associated );
+		if (Pivot::$timestamps) {
+			$this->with [] = 'created_at';
+			$this->with [] = 'updated_at';
 		}
-
-		parent::__construct($model, $associated, $foreign);
+		parent::__construct ( $model, $associated, $foreign );
 	}
 
 	/**
@@ -75,11 +69,9 @@ class HasManyAndBelongsTo extends Relationship {
 	 */
 	protected function joining($model, $associated)
 	{
-		$models = array(class_basename($model), class_basename($associated));
-
-		sort($models);
-
-		return strtolower($models[0].'_'.$models[1]);
+		$models = [ Leaps::classBasename ( $model ),Leaps::classBasename ( $associated ) ];
+		sort ( $models );
+		return strtolower ( $models [0] . '_' . $models [1] );
 	}
 
 	/**
@@ -89,101 +81,77 @@ class HasManyAndBelongsTo extends Relationship {
 	 */
 	public function results()
 	{
-		return parent::get();
+		return parent::get ();
 	}
 
 	/**
 	 * Insert a new record into the joining table of the association.
 	 *
-	 * @param  Model|int    $id
-	 * @param  array  $attributes
+	 * @param Model|int $id
+	 * @param array $attributes
 	 * @return bool
 	 */
-	public function attach($id, $attributes = array())
+	public function attach($id, $attributes = [])
 	{
-		if ($id instanceof Model) $id = $id->get_key();
-
-		$joining = array_merge($this->join_record($id), $attributes);
-
-		return $this->insert_joining($joining);
+		if ($id instanceof Model)
+			$id = $id->getKey ();
+		$joining = array_merge ( $this->joinRecord ( $id ), $attributes );
+		return $this->insertJoining ( $joining );
 	}
 
 	/**
 	 * Detach a record from the joining table of the association.
 	 *
-	 * @param  array|Model|int   $ids
+	 * @param array|Model|int $ids
 	 * @return bool
 	 */
 	public function detach($ids)
 	{
-		if ($ids instanceof Model) $ids = array($ids->get_key());
-		elseif ( ! is_array($ids)) $ids = array($ids);
-
-		return $this->pivot()->where_in($this->other_key(), $ids)->delete();
+		if ($ids instanceof Model)
+			$ids = [ $ids->getKey () ];
+		elseif (! is_array ( $ids ))
+			$ids = [ $ids ];
+		return $this->pivot ()->whereIn ( $this->otherKey (), $ids )->delete ();
 	}
 
 	/**
 	 * Sync the joining table with the array of given IDs.
 	 *
-	 * @param  array  $ids
+	 * @param array $ids
 	 * @return bool
 	 */
 	public function sync($ids)
 	{
-		$current = $this->pivot()->lists($this->other_key());
-		$ids = (array) $ids;
-
-		// First we need to attach any of the associated models that are not currently
-		// in the joining table. We'll spin through the given IDs, checking to see
-		// if they exist in the array of current ones, and if not we insert.
-		foreach ($ids as $id)
-		{
-			if ( ! in_array($id, $current))
-			{
-				$this->attach($id);
+		$current = $this->pivot ()->lists ( $this->otherKey () );
+		$ids = ( array ) $ids;
+		foreach ( $ids as $id ) {
+			if (! in_array ( $id, $current )) {
+				$this->attach ( $id );
 			}
 		}
-
-		// Next we will take the difference of the current and given IDs and detach
-		// all of the entities that exists in the current array but are not in
-		// the array of IDs given to the method, finishing the sync.
-		$detach = array_diff($current, $ids);
-
-		if (count($detach) > 0)
-		{
-			$this->detach($detach);
+		$detach = array_diff ( $current, $ids );
+		if (count ( $detach ) > 0) {
+			$this->detach ( $detach );
 		}
 	}
 
 	/**
 	 * Insert a new record for the association.
 	 *
-	 * @param  Model|array  $attributes
-	 * @param  array        $joining
+	 * @param Model|array $attributes
+	 * @param array $joining
 	 * @return bool
 	 */
-	public function insert($attributes, $joining = array())
+	public function insert($attributes, $joining = [])
 	{
-		// If the attributes are actually an instance of a model, we'll just grab the
-		// array of attributes off of the model for saving, allowing the developer
-		// to easily validate the joining models before inserting them.
-		if ($attributes instanceof Model)
-		{
+		if ($attributes instanceof Model) {
 			$attributes = $attributes->attributes;
 		}
-
-		$model = $this->model->create($attributes);
-
-		// If the insert was successful, we'll insert a record into the joining table
-		// using the new ID that was just inserted into the related table, allowing
-		// the developer to not worry about maintaining the join table.
-		if ($model instanceof Model)
-		{
-			$joining = array_merge($this->join_record($model->get_key()), $joining);
-
-			$result = $this->insert_joining($joining);
+		$model = $this->model->create ( $attributes );
+		if ($model instanceof Model) {
+			$joining = array_merge ( $this->joinRecord ( $model->getKey () ), $joining );
+			$result = $this->insertJoining ( $joining );
 		}
-
 		return $model instanceof Model and $result;
 	}
 
@@ -194,36 +162,33 @@ class HasManyAndBelongsTo extends Relationship {
 	 */
 	public function delete()
 	{
-		return $this->pivot()->delete();
+		return $this->pivot ()->delete ();
 	}
 
 	/**
 	 * Create an array representing a new joining record for the association.
 	 *
-	 * @param  int    $id
+	 * @param int $id
 	 * @return array
 	 */
-	protected function join_record($id)
+	protected function joinRecord($id)
 	{
-		return array($this->foreign_key() => $this->base->get_key(), $this->other_key() => $id);
+		return array ($this->foreignKey () => $this->base->getKey (),$this->otherKey () => $id );
 	}
 
 	/**
 	 * Insert a new record into the joining table of the association.
 	 *
-	 * @param  array  $attributes
+	 * @param array $attributes
 	 * @return void
 	 */
-	protected function insert_joining($attributes)
+	protected function insertJoining($attributes)
 	{
-		if (Pivot::$timestamps)
-		{
-			$attributes['created_at'] = new \DateTime;
-
-			$attributes['updated_at'] = $attributes['created_at'];
+		if (Pivot::$timestamps) {
+			$attributes ['created_at'] = new \DateTime ();
+			$attributes ['updated_at'] = $attributes ['created_at'];
 		}
-
-		return $this->joining_table()->insert($attributes);
+		return $this->joiningTable ()->insert ( $attributes );
 	}
 
 	/**
@@ -231,9 +196,9 @@ class HasManyAndBelongsTo extends Relationship {
 	 *
 	 * @return Query
 	 */
-	protected function joining_table()
+	protected function joiningTable()
 	{
-		return $this->connection()->table($this->joining);
+		return $this->connection ()->table ( $this->joining );
 	}
 
 	/**
@@ -243,114 +208,95 @@ class HasManyAndBelongsTo extends Relationship {
 	 */
 	protected function constrain()
 	{
-		$other = $this->other_key();
-
-		$foreign = $this->foreign_key();
-
-		$this->set_select($foreign, $other)->set_join($other)->set_where($foreign);
+		$other = $this->otherKey ();
+		$foreign = $this->foreignKey ();
+		$this->setSelect ( $foreign, $other )->setJoin ( $other )->setWhere ( $foreign );
 	}
 
 	/**
 	 * Set the SELECT clause on the query builder for the relationship.
 	 *
-	 * @param  string  $foreign
-	 * @param  string  $other
+	 * @param string $foreign
+	 * @param string $other
 	 * @return void
 	 */
-	protected function set_select($foreign, $other)
+	protected function setSelect($foreign, $other)
 	{
-		$columns = array($this->model->table().'.*');
-
-		$this->with = array_merge($this->with, array($foreign, $other));
-
-		// Since pivot tables may have extra information on them that the developer
-		// needs we allow an extra array of columns to be specified that will be
-		// fetched from the pivot table and hydrate into the pivot model.
-		foreach ($this->with as $column)
-		{
-			$columns[] = $this->joining.'.'.$column.' as pivot_'.$column;
+		$columns = array ($this->model->table () . '.*' );
+		$this->with = array_merge ( $this->with, [ $foreign,$other ] );
+		foreach ( $this->with as $column ) {
+			$columns [] = $this->joining . '.' . $column . ' as pivot_' . $column;
 		}
-
-		$this->table->select($columns);
-
+		$this->table->select ( $columns );
 		return $this;
 	}
 
 	/**
 	 * Set the JOIN clause on the query builder for the relationship.
 	 *
-	 * @param  string  $other
+	 * @param string $other
 	 * @return void
 	 */
-	protected function set_join($other)
+	protected function setJoin($other)
 	{
-		$this->table->join($this->joining, $this->associated_key(), '=', $this->joining.'.'.$other);
-
+		$this->table->join ( $this->joining, $this->associatedKey (), '=', $this->joining . '.' . $other );
 		return $this;
 	}
 
 	/**
 	 * Set the WHERE clause on the query builder for the relationship.
 	 *
-	 * @param  string  $foreign
+	 * @param string $foreign
 	 * @return void
 	 */
-	protected function set_where($foreign)
+	protected function setWhere($foreign)
 	{
-		$this->table->where($this->joining.'.'.$foreign, '=', $this->base->get_key());
-
+		$this->table->where ( $this->joining . '.' . $foreign, '=', $this->base->getKey () );
 		return $this;
 	}
 
 	/**
 	 * Initialize a relationship on an array of parent models.
 	 *
-	 * @param  array   $parents
-	 * @param  string  $relationship
+	 * @param array $parents
+	 * @param string $relationship
 	 * @return void
 	 */
 	public function initialize(&$parents, $relationship)
 	{
-		foreach ($parents as &$parent)
-		{
-			$parent->relationships[$relationship] = array();
+		foreach ( $parents as &$parent ) {
+			$parent->relationships [$relationship] = [ ];
 		}
 	}
 
 	/**
 	 * Set the proper constraints on the relationship table for an eager load.
 	 *
-	 * @param  array  $results
+	 * @param array $results
 	 * @return void
 	 */
-	public function eagerly_constrain($results)
+	public function eagerlyConstrain($results)
 	{
-		$this->table->where_in($this->joining.'.'.$this->foreign_key(), $this->keys($results));
+		$this->table->whereIn ( $this->joining . '.' . $this->foreignKey (), $this->keys ( $results ) );
 	}
 
 	/**
 	 * Match eagerly loaded child models to their parent models.
 	 *
-	 * @param  array  $parents
-	 * @param  array  $children
+	 * @param array $parents
+	 * @param array $children
 	 * @return void
 	 */
 	public function match($relationship, &$parents, $children)
 	{
-		$foreign = $this->foreign_key();
-
-		$dictionary = array();
-
-		foreach ($children as $child)
-		{
-			$dictionary[$child->pivot->$foreign][] = $child;
+		$foreign = $this->foreignKey ();
+		$dictionary = [ ];
+		foreach ( $children as $child ) {
+			$dictionary [$child->pivot->$foreign] [] = $child;
 		}
-
-		foreach ($parents as $parent)
-		{
-			if (array_key_exists($key = $parent->get_key(), $dictionary))
-			{
-				$parent->relationships[$relationship] = $dictionary[$key];
+		foreach ( $parents as $parent ) {
+			if (array_key_exists ( $key = $parent->getKey (), $dictionary )) {
+				$parent->relationships [$relationship] = $dictionary [$key];
 			}
 		}
 	}
@@ -358,57 +304,35 @@ class HasManyAndBelongsTo extends Relationship {
 	/**
 	 * Hydrate the Pivot model on an array of results.
 	 *
-	 * @param  array  $results
+	 * @param array $results
 	 * @return void
 	 */
-	protected function hydrate_pivot(&$results)
+	protected function hydratePivot(&$results)
 	{
-		foreach ($results as &$result)
-		{
-			// Every model result for a many-to-many relationship needs a Pivot instance
-			// to represent the pivot table's columns. Sometimes extra columns are on
-			// the pivot table that may need to be accessed by the developer.
-			$pivot = new Pivot($this->joining, $this->model->connection());
-
-			// If the attribute key starts with "pivot_", we know this is a column on
-			// the pivot table, so we will move it to the Pivot model and purge it
-			// from the model since it actually belongs to the pivot model.
-			foreach ($result->attributes as $key => $value)
-			{
-				if (starts_with($key, 'pivot_'))
-				{
-					$pivot->{substr($key, 6)} = $value;
-
-					$result->purge($key);
+		foreach ( $results as &$result ) {
+			$pivot = new Pivot ( $this->joining, $this->model->connection () );
+			foreach ( $result->attributes as $key => $value ) {
+				if (\Leaps\Utility\Str::startsWith( $key, 'pivot' )) {
+					$pivot->{substr ( $key, 5 )} = $value;
+					$result->purge ( $key );
 				}
 			}
-
-			// Once we have completed hydrating the pivot model instance, we'll set
-			// it on the result model's relationships array so the developer can
-			// quickly and easily access any pivot table information.
-			$result->relationships['pivot'] = $pivot;
-
-			$pivot->sync() and $result->sync();
+			$result->relationships ['pivot'] = $pivot;
+			$pivot->sync () and $result->sync ();
 		}
 	}
 
 	/**
 	 * Set the columns on the joining table that should be fetched.
 	 *
-	 * @param  array         $column
+	 * @param array $column
 	 * @return Relationship
 	 */
 	public function with($columns)
 	{
-		$columns = (is_array($columns)) ? $columns : func_get_args();
-
-		// The "with" array contains a couple of columns by default, so we will just
-		// merge in the developer specified columns here, and we will make sure
-		// the values of the array are unique to avoid duplicates.
-		$this->with = array_unique(array_merge($this->with, $columns));
-
-		$this->set_select($this->foreign_key(), $this->other_key());
-
+		$columns = (is_array ( $columns )) ? $columns : func_get_args ();
+		$this->with = array_unique ( array_merge ( $this->with, $columns ) );
+		$this->setSelect ( $this->foreignKey (), $this->otherKey () );
 		return $this;
 	}
 
@@ -419,9 +343,8 @@ class HasManyAndBelongsTo extends Relationship {
 	 */
 	public function pivot()
 	{
-		$pivot = new Pivot($this->joining, $this->model->connection());
-
-		return new Has_Many($this->base, $pivot, $this->foreign_key());
+		$pivot = new Pivot ( $this->joining, $this->model->connection () );
+		return new HasMany ( $this->base, $pivot, $this->foreignKey () );
 	}
 
 	/**
@@ -429,9 +352,9 @@ class HasManyAndBelongsTo extends Relationship {
 	 *
 	 * @return string
 	 */
-	protected function other_key()
+	protected function otherKey()
 	{
-		return Relationship::foreign($this->model, $this->other);
+		return Relationship::foreign ( $this->model, $this->other );
 	}
 
 	/**
@@ -439,9 +362,8 @@ class HasManyAndBelongsTo extends Relationship {
 	 *
 	 * @return string
 	 */
-	protected function associated_key()
+	protected function associatedKey()
 	{
-		return $this->model->table().'.'.$this->model->key();
+		return $this->model->table () . '.' . $this->model->key ();
 	}
-
 }

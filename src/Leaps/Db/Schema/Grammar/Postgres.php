@@ -8,10 +8,10 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Laravel\Database\Schema\Grammars;
+namespace Leaps\Db\Schema\Grammar;
 
 use Laravel\Fluent;
-use Laravel\Database\Schema\Table;
+use Leaps\Db\Schema\Table;
 
 class Postgres extends Grammar {
 

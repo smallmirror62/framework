@@ -9,7 +9,9 @@
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
 namespace Leaps\Db\Eloquent\Relationship;
+
 use Leaps\Db\Eloquent\Model;
+
 class BelongsTo extends Relationship
 {
 
@@ -67,20 +69,14 @@ class BelongsTo extends Relationship
 	 */
 	public function eagerlyConstrain($results)
 	{
-		$keys = array ();
-
-		// Inverse one-to-many relationships require us to gather the keys from the
-		// parent models and use those keys when setting the constraint since we
-		// are looking for the parent of a child model in this relationship.
+		$keys = [ ];
 		foreach ( $results as $result ) {
 			if (! is_null ( $key = $result->{$this->foreignKey ()} )) {
 				$keys [] = $key;
 			}
 		}
-
 		if (count ( $keys ) == 0)
-			$keys = array (0 );
-
+			$keys = [ 0 ];
 		$this->table->whereIn ( $this->model->key (), array_unique ( $keys ) );
 	}
 
@@ -94,7 +90,7 @@ class BelongsTo extends Relationship
 	public function match($relationship, &$children, $parents)
 	{
 		$foreign = $this->foreignKey ();
-		$dictionary = [];
+		$dictionary = [ ];
 		foreach ( $parents as $parent ) {
 			$dictionary [$parent->getKey ()] = $parent;
 		}

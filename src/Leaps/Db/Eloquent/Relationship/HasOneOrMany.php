@@ -12,45 +12,41 @@ namespace Leaps\Db\Eloquent\Relationship;
 
 use Leaps\Db\Eloquent\Model;
 
-class HasOneOrMany extends Relationship {
+class HasOneOrMany extends Relationship
+{
 
 	/**
 	 * Insert a new record for the association.
 	 *
 	 * If save is successful, the model will be returned, otherwise false.
 	 *
-	 * @param  Model|array  $attributes
+	 * @param Model|array $attributes
 	 * @return Model|false
 	 */
 	public function insert($attributes)
 	{
-		if ($attributes instanceof Model)
-		{
-			$attributes->set_attribute($this->foreign_key(), $this->base->get_key());
-			return $attributes->save() ? $attributes : false;
-		}
-		else
-		{
-			$attributes[$this->foreign_key()] = $this->base->get_key();
-
-			return $this->model->create($attributes);
+		if ($attributes instanceof Model) {
+			$attributes->setAttribute ( $this->foreignKey (), $this->base->getKey () );
+			return $attributes->save () ? $attributes : false;
+		} else {
+			$attributes [$this->foreignKey ()] = $this->base->getKey ();
+			return $this->model->create ( $attributes );
 		}
 	}
 
 	/**
 	 * Update a record for the association.
 	 *
-	 * @param  array  $attributes
+	 * @param array $attributes
 	 * @return bool
 	 */
 	public function update(array $attributes)
 	{
-		if ($this->model->timestamps())
-		{
-			$attributes['updated_at'] = new \DateTime;
+		if ($this->model->timestamps ()) {
+			$attributes ['updated_at'] = new \DateTime ();
 		}
 
-		return $this->table->update($attributes);
+		return $this->table->update ( $attributes );
 	}
 
 	/**
@@ -60,18 +56,17 @@ class HasOneOrMany extends Relationship {
 	 */
 	protected function constrain()
 	{
-		$this->table->where($this->foreign_key(), '=', $this->base->get_key());
+		$this->table->where ( $this->foreignKey (), '=', $this->base->getKey () );
 	}
 
 	/**
 	 * Set the proper constraints on the relationship table for an eager load.
 	 *
-	 * @param  array  $results
+	 * @param array $results
 	 * @return void
 	 */
-	public function eagerly_constrain($results)
+	public function eagerlyConstrain($results)
 	{
-		$this->table->where_in($this->foreign_key(), $this->keys($results));
+		$this->table->whereIn ( $this->foreignKey (), $this->keys ( $results ) );
 	}
-
 }

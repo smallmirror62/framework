@@ -40,14 +40,14 @@ class Table {
 	 *
 	 * @var array
 	 */
-	public $columns = array();
+	public $columns =[];
 
 	/**
 	 * The commands that should be executed on the table.
 	 *
 	 * @var array
 	 */
-	public $commands = array();
+	public $commands = [];
 
 	/**
 	 * Create a new schema table instance.
@@ -178,7 +178,7 @@ class Table {
 	 */
 	public function dropColumn($columns)
 	{
-		return $this->command(__FUNCTION__, array('columns' => (array) $columns));
+		return $this->command(__FUNCTION__, ['columns' => (array) $columns]);
 	}
 
 	/**
