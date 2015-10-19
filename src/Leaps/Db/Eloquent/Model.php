@@ -437,7 +437,7 @@ abstract class Model
 	 */
 	public function table()
 	{
-		return static::$table ?  : strtolower ( Str::plural ( class_basename ( $this ) ) );
+		return static::$table ?  : strtolower ( Str::plural ( \Leaps\Kernel::classBasename ( $this ) ) );
 	}
 
 	/**

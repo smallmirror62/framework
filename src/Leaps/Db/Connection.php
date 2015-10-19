@@ -31,6 +31,20 @@ class Connection extends Injectable
 	public $config;
 
 	/**
+	 * 开启数据库查询日志
+	 *
+	 * @var boolean
+	 */
+	public $profile = false;
+
+	/**
+	 * PDO 获取风格
+	 *
+	 * @var Ambiguous $fetch
+	 */
+	public $fetchStyle = PDO::FETCH_CLASS;
+
+	/**
 	 * 该连接的数据库查询语法实例
 	 *
 	 * @var Query\Grammars\Grammar
@@ -58,10 +72,11 @@ class Connection extends Injectable
 	 * @param array $config 数据库连接配置
 	 * @return void
 	 */
-	public function __construct(\PDO $pdo, $config)
+	public function __construct(\PDO $pdo, $config, $fetch, $profile = false)
 	{
 		$this->pdo = $pdo;
 		$this->config = $config;
+		$this->fetchStyle = $fetch;
 	}
 
 	/**
@@ -164,16 +179,16 @@ class Connection extends Injectable
 	 * @param array $bindings
 	 * @return array
 	 */
-	public function query($sql, $bindings = [])
+	public function query($sql, $bindings = [], $cache = 0)
 	{
 		$sql = trim ( $sql );
 		list ( $statement, $result ) = $this->execute ( $sql, $bindings );
 		if (stripos ( $sql, 'select' ) === 0 || stripos ( $sql, 'show' ) === 0) {
-			return $this->fetch ( $statement, Config::get ( 'database.fetch' ) );
+			return $this->fetch ( $statement, $this->fetchStyle );
 		} elseif (stripos ( $sql, 'update' ) === 0 or stripos ( $sql, 'delete' ) === 0) {
 			return $statement->rowCount ();
 		} elseif (stripos ( $sql, 'insert' ) === 0 and stripos ( $sql, 'returning' ) !== false) {
-			return $this->fetch ( $statement, Config::get ( 'database.fetch' ) );
+			return $this->fetch ( $statement, $this->fetchStyle );
 		} else {
 			return $result;
 		}
@@ -211,7 +226,7 @@ class Connection extends Injectable
 			$exception = new Exception ( $sql, $bindings, $exception );
 			throw $exception;
 		}
-		if (Config::get ( 'database.profile' )) {
+		if ($this->profile) {
 			$this->log ( $sql, $bindings, $start );
 		}
 		return [ $statement,$result ];
@@ -236,7 +251,7 @@ class Connection extends Injectable
 	}
 
 	/**
-	 * 从查询结果返回所有行
+	 * 从查询结果返回行
 	 *
 	 * @param \PDOStatement $statement
 	 * @param int $style

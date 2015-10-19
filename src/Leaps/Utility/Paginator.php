@@ -14,58 +14,56 @@ class Paginator
 {
 
 	/**
-	 * The results for the current page.
+	 * 当前页面的结果
 	 *
 	 * @var array
 	 */
 	public $results;
 
 	/**
-	 * The current page.
+	 * 当前页面
 	 *
 	 * @var int
 	 */
 	public $page;
 
 	/**
-	 * The last page available for the result set.
+	 * 结果集可用的最后一页
 	 *
 	 * @var int
 	 */
 	public $last;
 
 	/**
-	 * The total number of results.
+	 * 总页数
 	 *
 	 * @var int
 	 */
 	public $total;
 
 	/**
-	 * The number of items per page.
+	 * 每页的项目数
 	 *
 	 * @var int
 	 */
-	public $per_page;
+	public $perPage;
 
 	/**
-	 * The values that should be appended to the end of the link query strings.
+	 * 应该附加到连接查询字符串结尾的值
 	 *
 	 * @var array
 	 */
 	protected $appends;
 
 	/**
-	 * The compiled appendage that will be appended to the links.
-	 *
-	 * This consists of a sprintf format with a page place-holder and query string.
+	 * 编译的附属物，将附加到链接
 	 *
 	 * @var string
 	 */
 	protected $appendage;
 
 	/**
-	 * The language that should be used when creating the pagination links.
+	 * 要创建分页链接时使用的语言
 	 *
 	 * @var string
 	 */
@@ -79,39 +77,37 @@ class Paginator
 	protected $dots = '<li class="dots disabled"><a href="#">...</a></li>';
 
 	/**
-	 * Create a new Paginator instance.
+	 * 创建一个新的页面实例
 	 *
 	 * @param array $results
 	 * @param int $page
 	 * @param int $total
-	 * @param int $per_page
+	 * @param int $perPage
 	 * @param int $last
 	 * @return void
 	 */
-	protected function __construct($results, $page, $total, $per_page, $last)
+	protected function __construct($results, $page, $total, $perPage, $last)
 	{
 		$this->page = $page;
 		$this->last = $last;
 		$this->total = $total;
 		$this->results = $results;
-		$this->per_page = $per_page;
+		$this->perPage = $perPage;
 	}
 
 	/**
-	 * Create a new Paginator instance.
+	 * 创建一个新的页面实例
 	 *
 	 * @param array $results
 	 * @param int $total
 	 * @param int $per_page
 	 * @return Paginator
 	 */
-	public static function make($results, $total, $per_page)
+	public static function make($results, $total, $perPage)
 	{
-		$page = static::page ( $total, $per_page );
-
-		$last = ceil ( $total / $per_page );
-
-		return new static ( $results, $page, $total, $per_page, $last );
+		$page = static::page ( $total, $perPage );
+		$last = ceil ( $total / $perPage );
+		return new static ( $results, $page, $total, $perPage, $last );
 	}
 
 	/**
@@ -124,10 +120,6 @@ class Paginator
 	public static function page($total, $per_page)
 	{
 		$page = Input::get ( 'page', 1 );
-		// The page will be validated and adjusted if it is less than one or greater
-		// than the last page. For example, if the current page is not an integer or
-		// less than one, one will be returned. If the current page is greater than
-		// the last page, the last page will be returned.
 		if (is_numeric ( $page ) and $page > $last = ceil ( $total / $per_page )) {
 			return ($last > 0) ? $last : 1;
 		}
@@ -180,9 +172,7 @@ class Paginator
 		} else {
 			$links = $this->slider ( $adjacent );
 		}
-
 		$content = '<ul>' . $this->previous () . $links . $this->next () . '</ul>';
-
 		return '<div class="pagination">' . $content . '</div>';
 	}
 
@@ -212,10 +202,8 @@ class Paginator
 		elseif ($this->page >= $this->last - $window) {
 			return $this->beginning () . ' ' . $this->range ( $this->last - $window - 2, $this->last );
 		}
-
 		// Example: 1 2 ... 23 24 25 [26] 27 28 29 ... 51 52
 		$content = $this->range ( $this->page - $adjacent, $this->page + $adjacent );
-
 		return $this->beginning () . ' ' . $content . ' ' . $this->ending ();
 	}
 

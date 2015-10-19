@@ -87,7 +87,7 @@ class Db extends Base
 			if (is_null ( $config )) {
 				throw new \Exception ( "Database connection is not defined for [$connection]." );
 			}
-			$this->connectionInstance [$connection] = Kernel::createObject ( '\Leaps\Db\Connection', [ $this->connect ( $config ),$config ] );
+			$this->connectionInstance [$connection] = Kernel::createObject ( '\Leaps\Db\Connection', [ $this->connect ( $config ),$config,$this->fetch,$this->profile ] );
 		}
 		return $this->connectionInstance [$connection];
 	}
@@ -159,7 +159,7 @@ class Db extends Base
 	}
 
 	/**
-	 * Escape a string for usage in a query.
+	 * 字符串安全过滤
 	 *
 	 * This uses the correct quoting mechanism for the default database connection.
 	 *

@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Core;
 
-use Leaps\Kernel;
+use Leaps;
 
 abstract class Application extends Module
 {
@@ -99,11 +99,11 @@ abstract class Application extends Module
 	 */
 	public function __construct($config = [])
 	{
-		Kernel::setApp ( $this );
+		Leaps::setApp ( $this );
 		$this->_config = $config;
 		$this->preInit ();
 		$this->registerErrorHandler($config);
-		$this->setServices ( $this->_config ['services'] );
+		Leaps::$container->setServices ( $this->_config ['services'] );
 	}
 
 	/**
@@ -189,8 +189,8 @@ abstract class Application extends Module
 	public function setBasePath($path)
 	{
 		parent::setBasePath ( $path );
-		Kernel::setAlias ( '@App', $this->getBasePath () );
-		Kernel::setAlias ( '@Module', $this->getBasePath () . '/Module' );
+		Leaps::setAlias ( '@App', $this->getBasePath () );
+		Leaps::setAlias ( '@Module', $this->getBasePath () . '/Module' );
 	}
 
 	/**
@@ -245,8 +245,8 @@ abstract class Application extends Module
 	 */
 	public function setRuntimePath($path)
 	{
-		$this->_runtimePath = Kernel::getAlias ( $path );
-		Kernel::setAlias ( '@Runtime', $this->_runtimePath );
+		$this->_runtimePath = Leaps::getAlias ( $path );
+		Leaps::setAlias ( '@Runtime', $this->_runtimePath );
 	}
 
 	/**
@@ -277,10 +277,10 @@ abstract class Application extends Module
 	 */
 	public function setVendorPath($path)
 	{
-		$this->_vendorPath = Kernel::getAlias ( $path );
-		Kernel::setAlias ( '@Vendor', $this->_vendorPath );
-		Kernel::setAlias ( '@Bower', $this->_vendorPath . DIRECTORY_SEPARATOR . 'Bower' );
-		Kernel::setAlias ( '@Npm', $this->_vendorPath . DIRECTORY_SEPARATOR . 'Npm' );
+		$this->_vendorPath = Leaps::getAlias ( $path );
+		Leaps::setAlias ( '@Vendor', $this->_vendorPath );
+		Leaps::setAlias ( '@Bower', $this->_vendorPath . DIRECTORY_SEPARATOR . 'Bower' );
+		Leaps::setAlias ( '@Npm', $this->_vendorPath . DIRECTORY_SEPARATOR . 'Npm' );
 	}
 
 	/**

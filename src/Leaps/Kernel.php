@@ -15,27 +15,7 @@ use Leaps\Core\InvalidConfigException;
 use Leaps\Core\UnknownClassException;
 use Leaps\Core\InvalidParamException;
 
-/**
- * Gets the application start timestamp.
- */
-defined ( 'LEAPS_BEGIN_TIME' ) or define ( 'LEAPS_BEGIN_TIME', microtime ( true ) );
 
-/**
- * This constant defines the framework installation directory.
- */
-defined ( 'LEAPS_PATH' ) or define ( 'LEAPS_PATH', dirname ( dirname ( __DIR__ ) ) );
-
-/**
- * This constant defines whether the application should be in debug mode or not.
- * Defaults to false.
- */
-defined ( 'LEAPS_DEBUG' ) or define ( 'LEAPS_DEBUG', false );
-
-/**
- * This constant defines whether error handling should be enabled.
- * Defaults to true.
- */
-defined ( 'LEAPS_ENABLE_ERROR_HANDLER' ) or define ( 'LEAPS_ENABLE_ERROR_HANDLER', true );
 
 /**
  * Leaps 基类
@@ -85,21 +65,27 @@ class Kernel
 	 *
 	 * @var array
 	 */
-	private static $_aliases = [ ];
+	public static $aliases = [ ];
 
 	/**
 	 * classMap
 	 *
 	 * @var array
 	 */
-	private static $_classMap = [ ];
+	public static $classMap = [ ];
+
+	/**
+	 * 依赖注入容器
+	 * @var \Leaps\Di\Container
+	 */
+	public static $container;
 
 	/**
 	 * 应用实例
 	 *
 	 * @var Leaps\Core\Application
 	 */
-	private static $_application;
+	public static $app;
 
 	/**
 	 * 设置应用程序实例
@@ -109,9 +95,9 @@ class Kernel
 	 */
 	public static function setApp($application)
 	{
-		if (static::$_application !== null)
+		if (static::$app !== null)
 			throw new InvalidParamException ( 'application invalid' );
-		static::$_application = $application;
+		static::$app = $application;
 	}
 
 	/**
@@ -121,10 +107,10 @@ class Kernel
 	 */
 	public static function app()
 	{
-		if (static::$_application == null) {
+		if (static::$app == null) {
 			throw new InvalidParamException ( 'application invalid' );
 		}
-		return static::$_application;
+		return static::$app;
 	}
 
 	/**
@@ -202,8 +188,8 @@ class Kernel
 	 */
 	public static function autoload($className)
 	{
-		if (isset ( static::$_classMap [$className] )) {
-			$classFile = static::$_classMap [$className];
+		if (isset ( static::$classMap [$className] )) {
+			$classFile = static::$classMap [$className];
 			if ($classFile [0] === '@') {
 				$classFile = static::getAlias ( $classFile );
 			}
@@ -216,9 +202,17 @@ class Kernel
 			return;
 		}
 		include ($classFile);
-		if (static::$env == static::DEVELOPMENT && ! class_exists ( $className, false ) && ! interface_exists ( $className, false ) && ! trait_exists ( $className, false )) {
+		if (LEAPS_DEBUG && ! class_exists ( $className, false ) && ! interface_exists ( $className, false ) && ! trait_exists ( $className, false )) {
 			throw new UnknownClassException ( "Unable to find '$className' in file: $classFile. Namespace missing?" );
 		}
+	}
+
+	/**
+	 * 向Di注册服务
+	 * @param array $config
+	 */
+	public static function setService($config = []){
+		self::$container->setServices($config);
 	}
 
 	/**
@@ -236,27 +230,27 @@ class Kernel
 		$root = $pos === false ? $alias : substr ( $alias, 0, $pos );
 		if ($path !== null) {
 			$path = strncmp ( $path, '@', 1 ) ? rtrim ( $path, '\\/' ) : static::getAlias ( $path );
-			if (! isset ( static::$_aliases [$root] )) {
+			if (! isset ( static::$aliases [$root] )) {
 				if ($pos === false) {
-					static::$_aliases [$root] = $path;
+					static::$aliases [$root] = $path;
 				} else {
-					static::$_aliases [$root] = [ $alias => $path ];
+					static::$aliases [$root] = [ $alias => $path ];
 				}
-			} elseif (is_string ( static::$_aliases [$root] )) {
+			} elseif (is_string ( static::$aliases [$root] )) {
 				if ($pos === false) {
-					static::$_aliases [$root] = $path;
+					static::$aliases [$root] = $path;
 				} else {
-					static::$_aliases [$root] = [ $alias => $path,$root => static::$_aliases [$root] ];
+					static::$aliases [$root] = [ $alias => $path,$root => static::$aliases [$root] ];
 				}
 			} else {
-				static::$_aliases [$root] [$alias] = $path;
-				krsort ( static::$_aliases [$root] );
+				static::$aliases [$root] [$alias] = $path;
+				krsort ( static::$aliases [$root] );
 			}
-		} elseif (isset ( static::$_aliases [$root] )) {
-			if (is_array ( static::$_aliases [$root] )) {
-				unset ( static::$_aliases [$root] [$alias] );
+		} elseif (isset ( static::$aliases [$root] )) {
+			if (is_array ( static::$aliases [$root] )) {
+				unset ( static::$aliases [$root] [$alias] );
 			} elseif ($pos === false) {
-				unset ( static::$_aliases [$root] );
+				unset ( static::$aliases [$root] );
 			}
 		}
 	}
@@ -277,11 +271,11 @@ class Kernel
 		}
 		$pos = strpos ( $alias, '/' );
 		$root = $pos === false ? $alias : substr ( $alias, 0, $pos );
-		if (isset ( static::$_aliases [$root] )) {
-			if (is_string ( static::$_aliases [$root] )) {
-				return $pos === false ? static::$_aliases [$root] : static::$_aliases [$root] . substr ( $alias, $pos );
+		if (isset ( static::$aliases [$root] )) {
+			if (is_string ( static::$aliases [$root] )) {
+				return $pos === false ? static::$aliases [$root] : static::$aliases [$root] . substr ( $alias, $pos );
 			} else {
-				foreach ( static::$_aliases [$root] as $name => $path ) {
+				foreach ( static::$aliases [$root] as $name => $path ) {
 					if (strpos ( $alias . '/', $name . '/' ) === 0) {
 						return $path . substr ( $alias, strlen ( $name ) );
 					}
@@ -306,11 +300,11 @@ class Kernel
 	{
 		$pos = strpos ( $alias, '/' );
 		$root = $pos === false ? $alias : substr ( $alias, 0, $pos );
-		if (isset ( static::$_aliases [$root] )) {
-			if (is_string ( static::$_aliases [$root] )) {
+		if (isset ( static::$aliases [$root] )) {
+			if (is_string ( static::$aliases [$root] )) {
 				return $root;
 			} else {
-				foreach ( static::$_aliases [$root] as $name => $path ) {
+				foreach ( static::$aliases [$root] as $name => $path ) {
 					if (strpos ( $alias . '/', $name . '/' ) === 0) {
 						return $name;
 					}
@@ -328,9 +322,9 @@ class Kernel
 	public static function getClassMap($className = '')
 	{
 		if ('' === $className) {
-			return static::$_classMap;
-		} elseif (isset ( static::$_classMap [$className] )) {
-			return static::$_classMap [$className];
+			return static::$classMap;
+		} elseif (isset ( static::$classMap [$className] )) {
+			return static::$classMap [$className];
 		} else {
 			return null;
 		}
@@ -344,9 +338,9 @@ class Kernel
 	public static function addClassMap($className, $map = '')
 	{
 		if (is_array ( $className )) {
-			static::$_classMap = array_merge ( static::$_classMap, $className );
+			static::$classMap = array_merge ( static::$classMap, $className );
 		} else {
-			static::$_classMap [$className] = $map;
+			static::$classMap [$className] = $map;
 		}
 	}
 
@@ -407,6 +401,7 @@ class Kernel
 	{
 		return Version::get ();
 	}
+
 	private static $_logger;
 
 	/**

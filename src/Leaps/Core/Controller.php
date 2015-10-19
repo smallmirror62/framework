@@ -68,7 +68,8 @@ class Controller extends Base {
     public function runAction($id, $params = [])
     {
 		$db = $this->module->getDb();
-		print_r($db->table('user')->get());
+		$user = ['username'=>'aaa','email'=>'bbb','mobile'=>'1234567890','password'=>'aaa','encrypt'=>'bvbb'];
+		print_r($db->table('user')->insert($user));
     	exit;
     	$action = $this->createAction($id);
     	if ($action === null) {

@@ -11,7 +11,7 @@
 namespace Leaps\Db;
 
 use Closure;
-use Leaps\Paginator;
+use Leaps\Utility\Paginator;
 use Leaps\Db\Query\Grammar\Postgres;
 use Leaps\Db\Query\Grammar\SQLServer;
 
@@ -143,9 +143,9 @@ class Query
 	}
 
 	/**
-	 * Add an array of columns to the SELECT clause.
+	 * 添加返回的字段
 	 *
-	 * @param array $columns
+	 * @param array $columns 设置返回的字段
 	 * @return Query
 	 */
 	public function select($columns = ['*'])
@@ -155,7 +155,7 @@ class Query
 	}
 
 	/**
-	 * Add a join clause to the query.
+	 * 添加一个联查
 	 *
 	 * @param string $table
 	 * @param string $column1
@@ -202,11 +202,11 @@ class Query
 	}
 
 	/**
-	 * Add a raw where condition to the query.
+	 * 添加一个原始条件到查询中
 	 *
-	 * @param string $where
-	 * @param array $bindings
-	 * @param string $connector
+	 * @param string $where 原始条件
+	 * @param array $bindings 绑定变量
+	 * @param string $connector 查询连接符
 	 * @return Query
 	 */
 	public function rawWhere($where, $bindings = [], $connector = 'AND')
@@ -217,7 +217,7 @@ class Query
 	}
 
 	/**
-	 * Add a raw or where condition to the query.
+	 * 添加一个OR连接符的原始条件
 	 *
 	 * @param string $where
 	 * @param array $bindings
@@ -229,12 +229,12 @@ class Query
 	}
 
 	/**
-	 * Add a where condition to the query.
+	 * 添加一个Where条件
 	 *
-	 * @param string $column
-	 * @param string $operator
-	 * @param mixed $value
-	 * @param string $connector
+	 * @param string $column 字段
+	 * @param string $operator 运算符
+	 * @param mixed $value 值
+	 * @param string $connector 连接符
 	 * @return Query
 	 */
 	public function where($column, $operator = null, $value = null, $connector = 'AND')
@@ -249,11 +249,11 @@ class Query
 	}
 
 	/**
-	 * Add an or where condition to the query.
+	 * 添加一个OR WHERE 到查询
 	 *
-	 * @param string $column
-	 * @param string $operator
-	 * @param mixed $value
+	 * @param string $column 字段
+	 * @param string $operator 运算符
+	 * @param mixed $value 值
 	 * @return Query
 	 */
 	public function orWhere($column, $operator = null, $value = null)
@@ -621,8 +621,9 @@ class Query
 	 */
 	public function get($columns = ['*'])
 	{
-		if (is_null ( $this->selects ))
+		if (is_null ( $this->selects )){
 			$this->select ( $columns );
+		}
 		$sql = $this->grammar->select ( $this );
 		$results = $this->connection->query ( $sql, $this->bindings );
 		if ($this->offset > 0 and $this->grammar instanceof SQLServer) {

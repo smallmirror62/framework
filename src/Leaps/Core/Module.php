@@ -10,10 +10,9 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Core;
 
-use Leaps\Kernel;
-use Leaps\Di\Container;
+use Leaps;
 
-class Module extends Container
+class Module extends Base
 {
 	/**
 	 * 当前模块ID
@@ -135,7 +134,7 @@ class Module extends Container
 	 */
 	public function getControllerPath()
 	{
-		return Kernel::getAlias ( '@' . str_replace ( '\\', '/', $this->controllerNamespace ) );
+		return Leaps::getAlias ( '@' . str_replace ( '\\', '/', $this->controllerNamespace ) );
 	}
 
 	/**
@@ -160,7 +159,7 @@ class Module extends Container
 	 */
 	public function setViewPath($path)
 	{
-		$this->_viewPath = Kernel::getAlias ( $path );
+		$this->_viewPath = Leaps::getAlias ( $path );
 	}
 
 	/**
@@ -185,7 +184,7 @@ class Module extends Container
 	 */
 	public function setLayoutPath($path)
 	{
-		$this->_layoutPath = Kernel::getAlias ( $path );
+		$this->_layoutPath = Leaps::getAlias ( $path );
 	}
 
 	/**
@@ -202,7 +201,7 @@ class Module extends Container
 	public function setAliases($aliases)
 	{
 		foreach ( $aliases as $name => $alias ) {
-			Kernel::setAlias ( $name, $alias );
+			Leaps::setAlias ( $name, $alias );
 		}
 	}
 
@@ -242,9 +241,9 @@ class Module extends Container
 			if ($this->_modules [$id] instanceof Module) {
 				return $this->_modules [$id];
 			} elseif ($load) {
-				Kernel::trace ( "Loading module: $id", __METHOD__ );
+				Leaps::trace ( "Loading module: $id", __METHOD__ );
 				/* @var $module Module */
-				$module = Kernel::createObject ( $this->_modules [$id], [$id,$this] );
+				$module = Leaps::createObject ( $this->_modules [$id], [$id,$this] );
 
 				return $this->_modules [$id] = $module;
 			}
@@ -312,10 +311,10 @@ class Module extends Container
 		if (is_array ( $parts )) {
 			/* @var $controller Controller */
 			list ( $controller, $actionID ) = $parts;
-			$oldController = Kernel::app ()->controller;
-			Kernel::app ()->controller = $controller;
+			$oldController = Leaps::app ()->controller;
+			Leaps::app ()->controller = $controller;
 			$result = $controller->runAction ( $actionID, $params );
-			Kernel::app ()->controller = $oldController;
+			Leaps::app ()->controller = $oldController;
 			return $result;
 		} else {
 			throw new \Leaps\Router\Exception ( 'Unable to resolve the request "' . $route . '".' );
@@ -400,7 +399,7 @@ class Module extends Container
 			return null;
 		}
 		if (is_subclass_of ( $className, 'Leaps\Core\Controller' )) {
-			return Kernel::createObject ( $className, [$id,$this] );
+			return Leaps::createObject ( $className, [$id,$this] );
 		} elseif (LEAPS_DEBUG) {
 			throw new InvalidConfigException ( "Controller class must extend from \\Leaps\\Core\\Controller." );
 		} else {
