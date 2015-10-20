@@ -102,8 +102,7 @@ abstract class Application extends Module
 		Leaps::setApp ( $this );
 		$this->_config = $config;
 		$this->preInit ();
-		$this->registerErrorHandler($config);
-		$this->setServices ( $this->_config ['services'] );
+		Base::__construct ( $this->_config );
 	}
 
 	/**
@@ -151,6 +150,14 @@ abstract class Application extends Module
 				$this->_config ['services'] [$id] ['className'] = $service ['className'];
 			}
 		}
+		$this->registerErrorHandler();
+		$this->setServices ( $this->_config ['services'] );
+		unset($this->_config ['services']);
+	}
+
+	public function init()
+	{
+
 	}
 
 	/**

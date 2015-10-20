@@ -36,6 +36,27 @@ class Module extends Base
 	public $defaultRoute = 'home';
 
 	/**
+	 * @var array mapping from controller ID to controller configurations.
+	 * Each name-value pair specifies the configuration of a single controller.
+	 * A controller configuration can be either a string or an array.
+	 * If the former, the string should be the fully qualified class name of the controller.
+	 * If the latter, the array must contain a 'class' element which specifies
+	 * the controller's fully qualified class name, and the rest of the name-value pairs
+	 * in the array are used to initialize the corresponding controller properties. For example,
+	 *
+	 * ~~~
+	 * [
+	 *   'account' => 'App\Controller\UserController',
+	 *   'article' => [
+	 *      'className' => 'App\Controller\PostController',
+	 *      'pageTitle' => 'something new',
+	 *   ],
+	 * ]
+	 * ~~~
+	 */
+	public $controllerMap = [];
+
+	/**
 	 * 控制器命名空间
 	 *
 	 * @var string
@@ -345,6 +366,12 @@ class Module extends Base
 		} else {
 			$id = $route;
 			$route = '';
+		}
+
+		// module and controller map take precedence
+		if (isset($this->controllerMap[$id])) {
+			$controller = Leaps::createObject($this->controllerMap[$id], [$id, $this]);
+			return [$controller, $route];
 		}
 
 		$module = $this->getModule ( $id );

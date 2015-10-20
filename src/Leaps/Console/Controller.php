@@ -34,7 +34,7 @@ class Controller extends \Leaps\Core\Controller
 	public $color;
 
 	/**
-	 * Returns a value indicating whether ANSI color is enabled.
+	 * 返回是否启用Ansi颜色
 	 *
 	 * ANSI color is enabled only if [[color]] is set true or is not set
 	 * and the terminal supports ANSI color.
@@ -77,10 +77,7 @@ class Controller extends \Leaps\Core\Controller
 	}
 
 	/**
-	 * Binds the parameters to the action.
-	 * This method is invoked by [[Action]] when it begins to run with the given parameters.
-	 * This method will first bind the parameters with the [[options()|options]]
-	 * available to the action. It then validates the given arguments.
+	 * 绑定参数到操作
 	 *
 	 * @param Action $action the action to be bound with parameters
 	 * @param array $params the parameters to be bound to the action
@@ -94,9 +91,7 @@ class Controller extends \Leaps\Core\Controller
 		} else {
 			$method = new \ReflectionMethod ( $action, 'run' );
 		}
-
 		$args = array_values ( $params );
-
 		$missing = [ ];
 		foreach ( $method->getParameters () as $i => $param ) {
 			if ($param->isArray () && isset ( $args [$i] )) {
@@ -110,11 +105,9 @@ class Controller extends \Leaps\Core\Controller
 				}
 			}
 		}
-
 		if (! empty ( $missing )) {
 			throw new Exception ( 'Missing required arguments: '.implode ( ', ', $missing ) );
 		}
-
 		return $args;
 	}
 
