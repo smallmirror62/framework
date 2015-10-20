@@ -92,25 +92,6 @@ class Application extends \Leaps\Core\Application
 	 */
 	public function coreServices()
 	{
-		return array_merge(parent::coreServices(),[
-				"cookie" => [
-						"className" => "\\Leaps\\Http\\Cookies"
-				],
-				"request" => [
-						"className" => "\\Leaps\\Http\\Request"
-				],
-				"response" => [
-						"className" => "\\Leaps\\Http\\Response"
-				],
-				'router' => [
-						'className' => 'Leaps\Router\UrlManager'
-				],
-				'session' => [
-						'className' => "\\Leaps\\Session\\Files"
-				],
-				'errorhandler' => [
-						'className' => "\\Leaps\\Web\\ErrorHandler"
-				]
-		]);
+		return array_merge ( parent::coreServices (), [ 'errorhandler' => [ 'className' => 'Leaps\Web\ErrorHandler' ] ] );
 	}
 }

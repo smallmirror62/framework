@@ -66,7 +66,7 @@ class Application extends \Leaps\Core\Application
 	 */
 	public function coreServices()
 	{
-		return array_merge ( parent::coreServices (), [ 'request' => [ 'className' => 'Leaps\Application\Console\Request' ],'response' => [ 'className' => 'Leaps\Application\Console\Response' ],'errorHandler' => [ 'className' => 'Leaps\Application\Console\ErrorHandler' ] ]
+		return array_merge ( parent::coreServices (), [ 'request' => [ 'className' => 'Leaps\Console\Request' ],'response' => [ 'className' => 'Leaps\Console\Response' ],'errorHandler' => [ 'className' => 'Leaps\Console\ErrorHandler' ] ]
 
 		 );
 	}

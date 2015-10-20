@@ -313,31 +313,57 @@ abstract class Application extends Module
 	public function coreServices()
 	{
 		return [
-				"file" => [
-						"className" => "Leaps\\Filesystem\\Filesystem"
-				],
-				"log" => [
-						"className" => "Leaps\\Log\\Dispatcher"
-				],
-				"crypt" => [
-						"className" => "Leaps\\Crypt\\Crypt"
-				],
-				"cache" => [
-						"className" => "Leaps\\Cache\\ArrayCache"
-				],
-				"registry" => [
-						"className" => "Leaps\\Core\\Registry"
-				],
-				"filter" => [
-						"className" => "Leaps\\Filter\\Filter"
-				],
-				"event" => [
-					"className" => "Leaps\\Events\\Dispatcher"
-				],
-				"db"=>[
-					"className" => "Leaps\\Db\\Db"
-				]
+				'file' => ['className' => 'Leaps\Filesystem\Filesystem'],
+				'log' => ['className' => 'Leaps\Log\Dispatcher'],
+				'crypt' => ['className' => 'Leaps\Crypt\Crypt'],
+				'cache' => ['className' => 'Leaps\Cache\ArrayCache'],
+				'registry' => ['className' => 'Leaps\Core\Registry'],
+				'filter' => ['className' => 'Leaps\Filter\Filter'],
+				'event' => ['className' => 'Leaps\Events\Dispatcher'],
+				'db'=>['className' => 'Leaps\Db\Db'],
+				'view' => ['className' => 'Leaps\Web\View'],
+				'cookie' => ['className' => 'Leaps\Http\Cookies'],
+				'request' => ['className' => 'Leaps\Http\Request'],
+				'response' => ['className' => 'Leaps\Http\Response'],
+				'router' => ['className' => 'Leaps\Router\UrlManager'],
+				'session' => ['className' => "\\Leaps\\Session\\Files"],
 		];
+	}
+
+	/**
+	 * Returns the database connection component.
+	 * @return \Leaps\Db\Connection the database connection.
+	 */
+	public function getDb()
+	{
+		return $this->getShared('db');
+	}
+
+	/**
+	 * Returns the cache component.
+	 * @return \Leaps\Cache\Adapter the cache application component. Null if the component is not enabled.
+	 */
+	public function getCache()
+	{
+		return $this->getShared('cache');
+	}
+
+	/**
+	 * Returns the log dispatcher component.
+	 * @return \Leaps\Log\Dispatcher the log dispatcher application component.
+	 */
+	public function getLog()
+	{
+		return $this->getShared('log');
+	}
+
+	/**
+	 * Returns the error handler component.
+	 * @return \Leaps\Web\ErrorHandler|\Leaps\Console\ErrorHandler the error handler application component.
+	 */
+	public function getErrorHandler()
+	{
+		return $this->getShared('errorhandler');
 	}
 
 	/**
@@ -358,6 +384,33 @@ abstract class Application extends Module
 	public function getResponse()
 	{
 		return $this->getShared ( 'response' );
+	}
+
+	/**
+	 * 返回视图对象
+	 * @return View|\Leaps\Web\View the view application component that is used to render various view files.
+	 */
+	public function getView()
+	{
+		return $this->getShared('view');
+	}
+
+	/**
+	 * 返回加密对象
+	 * @return \Leaps\Crypt\Crypt the security application component.
+	 */
+	public function getCrypt()
+	{
+		return $this->getShared('crypt');
+	}
+
+	/**
+	 * 返回应用URL路由对象
+	 * @return \Leaps\Router\UrlManager the URL manager for this application.
+	 */
+	public function getUrlManager()
+	{
+		return $this->getShared('router');
 	}
 
 	/**

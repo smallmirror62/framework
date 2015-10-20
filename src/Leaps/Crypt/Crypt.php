@@ -11,6 +11,7 @@
 namespace Leaps\Crypt;
 
 use Leaps\Di\Injectable;
+
 /**
  * Leaps\Crypt\Crypt
  *
@@ -33,7 +34,6 @@ class Crypt extends Injectable implements CryptInterface
 	protected $_padding = 0;
 	protected $_mode = "cbc";
 	protected $_cipher = "rijndael-256";
-
 	const PADDING_DEFAULT = 0;
 	const PADDING_ANSI_X_923 = 1;
 	const PADDING_PKCS7 = 2;
