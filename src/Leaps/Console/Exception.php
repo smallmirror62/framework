@@ -8,38 +8,25 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Leaps\Application;
+namespace Leaps\Console;
 
-class ConsoleApplication extends \Leaps\Core\Application
+use Leaps\Core\UserException;
+
+/**
+ * 控制台命令异常
+ *
+ * @author Tongle Xu <xutongle@gmail.com>
+ * @since 4.0
+ */
+class Exception extends UserException
 {
-
 	/**
-	 * (non-PHPdoc)
+	 * 返回用户友好的异常名称
 	 *
-	 * @param resource Leaps\Http\Request
-	 * @see \Leaps\Core\Application::handleRequest()
+	 * @return string
 	 */
-	public function handleRequest($request)
+	public function getName()
 	{
-	}
-
-	/**
-	 * (non-PHPdoc)
-	 *
-	 * @see \Leaps\Core\Application::coreServices()
-	 */
-	public function coreServices()
-	{
-		return [
-				"cookie" => [
-						"className" => "\\Leaps\\Http\\Cookies"
-				],
-				"request" => [
-						"className" => "\\Leaps\\Http\\Request"
-				],
-				"response" => [
-						"className" => "\\Leaps\\Http\\Response"
-				]
-		];
+		return 'System Error';
 	}
 }

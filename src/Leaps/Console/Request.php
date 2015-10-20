@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Leaps\Application\Console;
+namespace Leaps\Console;
 
 class Request extends \Leaps\Core\Base
 {

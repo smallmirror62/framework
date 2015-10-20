@@ -13,49 +13,42 @@ namespace Leaps\Db;
 class Exception extends \Leaps\Core\Exception {
 
 	/**
-	 * The inner exception.
-	 *
-	 * @var Exception
+	 * PDO异常提供的错误信息
+	 * @var array
+	 * by [PDO::errorInfo](http://www.php.net/manual/en/pdo.errorinfo.php).
 	 */
-	protected $inner;
+	public $errorInfo = [];
 
 	/**
-	 * Create a new database exception instance.
-	 *
-	 * @param  string     $sql
-	 * @param  array      $bindings
-	 * @param  Exception  $inner
-	 * @return void
+	 * 构造方法
+	 * @param string $message PDO错误消息
+	 * @param array $errorInfo PDO 错误详细
+	 * @param integer $code PDO 错误代码
+	 * @param \Exception $previous The previous exception used for the exception chaining.
 	 */
-	public function __construct($sql, $bindings, \Exception $inner)
+	public function __construct($message, $errorInfo = [], $code = 0, \Exception $previous = null)
 	{
-		$this->inner = $inner;
-		$this->setMessage($sql, $bindings);
-		// Set the exception code
-		$this->code = $inner->getCode();
+		$this->errorInfo = $errorInfo;
+		parent::__construct($message, $code, $previous);
 	}
 
 	/**
-	 * Get the inner exception.
-	 *
-	 * @return Exception
+	 * 返回友好的异常名称
+	 * @return string
 	 */
-	public function getInner()
+	public function getName()
 	{
-		return $this->inner;
+		return 'Database Exception';
 	}
+
 
 	/**
-	 * Set the exception message to include the SQL and bindings.
-	 *
-	 * @param  string  $sql
-	 * @param  array   $bindings
-	 * @return void
+	 * 异常的可读表示
+	 * @return string
 	 */
-	protected function setMessage($sql, $bindings)
+	public function __toString()
 	{
-		$this->message = $this->inner->getMessage();
-		$this->message .= "\n\nSQL: ".$sql."\n\nBindings: ".var_export($bindings, true);
+		return parent::__toString() . PHP_EOL
+		. 'Additional Information:' . PHP_EOL . print_r($this->errorInfo, true);
 	}
-
 }

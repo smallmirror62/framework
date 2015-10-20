@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Core;
 
-use Leaps\Kernel;
+use Leaps;
 
 class InlineAction extends Action
 {
@@ -45,9 +45,9 @@ class InlineAction extends Action
 	public function runWithParams($params)
 	{
 		$args = $this->controller->bindActionParams ( $this, $params );
-		Kernel::trace ( 'Running action: ' . get_class ( $this->controller ) . '::' . $this->actionMethod . '()', __METHOD__ );
-		if (Kernel::app ()->requestedParams === null) {
-			Kernel::app ()->requestedParams = $args;
+		Leaps::trace ( 'Running action: ' . get_class ( $this->controller ) . '::' . $this->actionMethod . '()', __METHOD__ );
+		if (Leaps::app ()->requestedParams === null) {
+			Leaps::app ()->requestedParams = $args;
 		}
 		return call_user_func_array ( [ $this->controller,$this->actionMethod ], $args );
 	}

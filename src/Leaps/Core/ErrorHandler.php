@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Core;
 
-use Leaps\Kernel;
+use Leaps;
 use Leaps\Di\Injectable;
 use Leaps\Utility\VarDumper;
 use Leaps\Application\Web\HttpException;
@@ -51,21 +51,12 @@ abstract class ErrorHandler extends Injectable
 	public function register()
 	{
 		ini_set ( 'display_errors', true );
-		set_exception_handler ( [
-				$this,
-				'handleException'
-		] );
-		set_error_handler ( [
-				$this,
-				'handleError'
-		] );
+		set_exception_handler ( [ $this,'handleException' ] );
+		set_error_handler ( [ $this,'handleError' ] );
 		if ($this->memoryReserveSize > 0) {
 			$this->_memoryReserve = str_repeat ( 'x', $this->memoryReserveSize );
 		}
-		register_shutdown_function ( [
-				$this,
-				'handleFatalError'
-		] );
+		register_shutdown_function ( [ $this,'handleFatalError' ] );
 	}
 
 	/**
@@ -89,12 +80,9 @@ abstract class ErrorHandler extends Injectable
 		if ($exception instanceof ExitException) {
 			return;
 		}
-
 		$this->exception = $exception;
-
 		// disable error capturing to avoid recursive errors while handling exceptions
 		$this->unregister ();
-
 		// set preventive HTTP status code to 500 in case error handling somehow fails and headers are sent
 		// HTTP exceptions will override this value in renderException()
 		if (PHP_SAPI !== 'cli') {
@@ -106,7 +94,7 @@ abstract class ErrorHandler extends Injectable
 				$this->clearOutput ();
 			}
 			$this->renderException ( $exception );
-			if (Kernel::$env != Kernel::TEST) {
+			if (!LEAPS_ENV_TEST) {
 				exit ( 1 );
 			}
 		} catch ( \Exception $e ) {
@@ -115,11 +103,11 @@ abstract class ErrorHandler extends Injectable
 			$msg .= ( string ) $e;
 			$msg .= "\nPrevious exception:\n";
 			$msg .= ( string ) $exception;
-			if (Kernel::$env == Kernel::DEVELOPMENT) {
+			if (LEAPS_DEBUG) {
 				if (PHP_SAPI === 'cli') {
 					echo $msg . "\n";
 				} else {
-					echo '<pre>' . htmlspecialchars ( $msg, ENT_QUOTES, Kernel::app ()->charset ) . '</pre>';
+					echo '<pre>' . htmlspecialchars ( $msg, ENT_QUOTES, Leaps::app ()->charset ) . '</pre>';
 				}
 			} else {
 				echo 'An internal server error occurred.';
@@ -189,7 +177,7 @@ abstract class ErrorHandler extends Injectable
 			}
 			$this->renderException ( $exception );
 			// need to explicitly flush logs because exit() next will terminate the app immediately
-			//Kernel::app()->log->flush ( true );
+			Leaps::getLogger()->flush(true);
 			exit ( 1 );
 		}
 	}
@@ -215,7 +203,7 @@ abstract class ErrorHandler extends Injectable
 		} elseif ($exception instanceof \ErrorException) {
 			$category .= ':' . $exception->getSeverity ();
 		}
-		Kernel::error ( ( string ) $exception, $category );
+		Leaps::error ( ( string ) $exception, $category );
 	}
 
 	/**
@@ -252,9 +240,9 @@ abstract class ErrorHandler extends Injectable
 	 */
 	public static function convertExceptionToString($exception)
 	{
-		if ($exception instanceof Exception && ($exception instanceof UserException || Kernel::$env != Kernel::DEVELOPMENT)) {
+		if ($exception instanceof Exception && ($exception instanceof UserException || !LEAPS_DEBUG)) {
 			$message = "{$exception->getName()}: {$exception->getMessage()}";
-		} elseif (Kernel::$env == Kernel::DEVELOPMENT) {
+		} elseif (LEAPS_DEBUG) {
 			if ($exception instanceof Exception) {
 				$message = "Exception ({$exception->getName()})";
 			} elseif ($exception instanceof ErrorException) {

@@ -8,13 +8,12 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Leaps\Application;
+namespace Leaps\Web;
 
-use Leaps\Kernel;
+use Leaps;
 use Leaps\Http\Response;
-use Leaps\Application\Web\NotFoundHttpException;
 
-class WebApplication extends \Leaps\Core\Application
+class Application extends \Leaps\Core\Application
 {
 	/**
 	 *
@@ -36,11 +35,11 @@ class WebApplication extends \Leaps\Core\Application
 	 */
 	public function handleRequest($request)
 	{
-		Kernel::setAlias ( '@Webroot', dirname ( $request->getScriptFile () ) );
-		Kernel::setAlias ( '@Web', $request->getBaseUrl () );
+		Leaps::setAlias ( '@Webroot', dirname ( $request->getScriptFile () ) );
+		Leaps::setAlias ( '@Web', $request->getBaseUrl () );
 		list ( $route, $params ) = $request->resolve ();
 		try {
-			kernel::trace ( "Route requested: '$route'", __METHOD__ );
+			Leaps::trace ( "Route requested: '$route'", __METHOD__ );
 			$this->requestedRoute = $route;
 			$result = $this->runAction ( $route, $params );
 			if ($result instanceof Response) {
@@ -110,7 +109,7 @@ class WebApplication extends \Leaps\Core\Application
 						'className' => "\\Leaps\\Session\\Files"
 				],
 				'errorhandler' => [
-						'className' => "\\Leaps\\Application\\Web\\ErrorHandler"
+						'className' => "\\Leaps\\Web\\ErrorHandler"
 				]
 		]);
 	}

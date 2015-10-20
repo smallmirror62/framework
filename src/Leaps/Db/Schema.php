@@ -103,16 +103,11 @@ class Schema
 	protected static function implications($table)
 	{
 		if (count ( $table->columns ) > 0 and ! $table->creating ()) {
-			$command = new Fluent ( array ('type' => 'add') );
+			$command = new Fluent ( array ('type' => 'add' ) );
 			array_unshift ( $table->commands, $command );
 		}
 		foreach ( $table->columns as $column ) {
-			foreach ( [
-					'primary',
-					'unique',
-					'fulltext',
-					'index'
-			] as $key ) {
+			foreach ( [ 'primary','unique','fulltext','index' ] as $key ) {
 				if (isset ( $column->$key )) {
 					if ($column->$key === true) {
 						$table->$key ( $column->name );
@@ -134,7 +129,7 @@ class Schema
 	{
 		$driver = $connection->driver ();
 		if (isset ( \Leaps\Db\Db::$registrar [$driver] )) {
-			return \Leaps\Db\Db::$registrar [$driver] ['schema'] ();
+			return new \Leaps\Db\Db::$registrar [$driver] ['schema'] ();
 		}
 		switch ($driver) {
 			case 'mysql' :

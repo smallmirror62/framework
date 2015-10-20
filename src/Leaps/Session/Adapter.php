@@ -39,6 +39,7 @@ abstract class Adapter
 	 */
 	public function init()
 	{
+
 	}
 
 	/**

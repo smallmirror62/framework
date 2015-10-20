@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Core;
 
-use Leaps\Kernel;
+use Leaps;
 
 class Controller extends Base {
 
@@ -67,62 +67,23 @@ class Controller extends Base {
      */
     public function runAction($id, $params = [])
     {
-		$db = $this->module->getDb();
-		$user = ['username'=>'aaa','email'=>'bbb','mobile'=>'1234567890','password'=>'aaa','encrypt'=>'bvbb'];
-		print_r($db->table('user')->insert($user));
-    	exit;
     	$action = $this->createAction($id);
     	if ($action === null) {
     		throw new InvalidRouteException('Unable to resolve the request: ' . $this->getUniqueId() . '/' . $id);
     	}
-
-    	Kernel::trace("Route to run: " . $action->getUniqueId(), __METHOD__);
-
-    	if (Kernel::app()->requestedAction === null) {
-    		Kernel::app()->requestedAction = $action;
+    	Leaps::trace("Route to run: " . $action->getUniqueId(), __METHOD__);
+    	if (Leaps::app()->requestedAction === null) {
+    		Leaps::app()->requestedAction = $action;
     	}
-
     	$oldAction = $this->action;
     	$this->action = $action;
-
-    	$modules = [];
-    	$runAction = true;
-
-    	// call beforeAction on modules
-    	foreach ($this->getModules() as $module) {
-    		print_r($module);
-    		if ($module->beforeAction($action)) {
-    			array_unshift($modules, $module);
-    		} else {
-    			echo 888;
-    			$runAction = false;
-    			break;
-    		}
-    	}
-
-    	$result = null;
-    	if ($runAction && $this->beforeAction($action)) {
-    		echo 999;
-    		// run the action
-    		$result = $action->runWithParams($params);
-
-    		$result = $this->afterAction($action, $result);
-
-    		// call afterAction on modules
-    		foreach ($modules as $module) {
-    			/* @var $module Module */
-    			$result = $module->afterAction($action, $result);
-    		}
-    	}
+    	// run the action
+    	$result = $action->runWithParams($params);
 
     	$this->action = $oldAction;
-
     	return $result;
     }
-	public function afterAction(){}
-    public function beforeAction($action){
 
-    }
 
     /**
      * 执行指定的路由请求
@@ -142,7 +103,7 @@ class Controller extends Base {
     	} elseif ($pos > 0) {
     		return $this->module->runAction($route, $params);
     	} else {
-    		return Kernel::app()->runAction(ltrim($route, '/'), $params);
+    		return Leaps::app()->runAction(ltrim($route, '/'), $params);
     	}
     }
 

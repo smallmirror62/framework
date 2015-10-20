@@ -8,38 +8,19 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Leaps\Application;
+namespace Leaps\Web;
 
-class ApiApplication extends \Leaps\Core\Application
+class BadRequestHttpException extends HttpException
 {
-
 	/**
-	 * (non-PHPdoc)
+	 * 构造方法
 	 *
-	 * @param resource Leaps\Http\Request
-	 * @see \Leaps\Core\Application::handleRequest()
+	 * @param string $message 错误消息
+	 * @param integer $code 错误代码
+	 * @param \Exception $previous The previous exception used for the exception chaining.
 	 */
-	public function handleRequest($request)
+	public function __construct($message = null, $code = 0, \Exception $previous = null)
 	{
-	}
-
-	/**
-	 * (non-PHPdoc)
-	 *
-	 * @see \Leaps\Core\Application::coreServices()
-	 */
-	public function coreServices()
-	{
-		return [
-				"cookie" => [
-						"className" => "\\Leaps\\Http\\Cookies"
-				],
-				"request" => [
-						"className" => "\\Leaps\\Http\\Request"
-				],
-				"response" => [
-						"className" => "\\Leaps\\Http\\Response"
-				]
-		];
+		parent::__construct ( 400, $message, $code, $previous );
 	}
 }

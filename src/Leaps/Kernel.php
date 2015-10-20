@@ -26,41 +26,6 @@ use Leaps\Core\InvalidParamException;
 class Kernel
 {
 	/**
-	 * 测试环境
-	 *
-	 * @var string constant used for when in testing mode
-	 */
-	const TEST = 'test';
-
-	/**
-	 * 开发环境
-	 *
-	 * @var string
-	 */
-	const DEVELOPMENT = 'development';
-
-	/**
-	 * 生产环境
-	 *
-	 * @var string
-	 */
-	const PRODUCTION = 'production';
-
-	/**
-	 * 框架执行环境
-	 *
-	 * @var string
-	 */
-	public static $env = Kernel::PRODUCTION;
-
-	/**
-	 * 客户端
-	 *
-	 * @var string
-	 */
-	public static $client = Kernel::PRODUCTION;
-
-	/**
 	 * 路径别名集合
 	 *
 	 * @var array
@@ -83,7 +48,7 @@ class Kernel
 	/**
 	 * 应用实例
 	 *
-	 * @var Leaps\Core\Application
+	 * @var \Leaps\Core\Application
 	 */
 	public static $app;
 
@@ -175,7 +140,7 @@ class Kernel
 		 * 如果实现了 \Leaps\Di\InjectionAwareInterface 就把DI实例射进去
 		 */
 		if (is_object ( $instance ) && method_exists ( $instance, "setDI" )) {
-			$instance->setDI ( static::app () );
+			$instance->setDI ( \Leaps\Di\Container::getDefault () );
 		}
 
 		return $instance;

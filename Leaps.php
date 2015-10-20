@@ -30,6 +30,27 @@ defined ( 'LEAPS_PATH' ) or define ( 'LEAPS_PATH', __DIR__ );
 defined ( 'LEAPS_DEBUG' ) or define ( 'LEAPS_DEBUG', false );
 
 /**
+ * This constant defines in which environment the application is running. Defaults to 'prod', meaning production environment.
+ * You may define this constant in the bootstrap script. The value could be 'prod' (production), 'dev' (development), 'test', 'staging', etc.
+ */
+defined('LEAPS_ENV') or define('LEAPS_ENV', 'prod');
+
+/**
+ * Whether the the application is running in production environment
+ */
+defined('LEAPS_ENV_PROD') or define('LEAPS_ENV_PROD', LEAPS_ENV === 'prod');
+
+/**
+ * Whether the the application is running in development environment
+ */
+defined('LEAPS_ENV_DEV') or define('LEAPS_ENV_DEV', LEAPS_ENV === 'dev');
+
+/**
+ * Whether the the application is running in testing environment
+ */
+defined('LEAPS_ENV_TEST') or define('LEAPS_ENV_TEST', LEAPS_ENV === 'test');
+
+/**
  * This constant defines whether error handling should be enabled.
  * Defaults to true.
  */
@@ -53,8 +74,3 @@ class Leaps extends \Leaps\Kernel
  * 初始化自动加载
  */
 spl_autoload_register ( [ 'Leaps','autoload' ], true, true );
-
-/**
- * 初始化依赖注入容器
- */
-Leaps::$container = new Leaps\Di\Container();

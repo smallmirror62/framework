@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Log;
 
-use Leaps\Kernel;
+use Leaps;
 use Leaps\Di\Injectable;
 use Leaps\Core\ErrorHandler;
 
@@ -20,15 +20,14 @@ use Leaps\Core\ErrorHandler;
 class Dispatcher extends Injectable
 {
 	/**
-	 *
-	 * @var array|Target[] the log targets. Each array element represents a single [[Target|log target]] instance
-	 *      or the configuration for creating the log target instance.
+	 * 日志处理器实例
+	 * @var array|Target[]
 	 */
 	public $targets = [ ];
 
 	/**
-	 *
-	 * @var Logger the logger.
+	 * 日志
+	 * @var Logger
 	 */
 	private $_logger;
 
@@ -55,7 +54,7 @@ class Dispatcher extends Injectable
 		parent::init ();
 		foreach ( $this->targets as $name => $target ) {
 			if (! $target instanceof Target) {
-				$this->targets [$name] = Kernel::createObject ( $target );
+				$this->targets [$name] = Leaps::createObject ( $target );
 			}
 		}
 	}
@@ -70,7 +69,7 @@ class Dispatcher extends Injectable
 	public function getLogger()
 	{
 		if ($this->_logger === null) {
-			$this->setLogger ( Kernel::getLogger () );
+			$this->setLogger ( Leaps::getLogger () );
 		}
 		return $this->_logger;
 	}
@@ -151,7 +150,6 @@ class Dispatcher extends Injectable
 				}
 			}
 		}
-
 		if (! empty ( $targetErrors )) {
 			$this->dispatch ( $targetErrors, true );
 		}

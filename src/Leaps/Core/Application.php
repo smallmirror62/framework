@@ -103,7 +103,7 @@ abstract class Application extends Module
 		$this->_config = $config;
 		$this->preInit ();
 		$this->registerErrorHandler($config);
-		Leaps::$container->setServices ( $this->_config ['services'] );
+		$this->setServices ( $this->_config ['services'] );
 	}
 
 	/**
@@ -338,5 +338,51 @@ abstract class Application extends Module
 					"className" => "Leaps\\Db\\Db"
 				]
 		];
+	}
+
+	/**
+	 * 获取请求组件实例
+	 *
+	 * @return \Leaps\Http\Request|\Leaps\Console\Request
+	 */
+	public function getRequest()
+	{
+		return $this->getShared ( 'request' );
+	}
+
+	/**
+	 * 获取响应组件实例
+	 *
+	 * @return \Leaps\Http\Response | \Leaps\Application\Console\Response
+	 */
+	public function getResponse()
+	{
+		return $this->getShared ( 'response' );
+	}
+
+	/**
+	 * 动态调用Di容器方法
+	 *
+	 * @param string $method
+	 * @param array $args
+	 * @return mixed
+	 */
+	public function __call($method, $args)
+	{
+		$instance = \Leaps\Di\Container::getDefault ();
+		switch (count ( $args )) {
+			case 0 :
+				return $instance->$method ();
+			case 1 :
+				return $instance->$method ( $args [0] );
+			case 2 :
+				return $instance->$method ( $args [0], $args [1] );
+			case 3 :
+				return $instance->$method ( $args [0], $args [1], $args [2] );
+			case 4 :
+				return $instance->$method ( $args [0], $args [1], $args [2], $args [3] );
+			default :
+				return call_user_func_array ( [ $instance,$method ], $args );
+		}
 	}
 }

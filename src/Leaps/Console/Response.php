@@ -8,38 +8,34 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Leaps\Application;
+namespace Leaps\Console;
 
-class AdminApplication extends \Leaps\Core\Application
+class Response
 {
+	/**
+	 * 退出代码
+	 * @var integer the exit status. Exit statuses should be in the range 0 to 254.
+	 *      The status 0 means the program terminates successfully.
+	 */
+	public $exitStatus = 0;
 
 	/**
-	 * (non-PHPdoc)
-	 *
-	 * @param resource Leaps\Http\Request
-	 * @see \Leaps\Core\Application::handleRequest()
+	 * 发送响应到客户端
 	 */
-	public function handleRequest($request)
+	public function send()
 	{
 	}
 
 	/**
-	 * (non-PHPdoc)
-	 *
-	 * @see \Leaps\Core\Application::coreServices()
+	 * 删除所有输出缓存
 	 */
-	public function coreServices()
+	public function clearOutputBuffers()
 	{
-		return [
-				"cookie" => [
-						"className" => "\\Leaps\\Http\\Cookies"
-				],
-				"request" => [
-						"className" => "\\Leaps\\Http\\Request"
-				],
-				"response" => [
-						"className" => "\\Leaps\\Http\\Response"
-				]
-		];
+		// the following manual level counting is to deal with zlib.output_compression set to On
+		for($level = ob_get_level (); $level > 0; -- $level) {
+			if (! @ob_end_clean ()) {
+				ob_clean ();
+			}
+		}
 	}
 }

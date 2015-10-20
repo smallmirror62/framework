@@ -8,40 +8,49 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Leaps\Application\Web;
-use Leaps\Kernel;
+namespace Leaps\Web;
+
+use Leaps;
 use Leaps\Http\Response;
 use Leaps\Core\UserException;
-class ErrorHandler extends \Leaps\Core\ErrorHandler {
+use Leaps\Core\Exception;
+use Leaps\Core\ErrorException;
+
+class ErrorHandler extends \Leaps\Core\ErrorHandler
+{
 
 	/**
+	 *
 	 * @var integer maximum number of source code lines to be displayed. Defaults to 19.
 	 */
 	public $maxSourceLines = 19;
 	/**
+	 *
 	 * @var integer maximum number of trace source code lines to be displayed. Defaults to 13.
 	 */
 	public $maxTraceSourceLines = 13;
 
 	/**
 	 * (non-PHPdoc)
+	 *
 	 * @see \Leaps\Core\ErrorHandler::renderException()
 	 */
-	protected function renderException($exception){
+	protected function renderException($exception)
+	{
 		if (! is_object ( $this->_dependencyInjector )) {
 			throw new \Leaps\Di\Exception ( "A dependency injection object is required to access the 'response' service" );
 		}
 		$response = $this->_dependencyInjector->getShared ( "response" );
-		$useErrorView = $response->format === Response::FORMAT_HTML && (!LEAPS_DEBUG || $exception instanceof UserException);
+		$useErrorView = $response->format === Response::FORMAT_HTML && (! LEAPS_DEBUG || $exception instanceof UserException);
 		if ($response->format === Response::FORMAT_HTML) {
-			if (!LEAPS_DEBUG || isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+			if (LEAPS_ENV_TEST || isset ( $_SERVER ['HTTP_X_REQUESTED_WITH'] ) && $_SERVER ['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
 				// AJAX request
-				$response->data = '<pre>' . $this->htmlEncode($this->convertExceptionToString($exception)) . '</pre>';
+				$response->data = '<pre>' . $this->htmlEncode ( $this->convertExceptionToString ( $exception ) ) . '</pre>';
 			} else {
 				// if there is an error during error rendering it's useful to
 				// display PHP error in debug mode instead of a blank screen
-				if (Kernel::$env == Kernel::DEVELOPMENT) {
-					ini_set('display_errors', 1);
+				if (LEAPS_DEBUG) {
+					ini_set ( 'display_errors', 1 );
 				}
 				if ($useErrorView) {
 					$response->data = $this->renderErrorView ( $exception );
@@ -52,24 +61,25 @@ class ErrorHandler extends \Leaps\Core\ErrorHandler {
 		} elseif ($response->format === Response::FORMAT_RAW) {
 			$response->data = $exception;
 		} else {
-			$response->data = $this->convertExceptionToArray($exception);
+			$response->data = $this->convertExceptionToArray ( $exception );
 		}
 		if ($exception instanceof HttpException) {
-			$response->setStatusCode($exception->statusCode);
+			$response->setStatusCode ( $exception->statusCode );
 		} else {
-			$response->setStatusCode(500);
+			$response->setStatusCode ( 500 );
 		}
-		$response->send();
+		$response->send ();
 	}
 
 	/**
 	 * Converts special characters to HTML entities.
+	 *
 	 * @param string $text to encode.
 	 * @return string encoded original text.
 	 */
 	public function htmlEncode($text)
 	{
-		return htmlspecialchars($text, ENT_QUOTES, Kernel::app()->charset);
+		return htmlspecialchars ( $text, ENT_QUOTES, LEAPS::app ()->charset );
 	}
 
 	/**
@@ -205,28 +215,7 @@ class ErrorHandler extends \Leaps\Core\ErrorHandler {
 	 */
 	public function createServerInformationLink()
 	{
-		$serverUrls = [
-				'http://httpd.apache.org/' => [
-						'apache'
-				],
-				'http://nginx.org/' => [
-						'nginx'
-				],
-				'http://lighttpd.net/' => [
-						'lighttpd'
-				],
-				'http://gwan.com/' => [
-						'g-wan',
-						'gwan'
-				],
-				'http://iis.net/' => [
-						'iis',
-						'services'
-				],
-				'http://php.net/manual/en/features.commandline.webserver.php' => [
-						'development'
-				]
-		];
+		$serverUrls = [ 'http://httpd.apache.org/' => [ 'apache' ],'http://nginx.org/' => [ 'nginx' ],'http://lighttpd.net/' => [ 'lighttpd' ],'http://gwan.com/' => [ 'g-wan','gwan' ],'http://iis.net/' => [ 'iis','services' ],'http://php.net/manual/en/features.commandline.webserver.php' => [ 'development' ] ];
 		if (isset ( $_SERVER ['SERVER_SOFTWARE'] )) {
 			foreach ( $serverUrls as $url => $keywords ) {
 				foreach ( $keywords as $keyword ) {
@@ -236,7 +225,6 @@ class ErrorHandler extends \Leaps\Core\ErrorHandler {
 				}
 			}
 		}
-
 		return '';
 	}
 
@@ -259,7 +247,41 @@ class ErrorHandler extends \Leaps\Core\ErrorHandler {
 	 */
 	public function createFrameworkVersionLink()
 	{
-		return '<a href="http://github.com/leaps/framework/" target="_blank">' . $this->htmlEncode ( Kernel::getVersion () ) . '</a>';
+		return '<a href="http://github.com/leaps/framework/" target="_blank">' . $this->htmlEncode ( Leaps::getVersion () ) . '</a>';
+	}
+
+	/**
+	 * Converts an exception into an array.
+	 *
+	 * @param \Exception $exception the exception being converted
+	 * @return array the array representation of the exception.
+	 */
+	protected function convertExceptionToArray($exception)
+	{
+		if (! LEAPS_DEBUG && ! $exception instanceof UserException && ! $exception instanceof HttpException) {
+			$exception = new HttpException ( 500, 'There was an error at the server.' );
+		}
+
+		$array = [ 'name' => ($exception instanceof Exception || $exception instanceof ErrorException) ? $exception->getName () : 'Exception','message' => $exception->getMessage (),'code' => $exception->getCode () ];
+		if ($exception instanceof HttpException) {
+			$array ['status'] = $exception->statusCode;
+		}
+		if (LEAPS_DEBUG) {
+			$array ['type'] = get_class ( $exception );
+			if (! $exception instanceof UserException) {
+				$array ['file'] = $exception->getFile ();
+				$array ['line'] = $exception->getLine ();
+				$array ['stack-trace'] = explode ( "\n", $exception->getTraceAsString () );
+				if ($exception instanceof \Leaps\Db\Exception) {
+					$array ['error-info'] = $exception->errorInfo;
+				}
+			}
+		}
+		if (($prev = $exception->getPrevious ()) !== null) {
+			$array ['previous'] = $this->convertExceptionToArray ( $prev );
+		}
+
+		return $array;
 	}
 
 	/**

@@ -117,7 +117,7 @@ class Module extends Base
 	 */
 	public function setBasePath($path)
 	{
-		$path = \Leaps\Kernel::getAlias ( $path );
+		$path = Leaps::getAlias ( $path );
 		$p = realpath ( $path );
 		if ($p !== false && is_dir ( $p )) {
 			$this->_basePath = $p;
@@ -244,11 +244,9 @@ class Module extends Base
 				Leaps::trace ( "Loading module: $id", __METHOD__ );
 				/* @var $module Module */
 				$module = Leaps::createObject ( $this->_modules [$id], [$id,$this] );
-
 				return $this->_modules [$id] = $module;
 			}
 		}
-
 		return null;
 	}
 
@@ -290,7 +288,6 @@ class Module extends Base
 					$modules [] = $module;
 				}
 			}
-
 			return $modules;
 		} else {
 			return $this->_modules;
@@ -405,10 +402,5 @@ class Module extends Base
 		} else {
 			return null;
 		}
-	}
-
-	public function beforeAction($action)
-	{
-		return true;
 	}
 }

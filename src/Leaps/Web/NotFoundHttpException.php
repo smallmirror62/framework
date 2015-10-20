@@ -8,22 +8,19 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Leaps\Application\Console;
+namespace Leaps\Web;
 
-use Leaps\Core\UserException;
-
-/**
- * 控制台命令异常
- *
- * @author Tongle Xu <xutongle@gmail.com>
- * @since 4.0
- */
-class Exception extends UserException {
+class NotFoundHttpException extends HttpException
+{
 	/**
-	 * 返回用户友好的异常名称
-	 * @return string
+	 * Constructor.
+	 *
+	 * @param string $message error message
+	 * @param integer $code error code
+	 * @param \Exception $previous The previous exception used for the exception chaining.
 	 */
-	public function getName() {
-		return 'System Error';
+	public function __construct($message = null, $code = 0, \Exception $previous = null)
+	{
+		parent::__construct ( 404, $message, $code, $previous );
 	}
 }

@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Core;
 
-use Leaps\Kernel;
+use Leaps;
 
 class Action extends Base
 {
@@ -67,33 +67,11 @@ class Action extends Base
 			throw new InvalidConfigException ( get_class ( $this ) . ' must define a "run()" method.' );
 		}
 		$args = $this->controller->bindActionParams ( $this, $params );
-		Kernel::trace ( 'Running action: ' . get_class ( $this ) . '::run()', __METHOD__ );
-		if (Kernel::app ()->requestedParams === null) {
-			Kernel::app ()->requestedParams = $args;
+		Leaps::trace ( 'Running action: ' . get_class ( $this ) . '::run()', __METHOD__ );
+		if (Leaps::app ()->requestedParams === null) {
+			Leaps::app ()->requestedParams = $args;
 		}
-		if ($this->beforeRun ()) {
-			$result = call_user_func_array ( [ $this,'run' ], $args );
-			$this->afterRun ();
-			return $result;
-		} else {
-			return null;
-		}
-	}
-
-	/**
-	 * 前置执行
-	 *
-	 * @return boolean whether to run the action.
-	 */
-	protected function beforeRun()
-	{
-		return true;
-	}
-
-	/**
-	 * 后置执行
-	 */
-	protected function afterRun()
-	{
+		$result = call_user_func_array ( [ $this,'run' ], $args );
+		return $result;
 	}
 }
