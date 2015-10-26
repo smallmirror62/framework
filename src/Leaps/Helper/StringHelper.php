@@ -8,9 +8,9 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Leaps\Utility;
+namespace Leaps\Helper;
 
-class Str
+class StringHelper
 {
 	const RANDOM_ALNUM = 0;
 	const RANDOM_ALPHA = 1;
@@ -92,19 +92,19 @@ class Str
 	{
 		$str = "";
 		switch ($type) {
-			case Str::RANDOM_ALPHA :
+			case static::RANDOM_ALPHA :
 				$pool = array_merge ( range ( "a", "z" ), range ( "A", "Z" ) );
 				break;
 
-			case Str::RANDOM_HEXDEC :
+			case static::RANDOM_HEXDEC :
 				$pool = array_merge ( range ( 0, 9 ), range ( "a", "f" ) );
 				break;
 
-			case Str::RANDOM_NUMERIC :
+			case static::RANDOM_NUMERIC :
 				$pool = range ( 0, 9 );
 				break;
 
-			case Str::RANDOM_NOZERO :
+			case static::RANDOM_NOZERO :
 				$pool = range ( 1, 9 );
 				break;
 

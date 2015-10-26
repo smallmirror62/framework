@@ -15,18 +15,20 @@ use Leaps\Di\Injectable;
 use Leaps\Core\ErrorHandler;
 
 /**
- * 调度管理
+ * 日志调度器
  */
 class Dispatcher extends Injectable
 {
 	/**
 	 * 日志处理器实例
+	 *
 	 * @var array|Target[]
 	 */
 	public $targets = [ ];
 
 	/**
 	 * 日志
+	 *
 	 * @var Logger
 	 */
 	private $_logger;

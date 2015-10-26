@@ -69,11 +69,10 @@ class UrlManager extends Injectable
 
 	/**
 	 * 路由规则配置
+	 *
 	 * @var array
 	 */
-	public $ruleConfig = [
-			'className' => 'Leaps\Router\UrlRule'
-	 ];
+	public $ruleConfig = [ 'className' => 'Leaps\Router\UrlRule' ];
 
 	/**
 	 * 兼容模式的路由变量
@@ -82,14 +81,15 @@ class UrlManager extends Injectable
 
 	/**
 	 * 网站基础路径
+	 *
 	 * @var string
 	 */
 	private $_baseUrl;
-
 	private $_hostInfo;
 
 	/**
 	 * 请求类实例
+	 *
 	 * @var \Leaps\Http\Request
 	 */
 	private $request;
@@ -106,7 +106,7 @@ class UrlManager extends Injectable
 		}
 		if ($this->enableRuleCache) {
 			if (! is_object ( $this->cache )) {
-				$this->cache = $this->_dependencyInjector->get ( $this->cache );
+				$this->cache = $this->_dependencyInjector->getShared ( $this->cache );
 			}
 			$cacheKey = __CLASS__;
 			$hash = md5 ( json_encode ( $this->rules ) );
@@ -214,7 +214,7 @@ class UrlManager extends Injectable
 
 			return [ $pathInfo,[ ] ];
 		} else {
-			$route = $request->getQuery ( $this->routeParam, null,'' );
+			$route = $request->getQuery ( $this->routeParam, null, '' );
 			if (is_array ( $route )) {
 				$route = '';
 			}

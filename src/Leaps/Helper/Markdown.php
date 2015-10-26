@@ -8,12 +8,12 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Leaps\Utility;
+namespace Leaps\Helper;
 
 use Leaps;
 use Leaps\Core\InvalidParamException;
 
-class BaseMarkdown
+class Markdown
 {
 	/**
 	 *

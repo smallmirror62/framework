@@ -13,18 +13,20 @@ namespace Leaps\Log;
 use Leaps;
 use Leaps\Http\Request;
 use Leaps\Di\Injectable;
-use Leaps\Utility\VarDumper;
+use Leaps\Helper\VarDumper;
 use Leaps\Core\InvalidConfigException;
 
 abstract class Target extends Injectable
 {
 	/**
 	 * 是否启用此日志目标
+	 *
 	 * @var boolean
 	 */
 	public $enabled = true;
 	/**
 	 * 此目标感兴趣的消息类别列表
+	 *
 	 * @var array list of message categories that this target is interested in. Defaults to empty, meaning all categories.
 	 *      You can use an asterisk at the end of a category so that the category may be used to
 	 *      match those categories sharing the same common prefix. For example, 'Leaps\Db\*' will match
@@ -76,7 +78,6 @@ abstract class Target extends Injectable
 	 *      Please refer to [[Logger::messages]] for the details about the message structure.
 	 */
 	public $messages = [ ];
-
 	private $_levels = 0;
 
 	/**

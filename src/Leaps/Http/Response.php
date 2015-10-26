@@ -11,9 +11,9 @@
 namespace Leaps\Http;
 
 use Leaps\Kernel;
-use Leaps\Utility\Str;
 use Leaps\Di\Injectable;
 use Leaps\Filesystem\MimeType;
+use Leaps\Helper\StringHelper;
 use Leaps\Http\ResponseInterface;
 use Leaps\Core\InvalidParamException;
 use Leaps\Core\InvalidConfigException;
@@ -571,17 +571,17 @@ class Response extends Injectable implements ResponseInterface
 	public function sendContentAsFile($content, $attachmentName, $options = [])
 	{
 		$headers = $this->getHeaders ();
-		$contentLength = Str::length ( $content );
+		$contentLength = StringHelper::length ( $content );
 		$range = $this->getHttpRange ( $contentLength );
 		if ($range === false) {
 			$headers->set ( 'Content-Range', "bytes */$contentLength" );
-			throw new \Leaps\Application\Web\HttpException ( 416, 'Requested range not satisfiable' );
+			throw new \Leaps\Web\HttpException ( 416, 'Requested range not satisfiable' );
 		}
 		list ( $begin, $end ) = $range;
 		if ($begin != 0 || $end != $contentLength - 1) {
 			$this->setStatusCode ( 206 );
 			$headers->set ( 'Content-Range', "bytes $begin-$end/$contentLength" );
-			$this->content = Str::substr ( $content, $begin, $end - $begin + 1 );
+			$this->content = StringHelper::substr ( $content, $begin, $end - $begin + 1 );
 		} else {
 			$this->setStatusCode ( 200 );
 			$this->content = $content;
@@ -641,7 +641,7 @@ class Response extends Injectable implements ResponseInterface
 		$range = $this->getHttpRange ( $fileSize );
 		if ($range === false) {
 			$headers->set ( 'Content-Range', "bytes */$fileSize" );
-			throw new \Leaps\Application\Web\HttpException ( 416, 'Requested range not satisfiable' );
+			throw new \Leaps\Web\HttpException ( 416, 'Requested range not satisfiable' );
 		}
 		list ( $begin, $end ) = $range;
 		if ($begin != 0 || $end != $fileSize - 1) {

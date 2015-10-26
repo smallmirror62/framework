@@ -51,6 +51,7 @@ class Logger extends Injectable
 
 	/**
 	 * 日志消息
+	 *
 	 * @var array 日志消息
 	 *      每个日志消息都是以下结构:
 	 *
@@ -68,18 +69,21 @@ class Logger extends Injectable
 
 	/**
 	 * 在刷新内存和发送到目标之前，应记录多少信息。
+	 *
 	 * @var integer how many messages should be logged before they are flushed from memory and sent to targets.
 	 */
 	public $flushInterval = 1000;
 
 	/**
 	 * 每一条消息应记录多少调用堆栈信息（文件名和行数）。
+	 *
 	 * @var integer how much call stack information (file name and line number) should be logged for each message.
 	 */
 	public $traceLevel = 0;
 
 	/**
 	 * 消息调度器
+	 *
 	 * @var Dispatcher
 	 */
 	public $dispatcher;
@@ -89,7 +93,8 @@ class Logger extends Injectable
 	 */
 	public function init()
 	{
-		register_shutdown_function ( function () {
+		register_shutdown_function ( function ()
+		{
 			$this->flush ();
 			register_shutdown_function ( [ $this,'flush' ], true );
 		} );

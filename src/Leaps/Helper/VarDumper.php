@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Leaps\Utility;
+namespace Leaps\Helper;
 
 class VarDumper
 {

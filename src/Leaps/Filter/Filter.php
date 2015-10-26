@@ -13,7 +13,7 @@ namespace Leaps\Filter;
 /**
  * Leaps\Filter\Filter
  *
- * The Phalcon\Filter component provides a set of commonly needed data filters. It provides
+ * The Leaps\Filter\Filter component provides a set of commonly needed data filters. It provides
  * object oriented wrappers to the php filter extension. Also allows the developer to
  * define his/her own filters
  *

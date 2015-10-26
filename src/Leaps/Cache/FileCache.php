@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Cache;
 
-use Leaps\Kernel;
+use Leaps;
 
 class FileCache extends Adapter
 {
@@ -80,7 +80,7 @@ class FileCache extends Adapter
 		if (! is_object ( $this->file )) {
 			$this->file = $this->_dependencyInjector->getShared ( $this->file );
 		}
-		$this->cachePath = Kernel::getAlias ( $this->cachePath );
+		$this->cachePath = Leaps::getAlias ( $this->cachePath );
 		if (! is_dir ( $this->cachePath )) {
 			$this->file->createDirectory ( $this->cachePath, $this->dirMode, true );
 		}
