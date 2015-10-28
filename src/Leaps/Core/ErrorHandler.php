@@ -12,8 +12,9 @@ namespace Leaps\Core;
 
 use Leaps;
 use Leaps\Di\Injectable;
-use Leaps\Utility\VarDumper;
-use Leaps\Application\Web\HttpException;
+use Leaps\Web\HttpException;
+use Leaps\Helper\VarDumper;
+
 
 abstract class ErrorHandler extends Injectable
 {
@@ -199,7 +200,7 @@ abstract class ErrorHandler extends Injectable
 	{
 		$category = get_class ( $exception );
 		if ($exception instanceof HttpException) {
-			$category = 'Leaps\\Application\Web\\HttpException:' . $exception->statusCode;
+			$category = 'Leaps\Web\\HttpException:' . $exception->statusCode;
 		} elseif ($exception instanceof \ErrorException) {
 			$category .= ':' . $exception->getSeverity ();
 		}

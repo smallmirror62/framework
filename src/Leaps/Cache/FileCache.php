@@ -223,13 +223,13 @@ class FileCache extends Adapter
 					if (! $expiredOnly) {
 						if (! @rmdir ( $fullPath )) {
 							$error = error_get_last ();
-							// Yii::warning ( "Unable to remove directory '{$fullPath}': {$error['message']}", __METHOD__ );
+							Leaps::warning ( "Unable to remove directory '{$fullPath}': {$error['message']}", __METHOD__ );
 						}
 					}
 				} elseif (! $expiredOnly || $expiredOnly && @filemtime ( $fullPath ) < time ()) {
 					if (! @unlink ( $fullPath )) {
 						$error = error_get_last ();
-						// Yii::warning ( "Unable to remove file '{$fullPath}': {$error['message']}", __METHOD__ );
+						Leaps::warning ( "Unable to remove file '{$fullPath}': {$error['message']}", __METHOD__ );
 					}
 				}
 			}
