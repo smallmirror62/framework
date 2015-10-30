@@ -9,12 +9,8 @@
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
 namespace Leaps\Core;
+use Leaps;
 
-interface ViewContextInterface
+class Theme extends Base
 {
-	/**
-	 * 视图路径，可以说一个相对路径
-	 * @return string
-	 */
-	public function getViewPath();
 }

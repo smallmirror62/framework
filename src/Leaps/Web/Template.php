@@ -8,13 +8,10 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Leaps\Core;
+namespace Leaps\Web;
 
-interface ViewContextInterface
-{
-	/**
-	 * 视图路径，可以说一个相对路径
-	 * @return string
-	 */
-	public function getViewPath();
+use Leaps\Di\Injectable;
+
+class Template extends Injectable {
+
 }

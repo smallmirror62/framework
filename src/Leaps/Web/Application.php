@@ -16,14 +16,14 @@ use Leaps\Http\Response;
 class Application extends \Leaps\Core\Application
 {
 	/**
-	 *
-	 * @var string the default route of this application. Defaults to 'site'.
+	 * 应用程序默认路由
+	 * @var string
 	 */
 	public $defaultRoute = 'site';
 
 	/**
-	 *
-	 * @var Controller the currently active controller instance
+	 * 当前活动的控制器实例
+	 * @var Controller
 	 */
 	public $controller;
 

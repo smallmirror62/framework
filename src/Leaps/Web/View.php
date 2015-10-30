@@ -11,8 +11,8 @@
 namespace Leaps\Web;
 
 use Leaps;
-use Leaps\helpers\ArrayHelper;
-use Leaps\helpers\Html;
+use Leaps\Helper\ArrayHelper;
+use Leaps\Helper\Html;
 use Leaps\Core\InvalidConfigException;
 
 /**

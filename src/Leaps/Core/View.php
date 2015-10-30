@@ -16,20 +16,19 @@ class View extends Base
 {
 
 	/**
-	 *
-	 * @var string the default view file extension. This will be appended to view file names if they don't have file extensions.
+	 * 默认的模板文件后缀
+	 * @var string
 	 */
 	public $defaultExtension = 'php';
 
 	/**
-	 *
-	 * @var Theme|array|string the theme object or the configuration for creating the theme object.
-	 *      If not set, it means theming is not enabled.
+	 * 风格对象实例或配置
+	 * @var Theme|array|string
 	 */
 	public $theme;
 
 	/**
-	 *
+	 * 已加载的视图文件列表
 	 * @var array the view files currently being rendered. There may be multiple view files being
 	 *      rendered at a moment because one view may be rendered within another.
 	 */
