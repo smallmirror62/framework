@@ -11,7 +11,7 @@
 namespace Leaps\Db\Eloquent;
 
 use Leaps\Db\Db;
-use Leaps\Utility\Str;
+use Leaps\Helper\StringHelper;
 
 abstract class Model
 {
@@ -431,17 +431,17 @@ abstract class Model
 	}
 
 	/**
-	 * Get the name of the table associated with the model.
+	 * 获取与模型关联的表的名称。
 	 *
 	 * @return string
 	 */
 	public function table()
 	{
-		return static::$table ?  : strtolower ( Str::plural ( \Leaps\Kernel::classBasename ( $this ) ) );
+		return static::$table ? : strtolower(\Leaps\Kernel::classBasename ( $this ));
 	}
 
 	/**
-	 * Get the dirty attributes for the model.
+	 * 获取模型脏属性
 	 *
 	 * @return array
 	 */
@@ -630,9 +630,9 @@ abstract class Model
 		if (in_array ( $method, $underscored )) {
 			return call_user_func_array ( [ $this,'_' . $method ], $parameters );
 		}
-		if (Str::startsWith ( $method, 'get' )) {
+		if (StringHelper::startsWith ( $method, 'get' )) {
 			return $this->getAttribute ( substr ( $method, 3 ) );
-		} elseif (Str::startsWith ( $method, 'set' )) {
+		} elseif (StringHelper::startsWith ( $method, 'set' )) {
 			$this->setAttribute ( substr ( $method, 3 ), $parameters [0] );
 		} else {
 			return call_user_func_array ( [ $this->query (),$method ], $parameters );

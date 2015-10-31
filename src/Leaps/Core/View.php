@@ -127,7 +127,6 @@ class View extends Base
 	public function renderFile($viewFile, $params = [], $context = null)
 	{
 		$viewFile = Leaps::getAlias ( $viewFile );
-
 		if ($this->theme !== null) {
 			$viewFile = $this->theme->applyTo ( $viewFile );
 		}

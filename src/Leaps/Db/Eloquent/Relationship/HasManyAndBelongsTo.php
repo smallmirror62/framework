@@ -13,6 +13,7 @@ namespace Leaps\Db\Eloquent\Relationship;
 use Leaps;
 use Leaps\Db\Eloquent\Model;
 use Leaps\Db\Eloquent\Pivot;
+use Leaps\Helper\StringHelper;
 
 class HasManyAndBelongsTo extends Relationship
 {
@@ -312,7 +313,7 @@ class HasManyAndBelongsTo extends Relationship
 		foreach ( $results as &$result ) {
 			$pivot = new Pivot ( $this->joining, $this->model->connection () );
 			foreach ( $result->attributes as $key => $value ) {
-				if (\Leaps\Utility\Str::startsWith( $key, 'pivot' )) {
+				if (StringHelper::startsWith( $key, 'pivot' )) {
 					$pivot->{substr ( $key, 5 )} = $value;
 					$result->purge ( $key );
 				}

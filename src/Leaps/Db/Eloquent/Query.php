@@ -11,6 +11,7 @@
 namespace Leaps\Db\Eloquent;
 
 use Leaps\Db;
+use Leaps\Helper\StringHelper;
 use Leaps\Db\Eloquent\Relationship\HasManyAndBelongsTo;
 
 class Query
@@ -127,13 +128,13 @@ class Query
 		}
 		if (count ( $results ) > 0) {
 			foreach ( $this->modelInclude () as $relationship => $constraints ) {
-				if (\Leaps\Utility\Str::contain ( $relationship, '.' )) {
+				if (StringHelper::contain ( $relationship, '.' )) {
 					continue;
 				}
 				$this->load ( $models, $relationship, $constraints );
 			}
 		}
-		if ($this instanceof \Leaps\Db\Eloquent\Relationship\HasManyAndBelongsTo) {
+		if ($this instanceof HasManyAndBelongsTo) {
 			$this->hydratePivot ( $models );
 		}
 
@@ -171,7 +172,7 @@ class Query
 	{
 		$nested = array ();
 		foreach ( $this->modelInclude () as $include => $constraints ) {
-			if (\Leaps\Utility\Str::contain ( $include, $relationship . '.' )) {
+			if (StringHelper::contain ( $include, $relationship . '.' )) {
 				$nested [substr ( $include, strlen ( $relationship . '.' ) )] = $constraints;
 			}
 		}

@@ -36,23 +36,8 @@ class Module extends Base
 	public $defaultRoute = 'home';
 
 	/**
-	 * @var array mapping from controller ID to controller configurations.
-	 * Each name-value pair specifies the configuration of a single controller.
-	 * A controller configuration can be either a string or an array.
-	 * If the former, the string should be the fully qualified class name of the controller.
-	 * If the latter, the array must contain a 'class' element which specifies
-	 * the controller's fully qualified class name, and the rest of the name-value pairs
-	 * in the array are used to initialize the corresponding controller properties. For example,
-	 *
-	 * ~~~
-	 * [
-	 *   'account' => 'App\Controller\UserController',
-	 *   'article' => [
-	 *      'className' => 'App\Controller\PostController',
-	 *      'pageTitle' => 'something new',
-	 *   ],
-	 * ]
-	 * ~~~
+	 * 控制器集合
+	 * @var array
 	 */
 	public $controllerMap = [];
 
@@ -64,20 +49,30 @@ class Module extends Base
 	public $controllerNamespace;
 
 	/**
-	 * 已经注册的模块
+	 * 模块基础路径
+	 *
+	 * @var string $_basePath
+	 */
+	private $_basePath;
+
+	/**
+	 * 视图文件路径
+	 * @var string $_viewPath
+	 */
+	private $_viewPath;
+
+	/**
+	 * 布局文件路径
+	 * @var string $_layoutPath
+	 */
+	private $_layoutPath;
+
+	/**
+	 * 已经注册的子模块
 	 *
 	 * @var array
 	 */
-	protected $_modules = [ ];
-
-	/**
-	 * 模块基础路径
-	 *
-	 * @var string
-	 */
-	private $_basePath;
-	private $_viewPath;
-	private $_layoutPath;
+	private $_modules = [ ];
 
 	/**
 	 * 构造方法
@@ -312,6 +307,32 @@ class Module extends Base
 			return $modules;
 		} else {
 			return $this->_modules;
+		}
+	}
+
+	/**
+	 * 批量注册子模块
+	 *
+	 * If a new sub-module has the same ID as an existing one, the existing one will be overwritten silently.
+	 *
+	 * The following is an example for registering two sub-modules:
+	 *
+	 * ~~~
+	 * [
+	 *     'comment' => [
+	 *         'className' => 'app\modules\comment\CommentModule',
+	 *         'db' => 'db',
+	 *     ],
+	 *     'booking' => ['className' => 'app\modules\booking\BookingModule'],
+	 * ]
+	 * ~~~
+	 *
+	 * @param array $modules modules (id => module configuration or instances)
+	 */
+	public function setModules($modules)
+	{
+		foreach ($modules as $id => $module) {
+			$this->_modules[$id] = $module;
 		}
 	}
 

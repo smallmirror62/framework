@@ -16,26 +16,40 @@ class Response extends Base
 {
 
 	/**
+	 * 原始的响应
+	 *
+	 * @var array
+	 */
+	public $responseData;
+
+	/**
+	 * 响应的Header
+	 *
+	 * @var \Leaps\Http\Headers
+	 */
+	protected $header;
+
+	/**
 	 * 请求所消耗的时间
 	 *
 	 * @var int $time
 	 */
-	public $time = 0;
+	protected $time = 0;
 
 	/**
 	 * 初始化
 	 */
 	public function init()
 	{
-		if (isset ( $data ['code'] ))
-			$this->httpCode = $data ['code'];
-		if (isset ( $data ['time'] ))
-			$this->time = $data ['time'];
-		if (isset ( $data ['data'] ))
-			$this->body = $data ['data'];
+		if (isset ( $this->responseData ['code'] ))
+			$this->httpCode = $this->responseData ['code'];
+		if (isset ( $this->responseData ['time'] ))
+			$this->time = $this->responseData ['time'];
+		if (isset ( $this->responseData ['data'] ))
+			$this->body = $this->responseData ['data'];
 
-		if (isset ( $data ['header'] ) && is_array ( $data ['header'] ))
-			foreach ( $data ['header'] as $item ) {
+		if (isset ( $this->responseData ['header'] ) && is_array ( $this->responseData ['header'] ))
+			foreach ( $this->responseData ['header'] as $item ) {
 				if (preg_match ( '#^([a-zA-Z0-9\-]+): (.*)$#', $item, $m )) {
 					if ($m [1] == 'Set-Cookie') {
 						if (preg_match ( '#^([a-zA-Z0-9\-_.]+)=(.*)$#', $m [2], $m2 )) {
@@ -56,7 +70,8 @@ class Response extends Base
 	 *
 	 * @return array
 	 */
-	public function getBody() {
+	public function getBody()
+	{
 		return $this->body;
 	}
 
@@ -65,7 +80,8 @@ class Response extends Base
 	 *
 	 * @return number
 	 */
-	public function getHttpCode() {
+	public function getHttpCode()
+	{
 		return $this->httpCode;
 	}
 }
