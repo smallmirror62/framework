@@ -41,7 +41,7 @@ abstract class Application extends Module
 	 *
 	 * @var string|boolean
 	 */
-	public $layout = 'main';
+	public $layout;
 
 	/**
 	 * 控制器命名空间
@@ -198,6 +198,8 @@ abstract class Application extends Module
 		parent::setBasePath ( $path );
 		Leaps::setAlias ( '@App', $this->getBasePath () );
 		Leaps::setAlias ( '@Module', $this->getBasePath () . '/Module' );
+		Leaps::setAlias ( '@Model', $this->getBasePath () . '/Model' );
+		Leaps::setAlias ( '@Service', $this->getBasePath () . '/Service' );
 	}
 
 	/**

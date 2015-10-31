@@ -322,7 +322,7 @@ class Controller extends Base implements ViewContextInterface
 	 */
 	public function getViewPath()
 	{
-		return $this->module->getViewPath () . DIRECTORY_SEPARATOR . $this->id;
+		return $this->module->getViewPath () . DIRECTORY_SEPARATOR . ucwords($this->id);
 	}
 
 	/**

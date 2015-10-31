@@ -16,46 +16,52 @@ class View extends Base
 {
 
 	/**
+	 *
+	 * @var ViewContextInterface
+	 */
+	public $context;
+
+	/**
+	 * 模板参数
+	 * @var mixed
+	 */
+	public $params = [ ];
+
+	/**
+	 * 模板渲染引擎
+	 *
+	 * @var array ~~~
+	 *      [
+	 *      'tpl' => ['class' => 'Leaps\Smarty\ViewRenderer'],
+	 *      'twig' => ['class' => 'Leaps\Twig\ViewRenderer'],
+	 *      ]
+	 *      ~~~
+	 *
+	 *      If no renderer is available for the given view file, the view file will be treated as a normal PHP
+	 *      and rendered via [[renderPhpFile()]].
+	 */
+	public $renderers;
+
+	/**
 	 * 默认的模板文件后缀
+	 *
 	 * @var string
 	 */
 	public $defaultExtension = 'php';
 
 	/**
-	 * 风格对象实例或配置
-	 * @var Theme|array|string
-	 */
-	public $theme;
-
-	/**
 	 * 已加载的视图文件列表
-	 * @var array the view files currently being rendered. There may be multiple view files being
-	 *      rendered at a moment because one view may be rendered within another.
+	 *
+	 * @var array
 	 */
 	private $_viewFiles = [ ];
-
-	/**
-	 * 初始化
-	 */
-	public function init()
-	{
-		parent::init ();
-		if (is_array ( $this->theme )) {
-			if (! isset ( $this->theme ['className'] )) {
-				$this->theme ['className'] = 'Leaps\Core\Theme';
-			}
-			$this->theme = Leaps::createObject ( $this->theme );
-		} elseif (is_string ( $this->theme )) {
-			$this->theme = Leaps::createObject ( $this->theme );
-		}
-	}
 
 	/**
 	 * 渲染视图
 	 *
 	 * @param string $view 视图名称
 	 * @param array $params 参数
-	 * @param string $context 渲染结果
+	 * @param string $context 上下文
 	 */
 	public function render($view, $params = [], $context = null)
 	{
@@ -88,9 +94,9 @@ class View extends Base
 				throw new InvalidCallException ( "Unable to locate view file for view '$view': no active controller." );
 			}
 		} elseif ($context instanceof ViewContextInterface) {
-			$file = $context->getViewPath () . DIRECTORY_SEPARATOR . $view;
+			$file = $context->getViewPath () . DIRECTORY_SEPARATOR . ucwords ( $view );
 		} elseif (($currentViewFile = $this->getViewFile ()) !== false) {
-			$file = dirname ( $currentViewFile ) . DIRECTORY_SEPARATOR . $view;
+			$file = dirname ( $currentViewFile ) . DIRECTORY_SEPARATOR . ucwords ( $view );
 		} else {
 			throw new InvalidCallException ( "Unable to resolve view file for view '$view': no active view context." );
 		}
@@ -101,21 +107,11 @@ class View extends Base
 		if ($this->defaultExtension !== 'php' && ! is_file ( $path )) {
 			$path = $file . '.php';
 		}
-
 		return $path;
 	}
 
 	/**
 	 * 渲染视图文件
-	 *
-	 * If [[theme]] is enabled (not null), it will try to render the themed version of the view file as long
-	 * as it is available.
-	 *
-	 * The method will call [[FileHelper::localize()]] to localize the view file.
-	 *
-	 * If [[renderers|renderer]] is enabled (not null), the method will use it to render the view file.
-	 * Otherwise, it will simply include the view file as a normal PHP file, capture its output and
-	 * return it as a string.
 	 *
 	 * @param string $viewFile the view file. This can be either an absolute file path or an alias of it.
 	 * @param array $params the parameters (name-value pairs) that will be extracted and made available in the view file.
@@ -127,12 +123,8 @@ class View extends Base
 	public function renderFile($viewFile, $params = [], $context = null)
 	{
 		$viewFile = Leaps::getAlias ( $viewFile );
-		if ($this->theme !== null) {
-			$viewFile = $this->theme->applyTo ( $viewFile );
-		}
-		if (is_file ( $viewFile )) {
-			$viewFile = FileHelper::localize ( $viewFile );
-		} else {
+
+		if (!is_file ( $viewFile )) {
 			throw new InvalidParamException ( "The view file does not exist: $viewFile" );
 		}
 
@@ -143,20 +135,17 @@ class View extends Base
 		$output = '';
 		$this->_viewFiles [] = $viewFile;
 
-		if ($this->beforeRender ( $viewFile, $params )) {
-			Leaps::trace ( "Rendering view file: $viewFile", __METHOD__ );
-			$ext = pathinfo ( $viewFile, PATHINFO_EXTENSION );
-			if (isset ( $this->renderers [$ext] )) {
-				if (is_array ( $this->renderers [$ext] ) || is_string ( $this->renderers [$ext] )) {
-					$this->renderers [$ext] = Leaps::createObject ( $this->renderers [$ext] );
-				}
-				/* @var $renderer ViewRenderer */
-				$renderer = $this->renderers [$ext];
-				$output = $renderer->render ( $this, $viewFile, $params );
-			} else {
-				$output = $this->renderPhpFile ( $viewFile, $params );
+		Leaps::trace ( "Rendering view file: $viewFile", __METHOD__ );
+		$ext = pathinfo ( $viewFile, PATHINFO_EXTENSION );
+		if (isset ( $this->renderers [$ext] )) {
+			if (is_array ( $this->renderers [$ext] ) || is_string ( $this->renderers [$ext] )) {
+				$this->renderers [$ext] = Leaps::createObject ( $this->renderers [$ext] );
 			}
-			$this->afterRender ( $viewFile, $params, $output );
+			/* @var $renderer ViewRenderer */
+			$renderer = $this->renderers [$ext];
+			$output = $renderer->render ( $this, $viewFile, $params );
+		} else {
+			$output = $this->renderPhpFile ( $viewFile, $params );
 		}
 
 		array_pop ( $this->_viewFiles );

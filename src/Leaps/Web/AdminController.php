@@ -8,9 +8,12 @@
 // +----------------------------------------------------------------------
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
-namespace Leaps\Core;
-use Leaps;
+namespace Leaps\Web;
 
-class Theme extends Base
+use Leaps;
+use Leaps\Core\InlineAction;
+
+class AdminController extends Controller
 {
+
 }

@@ -29,11 +29,17 @@ class Module extends Base
 	public $module;
 
 	/**
+	 * 模块布局
+	 * @var string|boolean
+	 */
+	public $layout;
+
+	/**
 	 * 默认路由
 	 *
 	 * @var string
 	 */
-	public $defaultRoute = 'home';
+	public $defaultRoute = 'index';
 
 	/**
 	 * 控制器集合
@@ -181,14 +187,14 @@ class Module extends Base
 	/**
 	 * 获取模块布局路径
 	 *
-	 * @return string the root directory of layout files. Defaults to "[[viewPath]]/layouts".
+	 * @return string the root directory of layout files. Defaults to "[[viewPath]]/Layout".
 	 */
 	public function getLayoutPath()
 	{
 		if ($this->_layoutPath !== null) {
 			return $this->_layoutPath;
 		} else {
-			return $this->_layoutPath = $this->getViewPath () . DIRECTORY_SEPARATOR . 'layouts';
+			return $this->_layoutPath = $this->getViewPath () . DIRECTORY_SEPARATOR . 'Layout';
 		}
 	}
 
