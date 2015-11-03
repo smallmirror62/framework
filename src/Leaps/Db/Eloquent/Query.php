@@ -13,8 +13,9 @@ namespace Leaps\Db\Eloquent;
 use Leaps\Db;
 use Leaps\Helper\StringHelper;
 use Leaps\Db\Eloquent\Relationship\HasManyAndBelongsTo;
+use Leaps\Di\Injectable;
 
-class Query
+class Query extends Injectable
 {
 
 	/**
@@ -39,11 +40,11 @@ class Query
 	public $includes = [ ];
 
 	/**
-	 * The methods that should be returned from the fluent query builder.
+	 * 链式查询生成器所支持的方法
 	 *
 	 * @var array
 	 */
-	public $passthru = [ 'lists','only','insert','insert_get_id','update','increment','delete','decrement','count','min','max','avg','sum' ];
+	public $passthru = [ 'lists','only','insert','insertGetId','update','increment','delete','decrement','count','min','max','avg','sum' ];
 
 	/**
 	 * 从模型创建查询

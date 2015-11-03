@@ -11,9 +11,10 @@
 namespace Leaps\Db\Eloquent;
 
 use Leaps\Db\Db;
+use Leaps\Di\Injectable;
 use Leaps\Helper\StringHelper;
 
-abstract class Model
+abstract class Model extends Injectable
 {
 
 	/**
@@ -106,6 +107,13 @@ abstract class Model
 	 * @var int
 	 */
 	public static $perPage = 20;
+
+	/**
+	 * 事件触发器
+	 *
+	 * @var \Leaps\Events\Dispatcher|string
+	 */
+	private $event = 'event';
 
 	/**
 	 * 构造方法
@@ -356,9 +364,9 @@ abstract class Model
 	public function delete()
 	{
 		if ($this->exists) {
-			$this->fire_event ( 'deleting' );
+			$this->fireEvent ( 'deleting' );
 			$result = $this->query ()->where ( static::$key, '=', $this->getKey () )->delete ();
-			$this->fire_event ( 'deleted' );
+			$this->fireEvent ( 'deleted' );
 			return $result;
 		}
 	}
@@ -437,7 +445,7 @@ abstract class Model
 	 */
 	public function table()
 	{
-		return static::$table ? : strtolower(\Leaps\Kernel::classBasename ( $this ));
+		return static::$table ?  : strtolower ( \Leaps\Kernel::classBasename ( $this ) );
 	}
 
 	/**
@@ -551,7 +559,10 @@ abstract class Model
 	protected function fireEvent($event)
 	{
 		$events = [ "model.{$event}","model.{$event}: " . get_class ( $this ) ];
-		Event::fire ( $events, [ $this ] );
+		if (! is_object ( $this->event )) {
+			$this->event = $this->_dependencyInjector->getShared ( $this->event );
+		}
+		$this->event->trigger ( $events, [ $this ] );
 	}
 
 	/**

@@ -87,7 +87,7 @@ class Db extends Base
 			if (is_null ( $config )) {
 				throw new \Exception ( "Database connection is not defined for [$connection]." );
 			}
-			$this->connectionInstance [$connection] = Kernel::createObject ( '\Leaps\Db\Connection', [ $this->connect ( $config ),$config,$this->fetch,$this->profile ] );
+			$this->connectionInstance [$connection] = Kernel::createObject ( '\Leaps\Db\Connection', [ $this->connect ( $config ), $config, $this->fetch, $this->profile ] );
 		}
 		return $this->connectionInstance [$connection];
 	}

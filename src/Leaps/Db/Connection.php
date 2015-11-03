@@ -77,6 +77,7 @@ class Connection extends Injectable
 		$this->pdo = $pdo;
 		$this->config = $config;
 		$this->fetchStyle = $fetch;
+		$this->profile = $profile;
 	}
 
 	/**
@@ -223,9 +224,9 @@ class Connection extends Injectable
 			$start = microtime ( true );
 			$result = $statement->execute ( $bindings );
 		} catch ( \Exception $exception ) {
-			$message = $exception->getMessage() . "\nFailed to prepare SQL: $sql";
-            $errorInfo = $exception instanceof \PDOException ? $exception->errorInfo : null;
-            throw new Exception($message, $errorInfo, (int) $exception->getCode(), $exception);
+			$message = $exception->getMessage () . "\nFailed to prepare SQL: $sql";
+			$errorInfo = $exception instanceof \PDOException ? $exception->errorInfo : null;
+			throw new Exception ( $message, $errorInfo, ( int ) $exception->getCode (), $exception );
 		}
 		if ($this->profile) {
 			$this->log ( $sql, $bindings, $start );

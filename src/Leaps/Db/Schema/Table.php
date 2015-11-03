@@ -15,35 +15,35 @@ use Laravel\Fluent;
 class Table {
 
 	/**
-	 * The database table name.
+	 * 表名
 	 *
 	 * @var string
 	 */
 	public $name;
 
 	/**
-	 * The database connection that should be used.
+	 * 使用的数据库连接
 	 *
 	 * @var string
 	 */
 	public $connection;
 
 	/**
-	 * The engine that should be used for the table.
+	 * 表引擎
 	 *
 	 * @var string
 	 */
 	public $engine;
 
 	/**
-	 * The columns that should be added to the table.
+	 * 表字段
 	 *
 	 * @var array
 	 */
 	public $columns =[];
 
 	/**
-	 * The commands that should be executed on the table.
+	 * 在表中执行的命令
 	 *
 	 * @var array
 	 */
@@ -407,7 +407,6 @@ class Table {
 	protected function command($type, $parameters = [])
 	{
 		$parameters = array_merge(compact('type'), $parameters);
-
 		return $this->commands[] = new Fluent($parameters);
 	}
 
