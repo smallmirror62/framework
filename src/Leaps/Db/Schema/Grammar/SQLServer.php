@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Db\Schema\Grammar;
 
-use Laravel\Fluent;
+use Leaps\Core\Fluent;
 use Leaps\Db\Schema\Table;
 
 class SQLServer extends Grammar
@@ -33,12 +33,7 @@ class SQLServer extends Grammar
 	public function create(Table $table, Fluent $command)
 	{
 		$columns = implode ( ', ', $this->columns ( $table ) );
-
-		// First we will generate the base table creation statement. Other than auto
-		// incrementing keys, no indexes will be created during the first creation
-		// of the table as they're added in separate commands.
 		$sql = 'CREATE TABLE ' . $this->wrap ( $table ) . ' (' . $columns . ')';
-
 		return $sql;
 	}
 
@@ -68,23 +63,15 @@ class SQLServer extends Grammar
 	 */
 	protected function columns(Table $table)
 	{
-		$columns = array ();
+		$columns = [];
 		foreach ( $table->columns as $column ) {
-			// Each of the data type's have their own definition creation method,
-			// which is responsible for creating the SQL for the type. This lets
-			// us to keep the syntax easy and fluent, while translating the
-			// types to the types used by the database.
 			$sql = $this->wrap ( $column ) . ' ' . $this->type ( $column );
-
-			$elements = array ('incrementer','nullable','defaults' );
-
+			$elements = ['incrementer','nullable','defaults'];
 			foreach ( $elements as $element ) {
 				$sql .= $this->$element ( $table, $column );
 			}
-
 			$columns [] = $sql;
 		}
-
 		return $columns;
 	}
 
@@ -110,7 +97,7 @@ class SQLServer extends Grammar
 	protected function defaults(Table $table, Fluent $column)
 	{
 		if (! is_null ( $column->default )) {
-			return " DEFAULT '" . $this->default_value ( $column->default ) . "'";
+			return " DEFAULT '" . $this->defaultValue ( $column->default ) . "'";
 		}
 	}
 
@@ -166,21 +153,10 @@ class SQLServer extends Grammar
 	public function fulltext(Table $table, Fluent $command)
 	{
 		$columns = $this->columnize ( $command->columns );
-
 		$table = $this->wrap ( $table );
-
-		// SQL Server requires the creation of a full-text "catalog" before creating
-		// a full-text index, so we'll first create the catalog then add another
-		// separate statement for the index.
 		$sql [] = "CREATE FULLTEXT CATALOG {$command->catalog}";
-
 		$create = "CREATE FULLTEXT INDEX ON " . $table . " ({$columns}) ";
-
-		// Full-text indexes must specify a unique, non-null column as the index
-		// "key" and this should have been created manually by the developer in
-		// a separate column addition command.
 		$sql [] = $create .= "KEY INDEX {$command->key} ON {$command->catalog}";
-
 		return $sql;
 	}
 
@@ -207,9 +183,7 @@ class SQLServer extends Grammar
 	protected function key(Table $table, Fluent $command, $unique = false)
 	{
 		$columns = $this->columnize ( $command->columns );
-
 		$create = ($unique) ? 'CREATE UNIQUE' : 'CREATE';
-
 		return $create . " INDEX {$command->name} ON " . $this->wrap ( $table ) . " ({$columns})";
 	}
 
@@ -232,13 +206,9 @@ class SQLServer extends Grammar
 	 * @param Fluent $command
 	 * @return string
 	 */
-	public function drop_column(Table $table, Fluent $command)
+	public function dropColumn(Table $table, Fluent $command)
 	{
 		$columns = array_map ( array ($this,'wrap' ), $command->columns );
-
-		// Once we have the array of column names, we need to add "drop" to the front
-		// of each column, then we'll concatenate the columns using commas and
-		// generate the alter statement SQL.
 		$columns = implode ( ', ', array_map ( function ($column)
 		{
 			return 'DROP ' . $column;
@@ -254,7 +224,7 @@ class SQLServer extends Grammar
 	 * @param Fluent $command
 	 * @return string
 	 */
-	public function drop_primary(Table $table, Fluent $command)
+	public function dropPrimary(Table $table, Fluent $command)
 	{
 		return 'ALTER TABLE ' . $this->wrap ( $table ) . ' DROP CONSTRAINT ' . $command->name;
 	}
@@ -266,9 +236,9 @@ class SQLServer extends Grammar
 	 * @param Fluent $command
 	 * @return string
 	 */
-	public function drop_unique(Table $table, Fluent $command)
+	public function dropUnique(Table $table, Fluent $command)
 	{
-		return $this->drop_key ( $table, $command );
+		return $this->dropKey ( $table, $command );
 	}
 
 	/**
@@ -278,7 +248,7 @@ class SQLServer extends Grammar
 	 * @param Fluent $command
 	 * @return string
 	 */
-	public function drop_fulltext(Table $table, Fluent $command)
+	public function dropFulltext(Table $table, Fluent $command)
 	{
 		$sql [] = "DROP FULLTEXT INDEX " . $command->name;
 
@@ -294,9 +264,9 @@ class SQLServer extends Grammar
 	 * @param Fluent $command
 	 * @return string
 	 */
-	public function drop_index(Table $table, Fluent $command)
+	public function dropIndex(Table $table, Fluent $command)
 	{
-		return $this->drop_key ( $table, $command );
+		return $this->dropKey ( $table, $command );
 	}
 
 	/**
@@ -306,7 +276,7 @@ class SQLServer extends Grammar
 	 * @param Fluent $command
 	 * @return string
 	 */
-	protected function drop_key(Table $table, Fluent $command)
+	protected function dropKey(Table $table, Fluent $command)
 	{
 		return "DROP INDEX {$command->name} ON " . $this->wrap ( $table );
 	}
@@ -318,9 +288,9 @@ class SQLServer extends Grammar
 	 * @param Fluent $command
 	 * @return string
 	 */
-	public function drop_foreign(Table $table, Fluent $command)
+	public function dropForeign(Table $table, Fluent $command)
 	{
-		return $this->drop_constraint ( $table, $command );
+		return $this->dropConstraint ( $table, $command );
 	}
 
 	/**
@@ -329,7 +299,7 @@ class SQLServer extends Grammar
 	 * @param Fluent $column
 	 * @return string
 	 */
-	protected function type_string(Fluent $column)
+	protected function typeString(Fluent $column)
 	{
 		return 'NVARCHAR(' . $column->length . ')';
 	}
@@ -340,7 +310,7 @@ class SQLServer extends Grammar
 	 * @param Fluent $column
 	 * @return string
 	 */
-	protected function type_integer(Fluent $column)
+	protected function typeInteger(Fluent $column)
 	{
 		return 'INT';
 	}
@@ -351,7 +321,7 @@ class SQLServer extends Grammar
 	 * @param Fluent $column
 	 * @return string
 	 */
-	protected function type_float(Fluent $column)
+	protected function typeFloat(Fluent $column)
 	{
 		return 'FLOAT';
 	}
@@ -362,7 +332,7 @@ class SQLServer extends Grammar
 	 * @param Fluent $column
 	 * @return string
 	 */
-	protected function type_decimal(Fluent $column)
+	protected function typeDecimal(Fluent $column)
 	{
 		return "DECIMAL({$column->precision}, {$column->scale})";
 	}
@@ -373,7 +343,7 @@ class SQLServer extends Grammar
 	 * @param Fluent $column
 	 * @return string
 	 */
-	protected function type_boolean(Fluent $column)
+	protected function typeBoolean(Fluent $column)
 	{
 		return 'TINYINT';
 	}
@@ -384,7 +354,7 @@ class SQLServer extends Grammar
 	 * @param Fluent $column
 	 * @return string
 	 */
-	protected function type_date(Fluent $column)
+	protected function typeDate(Fluent $column)
 	{
 		return 'DATETIME';
 	}
@@ -395,7 +365,7 @@ class SQLServer extends Grammar
 	 * @param Fluent $column
 	 * @return string
 	 */
-	protected function type_timestamp(Fluent $column)
+	protected function typeTimestamp(Fluent $column)
 	{
 		return 'TIMESTAMP';
 	}
@@ -406,7 +376,7 @@ class SQLServer extends Grammar
 	 * @param Fluent $column
 	 * @return string
 	 */
-	protected function type_text(Fluent $column)
+	protected function typeText(Fluent $column)
 	{
 		return 'NVARCHAR(MAX)';
 	}
@@ -417,7 +387,7 @@ class SQLServer extends Grammar
 	 * @param Fluent $column
 	 * @return string
 	 */
-	protected function type_blob(Fluent $column)
+	protected function typeBlob(Fluent $column)
 	{
 		return 'VARBINARY(MAX)';
 	}

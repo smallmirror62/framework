@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Db\Schema;
 
-use Laravel\Fluent;
+use Leaps\Core\Fluent;
 
 class Table {
 

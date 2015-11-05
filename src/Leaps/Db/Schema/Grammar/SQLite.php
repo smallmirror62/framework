@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Db\Schema\Grammar;
 
-use Laravel\Fluent;
+use Leaps\Core\Fluent;
 use Leaps\Db\Schema\Table;
 
 class SQLite extends Grammar {
@@ -30,10 +30,6 @@ class SQLite extends Grammar {
 		{
 			return $value->type == 'primary';
 		});
-
-		// If we found primary keys in the array of commands, we'll create the SQL for
-		// the key addition and append it to the SQL table creation statement for
-		// the schema table so the index is properly generated.
 		if ( ! is_null($primary))
 		{
 			$columns = $this->columnize($primary->columns);
@@ -197,9 +193,7 @@ class SQLite extends Grammar {
 	protected function key(Table $table, Fluent $command, $unique = false)
 	{
 		$columns = $this->columnize($command->columns);
-
 		$create = ($unique) ? 'CREATE UNIQUE' : 'CREATE';
-
 		return $create." INDEX {$command->name} ON ".$this->wrap($table)." ({$columns})";
 	}
 
@@ -222,9 +216,9 @@ class SQLite extends Grammar {
 	 * @param  Fluent  $command
 	 * @return string
 	 */
-	public function drop_unique(Table $table, Fluent $command)
+	public function dropUnique(Table $table, Fluent $command)
 	{
-		return $this->drop_key($table, $command);
+		return $this->dropKey($table, $command);
 	}
 
 	/**
@@ -234,9 +228,9 @@ class SQLite extends Grammar {
 	 * @param  Fluent  $command
 	 * @return string
 	 */
-	public function drop_index(Table $table, Fluent $command)
+	public function dropIndex(Table $table, Fluent $command)
 	{
-		return $this->drop_key($table, $command);
+		return $this->dropKey($table, $command);
 	}
 
 	/**
@@ -246,7 +240,7 @@ class SQLite extends Grammar {
 	 * @param  Fluent  $command
 	 * @return string
 	 */
-	protected function drop_key(Table $table, Fluent $command)
+	protected function dropKey(Table $table, Fluent $command)
 	{
 		return 'DROP INDEX '.$this->wrap($command->name);
 	}
@@ -257,7 +251,7 @@ class SQLite extends Grammar {
 	 * @param  Fluent  $column
 	 * @return string
 	 */
-	protected function type_string(Fluent $column)
+	protected function typeString(Fluent $column)
 	{
 		return 'VARCHAR';
 	}
@@ -268,7 +262,7 @@ class SQLite extends Grammar {
 	 * @param  Fluent  $column
 	 * @return string
 	 */
-	protected function type_integer(Fluent $column)
+	protected function typeInteger(Fluent $column)
 	{
 		return 'INTEGER';
 	}
@@ -279,7 +273,7 @@ class SQLite extends Grammar {
 	 * @param  Fluent  $column
 	 * @return string
 	 */
-	protected function type_float(Fluent $column)
+	protected function typeFloat(Fluent $column)
 	{
 		return 'FLOAT';
 	}
@@ -290,7 +284,7 @@ class SQLite extends Grammar {
 	 * @param  Fluent  $column
 	 * @return string
 	 */
-	protected function type_decimal(Fluent $column)
+	protected function typeDecimal(Fluent $column)
 	{
 		return 'FLOAT';
 	}
@@ -301,7 +295,7 @@ class SQLite extends Grammar {
 	 * @param  Fluent  $column
 	 * @return string
 	 */
-	protected function type_boolean(Fluent $column)
+	protected function typeBoolean(Fluent $column)
 	{
 		return 'INTEGER';
 	}
@@ -312,7 +306,7 @@ class SQLite extends Grammar {
 	 * @param  Fluent  $column
 	 * @return string
 	 */
-	protected function type_date(Fluent $column)
+	protected function typeDate(Fluent $column)
 	{
 		return 'DATETIME';
 	}
@@ -323,7 +317,7 @@ class SQLite extends Grammar {
 	 * @param  Fluent  $column
 	 * @return string
 	 */
-	protected function type_timestamp(Fluent $column)
+	protected function typeTimestamp(Fluent $column)
 	{
 		return 'DATETIME';
 	}
@@ -334,7 +328,7 @@ class SQLite extends Grammar {
 	 * @param  Fluent  $column
 	 * @return string
 	 */
-	protected function type_text(Fluent $column)
+	protected function typeText(Fluent $column)
 	{
 		return 'TEXT';
 	}
@@ -345,7 +339,7 @@ class SQLite extends Grammar {
 	 * @param  Fluent  $column
 	 * @return string
 	 */
-	protected function type_blob(Fluent $column)
+	protected function typeBlob(Fluent $column)
 	{
 		return 'BLOB';
 	}

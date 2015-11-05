@@ -405,6 +405,15 @@ abstract class Application extends Module
 	}
 
 	/**
+	 * 返回Session组件
+	 * @return Session the session component.
+	 */
+	public function getSession()
+	{
+		return $this->get('session');
+	}
+
+	/**
 	 * 返回加密对象
 	 * @return \Leaps\Crypt\Crypt the security application component.
 	 */
@@ -421,6 +430,7 @@ abstract class Application extends Module
 	{
 		return $this->getShared('router');
 	}
+
 
 	/**
 	 * 动态调用Di容器方法

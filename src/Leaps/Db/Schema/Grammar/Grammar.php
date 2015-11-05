@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Db\Schema\Grammar;
 
-use Laravel\Fluent;
+use Leaps\Core\Fluent;
 use Leaps\Db\Schema\Table;
 
 abstract class Grammar extends \Leaps\Db\Grammar
@@ -74,7 +74,7 @@ abstract class Grammar extends \Leaps\Db\Grammar
 	public function wrap($value)
 	{
 		if ($value instanceof Table) {
-			return $this->wrap_table ( $value->name );
+			return $this->wrapTable ( $value->name );
 		} elseif ($value instanceof Fluent) {
 			$value = $value->name;
 		}

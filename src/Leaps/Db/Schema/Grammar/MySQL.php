@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Db\Schema\Grammar;
 
-use Laravel\Fluent;
+use Leaps\Core\Fluent;
 use Leaps\Db\Schema\Table;
 
 class MySQL extends Grammar
