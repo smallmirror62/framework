@@ -81,6 +81,16 @@ class Connection extends Injectable
 	}
 
 	/**
+	 * 返回数据库连接是否已经建立
+	 * @return boolean whether the DB connection is established
+	 */
+	public function getIsActive()
+	{
+		return $this->pdo !== null;
+	}
+
+
+	/**
 	 * 开始一个链式查询
 	 *
 	 * <code>
