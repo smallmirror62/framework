@@ -10,7 +10,8 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Db\Schema;
 
-use Leaps\Core\Fluent;
+use Leaps\Core\Registry;
+use Leaps\Helper\ArrayHelper;
 
 class Table {
 
@@ -63,7 +64,7 @@ class Table {
 	/**
 	 * Indicate that the table should be created.
 	 *
-	 * @return Fluent
+	 * @return Registry
 	 */
 	public function create()
 	{
@@ -75,7 +76,7 @@ class Table {
 	 *
 	 * @param  string|array  $columns
 	 * @param  string        $name
-	 * @return Fluent
+	 * @return Registry
 	 */
 	public function primary($columns, $name = null)
 	{
@@ -87,7 +88,7 @@ class Table {
 	 *
 	 * @param  string|array  $columns
 	 * @param  string        $name
-	 * @return Fluent
+	 * @return Registry
 	 */
 	public function unique($columns, $name = null)
 	{
@@ -99,7 +100,7 @@ class Table {
 	 *
 	 * @param  string|array  $columns
 	 * @param  string        $name
-	 * @return Fluent
+	 * @return Registry
 	 */
 	public function fulltext($columns, $name = null)
 	{
@@ -111,7 +112,7 @@ class Table {
 	 *
 	 * @param  string|array  $columns
 	 * @param  string        $name
-	 * @return Fluent
+	 * @return Registry
 	 */
 	public function index($columns, $name = null)
 	{
@@ -123,7 +124,7 @@ class Table {
 	 *
 	 * @param  string|array  $columns
 	 * @param  string        $name
-	 * @return Fluent
+	 * @return Registry
 	 */
 	public function foreign($columns, $name = null)
 	{
@@ -136,7 +137,7 @@ class Table {
 	 * @param  string        $type
 	 * @param  string|array  $columns
 	 * @param  string        $name
-	 * @return Fluent
+	 * @return Registry
 	 */
 	public function key($type, $columns, $name)
 	{
@@ -153,7 +154,7 @@ class Table {
 	 * Rename the database table.
 	 *
 	 * @param  string  $name
-	 * @return Fluent
+	 * @return Registry
 	 */
 	public function rename($name)
 	{
@@ -163,7 +164,7 @@ class Table {
 	/**
 	 * Drop the database table.
 	 *
-	 * @return Fluent
+	 * @return Registry
 	 */
 	public function drop()
 	{
@@ -241,7 +242,7 @@ class Table {
 	 *
 	 * @param  string  $type
 	 * @param  string  $name
-	 * @return Fluent
+	 * @return Registry
 	 */
 	protected function drop_key($type, $name)
 	{
@@ -252,7 +253,7 @@ class Table {
 	 * Add an auto-incrementing integer to the table.
 	 *
 	 * @param  string  $name
-	 * @return Fluent
+	 * @return Registry
 	 */
 	public function increments($name)
 	{
@@ -264,7 +265,7 @@ class Table {
 	 *
 	 * @param  string  $name
 	 * @param  int     $length
-	 * @return Fluent
+	 * @return Registry
 	 */
 	public function string($name, $length = 200)
 	{
@@ -276,7 +277,7 @@ class Table {
 	 *
 	 * @param  string  $name
 	 * @param  bool    $increment
-	 * @return Fluent
+	 * @return Registry
 	 */
 	public function integer($name, $increment = false)
 	{
@@ -287,7 +288,7 @@ class Table {
 	 * Add a float column to the table.
 	 *
 	 * @param  string  $name
-	 * @return Fluent
+	 * @return Registry
 	 */
 	public function float($name)
 	{
@@ -300,7 +301,7 @@ class Table {
 	 * @param  string  $name
 	 * @param  int     $precision
 	 * @param  int     $scale
-	 * @return Fluent
+	 * @return Registry
 	 */
 	public function decimal($name, $precision, $scale)
 	{
@@ -311,7 +312,7 @@ class Table {
 	 * Add a boolean column to the table.
 	 *
 	 * @param  string  $name
-	 * @return Fluent
+	 * @return Registry
 	 */
 	public function boolean($name)
 	{
@@ -333,7 +334,7 @@ class Table {
 	 * Add a date-time column to the table.
 	 *
 	 * @param  string  $name
-	 * @return Fluent
+	 * @return Registry
 	 */
 	public function date($name)
 	{
@@ -344,7 +345,7 @@ class Table {
 	 * Add a timestamp column to the table.
 	 *
 	 * @param  string  $name
-	 * @return Fluent
+	 * @return Registry
 	 */
 	public function timestamp($name)
 	{
@@ -355,7 +356,7 @@ class Table {
 	 * Add a text column to the table.
 	 *
 	 * @param  string  $name
-	 * @return Fluent
+	 * @return Registry
 	 */
 	public function text($name)
 	{
@@ -366,7 +367,7 @@ class Table {
 	 * Add a blob column to the table.
 	 *
 	 * @param  string  $name
-	 * @return Fluent
+	 * @return Registry
 	 */
 	public function blob($name)
 	{
@@ -391,36 +392,36 @@ class Table {
 	 */
 	public function creating()
 	{
-		return ! is_null(array_first($this->commands, function($key, $value)
+		return ! is_null(ArrayHelper::arrayfirst($this->commands, function($key, $value)
 		{
 			return $value->type == 'create';
 		}));
 	}
 
 	/**
-	 * Create a new fluent command instance.
+	 * Create a new Registry command instance.
 	 *
 	 * @param  string  $type
 	 * @param  array   $parameters
-	 * @return Fluent
+	 * @return Registry
 	 */
 	protected function command($type, $parameters = [])
 	{
 		$parameters = array_merge(compact('type'), $parameters);
-		return $this->commands[] = new Fluent($parameters);
+		return $this->commands[] = new Registry($parameters);
 	}
 
 	/**
-	 * Create a new fluent column instance.
+	 * Create a new Registry column instance.
 	 *
 	 * @param  string  $type
 	 * @param  array   $parameters
-	 * @return Fluent
+	 * @return Registry
 	 */
 	protected function column($type, $parameters = [])
 	{
 		$parameters = array_merge(compact('type'), $parameters);
-		return $this->columns[] = new Fluent($parameters);
+		return $this->columns[] = new Registry($parameters);
 	}
 
 }

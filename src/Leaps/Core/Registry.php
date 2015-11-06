@@ -10,178 +10,242 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Core;
 
-/**
- * Leaps\Core\Registry
- *
- * A registry is a container for storing objects and values in the application space.
- * By storing the value in a registry, the same object is always available throughout
- * your application.
- *
- * <code>
- * $registry = new \Leaps\Core\Registry();
- *
- * // Set value
- * $registry->something = 'something';
- * // or
- * $registry['something'] = 'something';
- *
- * // Get value
- * $value = $registry->something;
- * // or
- * $value = $registry['something'];
- *
- * // Check if the key exists
- * $exists = isset($registry->something);
- * // or
- * $exists = isset($registry['something']);
- *
- * // Unset
- * unset($registry->something);
- * // or
- * unset($registry['something']);
- * </code>
- *
- * In addition to ArrayAccess, Leaps\Core\Registry also implements Countable
- * (count($registry) will return the number of elements in the registry),
- * Serializable and Iterator (you can iterate over the registry
- * using a foreach loop) interfaces. For PHP 5.4 and higher, JsonSerializable
- * interface is implemented.
- *
- * Leaps\Core\Registry is very fast (it is typically faster than any userspace
- * implementation of the registry); however, this comes at a price:
- * Leaps\Core\Registry is a final class and cannot be inherited from.
- *
- * Though Leaps\Core\Registry exposes methods like __get(), offsetGet(), count() etc,
- * it is not recommended to invoke them manually (these methods exist mainly to
- * match the interfaces the registry implements): $registry->__get('property')
- * is several times slower than $registry->property.
- *
- * Internally all the magic methods (and interfaces except JsonSerializable)
- * are implemented using object handlers or similar techniques: this allows
- * to bypass relatively slow method calls.
- */
-final class Registry implements \ArrayAccess, \Countable, \Iterator
+use Closure;
+use Iterator;
+use Countable;
+use ArrayAccess;
+use JsonSerializable;
+
+final class Registry implements ArrayAccess, JsonSerializable, Iterator, Countable
 {
-	protected $_data;
 
 	/**
-	 * Registry constructor
-	 */
-	public final function __construct()
-	{
-		$this->_data = [ ];
-	}
-
-	/**
-	 * Checks if the element is present in the registry
+	 * 对象所有的属性
 	 *
-	 * @param string offset
+	 * @var array
 	 */
-	public final function offsetExists($offset)
-	{
-		return isset ( $this->_data [$offset] );
-	}
+	protected $attributes = [ ];
 
 	/**
-	 * Returns an index in the registry
+	 * 创建一个新的容器实例
 	 *
-	 * @param string offset
+	 * @param array|object $attributes 属性
+	 * @return void
 	 */
-	public final function offsetGet($offset)
+	public function __construct($attributes = [])
 	{
-		return $this->_data [$offset];
+		foreach ( $attributes as $key => $value ) {
+			$this->attributes [$key] = $value;
+		}
 	}
 
 	/**
-	 * Sets an element in the registry
+	 * 从容器获取属性
 	 *
-	 * @param string offset
-	 * @param mixed value
+	 * @param string $key
+	 * @param mixed $default
+	 * @return mixed
 	 */
-	public final function offsetSet($offset, $value)
+	public function get($key, $default = null)
 	{
-		$this->_data [$offset] = $value;
+		if (array_key_exists ( $key, $this->attributes )) {
+			return $this->attributes [$key];
+		}
+		return $default instanceof Closure ? $default () : $default;
 	}
 
 	/**
-	 * Unsets an element in the registry
+	 * 获取容器所有属性
 	 *
-	 * @param string offset
+	 * @return array
 	 */
-	public final function offsetUnset($offset)
+	public function getAttributes()
 	{
-		unset ( $this->_data [$offset] );
+		return $this->attributes;
 	}
 
 	/**
-	 * Sets an element in the registry
+	 * 转换容器属性到数组
 	 *
-	 * @param string offset
-	 * @param mixed value
+	 * @return array
 	 */
-	public final function __set($offset, $value)
+	public function toArray()
 	{
-		$this->_data [$offset] = $value;
+		return $this->attributes;
 	}
 
 	/**
-	 * Returns an index in the registry
+	 * 转换对象成JSON
 	 *
-	 * @param string offset
+	 * @return array
 	 */
-	public final function __get($offset)
+	public function jsonSerialize()
 	{
-		return $this->_data [$offset];
+		return $this->toArray ();
 	}
 
 	/**
-	 * Checks how many elements are in the register
+	 * 转换容器实例到JSON
+	 *
+	 * @param int $options
+	 * @return string
+	 */
+	public function toJson($options = 0)
+	{
+		return json_encode ( $this->toArray (), $options );
+	}
+
+	/**
+	 * 判断属性是否存在
+	 *
+	 * @param string $offset
+	 * @return bool
+	 */
+	public function offsetExists($offset)
+	{
+		return isset ( $this->{$offset} );
+	}
+
+	/**
+	 * 获取属性
+	 *
+	 * @param string $offset
+	 * @return mixed
+	 */
+	public function offsetGet($offset)
+	{
+		return $this->{$offset};
+	}
+
+	/**
+	 * 设置属性
+	 *
+	 * @param string $offset
+	 * @param mixed $value
+	 * @return void
+	 */
+	public function offsetSet($offset, $value)
+	{
+		$this->{$offset} = $value;
+	}
+
+	/**
+	 * 删除属性
+	 *
+	 * @param string $offset
+	 * @return void
+	 */
+	public function offsetUnset($offset)
+	{
+		unset ( $this->{$offset} );
+	}
+
+	/**
+	 * Handle dynamic calls to the container to set attributes.
+	 *
+	 * @param string $method
+	 * @param array $parameters
+	 * @return $this
+	 */
+	public function __call($method, $parameters)
+	{
+		$this->attributes [$method] = count ( $parameters ) > 0 ? $parameters [0] : true;
+		return $this;
+	}
+
+	/**
+	 * 获取属性
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function __get($key)
+	{
+		return $this->get ( $key );
+	}
+
+	/**
+	 * 设置属性
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 * @return void
+	 */
+	public function __set($key, $value)
+	{
+		$this->attributes [$key] = $value;
+	}
+
+	/**
+	 * 判断属性是否设置
+	 *
+	 * @param string $key
+	 * @return void
+	 */
+	public function __isset($key)
+	{
+		return isset ( $this->attributes [$key] );
+	}
+
+	/**
+	 * 删除属性
+	 *
+	 * @param string $key
+	 * @return void
+	 */
+	public function __unset($key)
+	{
+		unset ( $this->attributes [$key] );
+	}
+
+	/**
+	 * 获取属性数量
 	 *
 	 * @return int
 	 */
 	public final function count()
 	{
-		return count ( $this->_data );
+		return count ( $this->attributes );
 	}
 
 	/**
-	 * Moves cursor to next row in the registry
+	 * 将光标移到注册表中的下一行
 	 */
 	public final function next()
 	{
-		next ( $this->_data );
+		next ( $this->attributes );
 	}
 
 	/**
-	 * Gets pointer number of active row in the registry
+	 * 获取注册表中的活动行的指针数目
 	 *
 	 * @return int
 	 */
 	public final function key()
 	{
-		return key ( $this->_data );
+		return key ( $this->attributes );
 	}
 
 	/**
-	 * Rewinds the registry cursor to its beginning
+	 * 移动指针到注册表开头
 	 */
 	public final function rewind()
 	{
-		reset ( $this->_data );
+		reset ( $this->attributes );
 	}
 
 	/**
-	 * Checks if the iterator is valid
+	 * 检查迭代器是否有效
 	 */
 	public function valid()
 	{
-		return key ( $this->_data ) !== null;
+		return key ( $this->attributes ) !== null;
 	}
 
 	/**
 	 */
 	public function current()
 	{
-		return current ( $this->_data );
+		return current ( $this->attributes );
 	}
 }

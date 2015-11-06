@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Db\Schema\Grammar;
 
-use Leaps\Core\Fluent;
+use Leaps\Core\Registry;
 use Leaps\Db\Schema\Table;
 
 abstract class Grammar extends \Leaps\Db\Grammar
@@ -20,10 +20,10 @@ abstract class Grammar extends \Leaps\Db\Grammar
 	 * Generate the SQL statement for creating a foreign key.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function foreign(Table $table, Fluent $command)
+	public function foreign(Table $table, Registry $command)
 	{
 		$name = $command->name;
 		$table = $this->wrap ( $table );
@@ -45,10 +45,10 @@ abstract class Grammar extends \Leaps\Db\Grammar
 	 * Generate the SQL statement for a drop table command.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function drop(Table $table, Fluent $command)
+	public function drop(Table $table, Registry $command)
 	{
 		return 'DROP TABLE ' . $this->wrap ( $table );
 	}
@@ -57,10 +57,10 @@ abstract class Grammar extends \Leaps\Db\Grammar
 	 * Drop a constraint from the table.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	protected function drop_constraint(Table $table, Fluent $command)
+	protected function drop_constraint(Table $table, Registry $command)
 	{
 		return "ALTER TABLE " . $this->wrap ( $table ) . " DROP CONSTRAINT " . $command->name;
 	}
@@ -75,7 +75,7 @@ abstract class Grammar extends \Leaps\Db\Grammar
 	{
 		if ($value instanceof Table) {
 			return $this->wrapTable ( $value->name );
-		} elseif ($value instanceof Fluent) {
+		} elseif ($value instanceof Registry) {
 			$value = $value->name;
 		}
 		return parent::wrap ( $value );
@@ -84,10 +84,10 @@ abstract class Grammar extends \Leaps\Db\Grammar
 	/**
 	 * Get the appropriate data type definition for the column.
 	 *
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function type(Fluent $column)
+	protected function type(Registry $column)
 	{
 		return $this->{'type_' . $column->type} ( $column );
 	}

@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Db\Schema\Grammar;
 
-use Leaps\Core\Fluent;
+use Leaps\Core\Registry;
 use Leaps\Db\Schema\Table;
 
 class SQLServer extends Grammar
@@ -27,10 +27,10 @@ class SQLServer extends Grammar
 	 * Generate the SQL statements for a table creation command.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return array
 	 */
-	public function create(Table $table, Fluent $command)
+	public function create(Table $table, Registry $command)
 	{
 		$columns = implode ( ', ', $this->columns ( $table ) );
 		$sql = 'CREATE TABLE ' . $this->wrap ( $table ) . ' (' . $columns . ')';
@@ -41,10 +41,10 @@ class SQLServer extends Grammar
 	 * Generate the SQL statements for a table modification command.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return array
 	 */
-	public function add(Table $table, Fluent $command)
+	public function add(Table $table, Registry $command)
 	{
 		$columns = $this->columns ( $table );
 		$columns = implode ( ', ', array_map ( function ($column)
@@ -79,10 +79,10 @@ class SQLServer extends Grammar
 	 * Get the SQL syntax for indicating if a column is nullable.
 	 *
 	 * @param Table $table
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function nullable(Table $table, Fluent $column)
+	protected function nullable(Table $table, Registry $column)
 	{
 		return ($column->nullable) ? ' NULL' : ' NOT NULL';
 	}
@@ -91,10 +91,10 @@ class SQLServer extends Grammar
 	 * Get the SQL syntax for specifying a default value on a column.
 	 *
 	 * @param Table $table
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function defaults(Table $table, Fluent $column)
+	protected function defaults(Table $table, Registry $column)
 	{
 		if (! is_null ( $column->default )) {
 			return " DEFAULT '" . $this->defaultValue ( $column->default ) . "'";
@@ -105,10 +105,10 @@ class SQLServer extends Grammar
 	 * Get the SQL syntax for defining an auto-incrementing column.
 	 *
 	 * @param Table $table
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function incrementer(Table $table, Fluent $column)
+	protected function incrementer(Table $table, Registry $column)
 	{
 		if ($column->type == 'integer' and $column->increment) {
 			return ' IDENTITY PRIMARY KEY';
@@ -119,10 +119,10 @@ class SQLServer extends Grammar
 	 * Generate the SQL statement for creating a primary key.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function primary(Table $table, Fluent $command)
+	public function primary(Table $table, Registry $command)
 	{
 		$name = $command->name;
 
@@ -135,10 +135,10 @@ class SQLServer extends Grammar
 	 * Generate the SQL statement for creating a unique index.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function unique(Table $table, Fluent $command)
+	public function unique(Table $table, Registry $command)
 	{
 		return $this->key ( $table, $command, true );
 	}
@@ -147,10 +147,10 @@ class SQLServer extends Grammar
 	 * Generate the SQL statement for creating a full-text index.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function fulltext(Table $table, Fluent $command)
+	public function fulltext(Table $table, Registry $command)
 	{
 		$columns = $this->columnize ( $command->columns );
 		$table = $this->wrap ( $table );
@@ -164,10 +164,10 @@ class SQLServer extends Grammar
 	 * Generate the SQL statement for creating a regular index.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function index(Table $table, Fluent $command)
+	public function index(Table $table, Registry $command)
 	{
 		return $this->key ( $table, $command );
 	}
@@ -176,11 +176,11 @@ class SQLServer extends Grammar
 	 * Generate the SQL statement for creating a new index.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @param bool $unique
 	 * @return string
 	 */
-	protected function key(Table $table, Fluent $command, $unique = false)
+	protected function key(Table $table, Registry $command, $unique = false)
 	{
 		$columns = $this->columnize ( $command->columns );
 		$create = ($unique) ? 'CREATE UNIQUE' : 'CREATE';
@@ -191,10 +191,10 @@ class SQLServer extends Grammar
 	 * Generate the SQL statement for a rename table command.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function rename(Table $table, Fluent $command)
+	public function rename(Table $table, Registry $command)
 	{
 		return 'ALTER TABLE ' . $this->wrap ( $table ) . ' RENAME TO ' . $this->wrap ( $command->name );
 	}
@@ -203,10 +203,10 @@ class SQLServer extends Grammar
 	 * Generate the SQL statement for a drop column command.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function dropColumn(Table $table, Fluent $command)
+	public function dropColumn(Table $table, Registry $command)
 	{
 		$columns = array_map ( array ($this,'wrap' ), $command->columns );
 		$columns = implode ( ', ', array_map ( function ($column)
@@ -221,10 +221,10 @@ class SQLServer extends Grammar
 	 * Generate the SQL statement for a drop primary key command.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function dropPrimary(Table $table, Fluent $command)
+	public function dropPrimary(Table $table, Registry $command)
 	{
 		return 'ALTER TABLE ' . $this->wrap ( $table ) . ' DROP CONSTRAINT ' . $command->name;
 	}
@@ -233,10 +233,10 @@ class SQLServer extends Grammar
 	 * Generate the SQL statement for a drop unique key command.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function dropUnique(Table $table, Fluent $command)
+	public function dropUnique(Table $table, Registry $command)
 	{
 		return $this->dropKey ( $table, $command );
 	}
@@ -245,10 +245,10 @@ class SQLServer extends Grammar
 	 * Generate the SQL statement for a drop full-text key command.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function dropFulltext(Table $table, Fluent $command)
+	public function dropFulltext(Table $table, Registry $command)
 	{
 		$sql [] = "DROP FULLTEXT INDEX " . $command->name;
 
@@ -261,10 +261,10 @@ class SQLServer extends Grammar
 	 * Generate the SQL statement for a drop index command.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function dropIndex(Table $table, Fluent $command)
+	public function dropIndex(Table $table, Registry $command)
 	{
 		return $this->dropKey ( $table, $command );
 	}
@@ -273,10 +273,10 @@ class SQLServer extends Grammar
 	 * Generate the SQL statement for a drop key command.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	protected function dropKey(Table $table, Fluent $command)
+	protected function dropKey(Table $table, Registry $command)
 	{
 		return "DROP INDEX {$command->name} ON " . $this->wrap ( $table );
 	}
@@ -285,10 +285,10 @@ class SQLServer extends Grammar
 	 * Drop a foreign key constraint from the table.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function dropForeign(Table $table, Fluent $command)
+	public function dropForeign(Table $table, Registry $command)
 	{
 		return $this->dropConstraint ( $table, $command );
 	}
@@ -296,10 +296,10 @@ class SQLServer extends Grammar
 	/**
 	 * Generate the data-type definition for a string.
 	 *
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function typeString(Fluent $column)
+	protected function typeString(Registry $column)
 	{
 		return 'NVARCHAR(' . $column->length . ')';
 	}
@@ -307,10 +307,10 @@ class SQLServer extends Grammar
 	/**
 	 * Generate the data-type definition for an integer.
 	 *
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function typeInteger(Fluent $column)
+	protected function typeInteger(Registry $column)
 	{
 		return 'INT';
 	}
@@ -318,10 +318,10 @@ class SQLServer extends Grammar
 	/**
 	 * Generate the data-type definition for an integer.
 	 *
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function typeFloat(Fluent $column)
+	protected function typeFloat(Registry $column)
 	{
 		return 'FLOAT';
 	}
@@ -329,10 +329,10 @@ class SQLServer extends Grammar
 	/**
 	 * Generate the data-type definition for a decimal.
 	 *
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function typeDecimal(Fluent $column)
+	protected function typeDecimal(Registry $column)
 	{
 		return "DECIMAL({$column->precision}, {$column->scale})";
 	}
@@ -340,10 +340,10 @@ class SQLServer extends Grammar
 	/**
 	 * Generate the data-type definition for a boolean.
 	 *
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function typeBoolean(Fluent $column)
+	protected function typeBoolean(Registry $column)
 	{
 		return 'TINYINT';
 	}
@@ -351,10 +351,10 @@ class SQLServer extends Grammar
 	/**
 	 * Generate the data-type definition for a date.
 	 *
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function typeDate(Fluent $column)
+	protected function typeDate(Registry $column)
 	{
 		return 'DATETIME';
 	}
@@ -362,10 +362,10 @@ class SQLServer extends Grammar
 	/**
 	 * Generate the data-type definition for a timestamp.
 	 *
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function typeTimestamp(Fluent $column)
+	protected function typeTimestamp(Registry $column)
 	{
 		return 'TIMESTAMP';
 	}
@@ -373,10 +373,10 @@ class SQLServer extends Grammar
 	/**
 	 * Generate the data-type definition for a text column.
 	 *
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function typeText(Fluent $column)
+	protected function typeText(Registry $column)
 	{
 		return 'NVARCHAR(MAX)';
 	}
@@ -384,10 +384,10 @@ class SQLServer extends Grammar
 	/**
 	 * Generate the data-type definition for a blob.
 	 *
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function typeBlob(Fluent $column)
+	protected function typeBlob(Registry $column)
 	{
 		return 'VARBINARY(MAX)';
 	}

@@ -10,9 +10,9 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Log;
 
-use Leaps\Di\Injectable;
+use Leaps\Core\Base;
 
-class Logger extends Injectable
+class Logger extends Base
 {
 	/**
 	 * Error 级别
@@ -70,21 +70,21 @@ class Logger extends Injectable
 	/**
 	 * 在刷新内存和发送到目标之前，应记录多少信息。
 	 *
-	 * @var integer how many messages should be logged before they are flushed from memory and sent to targets.
+	 * @var integer
 	 */
 	public $flushInterval = 1000;
 
 	/**
 	 * 每一条消息应记录多少调用堆栈信息（文件名和行数）。
 	 *
-	 * @var integer how much call stack information (file name and line number) should be logged for each message.
+	 * @var integer
 	 */
 	public $traceLevel = 0;
 
 	/**
 	 * 消息调度器
 	 *
-	 * @var Dispatcher
+	 * @var \Leaps\Log\Dispatcher
 	 */
 	public $dispatcher;
 
@@ -139,8 +139,6 @@ class Logger extends Injectable
 	public function flush($final = false)
 	{
 		$messages = $this->messages;
-		// https://github.com/yiisoft/yii2/issues/5619
-		// new messages could be logged while the existing ones are being handled by targets
 		$this->messages = [ ];
 		if ($this->dispatcher instanceof Dispatcher) {
 			$this->dispatcher->dispatch ( $messages, $final );
@@ -162,8 +160,8 @@ class Logger extends Injectable
 	 *
 	 * @param array $categories list of categories that you are interested in.
 	 *        You can use an asterisk at the end of a category to do a prefix match.
-	 *        For example, 'yii\db\*' will match categories starting with 'yii\db\',
-	 *        such as 'yii\db\Connection'.
+	 *        For example, 'Leaps\Db\*' will match categories starting with 'Leaps\Db\',
+	 *        such as 'Leaps\Db\Connection'.
 	 * @param array $excludeCategories list of categories that you want to exclude
 	 * @return array the profiling results. Each element is an array consisting of these elements:
 	 *         `info`, `category`, `timestamp`, `trace`, `level`, `duration`.
@@ -213,7 +211,7 @@ class Logger extends Injectable
 	 */
 	public function getDbProfiling()
 	{
-		$timings = $this->getProfiling ( [ 'yii\db\Command::query','yii\db\Command::execute' ] );
+		$timings = $this->getProfiling ( [ 'Leaps\Db\Connection::query','Leaps\Db\Connection::execute' ] );
 		$count = count ( $timings );
 		$time = 0;
 		foreach ( $timings as $timing ) {

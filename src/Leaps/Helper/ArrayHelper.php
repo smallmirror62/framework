@@ -586,4 +586,42 @@ class ArrayHelper
 			return true;
 		}
 	}
+
+	/**
+	 * 返回一个数组中的第一个元素，通过一个给定的真值测试。
+	 *
+	 * <code>
+	 * // Return the first array element that equals "Taylor"
+	 * $value = arrayFirst($array, function($k, $v) {return $v == 'Taylor';});
+	 *
+	 * // Return a default value if no matching element is found
+	 * $value = arrayFirst($array, function($k, $v) {return $v == 'Taylor'}, 'Default');
+	 * </code>
+	 *
+	 * @param array $array
+	 * @param Closure $callback
+	 * @param mixed $default
+	 * @return mixed
+	 */
+	public static function arrayFirst($array, $callback, $default = null)
+	{
+		foreach ( $array as $key => $value ) {
+			if (call_user_func ( $callback, $key, $value ))
+				return $value;
+		}
+		return static::value ( $default );
+	}
+
+	/**
+	 * 返回给定项目的值
+	 *
+	 * 如果给定的项目是一个闭包，则返回结果
+	 *
+	 * @param mixed $value
+	 * @return mixed
+	 */
+	public static function value($value)
+	{
+		return (is_callable ( $value ) and ! is_string ( $value )) ? call_user_func ( $value ) : $value;
+	}
 }

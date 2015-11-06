@@ -85,6 +85,11 @@ class UrlManager extends Injectable
 	 * @var string
 	 */
 	private $_baseUrl;
+
+	/**
+	 * 主机信息
+	 * @var string
+	 */
 	private $_hostInfo;
 
 	/**

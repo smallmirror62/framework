@@ -11,13 +11,13 @@
 namespace Leaps\Db;
 
 use Closure;
-use Laravel\Fluent;
+use Leaps\Core\Registry;
 
 class Schema
 {
 
 	/**
-	 * Begin a fluent schema operation on a database table.
+	 * Begin a Registry schema operation on a database table.
 	 *
 	 * @param string $table
 	 * @param Closure $callback
@@ -103,7 +103,7 @@ class Schema
 	protected static function implications($table)
 	{
 		if (count ( $table->columns ) > 0 and ! $table->creating ()) {
-			$command = new Fluent ( array ('type' => 'add' ) );
+			$command = new Registry ( ['type' => 'add' ] );
 			array_unshift ( $table->commands, $command );
 		}
 		foreach ( $table->columns as $column ) {

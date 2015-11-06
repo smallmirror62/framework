@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Db\Schema\Grammar;
 
-use Leaps\Core\Fluent;
+use Leaps\Core\Registry;
 use Leaps\Db\Schema\Table;
 
 class MySQL extends Grammar
@@ -27,10 +27,10 @@ class MySQL extends Grammar
 	 * Generate the SQL statements for a table creation command.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return array
 	 */
-	public function create(Table $table, Fluent $command)
+	public function create(Table $table, Registry $command)
 	{
 		$columns = implode ( ', ', $this->columns ( $table ) );
 
@@ -50,10 +50,10 @@ class MySQL extends Grammar
 	 * Generate the SQL statements for a table modification command.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return array
 	 */
-	public function add(Table $table, Fluent $command)
+	public function add(Table $table, Registry $command)
 	{
 		$columns = $this->columns ( $table );
 
@@ -81,7 +81,7 @@ class MySQL extends Grammar
 		foreach ( $table->columns as $column ) {
 			// Each of the data type's have their own definition creation method,
 			// which is responsible for creating the SQL for the type. This lets
-			// us to keep the syntax easy and fluent, while translating the
+			// us to keep the syntax easy and Registry, while translating the
 			// types to the correct types.
 			$sql = $this->wrap ( $column ) . ' ' . $this->type ( $column );
 
@@ -101,10 +101,10 @@ class MySQL extends Grammar
 	 * Get the SQL syntax for indicating if a column is unsigned.
 	 *
 	 * @param Table $table
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function unsigned(Table $table, Fluent $column)
+	protected function unsigned(Table $table, Registry $column)
 	{
 		if ($column->type == 'integer' && ($column->unsigned || $column->increment)) {
 			return ' UNSIGNED';
@@ -115,10 +115,10 @@ class MySQL extends Grammar
 	 * Get the SQL syntax for indicating if a column is nullable.
 	 *
 	 * @param Table $table
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function nullable(Table $table, Fluent $column)
+	protected function nullable(Table $table, Registry $column)
 	{
 		return ($column->nullable) ? ' NULL' : ' NOT NULL';
 	}
@@ -127,10 +127,10 @@ class MySQL extends Grammar
 	 * Get the SQL syntax for specifying a default value on a column.
 	 *
 	 * @param Table $table
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function defaults(Table $table, Fluent $column)
+	protected function defaults(Table $table, Registry $column)
 	{
 		if (! is_null ( $column->default )) {
 			return " DEFAULT '" . $this->default_value ( $column->default ) . "'";
@@ -141,10 +141,10 @@ class MySQL extends Grammar
 	 * Get the SQL syntax for defining an auto-incrementing column.
 	 *
 	 * @param Table $table
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function incrementer(Table $table, Fluent $column)
+	protected function incrementer(Table $table, Registry $column)
 	{
 		if ($column->type == 'integer' and $column->increment) {
 			return ' AUTO_INCREMENT PRIMARY KEY';
@@ -155,10 +155,10 @@ class MySQL extends Grammar
 	 * Generate the SQL statement for creating a primary key.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function primary(Table $table, Fluent $command)
+	public function primary(Table $table, Registry $command)
 	{
 		return $this->key ( $table, $command->name ( null ), 'PRIMARY KEY' );
 	}
@@ -167,10 +167,10 @@ class MySQL extends Grammar
 	 * Generate the SQL statement for creating a unique index.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function unique(Table $table, Fluent $command)
+	public function unique(Table $table, Registry $command)
 	{
 		return $this->key ( $table, $command, 'UNIQUE' );
 	}
@@ -179,10 +179,10 @@ class MySQL extends Grammar
 	 * Generate the SQL statement for creating a full-text index.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function fulltext(Table $table, Fluent $command)
+	public function fulltext(Table $table, Registry $command)
 	{
 		return $this->key ( $table, $command, 'FULLTEXT' );
 	}
@@ -191,10 +191,10 @@ class MySQL extends Grammar
 	 * Generate the SQL statement for creating a regular index.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function index(Table $table, Fluent $command)
+	public function index(Table $table, Registry $command)
 	{
 		return $this->key ( $table, $command, 'INDEX' );
 	}
@@ -203,11 +203,11 @@ class MySQL extends Grammar
 	 * Generate the SQL statement for creating a new index.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @param string $type
 	 * @return string
 	 */
-	protected function key(Table $table, Fluent $command, $type)
+	protected function key(Table $table, Registry $command, $type)
 	{
 		$keys = $this->columnize ( $command->columns );
 
@@ -220,10 +220,10 @@ class MySQL extends Grammar
 	 * Generate the SQL statement for a rename table command.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function rename(Table $table, Fluent $command)
+	public function rename(Table $table, Registry $command)
 	{
 		return 'RENAME TABLE ' . $this->wrap ( $table ) . ' TO ' . $this->wrap ( $command->name );
 	}
@@ -232,10 +232,10 @@ class MySQL extends Grammar
 	 * Generate the SQL statement for a drop column command.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function drop_column(Table $table, Fluent $command)
+	public function drop_column(Table $table, Registry $command)
 	{
 		$columns = array_map ( array ($this,'wrap' ), $command->columns );
 
@@ -254,10 +254,10 @@ class MySQL extends Grammar
 	 * Generate the SQL statement for a drop primary key command.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function drop_primary(Table $table, Fluent $command)
+	public function drop_primary(Table $table, Registry $command)
 	{
 		return 'ALTER TABLE ' . $this->wrap ( $table ) . ' DROP PRIMARY KEY';
 	}
@@ -266,10 +266,10 @@ class MySQL extends Grammar
 	 * Generate the SQL statement for a drop unique key command.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function drop_unique(Table $table, Fluent $command)
+	public function drop_unique(Table $table, Registry $command)
 	{
 		return $this->drop_key ( $table, $command );
 	}
@@ -278,10 +278,10 @@ class MySQL extends Grammar
 	 * Generate the SQL statement for a drop full-text key command.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function drop_fulltext(Table $table, Fluent $command)
+	public function drop_fulltext(Table $table, Registry $command)
 	{
 		return $this->drop_key ( $table, $command );
 	}
@@ -290,10 +290,10 @@ class MySQL extends Grammar
 	 * Generate the SQL statement for a drop unique key command.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function drop_index(Table $table, Fluent $command)
+	public function drop_index(Table $table, Registry $command)
 	{
 		return $this->drop_key ( $table, $command );
 	}
@@ -302,10 +302,10 @@ class MySQL extends Grammar
 	 * Generate the SQL statement for a drop key command.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	protected function drop_key(Table $table, Fluent $command)
+	protected function drop_key(Table $table, Registry $command)
 	{
 		return 'ALTER TABLE ' . $this->wrap ( $table ) . " DROP INDEX {$command->name}";
 	}
@@ -314,10 +314,10 @@ class MySQL extends Grammar
 	 * Drop a foreign key constraint from the table.
 	 *
 	 * @param Table $table
-	 * @param Fluent $command
+	 * @param Registry $command
 	 * @return string
 	 */
-	public function drop_foreign(Table $table, Fluent $command)
+	public function drop_foreign(Table $table, Registry $command)
 	{
 		return "ALTER TABLE " . $this->wrap ( $table ) . " DROP FOREIGN KEY " . $command->name;
 	}
@@ -325,10 +325,10 @@ class MySQL extends Grammar
 	/**
 	 * Generate the data-type definition for a string.
 	 *
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function type_string(Fluent $column)
+	protected function type_string(Registry $column)
 	{
 		return 'VARCHAR(' . $column->length . ')';
 	}
@@ -336,10 +336,10 @@ class MySQL extends Grammar
 	/**
 	 * Generate the data-type definition for an integer.
 	 *
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function type_integer(Fluent $column)
+	protected function type_integer(Registry $column)
 	{
 		return 'INT';
 	}
@@ -347,10 +347,10 @@ class MySQL extends Grammar
 	/**
 	 * Generate the data-type definition for an integer.
 	 *
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function type_float(Fluent $column)
+	protected function type_float(Registry $column)
 	{
 		return 'FLOAT';
 	}
@@ -358,10 +358,10 @@ class MySQL extends Grammar
 	/**
 	 * Generate the data-type definition for a decimal.
 	 *
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function type_decimal(Fluent $column)
+	protected function type_decimal(Registry $column)
 	{
 		return "DECIMAL({$column->precision}, {$column->scale})";
 	}
@@ -369,10 +369,10 @@ class MySQL extends Grammar
 	/**
 	 * Generate the data-type definition for a boolean.
 	 *
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function type_boolean(Fluent $column)
+	protected function type_boolean(Registry $column)
 	{
 		return 'TINYINT(1)';
 	}
@@ -380,10 +380,10 @@ class MySQL extends Grammar
 	/**
 	 * Generate the data-type definition for a date.
 	 *
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function type_date(Fluent $column)
+	protected function type_date(Registry $column)
 	{
 		return 'DATETIME';
 	}
@@ -391,10 +391,10 @@ class MySQL extends Grammar
 	/**
 	 * Generate the data-type definition for a timestamp.
 	 *
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function type_timestamp(Fluent $column)
+	protected function type_timestamp(Registry $column)
 	{
 		return 'TIMESTAMP';
 	}
@@ -402,10 +402,10 @@ class MySQL extends Grammar
 	/**
 	 * Generate the data-type definition for a text column.
 	 *
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function type_text(Fluent $column)
+	protected function type_text(Registry $column)
 	{
 		return 'TEXT';
 	}
@@ -413,10 +413,10 @@ class MySQL extends Grammar
 	/**
 	 * Generate the data-type definition for a blob.
 	 *
-	 * @param Fluent $column
+	 * @param Registry $column
 	 * @return string
 	 */
-	protected function type_blob(Fluent $column)
+	protected function type_blob(Registry $column)
 	{
 		return 'BLOB';
 	}
