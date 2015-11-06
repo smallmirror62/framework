@@ -29,7 +29,11 @@ abstract class Adapter extends Injectable
 	 */
 	public function buildKey($key)
 	{
-		$key = (ctype_alnum ( $key ) && mb_strlen ( $key, '8bit' ) <= 32) ? $key : md5 ( $key );
+		if (is_string($key)) {
+			$key = ctype_alnum($key) && mb_strlen ( $key, '8bit' ) <= 32 ? $key : md5($key);
+		} else {
+			$key = md5(json_encode($key));
+		}
 		return $this->keyPrefix . $key;
 	}
 

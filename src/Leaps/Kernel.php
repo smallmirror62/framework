@@ -11,11 +11,10 @@
 namespace Leaps;
 
 use Leaps\Log\Logger;
+use Leaps\Di\Container;
 use Leaps\Core\InvalidConfigException;
 use Leaps\Core\UnknownClassException;
 use Leaps\Core\InvalidParamException;
-
-
 
 /**
  * Leaps 基类
@@ -315,9 +314,9 @@ class Kernel
 	 * @param mixed $var The value to get
 	 * @return mixed
 	 */
-	public static function value($var)
+	public static function value($value)
 	{
-		return ($var instanceof \Closure) ? $var () : $var;
+		return (is_callable ( $value ) and ! is_string ( $value )) ? call_user_func ( $value ) : $value;
 	}
 
 	/**
@@ -480,5 +479,31 @@ class Kernel
 	public static function powered()
 	{
 		return 'Powered by <a href="http://www.tintsoft.com/" rel="external">Leaps Framework</a>';
+	}
+
+	/**
+	 * 动态调用Di容器方法
+	 *
+	 * @param string $method
+	 * @param array $args
+	 * @return mixed
+	 */
+	public static function __callStatic($method, $args)
+	{
+		$instance = Container::getDefault ();
+		switch (count ( $args )) {
+			case 0 :
+				return $instance->$method ();
+			case 1 :
+				return $instance->$method ( $args [0] );
+			case 2 :
+				return $instance->$method ( $args [0], $args [1] );
+			case 3 :
+				return $instance->$method ( $args [0], $args [1], $args [2] );
+			case 4 :
+				return $instance->$method ( $args [0], $args [1], $args [2], $args [3] );
+			default :
+				return call_user_func_array ( [ $instance,$method ], $args );
+		}
 	}
 }

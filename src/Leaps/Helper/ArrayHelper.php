@@ -609,19 +609,6 @@ class ArrayHelper
 			if (call_user_func ( $callback, $key, $value ))
 				return $value;
 		}
-		return static::value ( $default );
-	}
-
-	/**
-	 * 返回给定项目的值
-	 *
-	 * 如果给定的项目是一个闭包，则返回结果
-	 *
-	 * @param mixed $value
-	 * @return mixed
-	 */
-	public static function value($value)
-	{
-		return (is_callable ( $value ) and ! is_string ( $value )) ? call_user_func ( $value ) : $value;
+		return Leaps::value ( $default );
 	}
 }
