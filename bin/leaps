@@ -1,0 +1,38 @@
+#!/usr/bin/env php
+<?php
+/**
+ * leaps console bootstrap file.
+ *
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft LLC
+ * @license http://www.tintsoft.com/license/
+ */
+
+defined('LEAPS_DEBUG') or define('LEAPS_DEBUG', true);
+
+$composerAutoload = [
+    __DIR__ . '/../vendor/autoload.php', // in leaps-dev repo
+    __DIR__ . '/../../autoload.php', // installed as a composer binary
+];
+$vendorPath = null;
+foreach ($composerAutoload as $autoload) {
+    if (file_exists($autoload)) {
+        require($autoload);
+        $vendorPath = dirname($autoload);
+        break;
+    }
+}
+
+
+require(__DIR__ . '/Leaps.php');
+
+$application = new Leaps\Console\Application([
+    'id' => 'leaps-console',
+    'basePath' => __DIR__ . '/console',
+    'controllerNamespace' => 'Leaps\Console\Controller',
+]);
+if ($vendorPath !== null) {
+    $application->setVendorPath($vendorPath);
+}
+$exitCode = $application->run();
+exit($exitCode);
