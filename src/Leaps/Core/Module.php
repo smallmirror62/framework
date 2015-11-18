@@ -15,71 +15,82 @@ use Leaps;
 class Module extends Base
 {
 	/**
+	 * 自定义模块配置
+	 * 
+	 * @var array custom module parameters (name => value).
+	 */
+	public $params = [ ];
+	
+	/**
 	 * 当前模块ID
 	 *
 	 * @var string
 	 */
 	public $id;
-
+	
 	/**
 	 * 父模块实例
 	 *
 	 * @var Module
 	 */
 	public $module;
-
+	
 	/**
 	 * 模块布局
+	 *
 	 * @var string|boolean
 	 */
 	public $layout;
-
+	
 	/**
 	 * 默认路由
 	 *
 	 * @var string
 	 */
 	public $defaultRoute = 'index';
-
+	
 	/**
 	 * 控制器集合
+	 *
 	 * @var array
 	 */
-	public $controllerMap = [];
-
+	public $controllerMap = [ ];
+	
 	/**
 	 * 控制器命名空间
 	 *
 	 * @var string
 	 */
 	public $controllerNamespace;
-
+	
 	/**
 	 * 模块基础路径
 	 *
 	 * @var string $_basePath
 	 */
 	private $_basePath;
-
+	
 	/**
 	 * 视图文件路径
+	 *
 	 * @var string $_viewPath
 	 */
 	private $_viewPath;
-
+	
 	/**
 	 * 布局文件路径
+	 *
 	 * @var string $_layoutPath
 	 */
 	private $_layoutPath;
-
+	
 	/**
 	 * 已经注册的子模块
 	 *
 	 * @var array
 	 */
 	private $_modules = [ ];
-
+	
 	/**
 	 * 构造方法
 	 *
@@ -93,7 +104,7 @@ class Module extends Base
 		$this->module = $parent;
 		parent::__construct ( $config );
 	}
-
+	
 	/**
 	 * 初始化模块
 	 */
@@ -106,7 +117,7 @@ class Module extends Base
 			}
 		}
 	}
-
+	
 	/**
 	 * 返回唯一的应用程序标识
 	 *
@@ -116,7 +127,7 @@ class Module extends Base
 	{
 		return $this->module ? ltrim ( $this->module->getUniqueId () . '/' . $this->id, '/' ) : $this->id;
 	}
-
+	
 	/**
 	 * 返回模块跟文件夹
 	 *
@@ -130,7 +141,7 @@ class Module extends Base
 		}
 		return $this->_basePath;
 	}
-
+	
 	/**
 	 * 设置模块文件夹
 	 *
@@ -147,7 +158,7 @@ class Module extends Base
 			throw new InvalidParamException ( "The directory does not exist: $path" );
 		}
 	}
-
+	
 	/**
 	 * 获取控制器路径
 	 *
@@ -158,7 +169,7 @@ class Module extends Base
 	{
 		return Leaps::getAlias ( '@' . str_replace ( '\\', '/', $this->controllerNamespace ) );
 	}
-
+	
 	/**
 	 * 获取模块视图路径
 	 *
@@ -172,7 +183,7 @@ class Module extends Base
 			return $this->_viewPath = $this->getBasePath () . DIRECTORY_SEPARATOR . 'View';
 		}
 	}
-
+	
 	/**
 	 * 设置模块视图路径
 	 *
@@ -183,7 +194,7 @@ class Module extends Base
 	{
 		$this->_viewPath = Leaps::getAlias ( $path );
 	}
-
+	
 	/**
 	 * 获取模块布局路径
 	 *
@@ -197,7 +208,7 @@ class Module extends Base
 			return $this->_layoutPath = $this->getViewPath () . DIRECTORY_SEPARATOR . 'Layout';
 		}
 	}
-
+	
 	/**
 	 * 设置模块布局路径
 	 *
@@ -208,7 +219,7 @@ class Module extends Base
 	{
 		$this->_layoutPath = Leaps::getAlias ( $path );
 	}
-
+	
 	/**
 	 * 设置别名路径
 	 * For example,
@@ -226,7 +237,7 @@ class Module extends Base
 			Leaps::setAlias ( $name, $alias );
 		}
 	}
-
+	
 	/**
 	 * 检查是否存在指定的子模块
 	 *
@@ -243,7 +254,7 @@ class Module extends Base
 			return isset ( $this->_modules [$id] );
 		}
 	}
-
+	
 	/**
 	 * 检索指定名称的子模块。
 	 *
@@ -265,20 +276,23 @@ class Module extends Base
 			} elseif ($load) {
 				Leaps::trace ( "Loading module: $id", __METHOD__ );
 				/* @var $module Module */
-				$module = Leaps::createObject ( $this->_modules [$id], [$id,$this] );
+				$module = Leaps::createObject ( $this->_modules [$id], [ 
+					$id,
+					$this 
+				] );
 				return $this->_modules [$id] = $module;
 			}
 		}
 		return null;
 	}
-
+	
 	/**
 	 * 添加子模块到当前模块
 	 *
 	 * @param string $id 模块ID
 	 * @param Module|array|null $module the sub-module to be added to this module. This can
 	 *        be one of the followings:
-	 *
+	 *       
 	 *        - a [[Module]] object
 	 *        - a configuration array: when [[getModule()]] is called initially, the array
 	 *        will be used to instantiate the sub-module
@@ -292,7 +306,7 @@ class Module extends Base
 			$this->_modules [$id] = $module;
 		}
 	}
-
+	
 	/**
 	 * 返回当前模块的子模块
 	 *
@@ -315,7 +329,7 @@ class Module extends Base
 			return $this->_modules;
 		}
 	}
-
+	
 	/**
 	 * 批量注册子模块
 	 *
@@ -325,11 +339,11 @@ class Module extends Base
 	 *
 	 * ~~~
 	 * [
-	 *     'comment' => [
-	 *         'className' => 'app\modules\comment\CommentModule',
-	 *         'db' => 'db',
-	 *     ],
-	 *     'booking' => ['className' => 'app\modules\booking\BookingModule'],
+	 * 'comment' => [
+	 * 'className' => 'app\modules\comment\CommentModule',
+	 * 'db' => 'db',
+	 * ],
+	 * 'booking' => ['className' => 'app\modules\booking\BookingModule'],
 	 * ]
 	 * ~~~
 	 *
@@ -337,11 +351,11 @@ class Module extends Base
 	 */
 	public function setModules($modules)
 	{
-		foreach ($modules as $id => $module) {
-			$this->_modules[$id] = $module;
+		foreach ( $modules as $id => $module ) {
+			$this->_modules [$id] = $module;
 		}
 	}
-
+	
 	/**
 	 * 从路由执行控制器操作
 	 *
@@ -365,7 +379,7 @@ class Module extends Base
 			throw new \Leaps\Router\Exception ( 'Unable to resolve the request "' . $route . '".' );
 		}
 	}
-
+	
 	/**
 	 * 根据控制器ID创建控制器
 	 *
@@ -381,32 +395,38 @@ class Module extends Base
 		if ($route === '') {
 			$route = $this->defaultRoute;
 		}
-
+		
 		// double slashes or leading/ending slashes may cause substr problem
 		$route = trim ( $route, '/' );
 		if (strpos ( $route, '//' ) !== false) {
 			return false;
 		}
-
+		
 		if (strpos ( $route, '/' ) !== false) {
 			list ( $id, $route ) = explode ( '/', $route, 2 );
 		} else {
 			$id = $route;
 			$route = '';
 		}
-
+		
 		// module and controller map take precedence
-		if (isset($this->controllerMap[$id])) {
-			$controller = Leaps::createObject($this->controllerMap[$id], [$id, $this]);
-			return [$controller, $route];
+		if (isset ( $this->controllerMap [$id] )) {
+			$controller = Leaps::createObject ( $this->controllerMap [$id], [ 
+				$id,
+				$this 
+			] );
+			return [ 
+				$controller,
+				$route 
+			];
 		}
-
+		
 		$module = $this->getModule ( $id );
-
+		
 		if ($module !== null) {
 			return $module->createController ( $route );
 		}
-
+		
 		if (($pos = strrpos ( $route, '/' )) !== false) {
 			$id .= '/' . substr ( $route, 0, $pos );
 			$route = substr ( $route, $pos + 1 );
@@ -416,10 +436,13 @@ class Module extends Base
 			$controller = $this->createControllerByID ( $id . '/' . $route );
 			$route = '';
 		}
-
-		return $controller === null ? false : [ $controller,$route];
+		
+		return $controller === null ? false : [ 
+			$controller,
+			$route 
+		];
 	}
-
+	
 	/**
 	 * 根据控制器ID创建控制器
 	 *
@@ -450,7 +473,10 @@ class Module extends Base
 			return null;
 		}
 		if (is_subclass_of ( $className, 'Leaps\Core\Controller' )) {
-			return Leaps::createObject ( $className, [$id,$this] );
+			return Leaps::createObject ( $className, [ 
+				$id,
+				$this 
+			] );
 		} elseif (LEAPS_DEBUG) {
 			throw new InvalidConfigException ( "Controller class must extend from \\Leaps\\Core\\Controller." );
 		} else {
