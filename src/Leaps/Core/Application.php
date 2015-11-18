@@ -20,14 +20,14 @@ abstract class Application extends Module
 	 * @var string
 	 */
 	public $name = 'My Application';
-
+	
 	/**
 	 * 应用程序编码
 	 *
 	 * @var string
 	 */
 	public $charset = 'UTF-8';
-
+	
 	/**
 	 * 最终用户语言
 	 *
@@ -35,63 +35,80 @@ abstract class Application extends Module
 	 * @see sourceLanguage
 	 */
 	public $language = 'zh-CN';
-
+	
 	/**
 	 * 应用程序使用的布局，false关闭
 	 *
 	 * @var string|boolean
 	 */
 	public $layout;
-
+	
 	/**
 	 * 控制器命名空间
 	 *
 	 * @var string
 	 */
 	public $controllerNamespace = 'App\\Controller';
-
+	
 	/**
 	 * 当前活跃的控制器实例
 	 *
 	 * @var Controller
 	 */
 	public $controller;
-
+	
 	/**
 	 * 请求的路由
 	 *
 	 * @var string
 	 */
 	public $requestedRoute;
-
+	
 	/**
 	 * 请求的操作
 	 *
 	 * @var Action
 	 */
 	public $requestedAction;
-
+	
 	/**
 	 * 请求的参数
 	 *
 	 * @var array
 	 */
 	public $requestedParams;
-
+	
 	/**
 	 * 已加载模块的类名称索引列表
 	 *
 	 * @var array
 	 */
 	public $loadedModules = [ ];
-
+	
+	/**
+	 *
+	 * @var array list of components that should be run during the application [[bootstrap()|bootstrapping process]].
+	 *     
+	 *      Each component may be specified in one of the following formats:
+	 *     
+	 *      - an application component ID as specified via [[components]].
+	 *      - a module ID as specified via [[modules]].
+	 *      - a class name.
+	 *      - a configuration array.
+	 *     
+	 *      During the bootstrapping process, each component will be instantiated. If the component class
+	 *      implements [[BootstrapInterface]], its [[BootstrapInterface::bootstrap()|bootstrap()]] method
+	 *      will be also be called.
+	 */
+	public $bootstrap = [ ];
+	
 	/**
 	 * 应用程序配置
 	 *
 	 * @var array 应用程序配置数组
 	 */
 	private $_config;
-
+	
 	/**
 	 * 构造方法
 	 *
@@ -104,7 +121,7 @@ abstract class Application extends Module
 		$this->preInit ();
 		Base::__construct ( $this->_config );
 	}
-
+	
 	/**
 	 * 前置初始化
 	 *
@@ -118,7 +135,7 @@ abstract class Application extends Module
 		} else {
 			throw new InvalidConfigException ( 'The "basePath" configuration for the Application is required.' );
 		}
-
+		
 		if (isset ( $this->_config ['vendorPath'] )) {
 			$this->setVendorPath ( $this->_config ['vendorPath'] );
 			unset ( $this->_config ['vendorPath'] );
@@ -126,7 +143,7 @@ abstract class Application extends Module
 			// set "@vendor"
 			$this->getVendorPath ();
 		}
-
+		
 		if (isset ( $this->_config ['runtimePath'] )) {
 			$this->setRuntimePath ( $this->_config ['runtimePath'] );
 			unset ( $this->_config ['runtimePath'] );
@@ -134,14 +151,14 @@ abstract class Application extends Module
 			// set "@runtime"
 			$this->getRuntimePath ();
 		}
-
+		
 		if (isset ( $this->_config ['timeZone'] )) {
 			$this->setTimeZone ( $this->_config ['timeZone'] );
 			unset ( $this->_config ['timeZone'] );
 		} elseif (! ini_get ( 'date.timezone' )) {
 			$this->setTimeZone ( 'UTC' );
 		}
-
+		
 		// merge core components with custom services
 		foreach ( $this->coreServices () as $id => $service ) {
 			if (! isset ( $this->_config ['services'] [$id] )) {
@@ -150,16 +167,14 @@ abstract class Application extends Module
 				$this->_config ['services'] [$id] ['className'] = $service ['className'];
 			}
 		}
-		$this->registerErrorHandler();
+		$this->registerErrorHandler ();
 		$this->setServices ( $this->_config ['services'] );
-		unset($this->_config ['services']);
+		unset ( $this->_config ['services'] );
 	}
-
 	public function init()
 	{
-
 	}
-
+	
 	/**
 	 * 初始化错误处理
 	 */
@@ -175,7 +190,7 @@ abstract class Application extends Module
 			$this->getErrorhandler ()->register ();
 		}
 	}
-
+	
 	/**
 	 * 返回应用程序的唯一ID
 	 *
@@ -185,7 +200,7 @@ abstract class Application extends Module
 	{
 		return '';
 	}
-
+	
 	/**
 	 * 设置应用程序的根目录和@App别名。
 	 *
@@ -201,7 +216,7 @@ abstract class Application extends Module
 		Leaps::setAlias ( '@Model', $this->getBasePath () . '/Model' );
 		Leaps::setAlias ( '@Service', $this->getBasePath () . '/Service' );
 	}
-
+	
 	/**
 	 * 执行应用程序
 	 */
@@ -215,7 +230,7 @@ abstract class Application extends Module
 			return $e->statusCode;
 		}
 	}
-
+	
 	/**
 	 * 处理指定的请求
 	 *
@@ -225,14 +240,14 @@ abstract class Application extends Module
 	 * @return Response the resulting response
 	 */
 	abstract public function handleRequest($request);
-
+	
 	/**
 	 * 运行时文件目录
 	 *
 	 * @var string
 	 */
 	private $_runtimePath;
-
+	
 	/**
 	 * 返回存储运行时文件的目录。
 	 *
@@ -246,7 +261,7 @@ abstract class Application extends Module
 		}
 		return $this->_runtimePath;
 	}
-
+	
 	/**
 	 * 设置存储运行时文件的目录。
 	 *
@@ -257,14 +272,14 @@ abstract class Application extends Module
 		$this->_runtimePath = Leaps::getAlias ( $path );
 		Leaps::setAlias ( '@Runtime', $this->_runtimePath );
 	}
-
+	
 	/**
 	 * 第三方组件目录
 	 *
 	 * @var string
 	 */
 	private $_vendorPath;
-
+	
 	/**
 	 * 返回第三方组件目录
 	 *
@@ -278,7 +293,7 @@ abstract class Application extends Module
 		}
 		return $this->_vendorPath;
 	}
-
+	
 	/**
 	 * 设置第三方组件目录
 	 *
@@ -291,7 +306,7 @@ abstract class Application extends Module
 		Leaps::setAlias ( '@Bower', $this->_vendorPath . DIRECTORY_SEPARATOR . 'Bower' );
 		Leaps::setAlias ( '@Npm', $this->_vendorPath . DIRECTORY_SEPARATOR . 'Npm' );
 	}
-
+	
 	/**
 	 * 返回应用程序时区
 	 *
@@ -302,7 +317,7 @@ abstract class Application extends Module
 	{
 		return date_default_timezone_get ();
 	}
-
+	
 	/**
 	 * 设置当前应用所属时区
 	 *
@@ -313,7 +328,7 @@ abstract class Application extends Module
 	{
 		date_default_timezone_set ( $value );
 	}
-
+	
 	/**
 	 * 系统默认核心服务
 	 *
@@ -321,60 +336,92 @@ abstract class Application extends Module
 	 */
 	public function coreServices()
 	{
-		return [
-				'file' => ['className' => 'Leaps\Filesystem\Filesystem'],
-				'log' => ['className' => 'Leaps\Log\Dispatcher'],
-				'crypt' => ['className' => 'Leaps\Crypt\Crypt'],
-				'cache' => ['className' => 'Leaps\Cache\ArrayCache'],
-				'registry' => ['className' => 'Leaps\Core\Registry'],
-				'filter' => ['className' => 'Leaps\Filter\Filter'],
-				'event' => ['className' => 'Leaps\Events\Dispatcher'],
-				'db'=>['className' => 'Leaps\Db\Db'],
-				'view' => ['className' => 'Leaps\Web\View'],
-				'cookie' => ['className' => 'Leaps\Http\Cookies'],
-				'request' => ['className' => 'Leaps\Http\Request'],
-				'response' => ['className' => 'Leaps\Http\Response'],
-				'router' => ['className' => 'Leaps\Router\UrlManager'],
-				'session' => ['className' => "\\Leaps\\Session\\Files"],
+		return [ 
+			'file' => [ 
+				'className' => 'Leaps\Filesystem\Filesystem' 
+			],
+			'log' => [ 
+				'className' => 'Leaps\Log\Dispatcher' 
+			],
+			'crypt' => [ 
+				'className' => 'Leaps\Crypt\Crypt' 
+			],
+			'cache' => [ 
+				'className' => 'Leaps\Cache\ArrayCache' 
+			],
+			'registry' => [ 
+				'className' => 'Leaps\Core\Registry' 
+			],
+			'filter' => [ 
+				'className' => 'Leaps\Filter\Filter' 
+			],
+			'event' => [ 
+				'className' => 'Leaps\Events\Dispatcher' 
+			],
+			'db' => [ 
+				'className' => 'Leaps\Db\Db' 
+			],
+			'view' => [ 
+				'className' => 'Leaps\Web\View' 
+			],
+			'cookie' => [ 
+				'className' => 'Leaps\Http\Cookies' 
+			],
+			'request' => [ 
+				'className' => 'Leaps\Http\Request' 
+			],
+			'response' => [ 
+				'className' => 'Leaps\Http\Response' 
+			],
+			'router' => [ 
+				'className' => 'Leaps\Router\UrlManager' 
+			],
+			'session' => [ 
+				'className' => "\\Leaps\\Session\\Files" 
+			] 
 		];
 	}
-
+	
 	/**
 	 * Returns the database connection component.
+	 * 
 	 * @return \Leaps\Db\Connection the database connection.
 	 */
 	public function getDb()
 	{
-		return $this->getShared('db');
+		return $this->getShared ( 'db' );
 	}
-
+	
 	/**
 	 * Returns the cache component.
+	 * 
 	 * @return \Leaps\Cache\Adapter the cache application component. Null if the component is not enabled.
 	 */
 	public function getCache()
 	{
-		return $this->getShared('cache');
+		return $this->getShared ( 'cache' );
 	}
-
+	
 	/**
 	 * Returns the log dispatcher component.
+	 * 
 	 * @return \Leaps\Log\Dispatcher the log dispatcher application component.
 	 */
 	public function getLog()
 	{
-		return $this->getShared('log');
+		return $this->getShared ( 'log' );
 	}
-
+	
 	/**
 	 * Returns the error handler component.
+	 * 
 	 * @return \Leaps\Web\ErrorHandler|\Leaps\Console\ErrorHandler the error handler application component.
 	 */
 	public function getErrorHandler()
 	{
-		return $this->getShared('errorhandler');
+		return $this->getShared ( 'errorhandler' );
 	}
-
+	
 	/**
 	 * 获取请求组件实例
 	 *
@@ -384,7 +431,7 @@ abstract class Application extends Module
 	{
 		return $this->getShared ( 'request' );
 	}
-
+	
 	/**
 	 * 获取响应组件实例
 	 *
@@ -394,44 +441,47 @@ abstract class Application extends Module
 	{
 		return $this->getShared ( 'response' );
 	}
-
+	
 	/**
 	 * 返回视图对象
+	 * 
 	 * @return View|\Leaps\Web\View the view application component that is used to render various view files.
 	 */
 	public function getView()
 	{
-		return $this->getShared('view');
+		return $this->getShared ( 'view' );
 	}
-
+	
 	/**
 	 * 返回Session组件
+	 * 
 	 * @return Session the session component.
 	 */
 	public function getSession()
 	{
-		return $this->get('session');
+		return $this->get ( 'session' );
 	}
-
+	
 	/**
 	 * 返回加密对象
+	 * 
 	 * @return \Leaps\Crypt\Crypt the security application component.
 	 */
 	public function getCrypt()
 	{
-		return $this->getShared('crypt');
+		return $this->getShared ( 'crypt' );
 	}
-
+	
 	/**
 	 * 返回应用URL路由对象
+	 * 
 	 * @return \Leaps\Router\UrlManager the URL manager for this application.
 	 */
 	public function getUrlManager()
 	{
-		return $this->getShared('router');
+		return $this->getShared ( 'router' );
 	}
-
-
+	
 	/**
 	 * 动态调用Di容器方法
 	 *
@@ -454,7 +504,10 @@ abstract class Application extends Module
 			case 4 :
 				return $instance->$method ( $args [0], $args [1], $args [2], $args [3] );
 			default :
-				return call_user_func_array ( [ $instance,$method ], $args );
+				return call_user_func_array ( [ 
+					$instance,
+					$method 
+				], $args );
 		}
 	}
 }
