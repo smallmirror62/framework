@@ -11,7 +11,7 @@
 namespace Leaps\Console;
 
 use Leaps;
-use Leaps\Utility\Console;
+use Leaps\Helper\Console;
 use Leaps\Core\UserException;
 use Leaps\Core\ErrorException;
 
@@ -34,23 +34,37 @@ class ErrorHandler extends \Leaps\Core\ErrorHandler
 			} else {
 				$message = $this->formatMessage ( 'Exception' );
 			}
-			$message .= $this->formatMessage ( " '" . get_class ( $exception ) . "'", [ Console::BOLD,Console::FG_BLUE ] ) . " with message " . $this->formatMessage ( "'{$exception->getMessage()}'", [ Console::BOLD ] ) . // . "\n"
-"\n\nin " . dirname ( $exception->getFile () ) . DIRECTORY_SEPARATOR . $this->formatMessage ( basename ( $exception->getFile () ), [ Console::BOLD ] ) . ':' . $this->formatMessage ( $exception->getLine (), [ Console::BOLD,Console::FG_YELLOW ] ) . "\n";
+			$message .= $this->formatMessage ( " '" . get_class ( $exception ) . "'", [ 
+				Console::BOLD,
+				Console::FG_BLUE 
+			] ) . " with message " . $this->formatMessage ( "'{$exception->getMessage()}'", [ 
+				Console::BOLD 
+			] ) . // . "\n"
+"\n\nin " . dirname ( $exception->getFile () ) . DIRECTORY_SEPARATOR . $this->formatMessage ( basename ( $exception->getFile () ), [ 
+				Console::BOLD 
+			] ) . ':' . $this->formatMessage ( $exception->getLine (), [ 
+				Console::BOLD,
+				Console::FG_YELLOW 
+			] ) . "\n";
 			if ($exception instanceof \Leaps\Db\Exception && ! empty ( $exception->errorInfo )) {
-				$message .= "\n" . $this->formatMessage ( "Error Info:\n", [ Console::BOLD ] ) . print_r ( $exception->errorInfo, true );
+				$message .= "\n" . $this->formatMessage ( "Error Info:\n", [ 
+					Console::BOLD 
+				] ) . print_r ( $exception->errorInfo, true );
 			}
-			$message .= "\n" . $this->formatMessage ( "Stack trace:\n", [ Console::BOLD ] ) . $exception->getTraceAsString ();
+			$message .= "\n" . $this->formatMessage ( "Stack trace:\n", [ 
+				Console::BOLD 
+			] ) . $exception->getTraceAsString ();
 		} else {
 			$message = $this->formatMessage ( 'Error: ' ) . $exception->getMessage ();
 		}
-
+		
 		if (PHP_SAPI === 'cli') {
 			Console::stderr ( $message . "\n" );
 		} else {
 			echo $message . "\n";
 		}
 	}
-
+	
 	/**
 	 * Colorizes a message for console output.
 	 *
