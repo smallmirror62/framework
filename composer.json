@@ -5,7 +5,12 @@
   "require" : {
     "php" : ">=5.4.0",
     "ext-mbstring" : "*",
-    "lib-pcre" : "*"
+    "lib-pcre" : "*",
+    "ezyang/htmlpurifier": "4.6.*",
+    "cebe/markdown": "~1.0.0 | ~1.1.0",
+    "bower-asset/jquery": "2.1.*@stable | 1.11.*@stable",
+    "bower-asset/jquery.inputmask": "3.1.*",
+    "bower-asset/punycode": "1.3.*",
   },
   "authors" : [ {
     "name" : "Tongle Xu",
@@ -26,7 +31,7 @@
       "Leaps\\" : "src/Leaps/"
     }
   },
-  "bin" : [ "bin/leaps" ],
+  "bin" : [ "leaps" ],
   "type" : "library",
   "license" : "Apache License",
   "homepage" : "http://leaps.tintsoft.com/"
