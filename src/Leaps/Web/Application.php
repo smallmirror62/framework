@@ -1,97 +1,157 @@
 <?php
-// +----------------------------------------------------------------------
-// | Leaps Framework [ WE CAN DO IT JUST THINK IT ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2011-2014 Leaps Team (http://www.tintsoft.com)
-// +----------------------------------------------------------------------
-// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
-// +----------------------------------------------------------------------
-// | Author XuTongle <xutongle@gmail.com>
-// +----------------------------------------------------------------------
+/**
+ * @link http://www.yiiframework.com/
+ * @copyright Copyright (c) 2008 Yii Software LLC
+ * @license http://www.yiiframework.com/license/
+ */
+
 namespace Leaps\Web;
 
 use Leaps;
-use Leaps\Http\Response;
+use Leaps\Base\InvalidRouteException;
 
-class Application extends \Leaps\Core\Application
+/**
+ * Application is the base class for all web application classes.
+ *
+ * @property string $homeUrl The homepage URL.
+ * @property Session $session The session component. This property is read-only.
+ * @property User $user The user component. This property is read-only.
+ *
+ * @author Qiang Xue <qiang.xue@gmail.com>
+ * @since 2.0
+ */
+class Application extends \Leaps\Base\Application
 {
-	/**
-	 * 应用程序默认路由
-	 * @var string
-	 */
-	public $defaultRoute = 'site';
+    /**
+     * @var string the default route of this application. Defaults to 'site'.
+     */
+    public $defaultRoute = 'site';
+    /**
+     * @var array the configuration specifying a controller action which should handle
+     * all user requests. This is mainly used when the application is in maintenance mode
+     * and needs to handle all incoming requests via a single action.
+     * The configuration is an array whose first element specifies the route of the action.
+     * The rest of the array elements (key-value pairs) specify the parameters to be bound
+     * to the action. For example,
+     *
+     * ~~~
+     * [
+     *     'offline/notice',
+     *     'param1' => 'value1',
+     *     'param2' => 'value2',
+     * ]
+     * ~~~
+     *
+     * Defaults to null, meaning catch-all is not used.
+     */
+    public $catchAll;
+    /**
+     * @var Controller the currently active controller instance
+     */
+    public $controller;
 
-	/**
-	 * 当前活动的控制器实例
-	 * @var Controller
-	 */
-	public $controller;
 
-	/**
-	 * (non-PHPdoc)
-	 *
-	 * @param resource Leaps\Http\Request
-	 * @see \Leaps\Core\Application::handleRequest()
-	 */
-	public function handleRequest($request)
-	{
-		Leaps::setAlias ( '@Webroot', dirname ( $request->getScriptFile () ) );
-		Leaps::setAlias ( '@Web', $request->getBaseUrl () );
-		list ( $route, $params ) = $request->resolve ();
-		try {
-			Leaps::trace ( "Route requested: '$route'", __METHOD__ );
-			$this->requestedRoute = $route;
-			$result = $this->runAction ( $route, $params );
-			if ($result instanceof Response) {
-				return $result;
-			} else {
-				$response = $this->getShared ( 'response' );
-				if ($result !== null) {
-					$response->data = $result;
-				}
-				return $response;
-			}
-		} catch ( \Leaps\Router\Exception $e ) {
-			throw new NotFoundHttpException ( 'Page not found.', $e->getCode (), $e );
-		}
-	}
-	private $_homeUrl;
+    /**
+     * @inheritdoc
+     */
+    protected function bootstrap()
+    {
+        $request = $this->getRequest();
+        Leaps::setAlias('@webroot', dirname($request->getScriptFile()));
+        Leaps::setAlias('@web', $request->getBaseUrl());
 
-	/**
-	 * 获取首页URL
-	 *
-	 * @return string
-	 */
-	public function getHomeUrl()
-	{
-		if ($this->_homeUrl === null) {
-			if ($this->getRouter ()->showScriptName) {
-				return $this->getRequest ()->getScriptUrl ();
-			} else {
-				return $this->getRequest ()->getBaseUrl () . '/';
-			}
-		} else {
-			return $this->_homeUrl;
-		}
-	}
+        parent::bootstrap();
+    }
 
-	/**
-	 * 设置首页URL
-	 *
-	 * @param string $value
-	 */
-	public function setHomeUrl($value)
-	{
-		$this->_homeUrl = $value;
-	}
+    /**
+     * Handles the specified request.
+     * @param Request $request the request to be handled
+     * @return Response the resulting response
+     * @throws NotFoundHttpException if the requested route is invalid
+     */
+    public function handleRequest($request)
+    {
+        if (empty($this->catchAll)) {
+            list ($route, $params) = $request->resolve();
+        } else {
+            $route = $this->catchAll[0];
+            $params = $this->catchAll;
+            unset($params[0]);
+        }
+        try {
+            Leaps::trace("Route requested: '$route'", __METHOD__);
+            $this->requestedRoute = $route;
+            $result = $this->runAction($route, $params);
+            if ($result instanceof Response) {
+                return $result;
+            } else {
+                $response = $this->getResponse();
+                if ($result !== null) {
+                    $response->data = $result;
+                }
 
-	/**
-	 * (non-PHPdoc)
-	 *
-	 * @see \Leaps\Core\Application::coreServices()
-	 */
-	public function coreServices()
-	{
-		return array_merge ( parent::coreServices (), [ 'errorhandler' => [ 'className' => 'Leaps\Web\ErrorHandler' ] ] );
-	}
+                return $response;
+            }
+        } catch (InvalidRouteException $e) {
+            throw new NotFoundHttpException(Leaps::t('leaps', 'Page not found.'), $e->getCode(), $e);
+        }
+    }
+
+    private $_homeUrl;
+
+    /**
+     * @return string the homepage URL
+     */
+    public function getHomeUrl()
+    {
+        if ($this->_homeUrl === null) {
+            if ($this->getUrlManager()->showScriptName) {
+                return $this->getRequest()->getScriptUrl();
+            } else {
+                return $this->getRequest()->getBaseUrl() . '/';
+            }
+        } else {
+            return $this->_homeUrl;
+        }
+    }
+
+    /**
+     * @param string $value the homepage URL
+     */
+    public function setHomeUrl($value)
+    {
+        $this->_homeUrl = $value;
+    }
+
+    /**
+     * Returns the session component.
+     * @return Session the session component.
+     */
+    public function getSession()
+    {
+        return $this->get('session');
+    }
+
+    /**
+     * Returns the user component.
+     * @return User the user component.
+     */
+    public function getUser()
+    {
+        return $this->get('user');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function coreComponents()
+    {
+        return array_merge(parent::coreComponents(), [
+            'request' => ['class' => 'Leaps\Web\Request'],
+            'response' => ['class' => 'Leaps\Web\Response'],
+            'session' => ['class' => 'Leaps\Web\Session'],
+            'user' => ['class' => 'Leaps\Web\User'],
+            'errorHandler' => ['class' => 'Leaps\Web\ErrorHandler'],
+        ]);
+    }
 }

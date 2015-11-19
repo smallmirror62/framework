@@ -1,52 +1,61 @@
 <?php
-// +----------------------------------------------------------------------
-// | Leaps Framework [ WE CAN DO IT JUST THINK IT ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2011-2014 Leaps Team (http://www.tintsoft.com)
-// +----------------------------------------------------------------------
-// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
-// +----------------------------------------------------------------------
-// | Author XuTongle <xutongle@gmail.com>
-// +----------------------------------------------------------------------
+/**
+ * @link http://www.yiiframework.com/
+ * @copyright Copyright (c) 2008 Yii Software LLC
+ * @license http://www.yiiframework.com/license/
+ */
+
 namespace Leaps\Db;
 
-class Expression {
+/**
+ * Expression represents a DB expression that does not need escaping or quoting.
+ * When an Expression object is embedded within a SQL statement or fragment,
+ * it will be replaced with the [[expression]] property value without any
+ * DB escaping or quoting. For example,
+ *
+ * ~~~
+ * $expression = new Expression('NOW()');
+ * $sql = 'SELECT ' . $expression;  // SELECT NOW()
+ * ~~~
+ *
+ * An expression can also be bound with parameters specified via [[params]].
+ *
+ * @author Qiang Xue <qiang.xue@gmail.com>
+ * @since 2.0
+ */
+class Expression extends \Leaps\Base\Object
+{
+    /**
+     * @var string the DB expression
+     */
+    public $expression;
+    /**
+     * @var array list of parameters that should be bound for this expression.
+     * The keys are placeholders appearing in [[expression]] and the values
+     * are the corresponding parameter values.
+     */
+    public $params = [];
 
-	/**
-	 * 数据库表达式的值
-	 *
-	 * @var string
-	 */
-	protected $value;
 
-	/**
-	 * 创建一个新的数据库表达式实例
-	 *
-	 * @param  string  $value
-	 * @return void
-	 */
-	public function __construct($value)
-	{
-		$this->value = $value;
-	}
+    /**
+     * Constructor.
+     * @param string $expression the DB expression
+     * @param array $params parameters
+     * @param array $config name-value pairs that will be used to initialize the object properties
+     */
+    public function __construct($expression, $params = [], $config = [])
+    {
+        $this->expression = $expression;
+        $this->params = $params;
+        parent::__construct($config);
+    }
 
-	/**
-	 * 从数据库表达式获取字符串
-	 * @return string
-	 */
-	public function get()
-	{
-		return $this->value;
-	}
-
-	/**
-	 * 魔术方法，从数据库表达式获取字符串
-	 *
-	 * @return string
-	 */
-	public function __toString()
-	{
-		return $this->get();
-	}
-
+    /**
+     * String magic method
+     * @return string the DB expression
+     */
+    public function __toString()
+    {
+        return $this->expression;
+    }
 }

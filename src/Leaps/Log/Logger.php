@@ -10,51 +10,84 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Log;
 
-use Leaps\Core\Base;
+use Leaps;
+use Leaps\Base\Service;
 
-class Logger extends Base
+/**
+ * Logger records logged messages in memory and sends them to different targets if [[dispatcher]] is set.
+ *
+ * A Logger instance can be accessed via `Leaps::getLogger()`. You can call the method [[log()]] to record a single log message.
+ * For convenience, a set of shortcut methods are provided for logging messages of various severity levels
+ * via the [[Yii]] class:
+ *
+ * - [[Leaps::trace()]]
+ * - [[Leaps::error()]]
+ * - [[Leaps::warning()]]
+ * - [[Leaps::info()]]
+ * - [[Leaps::beginProfile()]]
+ * - [[Leaps::endProfile()]]
+ *
+ * When the application ends or [[flushInterval]] is reached, Logger will call [[flush()]]
+ * to send logged messages to different log targets, such as [[FileTarget|file]], [[EmailTarget|email]],
+ * or [[DbTarget|database]], with the help of the [[dispatcher]].
+ *
+ * @property array $dbProfiling The first element indicates the number of SQL statements executed, and the
+ *           second element the total time spent in SQL execution. This property is read-only.
+ * @property float $elapsedTime The total elapsed time in seconds for current request. This property is
+ *           read-only.
+ * @property array $profiling The profiling results. Each element is an array consisting of these elements:
+ *           `info`, `category`, `timestamp`, `trace`, `level`, `duration`. This property is read-only.
+ *          
+ *          
+ */
+class Logger extends Service
 {
 	/**
-	 * Error 级别
+	 * Error message level.
+	 * An error message is one that indicates the abnormal termination of the
+	 * application and may require developer's handling.
 	 */
 	const LEVEL_ERROR = 0x01;
-
 	/**
-	 * Warning 级别
+	 * Warning message level.
+	 * A warning message is one that indicates some abnormal happens but
+	 * the application is able to continue to run. Developers should pay attention to this message.
 	 */
 	const LEVEL_WARNING = 0x02;
-
 	/**
-	 * Informational 级别
+	 * Informational message level.
+	 * An informational message is one that includes certain information
+	 * for developers to review.
 	 */
 	const LEVEL_INFO = 0x04;
-
 	/**
-	 * Tracing 级别
+	 * Tracing message level.
+	 * An tracing message is one that reveals the code execution flow.
 	 */
 	const LEVEL_TRACE = 0x08;
-
 	/**
-	 * Profiling 级别
+	 * Profiling message level.
+	 * This indicates the message is for profiling purpose.
 	 */
 	const LEVEL_PROFILE = 0x40;
-
 	/**
-	 * Profiling 级别
+	 * Profiling message level.
+	 * This indicates the message is for profiling purpose. It marks the
+	 * beginning of a profiling block.
 	 */
 	const LEVEL_PROFILE_BEGIN = 0x50;
-
 	/**
-	 * Profiling 级别
+	 * Profiling message level.
+	 * This indicates the message is for profiling purpose. It marks the
+	 * end of a profiling block.
 	 */
 	const LEVEL_PROFILE_END = 0x60;
-
+	
 	/**
-	 * 日志消息
 	 *
-	 * @var array 日志消息
-	 *      每个日志消息都是以下结构:
-	 *
+	 * @var array logged messages. This property is managed by [[log()]] and [[flush()]].
+	 *      Each log message is of the following structure:
+	 *     
 	 *      ~~~
 	 *      [
 	 *      [0] => message (mixed, can be a string or some complex data, such as an exception object)
@@ -66,46 +99,58 @@ class Logger extends Base
 	 *      ~~~
 	 */
 	public $messages = [ ];
-
 	/**
-	 * 在刷新内存和发送到目标之前，应记录多少信息。
 	 *
-	 * @var integer
+	 * @var integer how many messages should be logged before they are flushed from memory and sent to targets.
+	 *      Defaults to 1000, meaning the [[flush]] method will be invoked once every 1000 messages logged.
+	 *      Set this property to be 0 if you don't want to flush messages until the application terminates.
+	 *      This property mainly affects how much memory will be taken by the logged messages.
+	 *      A smaller value means less memory, but will increase the execution time due to the overhead of [[flush()]].
 	 */
 	public $flushInterval = 1000;
-
 	/**
-	 * 每一条消息应记录多少调用堆栈信息（文件名和行数）。
 	 *
-	 * @var integer
+	 * @var integer how much call stack information (file name and line number) should be logged for each message.
+	 *      If it is greater than 0, at most that number of call stacks will be logged. Note that only application
+	 *      call stacks are counted.
 	 */
 	public $traceLevel = 0;
-
 	/**
-	 * 消息调度器
 	 *
-	 * @var \Leaps\Log\Dispatcher
+	 * @var Dispatcher the message dispatcher
 	 */
 	public $dispatcher;
-
+	
 	/**
-	 * 初始化
+	 * Initializes the logger by registering [[flush()]] as a shutdown function.
 	 */
 	public function init()
 	{
+		parent::init ();
 		register_shutdown_function ( function ()
 		{
+			// make regular flush before other shutdown functions, which allows session data collection and so on
 			$this->flush ();
-			register_shutdown_function ( [ $this,'flush' ], true );
+			// make sure log entries written by shutdown functions are also flushed
+			// ensure "flush()" is called last when there are multiple shutdown functions
+			register_shutdown_function ( [ 
+				$this,
+				'flush' 
+			], true );
 		} );
 	}
-
+	
 	/**
-	 * 记录指定类型和类别的消息。
+	 * Logs a message with the given type and category.
+	 * If [[traceLevel]] is greater than 0, additional call stack information about
+	 * the application code will be logged as well.
 	 *
-	 * @param string|array $message 消息内容
-	 * @param integer $level 消息类别
-	 * @param string $category 消息分类
+	 * @param string|array $message the message to be logged. This can be a simple string or a more
+	 *        complex data structure that will be handled by a [[Target|log target]].
+	 * @param integer $level the level of the message. This must be one of the following:
+	 *        `Logger::LEVEL_ERROR`, `Logger::LEVEL_WARNING`, `Logger::LEVEL_INFO`, `Logger::LEVEL_TRACE`,
+	 *        `Logger::LEVEL_PROFILE_BEGIN`, `Logger::LEVEL_PROFILE_END`.
+	 * @param string $category the category of the message.
 	 */
 	public function log($message, $level, $category = 'application')
 	{
@@ -125,43 +170,58 @@ class Logger extends Base
 				}
 			}
 		}
-		$this->messages [] = [ $message,$level,$category,$time,$traces ];
+		$this->messages [] = [ 
+			$message,
+			$level,
+			$category,
+			$time,
+			$traces 
+		];
 		if ($this->flushInterval > 0 && count ( $this->messages ) >= $this->flushInterval) {
 			$this->flush ();
 		}
 	}
-
+	
 	/**
-	 * 将日志发送给记录器
+	 * Flushes log messages from memory to targets.
 	 *
 	 * @param boolean $final whether this is a final call during a request.
 	 */
 	public function flush($final = false)
 	{
 		$messages = $this->messages;
+		// https://github.com/yiisoft/yii2/issues/5619
+		// new messages could be logged while the existing ones are being handled by targets
 		$this->messages = [ ];
 		if ($this->dispatcher instanceof Dispatcher) {
 			$this->dispatcher->dispatch ( $messages, $final );
 		}
 	}
-
+	
 	/**
-	 * 返回当前请求的总共时间
+	 * Returns the total elapsed time since the start of the current request.
+	 * This method calculates the difference between now and the timestamp
+	 * defined by constant `YII_BEGIN_TIME` which is evaluated at the beginning
+	 * of [[\leaps \BaseYii]] class file.
 	 *
 	 * @return float the total elapsed time in seconds for current request.
 	 */
 	public function getElapsedTime()
 	{
-		return microtime ( true ) - LEAPS_BEGIN_TIME;
+		return microtime ( true ) - YII_BEGIN_TIME;
 	}
-
+	
 	/**
-	 * 返回分析结果
+	 * Returns the profiling results.
+	 *
+	 * By default, all profiling results will be returned. You may provide
+	 * `$categories` and `$excludeCategories` as parameters to retrieve the
+	 * results that you are interested in.
 	 *
 	 * @param array $categories list of categories that you are interested in.
 	 *        You can use an asterisk at the end of a category to do a prefix match.
-	 *        For example, 'Leaps\Db\*' will match categories starting with 'Leaps\Db\',
-	 *        such as 'Leaps\Db\Connection'.
+	 *        For example, 'leaps \db\*' will match categories starting with 'leaps \db\',
+	 *        such as 'leaps \db\Connection'.
 	 * @param array $excludeCategories list of categories that you want to exclude
 	 * @return array the profiling results. Each element is an array consisting of these elements:
 	 *         `info`, `category`, `timestamp`, `trace`, `level`, `duration`.
@@ -172,7 +232,7 @@ class Logger extends Base
 		if (empty ( $categories ) && empty ( $excludeCategories )) {
 			return $timings;
 		}
-
+		
 		foreach ( $timings as $i => $timing ) {
 			$matched = empty ( $categories );
 			foreach ( $categories as $category ) {
@@ -182,7 +242,7 @@ class Logger extends Base
 					break;
 				}
 			}
-
+			
 			if ($matched) {
 				foreach ( $excludeCategories as $category ) {
 					$prefix = rtrim ( $category, '*' );
@@ -194,34 +254,43 @@ class Logger extends Base
 					}
 				}
 			}
-
+			
 			if (! $matched) {
 				unset ( $timings [$i] );
 			}
 		}
-
+		
 		return array_values ( $timings );
 	}
-
+	
 	/**
-	 * 返回数据库查询的统计结果
+	 * Returns the statistical results of DB queries.
+	 * The results returned include the number of SQL statements executed and
+	 * the total time spent.
 	 *
 	 * @return array the first element indicates the number of SQL statements executed,
 	 *         and the second element the total time spent in SQL execution.
 	 */
 	public function getDbProfiling()
 	{
-		$timings = $this->getProfiling ( [ 'Leaps\Db\Connection::query','Leaps\Db\Connection::execute' ] );
+		$timings = $this->getProfiling ( [ 
+			'leaps \db\Command::query',
+			'leaps \db\Command::execute' 
+		] );
 		$count = count ( $timings );
 		$time = 0;
 		foreach ( $timings as $timing ) {
 			$time += $timing ['duration'];
 		}
-		return [ $count,$time ];
+		
+		return [ 
+			$count,
+			$time 
+		];
 	}
-
+	
 	/**
-	 * 计算指定日志消息的运行时间
+	 * Calculates the elapsed time for the given log messages.
 	 *
 	 * @param array $messages the log messages obtained from profiling
 	 * @return array timings. Each element is an array consisting of these elements:
@@ -231,6 +300,7 @@ class Logger extends Base
 	{
 		$timings = [ ];
 		$stack = [ ];
+		
 		foreach ( $messages as $i => $log ) {
 			list ( $token, $level, $category, $timestamp, $traces ) = $log;
 			$log [5] = $i;
@@ -238,23 +308,40 @@ class Logger extends Base
 				$stack [] = $log;
 			} elseif ($level == Logger::LEVEL_PROFILE_END) {
 				if (($last = array_pop ( $stack )) !== null && $last [0] === $token) {
-					$timings [$last [5]] = [ 'info' => $last [0],'category' => $last [2],'timestamp' => $last [3],'trace' => $last [4],'level' => count ( $stack ),'duration' => $timestamp - $last [3] ];
+					$timings [$last [5]] = [ 
+						'info' => $last [0],
+						'category' => $last [2],
+						'timestamp' => $last [3],
+						'trace' => $last [4],
+						'level' => count ( $stack ),
+						'duration' => $timestamp - $last [3] 
+					];
 				}
 			}
 		}
+		
 		ksort ( $timings );
+		
 		return array_values ( $timings );
 	}
-
+	
 	/**
-	 * 获取日志级别对应的可读字符串
+	 * Returns the text display of the specified level.
 	 *
 	 * @param integer $level the message level, e.g. [[LEVEL_ERROR]], [[LEVEL_WARNING]].
 	 * @return string the text display of the level
 	 */
 	public static function getLevelName($level)
 	{
-		static $levels = [ self::LEVEL_ERROR => 'error',self::LEVEL_WARNING => 'warning',self::LEVEL_INFO => 'info',self::LEVEL_TRACE => 'trace',self::LEVEL_PROFILE_BEGIN => 'profile begin',self::LEVEL_PROFILE_END => 'profile end' ];
+		static $levels = [ 
+			self::LEVEL_ERROR => 'error',
+			self::LEVEL_WARNING => 'warning',
+			self::LEVEL_INFO => 'info',
+			self::LEVEL_TRACE => 'trace',
+			self::LEVEL_PROFILE_BEGIN => 'profile begin',
+			self::LEVEL_PROFILE_END => 'profile end' 
+		];
+		
 		return isset ( $levels [$level] ) ? $levels [$level] : 'unknown';
 	}
 }

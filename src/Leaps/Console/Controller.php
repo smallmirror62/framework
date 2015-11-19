@@ -11,12 +11,31 @@
 namespace Leaps\Console;
 
 use Leaps;
-use Leaps\Core\Action;
-use Leaps\Core\InlineAction;
-use Leaps\Core\InvalidRouteException;
+use Leaps\base\Action;
+use Leaps\base\InlineAction;
+use Leaps\base\InvalidRouteException;
 use Leaps\Helper\Console;
 
-class Controller extends \Leaps\Core\Controller
+/**
+ * Controller is the base class of console command classes.
+ *
+ * A console controller consists of one or several actions known as sub-commands.
+ * Users call a console command by specifying the corresponding route which identifies a controller action.
+ * The `Leaps` program is used when calling a console command, like the following:
+ *
+ * ~~~
+ * Leaps <route> [--param1=value1 --param2 ...]
+ * ~~~
+ *
+ * where `<route>` is a route to a controller action and the params will be populated as properties of a command.
+ * See [[options()]] for details.
+ *
+ * @property string $help This property is read-only.
+ * @property string $helpSummary This property is read-only.
+ *          
+ *          
+ */
+class Controller extends \Leaps\Base\Controller
 {
 	const EXIT_CODE_NORMAL = 0;
 	const EXIT_CODE_ERROR = 1;
@@ -34,7 +53,7 @@ class Controller extends \Leaps\Core\Controller
 	public $color;
 	
 	/**
-	 * 返回是否启用Ansi颜色
+	 * Returns a value indicating whether ANSI color is enabled.
 	 *
 	 * ANSI color is enabled only if [[color]] is set true or is not set
 	 * and the terminal supports ANSI color.
@@ -62,14 +81,16 @@ class Controller extends \Leaps\Core\Controller
 	{
 		if (! empty ( $params )) {
 			// populate options here so that they are available in beforeAction().
-			$options = $this->options ( $id );
+			$options = $this->options ( $id === '' ? $this->defaultAction : $id );
 			foreach ( $params as $name => $value ) {
 				if (in_array ( $name, $options, true )) {
 					$default = $this->$name;
 					$this->$name = is_array ( $default ) ? preg_split ( '/\s*,\s*/', $value ) : $value;
 					unset ( $params [$name] );
 				} elseif (! is_int ( $name )) {
-					throw new Exception ( 'Unknown option: --' . $name );
+					throw new Exception ( Leaps::t ( 'Leaps', 'Unknown option: --{name}', [ 
+						'name' => $name 
+					] ) );
 				}
 			}
 		}
@@ -77,7 +98,10 @@ class Controller extends \Leaps\Core\Controller
 	}
 	
 	/**
-	 * 绑定参数到操作
+	 * Binds the parameters to the action.
+	 * This method is invoked by [[Action]] when it begins to run with the given parameters.
+	 * This method will first bind the parameters with the [[options()|options]]
+	 * available to the action. It then validates the given arguments.
 	 *
 	 * @param Action $action the action to be bound with parameters
 	 * @param array $params the parameters to be bound to the action
@@ -91,7 +115,9 @@ class Controller extends \Leaps\Core\Controller
 		} else {
 			$method = new \ReflectionMethod ( $action, 'run' );
 		}
+		
 		$args = array_values ( $params );
+		
 		$missing = [ ];
 		foreach ( $method->getParameters () as $i => $param ) {
 			if ($param->isArray () && isset ( $args [$i] )) {
@@ -105,16 +131,20 @@ class Controller extends \Leaps\Core\Controller
 				}
 			}
 		}
+		
 		if (! empty ( $missing )) {
-			throw new Exception ( 'Missing required arguments: ' . implode ( ', ', $missing ) );
+			throw new Exception ( Leaps::t ( 'Leaps', 'Missing required arguments: {params}', [ 
+				'params' => implode ( ', ', $missing ) 
+			] ) );
 		}
+		
 		return $args;
 	}
 	
 	/**
 	 * Formats a string with ANSI codes
 	 *
-	 * You may pass additional parameters using the constants defined in [[\yii\helpers\Console]].
+	 * You may pass additional parameters using the constants defined in [[\Leaps\Helper\Console]].
 	 *
 	 * Example:
 	 *
@@ -139,7 +169,7 @@ class Controller extends \Leaps\Core\Controller
 	 * Prints a string to STDOUT
 	 *
 	 * You may optionally format the string with ANSI codes by
-	 * passing additional parameters using the constants defined in [[\yii\helpers\Console]].
+	 * passing additional parameters using the constants defined in [[\Leaps\Helper\Console]].
 	 *
 	 * Example:
 	 *
@@ -164,7 +194,7 @@ class Controller extends \Leaps\Core\Controller
 	 * Prints a string to STDERR
 	 *
 	 * You may optionally format the string with ANSI codes by
-	 * passing additional parameters using the constants defined in [[\yii\helpers\Console]].
+	 * passing additional parameters using the constants defined in [[\Leaps\Helper\Console]].
 	 *
 	 * Example:
 	 *

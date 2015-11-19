@@ -43,7 +43,7 @@ class Security extends Component
 	 *     
 	 *      > Warning: All OpenSSL ciphers that we recommend are in the default value, i.e. AES in CBC mode.
 	 *     
-	 *      > Note: Yii's encryption protocol uses the same size for cipher key, HMAC signature key and key
+	 *      > Note: Leaps's encryption protocol uses the same size for cipher key, HMAC signature key and key
 	 *      derivation salt.
 	 */
 	public $allowedCiphers = [ 
@@ -207,7 +207,7 @@ class Security extends Component
 		
 		$encrypted = openssl_encrypt ( $data, $this->cipher, $key, OPENSSL_RAW_DATA, $iv );
 		if ($encrypted === false) {
-			throw new \yii\base\Exception ( 'OpenSSL failure on encryption: ' . openssl_error_string () );
+			throw new \Leaps\Base\Exception ( 'OpenSSL failure on encryption: ' . openssl_error_string () );
 		}
 		
 		$authKey = $this->hkdf ( $this->kdfHash, $key, null, $this->authKeyInfo, $keySize );
@@ -264,7 +264,7 @@ class Security extends Component
 		
 		$decrypted = openssl_decrypt ( $encrypted, $this->cipher, $key, OPENSSL_RAW_DATA, $iv );
 		if ($decrypted === false) {
-			throw new \yii\base\Exception ( 'OpenSSL failure on decryption: ' . openssl_error_string () );
+			throw new \Leaps\Base\Exception ( 'OpenSSL failure on decryption: ' . openssl_error_string () );
 		}
 		
 		return $decrypted;
@@ -540,11 +540,11 @@ class Security extends Component
 	 *
 	 * ~~~
 	 * // generates the hash (usually done during user registration or when the password is changed)
-	 * $hash = Yii::$app->getSecurity()->generatePasswordHash($password);
+	 * $hash = Leaps::$app->getSecurity()->generatePasswordHash($password);
 	 * // ...save $hash in database...
 	 *
 	 * // during login, validate if the password entered is correct using $hash fetched from database
-	 * if (Yii::$app->getSecurity()->validatePassword($password, $hash) {
+	 * if (Leaps::$app->getSecurity()->validatePassword($password, $hash) {
 	 * // password is good
 	 * } else {
 	 * // password is bad

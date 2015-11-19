@@ -12,10 +12,16 @@ namespace Leaps\Console;
 
 use Leaps;
 use Leaps\Helper\Console;
-use Leaps\Core\UserException;
-use Leaps\Core\ErrorException;
+use Leaps\Base\ErrorException;
+use Leaps\Base\UserException;
 
-class ErrorHandler extends \Leaps\Core\ErrorHandler
+/**
+ * ErrorHandler handles uncaught PHP errors and exceptions.
+ *
+ * ErrorHandler is configured as an application component in [[\Leaps\base\Application]] by default.
+ * You can access that instance via `Leaps::$app->errorHandler`.
+ */
+class ErrorHandler extends \Leaps\Base\ErrorHandler
 {
 	/**
 	 * Renders an exception using ansi format for console output.

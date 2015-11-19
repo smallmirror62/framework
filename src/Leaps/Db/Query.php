@@ -1,796 +1,829 @@
 <?php
-// +----------------------------------------------------------------------
-// | Leaps Framework [ WE CAN DO IT JUST THINK IT ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2011-2014 Leaps Team (http://www.tintsoft.com)
-// +----------------------------------------------------------------------
-// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
-// +----------------------------------------------------------------------
-// | Author XuTongle <xutongle@gmail.com>
-// +----------------------------------------------------------------------
+/**
+ * @link http://www.yiiframework.com/
+ * @copyright Copyright (c) 2008 Yii Software LLC
+ * @license http://www.yiiframework.com/license/
+ */
+
 namespace Leaps\Db;
 
-use Closure;
-use Leaps\Utility\Paginator;
-use Leaps\Db\Query\Grammar\Postgres;
-use Leaps\Db\Query\Grammar\SQLServer;
+use Leaps;
+use Leaps\Base\Component;
 
-class Query
+/**
+ * Query represents a SELECT SQL statement in a way that is independent of DBMS.
+ *
+ * Query provides a set of methods to facilitate the specification of different clauses
+ * in a SELECT statement. These methods can be chained together.
+ *
+ * By calling [[createCommand()]], we can get a [[Command]] instance which can be further
+ * used to perform/execute the DB query against a database.
+ *
+ * For example,
+ *
+ * ```php
+ * $query = new Query;
+ * // compose the query
+ * $query->select('id, name')
+ *     ->from('user')
+ *     ->limit(10);
+ * // build and execute the query
+ * $rows = $query->all();
+ * // alternatively, you can create DB command and execute it
+ * $command = $query->createCommand();
+ * // $command->sql returns the actual SQL
+ * $rows = $command->queryAll();
+ * ```
+ *
+ * @author Qiang Xue <qiang.xue@gmail.com>
+ * @author Carsten Brandt <mail@cebe.cc>
+ * @since 2.0
+ */
+class Query extends Component implements QueryInterface
 {
+    use QueryTrait;
 
-	/**
-	 * 数据库连接
-	 *
-	 * @var \Leaps\Db\Connection
-	 */
-	public $connection;
+    /**
+     * @var array the columns being selected. For example, `['id', 'name']`.
+     * This is used to construct the SELECT clause in a SQL statement. If not set, it means selecting all columns.
+     * @see select()
+     */
+    public $select;
+    /**
+     * @var string additional option that should be appended to the 'SELECT' keyword. For example,
+     * in MySQL, the option 'SQL_CALC_FOUND_ROWS' can be used.
+     */
+    public $selectOption;
+    /**
+     * @var boolean whether to select distinct rows of data only. If this is set true,
+     * the SELECT clause would be changed to SELECT DISTINCT.
+     */
+    public $distinct;
+    /**
+     * @var array the table(s) to be selected from. For example, `['user', 'post']`.
+     * This is used to construct the FROM clause in a SQL statement.
+     * @see from()
+     */
+    public $from;
+    /**
+     * @var array how to group the query results. For example, `['company', 'department']`.
+     * This is used to construct the GROUP BY clause in a SQL statement.
+     */
+    public $groupBy;
+    /**
+     * @var array how to join with other tables. Each array element represents the specification
+     * of one join which has the following structure:
+     *
+     * ~~~
+     * [$joinType, $tableName, $joinCondition]
+     * ~~~
+     *
+     * For example,
+     *
+     * ~~~
+     * [
+     *     ['INNER JOIN', 'user', 'user.id = author_id'],
+     *     ['LEFT JOIN', 'team', 'team.id = team_id'],
+     * ]
+     * ~~~
+     */
+    public $join;
+    /**
+     * @var string|array the condition to be applied in the GROUP BY clause.
+     * It can be either a string or an array. Please refer to [[where()]] on how to specify the condition.
+     */
+    public $having;
+    /**
+     * @var array this is used to construct the UNION clause(s) in a SQL statement.
+     * Each array element is an array of the following structure:
+     *
+     * - `query`: either a string or a [[Query]] object representing a query
+     * - `all`: boolean, whether it should be `UNION ALL` or `UNION`
+     */
+    public $union;
+    /**
+     * @var array list of query parameter values indexed by parameter placeholders.
+     * For example, `[':name' => 'Dan', ':age' => 31]`.
+     */
+    public $params = [];
 
-	/**
-	 * 查询语法实例
-	 *
-	 * @var \Leaps\Db\Query\Grammar\Grammar
-	 */
-	public $grammar;
 
-	/**
-	 * 查询容器
-	 *
-	 * @var array
-	 */
-	public $selects;
+    /**
+     * Creates a DB command that can be used to execute this query.
+     * @param Connection $db the database connection used to generate the SQL statement.
+     * If this parameter is not given, the `db` application component will be used.
+     * @return Command the created DB command instance.
+     */
+    public function createCommand($db = null)
+    {
+        if ($db === null) {
+            $db = Leaps::$app->getDb();
+        }
+        list ($sql, $params) = $db->getQueryBuilder()->build($this);
 
-	/**
-	 * 聚集列和函数
-	 *
-	 * @var array
-	 */
-	public $aggregate;
+        return $db->createCommand($sql, $params);
+    }
 
-	/**
-	 * 设定查询是否返回不同的结果。
-	 *
-	 * @var bool
-	 */
-	public $distinct = false;
+    /**
+     * Prepares for building SQL.
+     * This method is called by [[QueryBuilder]] when it starts to build SQL from a query object.
+     * You may override this method to do some final preparation work when converting a query into a SQL statement.
+     * @param QueryBuilder $builder
+     * @return Query a prepared query instance which will be used by [[QueryBuilder]] to build the SQL
+     */
+    public function prepare($builder)
+    {
+        return $this;
+    }
 
-	/**
-	 * 表名称
-	 *
-	 * @var string
-	 */
-	public $from;
+    /**
+     * Starts a batch query.
+     *
+     * A batch query supports fetching data in batches, which can keep the memory usage under a limit.
+     * This method will return a [[BatchQueryResult]] object which implements the [[\Iterator]] interface
+     * and can be traversed to retrieve the data in batches.
+     *
+     * For example,
+     *
+     * ```php
+     * $query = (new Query)->from('user');
+     * foreach ($query->batch() as $rows) {
+     *     // $rows is an array of 10 or fewer rows from user table
+     * }
+     * ```
+     *
+     * @param integer $batchSize the number of records to be fetched in each batch.
+     * @param Connection $db the database connection. If not set, the "db" application component will be used.
+     * @return BatchQueryResult the batch query result. It implements the [[\Iterator]] interface
+     * and can be traversed to retrieve the data in batches.
+     */
+    public function batch($batchSize = 100, $db = null)
+    {
+        return Leaps::createObject([
+            'class' => BatchQueryResult::className(),
+            'query' => $this,
+            'batchSize' => $batchSize,
+            'db' => $db,
+            'each' => false,
+        ]);
+    }
 
-	/**
-	 * 表联接
-	 *
-	 * @var array
-	 */
-	public $joins;
+    /**
+     * Starts a batch query and retrieves data row by row.
+     * This method is similar to [[batch()]] except that in each iteration of the result,
+     * only one row of data is returned. For example,
+     *
+     * ```php
+     * $query = (new Query)->from('user');
+     * foreach ($query->each() as $row) {
+     * }
+     * ```
+     *
+     * @param integer $batchSize the number of records to be fetched in each batch.
+     * @param Connection $db the database connection. If not set, the "db" application component will be used.
+     * @return BatchQueryResult the batch query result. It implements the [[\Iterator]] interface
+     * and can be traversed to retrieve the data in batches.
+     */
+    public function each($batchSize = 100, $db = null)
+    {
+        return Leaps::createObject([
+            'class' => BatchQueryResult::className(),
+            'query' => $this,
+            'batchSize' => $batchSize,
+            'db' => $db,
+            'each' => true,
+        ]);
+    }
 
-	/**
-	 * 查询条件
-	 *
-	 * @var array
-	 */
-	public $wheres;
+    /**
+     * Executes the query and returns all results as an array.
+     * @param Connection $db the database connection used to generate the SQL statement.
+     * If this parameter is not given, the `db` application component will be used.
+     * @return array the query results. If the query results in nothing, an empty array will be returned.
+     */
+    public function all($db = null)
+    {
+        $rows = $this->createCommand($db)->queryAll();
+        return $this->populate($rows);
+    }
 
-	/**
-	 * 查询分组
-	 *
-	 * @var array
-	 */
-	public $groupings;
+    /**
+     * Converts the raw query results into the format as specified by this query.
+     * This method is internally used to convert the data fetched from database
+     * into the format as required by this query.
+     * @param array $rows the raw query result from database
+     * @return array the converted query result
+     */
+    public function populate($rows)
+    {
+        if ($this->indexBy === null) {
+            return $rows;
+        }
+        $result = [];
+        foreach ($rows as $row) {
+            if (is_string($this->indexBy)) {
+                $key = $row[$this->indexBy];
+            } else {
+                $key = call_user_func($this->indexBy, $row);
+            }
+            $result[$key] = $row;
+        }
+        return $result;
+    }
 
-	/**
-	 * HAVING 子句
-	 *
-	 * @var array
-	 */
-	public $havings;
+    /**
+     * Executes the query and returns a single row of result.
+     * @param Connection $db the database connection used to generate the SQL statement.
+     * If this parameter is not given, the `db` application component will be used.
+     * @return array|boolean the first row (in terms of an array) of the query result. False is returned if the query
+     * results in nothing.
+     */
+    public function one($db = null)
+    {
+        return $this->createCommand($db)->queryOne();
+    }
 
-	/**
-	 * ORDER BY 子句
-	 *
-	 * @var array
-	 */
-	public $orderings;
+    /**
+     * Returns the query result as a scalar value.
+     * The value returned will be the first column in the first row of the query results.
+     * @param Connection $db the database connection used to generate the SQL statement.
+     * If this parameter is not given, the `db` application component will be used.
+     * @return string|boolean the value of the first column in the first row of the query result.
+     * False is returned if the query result is empty.
+     */
+    public function scalar($db = null)
+    {
+        return $this->createCommand($db)->queryScalar();
+    }
 
-	/**
-	 * LIMIT 值
-	 *
-	 * @var int
-	 */
-	public $limit;
+    /**
+     * Executes the query and returns the first column of the result.
+     * @param Connection $db the database connection used to generate the SQL statement.
+     * If this parameter is not given, the `db` application component will be used.
+     * @return array the first column of the query result. An empty array is returned if the query results in nothing.
+     */
+    public function column($db = null)
+    {
+        if (!is_string($this->indexBy)) {
+            return $this->createCommand($db)->queryColumn();
+        }
+        if (is_array($this->select) && count($this->select) === 1) {
+            $this->select[] = $this->indexBy;
+        }
+        $rows = $this->createCommand($db)->queryAll();
+        $results = [];
+        foreach ($rows as $row) {
+            if (array_key_exists($this->indexBy, $row)) {
+                $results[$row[$this->indexBy]] = reset($row);
+            } else {
+                $results[] = reset($row);
+            }
+        }
+        return $results;
+    }
 
-	/**
-	 * OFFSET 值
-	 *
-	 * @var int
-	 */
-	public $offset;
+    /**
+     * Returns the number of records.
+     * @param string $q the COUNT expression. Defaults to '*'.
+     * Make sure you properly [quote](guide:db-dao#quoting-table-and-column-names) column names in the expression.
+     * @param Connection $db the database connection used to generate the SQL statement.
+     * If this parameter is not given (or null), the `db` application component will be used.
+     * @return integer|string number of records. The result may be a string depending on the
+     * underlying database engine and to support integer values higher than a 32bit PHP integer can handle.
+     */
+    public function count($q = '*', $db = null)
+    {
+        return $this->queryScalar("COUNT($q)", $db);
+    }
 
-	/**
-	 * 查询值绑定
-	 *
-	 * @var array
-	 */
-	public $bindings = [ ];
+    /**
+     * Returns the sum of the specified column values.
+     * @param string $q the column name or expression.
+     * Make sure you properly [quote](guide:db-dao#quoting-table-and-column-names) column names in the expression.
+     * @param Connection $db the database connection used to generate the SQL statement.
+     * If this parameter is not given, the `db` application component will be used.
+     * @return mixed the sum of the specified column values.
+     */
+    public function sum($q, $db = null)
+    {
+        return $this->queryScalar("SUM($q)", $db);
+    }
 
-	/**
-	 * 构造方法
-	 *
-	 * @param Connection $connection
-	 * @param Grammar $grammar
-	 * @param string $table
-	 * @return void
-	 */
-	public function __construct(\Leaps\Db\Connection $connection, \Leaps\Db\Query\Grammar\Grammar $grammar, $table)
-	{
-		$this->from = $table;
-		$this->grammar = $grammar;
-		$this->connection = $connection;
-	}
+    /**
+     * Returns the average of the specified column values.
+     * @param string $q the column name or expression.
+     * Make sure you properly [quote](guide:db-dao#quoting-table-and-column-names) column names in the expression.
+     * @param Connection $db the database connection used to generate the SQL statement.
+     * If this parameter is not given, the `db` application component will be used.
+     * @return mixed the average of the specified column values.
+     */
+    public function average($q, $db = null)
+    {
+        return $this->queryScalar("AVG($q)", $db);
+    }
 
-	/**
-	 * 强制返回不同的查询结果
-	 *
-	 * @return Query
-	 */
-	public function distinct()
-	{
-		$this->distinct = true;
-		return $this;
-	}
+    /**
+     * Returns the minimum of the specified column values.
+     * @param string $q the column name or expression.
+     * Make sure you properly [quote](guide:db-dao#quoting-table-and-column-names) column names in the expression.
+     * @param Connection $db the database connection used to generate the SQL statement.
+     * If this parameter is not given, the `db` application component will be used.
+     * @return mixed the minimum of the specified column values.
+     */
+    public function min($q, $db = null)
+    {
+        return $this->queryScalar("MIN($q)", $db);
+    }
 
-	/**
-	 * 添加返回的字段
-	 *
-	 * @param array $columns 设置返回的字段
-	 * @return Query
-	 */
-	public function select($columns = ['*'])
-	{
-		$this->selects = $columns;
-		return $this;
-	}
+    /**
+     * Returns the maximum of the specified column values.
+     * @param string $q the column name or expression.
+     * Make sure you properly [quote](guide:db-dao#quoting-table-and-column-names) column names in the expression.
+     * @param Connection $db the database connection used to generate the SQL statement.
+     * If this parameter is not given, the `db` application component will be used.
+     * @return mixed the maximum of the specified column values.
+     */
+    public function max($q, $db = null)
+    {
+        return $this->queryScalar("MAX($q)", $db);
+    }
 
-	/**
-	 * 添加一个联查
-	 *
-	 * @param string $table
-	 * @param string $column1
-	 * @param string $operator
-	 * @param string $column2
-	 * @param string $type
-	 * @return Query
-	 */
-	public function join($table, $column1, $operator = null, $column2 = null, $type = 'INNER')
-	{
-		if ($column1 instanceof Closure) {
-			$this->joins [] = new Query\Join ( $type, $table );
-			call_user_func ( $column1, end ( $this->joins ) );
-		} else {
-			$join = new Query\Join ( $type, $table );
-			$join->on ( $column1, $operator, $column2 );
-			$this->joins [] = $join;
-		}
-		return $this;
-	}
+    /**
+     * Returns a value indicating whether the query result contains any row of data.
+     * @param Connection $db the database connection used to generate the SQL statement.
+     * If this parameter is not given, the `db` application component will be used.
+     * @return boolean whether the query result contains any row of data.
+     */
+    public function exists($db = null)
+    {
+        $select = $this->select;
+        $this->select = [new Expression('1')];
+        $command = $this->createCommand($db);
+        $this->select = $select;
+        return $command->queryScalar() !== false;
+    }
 
-	/**
-	 * Add a left join to the query.
-	 *
-	 * @param string $table
-	 * @param string $column1
-	 * @param string $operator
-	 * @param string $column2
-	 * @return Query
-	 */
-	public function leftJoin($table, $column1, $operator = null, $column2 = null)
-	{
-		return $this->join ( $table, $column1, $operator, $column2, 'LEFT' );
-	}
+    /**
+     * Queries a scalar value by setting [[select]] first.
+     * Restores the value of select to make this query reusable.
+     * @param string|Expression $selectExpression
+     * @param Connection|null $db
+     * @return bool|string
+     */
+    protected function queryScalar($selectExpression, $db)
+    {
+        $select = $this->select;
+        $limit = $this->limit;
+        $offset = $this->offset;
 
-	/**
-	 * 重置Where查询条件
-	 *
-	 * @return void
-	 */
-	public function resetWhere()
-	{
-		list ( $this->wheres, $this->bindings ) = [ [ ],[ ] ];
-	}
+        $this->select = [$selectExpression];
+        $this->limit = null;
+        $this->offset = null;
+        $command = $this->createCommand($db);
 
-	/**
-	 * 添加一个原始条件到查询中
-	 *
-	 * @param string $where 原始条件
-	 * @param array $bindings 绑定变量
-	 * @param string $connector 查询连接符
-	 * @return Query
-	 */
-	public function rawWhere($where, $bindings = [], $connector = 'AND')
-	{
-		$this->wheres [] = [ 'type' => 'whereRaw','connector' => $connector,'sql' => $where ];
-		$this->bindings = array_merge ( $this->bindings, $bindings );
-		return $this;
-	}
+        $this->select = $select;
+        $this->limit = $limit;
+        $this->offset = $offset;
 
-	/**
-	 * 添加一个OR连接符的原始条件
-	 *
-	 * @param string $where
-	 * @param array $bindings
-	 * @return Query
-	 */
-	public function rawOrWhere($where, $bindings = [])
-	{
-		return $this->rawWhere ( $where, $bindings, 'OR' );
-	}
+        if (empty($this->groupBy) && empty($this->having) && empty($this->union) && !$this->distinct) {
+            return $command->queryScalar();
+        } else {
+            return (new Query)->select([$selectExpression])
+                ->from(['c' => $this])
+                ->createCommand($command->db)
+                ->queryScalar();
+        }
+    }
 
-	/**
-	 * 添加一个Where条件
-	 *
-	 * @param string $column 字段
-	 * @param string $operator 运算符
-	 * @param mixed $value 值
-	 * @param string $connector 连接符
-	 * @return Query
-	 */
-	public function where($column, $operator = null, $value = null, $connector = 'AND')
-	{
-		if ($column instanceof Closure) {
-			return $this->whereNested ( $column, $connector );
-		}
-		$type = 'where';
-		$this->wheres [] = compact ( 'type', 'column', 'operator', 'value', 'connector' );
-		$this->bindings [] = $value;
-		return $this;
-	}
+    /**
+     * Sets the SELECT part of the query.
+     * @param string|array $columns the columns to be selected.
+     * Columns can be specified in either a string (e.g. "id, name") or an array (e.g. ['id', 'name']).
+     * Columns can be prefixed with table names (e.g. "user.id") and/or contain column aliases (e.g. "user.id AS user_id").
+     * The method will automatically quote the column names unless a column contains some parenthesis
+     * (which means the column contains a DB expression).
+     *
+     * Note that if you are selecting an expression like `CONCAT(first_name, ' ', last_name)`, you should
+     * use an array to specify the columns. Otherwise, the expression may be incorrectly split into several parts.
+     *
+     * When the columns are specified as an array, you may also use array keys as the column aliases (if a column
+     * does not need alias, do not use a string key).
+     *
+     * Starting from version 2.0.1, you may also select sub-queries as columns by specifying each such column
+     * as a `Query` instance representing the sub-query.
+     *
+     * @param string $option additional option that should be appended to the 'SELECT' keyword. For example,
+     * in MySQL, the option 'SQL_CALC_FOUND_ROWS' can be used.
+     * @return $this the query object itself
+     */
+    public function select($columns, $option = null)
+    {
+        if (!is_array($columns)) {
+            $columns = preg_split('/\s*,\s*/', trim($columns), -1, PREG_SPLIT_NO_EMPTY);
+        }
+        $this->select = $columns;
+        $this->selectOption = $option;
+        return $this;
+    }
 
-	/**
-	 * 添加一个OR WHERE 到查询
-	 *
-	 * @param string $column 字段
-	 * @param string $operator 运算符
-	 * @param mixed $value 值
-	 * @return Query
-	 */
-	public function orWhere($column, $operator = null, $value = null)
-	{
-		return $this->where ( $column, $operator, $value, 'OR' );
-	}
+    /**
+     * Add more columns to the SELECT part of the query.
+     *
+     * Note, that if [[select]] has not been specified before, you should include `*` explicitly
+     * if you want to select all remaining columns too:
+     *
+     * ```php
+     * $query->addSelect(["*", "CONCAT(first_name, ' ', last_name) AS full_name"])->one();
+     * ```
+     *
+     * @param string|array $columns the columns to add to the select.
+     * @return $this the query object itself
+     * @see select()
+     */
+    public function addSelect($columns)
+    {
+        if (!is_array($columns)) {
+            $columns = preg_split('/\s*,\s*/', trim($columns), -1, PREG_SPLIT_NO_EMPTY);
+        }
+        if ($this->select === null) {
+            $this->select = $columns;
+        } else {
+            $this->select = array_merge($this->select, $columns);
+        }
+        return $this;
+    }
 
-	/**
-	 * Add an or where condition for the primary key to the query.
-	 *
-	 * @param mixed $value
-	 * @return Query
-	 */
-	public function orWhereID($value)
-	{
-		return $this->orWhere ( 'id', '=', $value );
-	}
+    /**
+     * Sets the value indicating whether to SELECT DISTINCT or not.
+     * @param boolean $value whether to SELECT DISTINCT or not.
+     * @return $this the query object itself
+     */
+    public function distinct($value = true)
+    {
+        $this->distinct = $value;
+        return $this;
+    }
 
-	/**
-	 * Add a where in condition to the query.
-	 *
-	 * @param string $column
-	 * @param array $values
-	 * @param string $connector
-	 * @param bool $not
-	 * @return Query
-	 */
-	public function whereIn($column, $values, $connector = 'AND', $not = false)
-	{
-		$type = ($not) ? 'whereNotIn' : 'whereIn';
-		$this->wheres [] = compact ( 'type', 'column', 'values', 'connector' );
-		$this->bindings = array_merge ( $this->bindings, $values );
-		return $this;
-	}
+    /**
+     * Sets the FROM part of the query.
+     * @param string|array $tables the table(s) to be selected from. This can be either a string (e.g. `'user'`)
+     * or an array (e.g. `['user', 'profile']`) specifying one or several table names.
+     * Table names can contain schema prefixes (e.g. `'public.user'`) and/or table aliases (e.g. `'user u'`).
+     * The method will automatically quote the table names unless it contains some parenthesis
+     * (which means the table is given as a sub-query or DB expression).
+     *
+     * When the tables are specified as an array, you may also use the array keys as the table aliases
+     * (if a table does not need alias, do not use a string key).
+     *
+     * Use a Query object to represent a sub-query. In this case, the corresponding array key will be used
+     * as the alias for the sub-query.
+     *
+     * @return $this the query object itself
+     */
+    public function from($tables)
+    {
+        if (!is_array($tables)) {
+            $tables = preg_split('/\s*,\s*/', trim($tables), -1, PREG_SPLIT_NO_EMPTY);
+        }
+        $this->from = $tables;
+        return $this;
+    }
 
-	/**
-	 * Add an or where in condition to the query.
-	 *
-	 * @param string $column
-	 * @param array $values
-	 * @return Query
-	 */
-	public function orWhereIn($column, $values)
-	{
-		return $this->whereIn ( $column, $values, 'OR' );
-	}
+    /**
+     * Sets the WHERE part of the query.
+     *
+     * The method requires a `$condition` parameter, and optionally a `$params` parameter
+     * specifying the values to be bound to the query.
+     *
+     * The `$condition` parameter should be either a string (e.g. `'id=1'`) or an array.
+     *
+     * @inheritdoc
+     *
+     * @param string|array $condition the conditions that should be put in the WHERE part.
+     * @param array $params the parameters (name => value) to be bound to the query.
+     * @return $this the query object itself
+     * @see andWhere()
+     * @see orWhere()
+     * @see QueryInterface::where()
+     */
+    public function where($condition, $params = [])
+    {
+        $this->where = $condition;
+        $this->addParams($params);
+        return $this;
+    }
 
-	/**
-	 * Add a where not in condition to the query.
-	 *
-	 * @param string $column
-	 * @param array $values
-	 * @param string $connector
-	 * @return Query
-	 */
-	public function whereNotIn($column, $values, $connector = 'AND')
-	{
-		return $this->whereIn ( $column, $values, $connector, true );
-	}
+    /**
+     * Adds an additional WHERE condition to the existing one.
+     * The new condition and the existing one will be joined using the 'AND' operator.
+     * @param string|array $condition the new WHERE condition. Please refer to [[where()]]
+     * on how to specify this parameter.
+     * @param array $params the parameters (name => value) to be bound to the query.
+     * @return $this the query object itself
+     * @see where()
+     * @see orWhere()
+     */
+    public function andWhere($condition, $params = [])
+    {
+        if ($this->where === null) {
+            $this->where = $condition;
+        } else {
+            $this->where = ['and', $this->where, $condition];
+        }
+        $this->addParams($params);
+        return $this;
+    }
 
-	/**
-	 * Add an or where not in condition to the query.
-	 *
-	 * @param string $column
-	 * @param array $values
-	 * @return Query
-	 */
-	public function orWhereNotIn($column, $values)
-	{
-		return $this->whereNotIn ( $column, $values, 'OR' );
-	}
+    /**
+     * Adds an additional WHERE condition to the existing one.
+     * The new condition and the existing one will be joined using the 'OR' operator.
+     * @param string|array $condition the new WHERE condition. Please refer to [[where()]]
+     * on how to specify this parameter.
+     * @param array $params the parameters (name => value) to be bound to the query.
+     * @return $this the query object itself
+     * @see where()
+     * @see andWhere()
+     */
+    public function orWhere($condition, $params = [])
+    {
+        if ($this->where === null) {
+            $this->where = $condition;
+        } else {
+            $this->where = ['or', $this->where, $condition];
+        }
+        $this->addParams($params);
+        return $this;
+    }
 
-	/**
-	 * Add a BETWEEN condition to the query
-	 *
-	 * @param string $column
-	 * @param mixed $min
-	 * @param mixed $max
-	 * @param string $connector
-	 * @param boolean $not
-	 * @return Query
-	 */
-	public function whereBetween($column, $min, $max, $connector = 'AND', $not = false)
-	{
-		$type = ($not) ? 'whereNotBetween' : 'whereBetween';
-		$this->wheres [] = compact ( 'type', 'column', 'min', 'max', 'connector' );
-		$this->bindings [] = $min;
-		$this->bindings [] = $max;
-		return $this;
-	}
+    /**
+     * Appends a JOIN part to the query.
+     * The first parameter specifies what type of join it is.
+     * @param string $type the type of join, such as INNER JOIN, LEFT JOIN.
+     * @param string|array $table the table to be joined.
+     *
+     * Use string to represent the name of the table to be joined.
+     * Table name can contain schema prefix (e.g. 'public.user') and/or table alias (e.g. 'user u').
+     * The method will automatically quote the table name unless it contains some parenthesis
+     * (which means the table is given as a sub-query or DB expression).
+     *
+     * Use array to represent joining with a sub-query. The array must contain only one element.
+     * The value must be a Query object representing the sub-query while the corresponding key
+     * represents the alias for the sub-query.
+     *
+     * @param string|array $on the join condition that should appear in the ON part.
+     * Please refer to [[where()]] on how to specify this parameter.
+     * @param array $params the parameters (name => value) to be bound to the query.
+     * @return Query the query object itself
+     */
+    public function join($type, $table, $on = '', $params = [])
+    {
+        $this->join[] = [$type, $table, $on];
+        return $this->addParams($params);
+    }
 
-	/**
-	 * Add a OR BETWEEN condition to the query
-	 *
-	 * @param string $column
-	 * @param mixed $min
-	 * @param mixed $max
-	 * @return Query
-	 */
-	public function orWhereBetween($column, $min, $max)
-	{
-		return $this->whereBetween ( $column, $min, $max, 'OR' );
-	}
+    /**
+     * Appends an INNER JOIN part to the query.
+     * @param string|array $table the table to be joined.
+     *
+     * Use string to represent the name of the table to be joined.
+     * Table name can contain schema prefix (e.g. 'public.user') and/or table alias (e.g. 'user u').
+     * The method will automatically quote the table name unless it contains some parenthesis
+     * (which means the table is given as a sub-query or DB expression).
+     *
+     * Use array to represent joining with a sub-query. The array must contain only one element.
+     * The value must be a Query object representing the sub-query while the corresponding key
+     * represents the alias for the sub-query.
+     *
+     * @param string|array $on the join condition that should appear in the ON part.
+     * Please refer to [[where()]] on how to specify this parameter.
+     * @param array $params the parameters (name => value) to be bound to the query.
+     * @return Query the query object itself
+     */
+    public function innerJoin($table, $on = '', $params = [])
+    {
+        $this->join[] = ['INNER JOIN', $table, $on];
+        return $this->addParams($params);
+    }
 
-	/**
-	 * Add a NOT BETWEEN condition to the query
-	 *
-	 * @param string $column
-	 * @param mixed $min
-	 * @param mixed $max
-	 * @return Query
-	 */
-	public function whereNotBetween($column, $min, $max, $connector = 'AND')
-	{
-		return $this->whereBetween ( $column, $min, $max, $connector, true );
-	}
+    /**
+     * Appends a LEFT OUTER JOIN part to the query.
+     * @param string|array $table the table to be joined.
+     *
+     * Use string to represent the name of the table to be joined.
+     * Table name can contain schema prefix (e.g. 'public.user') and/or table alias (e.g. 'user u').
+     * The method will automatically quote the table name unless it contains some parenthesis
+     * (which means the table is given as a sub-query or DB expression).
+     *
+     * Use array to represent joining with a sub-query. The array must contain only one element.
+     * The value must be a Query object representing the sub-query while the corresponding key
+     * represents the alias for the sub-query.
+     *
+     * @param string|array $on the join condition that should appear in the ON part.
+     * Please refer to [[where()]] on how to specify this parameter.
+     * @param array $params the parameters (name => value) to be bound to the query
+     * @return Query the query object itself
+     */
+    public function leftJoin($table, $on = '', $params = [])
+    {
+        $this->join[] = ['LEFT JOIN', $table, $on];
+        return $this->addParams($params);
+    }
 
-	/**
-	 * Add a OR NOT BETWEEN condition to the query
-	 *
-	 * @param string $column
-	 * @param mixed $min
-	 * @param mixed $max
-	 * @return Query
-	 */
-	public function orWhereNotBetween($column, $min, $max)
-	{
-		return $this->whereNotBetween ( $column, $min, $max, 'OR' );
-	}
+    /**
+     * Appends a RIGHT OUTER JOIN part to the query.
+     * @param string|array $table the table to be joined.
+     *
+     * Use string to represent the name of the table to be joined.
+     * Table name can contain schema prefix (e.g. 'public.user') and/or table alias (e.g. 'user u').
+     * The method will automatically quote the table name unless it contains some parenthesis
+     * (which means the table is given as a sub-query or DB expression).
+     *
+     * Use array to represent joining with a sub-query. The array must contain only one element.
+     * The value must be a Query object representing the sub-query while the corresponding key
+     * represents the alias for the sub-query.
+     *
+     * @param string|array $on the join condition that should appear in the ON part.
+     * Please refer to [[where()]] on how to specify this parameter.
+     * @param array $params the parameters (name => value) to be bound to the query
+     * @return Query the query object itself
+     */
+    public function rightJoin($table, $on = '', $params = [])
+    {
+        $this->join[] = ['RIGHT JOIN', $table, $on];
+        return $this->addParams($params);
+    }
 
-	/**
-	 * Add a where null condition to the query.
-	 *
-	 * @param string $column
-	 * @param string $connector
-	 * @param bool $not
-	 * @return Query
-	 */
-	public function whereNull($column, $connector = 'AND', $not = false)
-	{
-		$type = ($not) ? 'whereNotNull' : 'whereNull';
-		$this->wheres [] = compact ( 'type', 'column', 'connector' );
-		return $this;
-	}
+    /**
+     * Sets the GROUP BY part of the query.
+     * @param string|array $columns the columns to be grouped by.
+     * Columns can be specified in either a string (e.g. "id, name") or an array (e.g. ['id', 'name']).
+     * The method will automatically quote the column names unless a column contains some parenthesis
+     * (which means the column contains a DB expression).
+     * @return $this the query object itself
+     * @see addGroupBy()
+     */
+    public function groupBy($columns)
+    {
+        if (!is_array($columns)) {
+            $columns = preg_split('/\s*,\s*/', trim($columns), -1, PREG_SPLIT_NO_EMPTY);
+        }
+        $this->groupBy = $columns;
+        return $this;
+    }
 
-	/**
-	 * Add an or where null condition to the query.
-	 *
-	 * @param string $column
-	 * @return Query
-	 */
-	public function orWhereNull($column)
-	{
-		return $this->whereNull ( $column, 'OR' );
-	}
+    /**
+     * Adds additional group-by columns to the existing ones.
+     * @param string|array $columns additional columns to be grouped by.
+     * Columns can be specified in either a string (e.g. "id, name") or an array (e.g. ['id', 'name']).
+     * The method will automatically quote the column names unless a column contains some parenthesis
+     * (which means the column contains a DB expression).
+     * @return $this the query object itself
+     * @see groupBy()
+     */
+    public function addGroupBy($columns)
+    {
+        if (!is_array($columns)) {
+            $columns = preg_split('/\s*,\s*/', trim($columns), -1, PREG_SPLIT_NO_EMPTY);
+        }
+        if ($this->groupBy === null) {
+            $this->groupBy = $columns;
+        } else {
+            $this->groupBy = array_merge($this->groupBy, $columns);
+        }
+        return $this;
+    }
 
-	/**
-	 * Add a where not null condition to the query.
-	 *
-	 * @param string $column
-	 * @param string $connector
-	 * @return Query
-	 */
-	public function whereNotNull($column, $connector = 'AND')
-	{
-		return $this->whereNull ( $column, $connector, true );
-	}
+    /**
+     * Sets the HAVING part of the query.
+     * @param string|array $condition the conditions to be put after HAVING.
+     * Please refer to [[where()]] on how to specify this parameter.
+     * @param array $params the parameters (name => value) to be bound to the query.
+     * @return $this the query object itself
+     * @see andHaving()
+     * @see orHaving()
+     */
+    public function having($condition, $params = [])
+    {
+        $this->having = $condition;
+        $this->addParams($params);
+        return $this;
+    }
 
-	/**
-	 * Add an or where not null condition to the query.
-	 *
-	 * @param string $column
-	 * @return Query
-	 */
-	public function orWhereNotNull($column)
-	{
-		return $this->whereNotNull ( $column, 'OR' );
-	}
+    /**
+     * Adds an additional HAVING condition to the existing one.
+     * The new condition and the existing one will be joined using the 'AND' operator.
+     * @param string|array $condition the new HAVING condition. Please refer to [[where()]]
+     * on how to specify this parameter.
+     * @param array $params the parameters (name => value) to be bound to the query.
+     * @return $this the query object itself
+     * @see having()
+     * @see orHaving()
+     */
+    public function andHaving($condition, $params = [])
+    {
+        if ($this->having === null) {
+            $this->having = $condition;
+        } else {
+            $this->having = ['and', $this->having, $condition];
+        }
+        $this->addParams($params);
+        return $this;
+    }
 
-	/**
-	 * Add a nested where condition to the query.
-	 *
-	 * @param Closure $callback
-	 * @param string $connector
-	 * @return Query
-	 */
-	public function whereNested($callback, $connector = 'AND')
-	{
-		$type = 'whereNested';
-		$query = new Query ( $this->connection, $this->grammar, $this->from );
-		call_user_func ( $callback, $query );
-		if ($query->wheres !== null) {
-			$this->wheres [] = compact ( 'type', 'query', 'connector' );
-		}
-		$this->bindings = array_merge ( $this->bindings, $query->bindings );
-		return $this;
-	}
+    /**
+     * Adds an additional HAVING condition to the existing one.
+     * The new condition and the existing one will be joined using the 'OR' operator.
+     * @param string|array $condition the new HAVING condition. Please refer to [[where()]]
+     * on how to specify this parameter.
+     * @param array $params the parameters (name => value) to be bound to the query.
+     * @return $this the query object itself
+     * @see having()
+     * @see andHaving()
+     */
+    public function orHaving($condition, $params = [])
+    {
+        if ($this->having === null) {
+            $this->having = $condition;
+        } else {
+            $this->having = ['or', $this->having, $condition];
+        }
+        $this->addParams($params);
+        return $this;
+    }
 
-	/**
-	 * Add dynamic where conditions to the query.
-	 *
-	 * @param string $method
-	 * @param array $parameters
-	 * @return Query
-	 */
-	private function dynamicWhere($method, $parameters)
-	{
-		$finder = substr ( $method, 6 );
-		$flags = PREG_SPLIT_DELIM_CAPTURE;
-		$segments = preg_split ( '/(_and_|_or_)/i', $finder, - 1, $flags );
-		$connector = 'AND';
-		$index = 0;
-		foreach ( $segments as $segment ) {
-			if ($segment != '_and_' and $segment != '_or_') {
-				$this->where ( $segment, '=', $parameters [$index], $connector );
-				$index ++;
-			} else {
-				$connector = trim ( strtoupper ( $segment ), '_' );
-			}
-		}
-		return $this;
-	}
+    /**
+     * Appends a SQL statement using UNION operator.
+     * @param string|Query $sql the SQL statement to be appended using UNION
+     * @param boolean $all TRUE if using UNION ALL and FALSE if using UNION
+     * @return $this the query object itself
+     */
+    public function union($sql, $all = false)
+    {
+        $this->union[] = ['query' => $sql, 'all' => $all];
+        return $this;
+    }
 
-	/**
-	 * Add a grouping to the query.
-	 *
-	 * @param string $column
-	 * @return Query
-	 */
-	public function groupBy($column)
-	{
-		$this->groupings [] = $column;
-		return $this;
-	}
+    /**
+     * Sets the parameters to be bound to the query.
+     * @param array $params list of query parameter values indexed by parameter placeholders.
+     * For example, `[':name' => 'Dan', ':age' => 31]`.
+     * @return $this the query object itself
+     * @see addParams()
+     */
+    public function params($params)
+    {
+        $this->params = $params;
+        return $this;
+    }
 
-	/**
-	 * Add a having to the query.
-	 *
-	 * @param string $column
-	 * @param string $operator
-	 * @param mixed $value
-	 */
-	public function having($column, $operator, $value)
-	{
-		$this->havings [] = compact ( 'column', 'operator', 'value' );
-		$this->bindings [] = $value;
-		return $this;
-	}
+    /**
+     * Adds additional parameters to be bound to the query.
+     * @param array $params list of query parameter values indexed by parameter placeholders.
+     * For example, `[':name' => 'Dan', ':age' => 31]`.
+     * @return $this the query object itself
+     * @see params()
+     */
+    public function addParams($params)
+    {
+        if (!empty($params)) {
+            if (empty($this->params)) {
+                $this->params = $params;
+            } else {
+                foreach ($params as $name => $value) {
+                    if (is_int($name)) {
+                        $this->params[] = $value;
+                    } else {
+                        $this->params[$name] = $value;
+                    }
+                }
+            }
+        }
+        return $this;
+    }
 
-	/**
-	 * Add an ordering to the query.
-	 *
-	 * @param string $column
-	 * @param string $direction
-	 * @return Query
-	 */
-	public function orderBy($column, $direction = 'asc')
-	{
-		$this->orderings [] = compact ( 'column', 'direction' );
-		return $this;
-	}
-
-	/**
-	 * Set the query offset.
-	 *
-	 * @param int $value
-	 * @return Query
-	 */
-	public function skip($value)
-	{
-		$this->offset = $value;
-		return $this;
-	}
-
-	/**
-	 * Set the query limit.
-	 *
-	 * @param int $value
-	 * @return Query
-	 */
-	public function take($value)
-	{
-		$this->limit = $value;
-		return $this;
-	}
-
-	/**
-	 * Set the query limit and offset for a given page.
-	 *
-	 * @param int $page
-	 * @param int $per_page
-	 * @return Query
-	 */
-	public function forPage($page, $per_page)
-	{
-		return $this->skip ( ($page - 1) * $per_page )->take ( $per_page );
-	}
-
-	/**
-	 * 查询主键
-	 *
-	 * @param int $id
-	 * @param array $columns
-	 * @return object
-	 */
-	public function find($id, $columns = ['*'])
-	{
-		return $this->where ( 'id', '=', $id )->first ( $columns );
-	}
-
-	/**
-	 * 获取一列
-	 *
-	 * @param string $column
-	 * @return mixed
-	 */
-	public function only($column)
-	{
-		$sql = $this->grammar->select ( $this->select ( [ $column ] ) );
-		return $this->connection->only ( $sql, $this->bindings );
-	}
-
-	/**
-	 * 获取一条数据
-	 *
-	 * @param array $columns
-	 * @return mixed
-	 */
-	public function first($columns = ['*'])
-	{
-		$columns = ( array ) $columns;
-		$results = $this->take ( 1 )->get ( $columns );
-		return (count ( $results ) > 0) ? $results [0] : null;
-	}
-
-	/**
-	 * Get an array with the values of a given column.
-	 *
-	 * @param string $column
-	 * @param string $key
-	 * @return array
-	 */
-	public function lists($column, $key = null)
-	{
-		$columns = (is_null ( $key )) ? [ $column ] : [ $column,$key ];
-		$results = $this->get ( $columns );
-		$values = array_map ( function ($row) use($column)
-		{
-			return $row->$column;
-		}, $results );
-		if (! is_null ( $key ) && count ( $results )) {
-			return array_combine ( array_map ( function ($row) use($key)
-			{
-				return $row->$key;
-			}, $results ), $values );
-		}
-		return $values;
-	}
-
-	/**
-	 * 获取查询结果实例
-	 *
-	 * @param array $columns
-	 * @return array
-	 */
-	public function get($columns = ['*'])
-	{
-		if (is_null ( $this->selects )){
-			$this->select ( $columns );
-		}
-		$sql = $this->grammar->select ( $this );
-		$results = $this->connection->query ( $sql, $this->bindings );
-		if ($this->offset > 0 and $this->grammar instanceof SQLServer) {
-			array_walk ( $results, function ($result)
-			{
-				unset ( $result->rownum );
-			} );
-		}
-		$this->selects = null;
-		return $results;
-	}
-
-	/**
-	 * 获取字段的合
-	 *
-	 * @param string $aggregator
-	 * @param array $columns
-	 * @return mixed
-	 */
-	public function aggregate($aggregator, $columns)
-	{
-		$this->aggregate = compact ( 'aggregator', 'columns' );
-		$sql = $this->grammar->select ( $this );
-		$result = $this->connection->only ( $sql, $this->bindings );
-		$this->aggregate = null;
-		return $result;
-	}
-
-	/**
-	 * 获取分页
-	 *
-	 * @param int $per_page
-	 * @param array $columns
-	 * @return Paginator
-	 */
-	public function paginate($per_page = 20, $columns = ['*'])
-	{
-		list ( $orderings, $this->orderings ) = [ $this->orderings,null ];
-		$total = $this->count ( reset ( $columns ) );
-		$page = Paginator::page ( $total, $per_page );
-		$this->orderings = $orderings;
-		$results = $this->for_page ( $page, $per_page )->get ( $columns );
-		return Paginator::make ( $results, $total, $per_page );
-	}
-
-	/**
-	 * 插入数据
-	 *
-	 * @param array $values
-	 * @return bool
-	 */
-	public function insert($values)
-	{
-		if (! is_array ( reset ( $values ) )) {
-			$values = [ $values ];
-		}
-		$bindings = [ ];
-		foreach ( $values as $value ) {
-			$bindings = array_merge ( $bindings, array_values ( $value ) );
-		}
-		$sql = $this->grammar->insert ( $this, $values );
-		return $this->connection->query ( $sql, $bindings );
-	}
-
-	/**
-	 * 获取插入的ID
-	 *
-	 * @param array $values
-	 * @param string $column
-	 * @return mixed
-	 */
-	public function insertGetID($values, $column = 'id')
-	{
-		$sql = $this->grammar->insertGetID ( $this, $values, $column );
-		$result = $this->connection->query ( $sql, array_values ( $values ) );
-		if (isset ( $values [$column] )) {
-			return $values [$column];
-		} else if ($this->grammar instanceof Postgres) {
-			$row = ( array ) $result [0];
-			return ( int ) $row [$column];
-		} else {
-			return ( int ) $this->connection->pdo->lastInsertId ();
-		}
-	}
-
-	/**
-	 * 字段加一
-	 *
-	 * @param string $column
-	 * @param int $amount
-	 * @return int
-	 */
-	public function increment($column, $amount = 1)
-	{
-		return $this->adjust ( $column, $amount, ' + ' );
-	}
-
-	/**
-	 * 字段减一
-	 *
-	 * @param string $column
-	 * @param int $amount
-	 * @return int
-	 */
-	public function decrement($column, $amount = 1)
-	{
-		return $this->adjust ( $column, $amount, ' - ' );
-	}
-
-	/**
-	 * Adjust the value of a column up or down by a given amount.
-	 *
-	 * @param string $column
-	 * @param int $amount
-	 * @param string $operator
-	 * @return int
-	 */
-	protected function adjust($column, $amount, $operator)
-	{
-		$wrapped = $this->grammar->wrap ( $column );
-		$value = new Expression ( $wrapped . $operator . $amount );
-		return $this->update ( [ $column => $value ] );
-	}
-
-	/**
-	 * Update an array of values in the database table.
-	 *
-	 * @param array $values
-	 * @return int
-	 */
-	public function update($values)
-	{
-		$bindings = array_merge ( array_values ( $values ), $this->bindings );
-		$sql = $this->grammar->update ( $this, $values );
-		return $this->connection->query ( $sql, $bindings );
-	}
-
-	/**
-	 * 执行一个删除查询
-	 *
-	 * 或者指定ID
-	 *
-	 * @param int $id
-	 * @return int
-	 */
-	public function delete($id = null)
-	{
-		if (! is_null ( $id )) {
-			$this->where ( 'id', '=', $id );
-		}
-		$sql = $this->grammar->delete ( $this );
-		return $this->connection->query ( $sql, $this->bindings );
-	}
-
-	/**
-	 * 魔术方法，实现动态查询
-	 */
-	public function __call($method, $parameters)
-	{
-		if (strpos ( $method, 'where' ) === 0) {
-			return $this->dynamicWhere ( $method, $parameters, $this );
-		}
-		if (in_array ( $method, [ 'count','min','max','avg','sum' ] )) {
-			if (count ( $parameters ) == 0)
-				$parameters [0] = '*';
-			return $this->aggregate ( strtoupper ( $method ), ( array ) $parameters [0] );
-		}
-		throw new \Leaps\Db\Exception ( "Method [$method] is not defined on the Query class." );
-	}
+    /**
+     * Creates a new Query object and copies its property values from an existing one.
+     * The properties being copies are the ones to be used by query builders.
+     * @param Query $from the source query object
+     * @return Query the new Query object
+     */
+    public static function create($from)
+    {
+        return new self([
+            'where' => $from->where,
+            'limit' => $from->limit,
+            'offset' => $from->offset,
+            'orderBy' => $from->orderBy,
+            'indexBy' => $from->indexBy,
+            'select' => $from->select,
+            'selectOption' => $from->selectOption,
+            'distinct' => $from->distinct,
+            'from' => $from->from,
+            'groupBy' => $from->groupBy,
+            'join' => $from->join,
+            'having' => $from->having,
+            'union' => $from->union,
+            'params' => $from->params,
+        ]);
+    }
 }

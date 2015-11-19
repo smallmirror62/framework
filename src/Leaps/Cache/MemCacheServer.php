@@ -1,62 +1,58 @@
 <?php
-// +----------------------------------------------------------------------
-// | Leaps Framework [ WE CAN DO IT JUST THINK IT ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2011-2014 Leaps Team (http://www.tintsoft.com)
-// +----------------------------------------------------------------------
-// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
-// +----------------------------------------------------------------------
-// | Author XuTongle <xutongle@gmail.com>
-// +----------------------------------------------------------------------
+/**
+ * @link http://www.yiiframework.com/
+ * @copyright Copyright (c) 2008 Yii Software LLC
+ * @license http://www.yiiframework.com/license/
+ */
+
 namespace Leaps\Cache;
 
-class MemCacheServer extends \Leaps\Core\Base
+/**
+ * MemCacheServer represents the configuration data for a single memcache or memcached server.
+ *
+ * See [PHP manual](http://www.php.net/manual/en/function.Memcache-addServer.php) for detailed explanation
+ * of each configuration property.
+ *
+ * @author Qiang Xue <qiang.xue@gmail.com>
+ * @since 2.0
+ */
+class MemCacheServer extends \Leaps\Base\Object
 {
-	/**
-	 * memcache服务器域名或IP地址
-	 * @var string
-	 */
-	public $host;
-
-	/**
-	 * memcache服务器端口
-	 * @var integer
-	 */
-	public $port = 11211;
-
-	/**
-	 * 服务器权重（越大使用概率越高 ）
-	 * @var integer
-	 */
-	public $weight = 1;
-
-	/**
-	 * 是否使用持久连接。
-	 * @var boolean
-	 */
-	public $persistent = true;
-
-	/**
-	 * 连接超时时间（毫秒）
-	 * @var integer
-	 */
-	public $timeout = 1000;
-
-	/**
-	 * 失败重试时间（秒）
-	 * @var integer
-	 */
-	public $retryInterval = 15;
-
-	/**
-	 * 标记服务器状态
-	 * @var boolean
-	 */
-	public $status = true;
-
-	/**
-	 * 失败时的回调
-	 * @var \Closure
-	 */
-	public $failureCallback;
+    /**
+     * @var string memcache server hostname or IP address
+     */
+    public $host;
+    /**
+     * @var integer memcache server port
+     */
+    public $port = 11211;
+    /**
+     * @var integer probability of using this server among all servers.
+     */
+    public $weight = 1;
+    /**
+     * @var boolean whether to use a persistent connection. This is used by memcache only.
+     */
+    public $persistent = true;
+    /**
+     * @var integer timeout in milliseconds which will be used for connecting to the server.
+     * This is used by memcache only. For old versions of memcache that only support specifying
+     * timeout in seconds this will be rounded up to full seconds.
+     */
+    public $timeout = 1000;
+    /**
+     * @var integer how often a failed server will be retried (in seconds). This is used by memcache only.
+     */
+    public $retryInterval = 15;
+    /**
+     * @var boolean if the server should be flagged as online upon a failure. This is used by memcache only.
+     */
+    public $status = true;
+    /**
+     * @var \Closure this callback function will run upon encountering an error.
+     * The callback is run before fail over is attempted. The function takes two parameters,
+     * the [[host]] and the [[port]] of the failed server.
+     * This is used by memcache only.
+     */
+    public $failureCallback;
 }
