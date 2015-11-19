@@ -11,14 +11,12 @@
 namespace Leaps\Base;
 
 /**
- * InvalidCallException represents an exception caused by calling a method in a wrong way.
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
+ * InvalidCallException 使用一个错误的方式调用方法
  */
 class InvalidCallException extends \BadMethodCallException
 {
 	/**
+	 *
 	 * @return string the user-friendly name of this exception
 	 */
 	public function getName()

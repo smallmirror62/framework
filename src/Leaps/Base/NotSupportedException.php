@@ -11,19 +11,16 @@
 namespace Leaps\Base;
 
 /**
- * 可配置类接口其属性通过构造方法的最后一个参数设置
- *
- * 不声明任何方法的接口，实现这个接口类必须声明自己的构造函数
- * 如:
- *
- * ```php
- * public function __constructor($param1, $param2, ..., $config = [])
- * ```
- *
- * 也就是说,构造函数的最后一个参数必须接受一个配置数组。
- *
- * 这个接口主要是使用 [[\Leaps\Di\Container]] 这样就可以将对象配置作为最后一个参数传递给执行类的构造函数。
+ * NotSupportedException represents an exception caused by accessing features that are not supported.
  */
-interface Configurable
+class NotSupportedException extends Exception
 {
+	/**
+	 *
+	 * @return string the user-friendly name of this exception
+	 */
+	public function getName()
+	{
+		return 'Not Supported';
+	}
 }
