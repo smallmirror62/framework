@@ -23,7 +23,7 @@ defined ( 'LEAPS_BEGIN_TIME' ) or define ( 'LEAPS_BEGIN_TIME', microtime ( true 
 /**
  * This constant defines the framework installation directory.
  */
-defined ( 'LEAPS2_PATH' ) or define ( 'LEAPS2_PATH', __DIR__ );
+defined ( 'LEAPS_PATH' ) or define ( 'LEAPS_PATH', __DIR__ );
 /**
  * This constant defines whether the application should be in debug mode or not.
  * Defaults to false.
@@ -318,11 +318,11 @@ class Kernel
 	 *
 	 * ```php
 	 * // create an object using a class name
-	 * $object = Leaps::createObject('Leaps\db\Connection');
+	 * $object = Leaps::createObject('Leaps\Db\Connection');
 	 *
 	 * // create an object using a configuration array
 	 * $object = Leaps::createObject([
-	 * 'class' => 'Leaps\db\Connection',
+	 * 'className' => 'Leaps\Db\Connection',
 	 * 'dsn' => 'mysql:host=127.0.0.1;dbname=demo',
 	 * 'username' => 'root',
 	 * 'password' => '',

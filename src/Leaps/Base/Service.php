@@ -82,7 +82,7 @@ use Leaps;
  * ~~~
  * [
  * 'as tree' => [
- * 'class' => 'Tree',
+ * 'className' => 'Tree',
  * ],
  * ]
  * ~~~
@@ -417,7 +417,7 @@ class Service extends Object
 	 *
 	 * ~~~
 	 * 'behaviorName' => [
-	 * 'class' => 'BehaviorClass',
+	 * 'className' => 'BehaviorClass',
 	 * 'property1' => 'value1',
 	 * 'property2' => 'value2',
 	 * ]

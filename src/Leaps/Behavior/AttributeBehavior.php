@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 namespace Leaps\Behavior;
 
@@ -28,7 +28,7 @@ use Leaps\Base\Behavior;
  * {
  * return [
  * [
- * 'class' => AttributeBehavior::className(),
+ * 'className' => AttributeBehavior::className(),
  * 'attributes' => [
  * ActiveRecord::EVENT_BEFORE_INSERT => 'attribute1',
  * ActiveRecord::EVENT_BEFORE_UPDATE => 'attribute2',

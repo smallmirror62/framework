@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 namespace Leaps\Filter;
 
@@ -31,7 +31,7 @@ use Leaps\Web\ForbiddenHttpException;
  * {
  * return [
  * 'access' => [
- * 'class' => \Leaps\Filter\AccessControl::className(),
+ * 'className' => \Leaps\Filter\AccessControl::className(),
  * 'only' => ['create', 'update'],
  * 'rules' => [
  * // deny all POST requests
@@ -83,7 +83,7 @@ class AccessControl extends ActionFilter
 	 *      specified via [[rules]] will take precedence when the same property of the rule is configured.
 	 */
 	public $ruleConfig = [ 
-		'class' => 'Leaps\Filter\AccessRule' 
+		'className' => 'Leaps\Filter\AccessRule' 
 	];
 	/**
 	 *
@@ -155,7 +155,7 @@ class AccessControl extends ActionFilter
 		if ($user->getIsGuest ()) {
 			$user->loginRequired ();
 		} else {
-			throw new ForbiddenHttpException ( Leaps::t('leaps', 'You are not allowed to perform this action.' ) );
+			throw new ForbiddenHttpException ( Leaps::t ( 'leaps', 'You are not allowed to perform this action.' ) );
 		}
 	}
 }

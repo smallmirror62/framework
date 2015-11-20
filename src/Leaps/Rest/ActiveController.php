@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Rest;
@@ -71,34 +71,34 @@ class ActiveController extends Controller
     {
         return [
             'index' => [
-                'class' => 'Leaps\Rest\IndexAction',
+                'className' => 'Leaps\Rest\IndexAction',
                 'modelClass' => $this->modelClass,
                 'checkAccess' => [$this, 'checkAccess'],
             ],
             'view' => [
-                'class' => 'Leaps\Rest\ViewAction',
+                'className' => 'Leaps\Rest\ViewAction',
                 'modelClass' => $this->modelClass,
                 'checkAccess' => [$this, 'checkAccess'],
             ],
             'create' => [
-                'class' => 'Leaps\Rest\CreateAction',
+                'className' => 'Leaps\Rest\CreateAction',
                 'modelClass' => $this->modelClass,
                 'checkAccess' => [$this, 'checkAccess'],
                 'scenario' => $this->createScenario,
             ],
             'update' => [
-                'class' => 'Leaps\Rest\UpdateAction',
+                'className' => 'Leaps\Rest\UpdateAction',
                 'modelClass' => $this->modelClass,
                 'checkAccess' => [$this, 'checkAccess'],
                 'scenario' => $this->updateScenario,
             ],
             'delete' => [
-                'class' => 'Leaps\Rest\DeleteAction',
+                'className' => 'Leaps\Rest\DeleteAction',
                 'modelClass' => $this->modelClass,
                 'checkAccess' => [$this, 'checkAccess'],
             ],
             'options' => [
-                'class' => 'Leaps\Rest\OptionsAction',
+                'className' => 'Leaps\Rest\OptionsAction',
             ],
         ];
     }

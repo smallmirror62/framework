@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Web;
@@ -11,7 +11,7 @@ use DOMDocument;
 use DOMElement;
 use DOMText;
 use Leaps\Base\Arrayable;
-use Leaps\Base\Component;
+use Leaps\Base\Service;
 use Leaps\Helper\StringHelper;
 
 /**
@@ -22,7 +22,7 @@ use Leaps\Helper\StringHelper;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class XmlResponseFormatter extends Component implements ResponseFormatterInterface
+class XmlResponseFormatter extends Service implements ResponseFormatterInterface
 {
     /**
      * @var string the Content-Type header for the response

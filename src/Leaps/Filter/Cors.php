@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Filter;
@@ -24,7 +24,7 @@ use Leaps\Web\Response;
  * {
  *     return [
  *         'corsFilter' => [
- *             'class' => \Leaps\Filter\Cors::className(),
+ *             'className' => \Leaps\Filter\Cors::className(),
  *         ],
  *     ];
  * }
@@ -38,7 +38,7 @@ use Leaps\Web\Response;
  * {
  *     return [
  *         'corsFilter' => [
- *             'class' => \Leaps\Filter\Cors::className(),
+ *             'className' => \Leaps\Filter\Cors::className(),
  *             'cors' => [
  *                 // restrict access to
  *                 'Origin' => ['http://www.myserver.com', 'https://www.myserver.com'],

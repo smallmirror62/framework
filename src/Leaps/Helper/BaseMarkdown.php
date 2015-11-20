@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Helper;
@@ -25,20 +25,20 @@ class BaseMarkdown
      */
     public static $flavors = [
         'original' => [
-            'class' => 'cebe\markdown\Markdown',
+            'className' => 'cebe\markdown\Markdown',
             'html5' => true,
         ],
         'gfm' => [
-            'class' => 'cebe\markdown\GithubMarkdown',
+            'className' => 'cebe\markdown\GithubMarkdown',
             'html5' => true,
         ],
         'gfm-comment' => [
-            'class' => 'cebe\markdown\GithubMarkdown',
+            'className' => 'cebe\markdown\GithubMarkdown',
             'html5' => true,
             'enableNewlines' => true,
         ],
         'extra' => [
-            'class' => 'cebe\markdown\MarkdownExtra',
+            'className' => 'cebe\markdown\MarkdownExtra',
             'html5' => true,
         ],
     ];

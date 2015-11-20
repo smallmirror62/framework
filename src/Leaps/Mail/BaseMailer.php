@@ -1,17 +1,19 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
-namespace yii\mail;
+namespace Leaps\Mail;
 
 use Leaps;
-use Leaps\Base\Component;
-use Leaps\Base\InvalidConfigException;
-use Leaps\Base\ViewContextInterface;
 use Leaps\Web\View;
+use Leaps\Base\Service;
+use Leaps\Base\ViewContextInterface;
+use Leaps\Base\InvalidConfigException;
+
+
 
 /**
  * BaseMailer serves as a base class that implements the basic functions required by [[MailerInterface]].
@@ -28,7 +30,7 @@ use Leaps\Web\View;
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 2.0
  */
-abstract class BaseMailer extends Component implements MailerInterface, ViewContextInterface
+abstract class BaseMailer extends Service implements MailerInterface, ViewContextInterface
 {
     /**
      * @event MailEvent an event raised right before send.
@@ -73,7 +75,7 @@ abstract class BaseMailer extends Component implements MailerInterface, ViewCont
     /**
      * @var string the default class name of the new message instances created by [[createMessage()]]
      */
-    public $messageClass = 'yii\mail\BaseMessage';
+    public $messageClass = 'Leaps\Mail\BaseMessage';
     /**
      * @var boolean whether to save email messages as files under [[fileTransportPath]] instead of sending them
      * to the actual recipients. This is usually used during development for debugging purpose.
@@ -83,7 +85,7 @@ abstract class BaseMailer extends Component implements MailerInterface, ViewCont
     /**
      * @var string the directory where the email messages are saved when [[useFileTransport]] is true.
      */
-    public $fileTransportPath = '@runtime/mail';
+    public $fileTransportPath = '@Runtime/mail';
     /**
      * @var callable a PHP callback that will be called by [[send()]] when [[useFileTransport]] is true.
      * The callback should return a file name which will be used to save the email message.
@@ -139,8 +141,8 @@ abstract class BaseMailer extends Component implements MailerInterface, ViewCont
      */
     protected function createView(array $config)
     {
-        if (!array_key_exists('class', $config)) {
-            $config['class'] = View::className();
+        if (!array_key_exists('className', $config)) {
+            $config['className'] = View::className();
         }
 
         return Leaps::createObject($config);
@@ -226,8 +228,8 @@ abstract class BaseMailer extends Component implements MailerInterface, ViewCont
     protected function createMessage()
     {
         $config = $this->messageConfig;
-        if (!array_key_exists('class', $config)) {
-            $config['class'] = $this->messageClass;
+        if (!array_key_exists('className', $config)) {
+            $config['className'] = $this->messageClass;
         }
         $config['mailer'] = $this;
         return Leaps::createObject($config);

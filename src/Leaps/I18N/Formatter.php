@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\I18n;
@@ -14,7 +14,7 @@ use DateTimeZone;
 use IntlDateFormatter;
 use NumberFormatter;
 use Leaps;
-use Leaps\Base\Component;
+use Leaps\Base\Service;
 use Leaps\Base\InvalidConfigException;
 use Leaps\Base\InvalidParamException;
 use Leaps\Helper\FormatConverter;
@@ -44,7 +44,7 @@ use Leaps\Helper\Html;
  * @author Carsten Brandt <mail@cebe.cc>
  * @since 2.0
  */
-class Formatter extends Component
+class Formatter extends Service
 {
     /**
      * @var string the text to be displayed when formatting a `null` value.

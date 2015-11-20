@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Filter;
@@ -30,11 +30,11 @@ use Leaps\Web\Response;
  * {
  *     return [
  *         'pageCache' => [
- *             'class' => 'Leaps\Filter\PageCache',
+ *             'className' => 'Leaps\Filter\PageCache',
  *             'only' => ['index'],
  *             'duration' => 60,
  *             'dependency' => [
- *                 'class' => 'Leaps\Cache\DbDependency',
+ *                 'className' => 'Leaps\Cache\DbDependency',
  *                 'sql' => 'SELECT COUNT(*) FROM post',
  *             ],
  *             'variations' => [
@@ -74,7 +74,7 @@ class PageCache extends ActionFilter
      *
      * ```php
      * [
-     *     'class' => 'Leaps\Cache\DbDependency',
+     *     'className' => 'Leaps\Cache\DbDependency',
      *     'sql' => 'SELECT MAX(updated_at) FROM post',
      * ]
      * ```

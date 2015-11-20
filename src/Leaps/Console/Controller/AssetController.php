@@ -146,8 +146,8 @@ class AssetController extends Controller
 	{
 		if (! is_object ( $this->_assetManager )) {
 			$options = $this->_assetManager;
-			if (! isset ( $options ['class'] )) {
-				$options ['class'] = 'Leaps\\Web\\AssetManager';
+			if (! isset ( $options ['className'] )) {
+				$options ['className'] = 'Leaps\\Web\\AssetManager';
 			}
 			if (! isset ( $options ['basePath'] )) {
 				throw new Exception ( "Please specify 'basePath' for the 'assetManager' option." );
@@ -467,7 +467,7 @@ class AssetController extends Controller
 		foreach ( $targets as $name => $target ) {
 			if (isset ( $this->targets [$name] )) {
 				$array [$name] = [ 
-					'class' => get_class ( $target ),
+					'className' => get_class ( $target ),
 					'basePath' => $this->targets [$name] ['basePath'],
 					'baseUrl' => $this->targets [$name] ['baseUrl'],
 					'js' => $target->js,

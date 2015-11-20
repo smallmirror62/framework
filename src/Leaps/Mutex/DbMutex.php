@@ -1,16 +1,17 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
-namespace yii\mutex;
+namespace Leaps\Mutex;
 
 use Leaps;
+use Leaps\Di\Instance;
 use Leaps\Db\Connection;
 use Leaps\Base\InvalidConfigException;
-use Leaps\Di\Instance;
+
 
 /**
  * DbMutex is the base class for classes, which relies on database while implementing mutex "lock" mechanism.

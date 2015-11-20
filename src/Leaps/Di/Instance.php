@@ -30,7 +30,7 @@ use Leaps\Base\InvalidConfigException;
  * $container = new \Leaps\Di\Container;
  * $container->set('cache', 'leaps \caching\DbCache', Instance::of('db'));
  * $container->set('db', [
- * 'class' => 'Leaps\Db\Connection',
+ * 'className' => 'Leaps\Db\Connection',
  * 'dsn' => 'sqlite:path/to/file.db',
  * ]);
  * ```
@@ -115,11 +115,11 @@ class Instance
 		if ($reference instanceof $type) {
 			return $reference;
 		} elseif (is_array ( $reference )) {
-			$class = isset ( $reference ['class'] ) ? $reference ['class'] : $type;
+			$class = isset ( $reference ['className'] ) ? $reference ['className'] : $type;
 			if (! $container instanceof Container) {
 				$container = Leaps::$container;
 			}
-			unset ( $reference ['class'] );
+			unset ( $reference ['className'] );
 			return $container->get ( $class, [ ], $reference );
 		} elseif (empty ( $reference )) {
 			throw new InvalidConfigException ( 'The required component is not specified.' );

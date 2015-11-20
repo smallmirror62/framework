@@ -95,7 +95,7 @@ class CacheController extends Controller
 		foreach ( $caches as $name => $class ) {
 			$cachesInfo [] = [ 
 				'name' => $name,
-				'class' => $class,
+				'className' => $class,
 				'is_flushed' => Leaps::$app->get ( $name )->flush () 
 			];
 		}
@@ -119,7 +119,7 @@ class CacheController extends Controller
 		foreach ( $caches as $name => $class ) {
 			$cachesInfo [] = [ 
 				'name' => $name,
-				'class' => $class,
+				'className' => $class,
 				'is_flushed' => Leaps::$app->get ( $name )->flush () 
 			];
 		}
@@ -215,7 +215,7 @@ class CacheController extends Controller
 		$this->stdout ( "The following cache components were processed:\n\n", Console::FG_YELLOW );
 		
 		foreach ( $caches as $cache ) {
-			$this->stdout ( "\t* " . $cache ['name'] . " (" . $cache ['class'] . ")", Console::FG_GREEN );
+			$this->stdout ( "\t* " . $cache ['name'] . " (" . $cache ['className'] . ")", Console::FG_GREEN );
 			
 			if (! $cache ['is_flushed']) {
 				$this->stdout ( " - not flushed\n", Console::FG_RED );
@@ -263,8 +263,8 @@ class CacheController extends Controller
 			
 			if ($component instanceof Cache) {
 				$caches [$name] = get_class ( $component );
-			} elseif (is_array ( $component ) && isset ( $component ['class'] ) && $this->isCacheClass ( $component ['class'] )) {
-				$caches [$name] = $component ['class'];
+			} elseif (is_array ( $component ) && isset ( $component ['className'] ) && $this->isCacheClass ( $component ['className'] )) {
+				$caches [$name] = $component ['className'];
 			} elseif (is_string ( $component ) && $this->isCacheClass ( $component )) {
 				$caches [$name] = $component;
 			}

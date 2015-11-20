@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Validator;
@@ -131,8 +131,7 @@ class NumberValidator extends Validator
         ];
 
         if ($this->min !== null) {
-            // ensure numeric value to make javascript comparison equal to PHP comparison
-            // https://github.com/yiisoft/yii2/issues/3118
+
             $options['min'] = is_string($this->min) ? (float) $this->min : $this->min;
             $options['tooSmall'] = Leaps::$app->getI18n()->format($this->tooSmall, [
                 'attribute' => $label,
@@ -140,8 +139,7 @@ class NumberValidator extends Validator
             ], Leaps::$app->language);
         }
         if ($this->max !== null) {
-            // ensure numeric value to make javascript comparison equal to PHP comparison
-            // https://github.com/yiisoft/yii2/issues/3118
+
             $options['max'] = is_string($this->max) ? (float) $this->max : $this->max;
             $options['tooBig'] = Leaps::$app->getI18n()->format($this->tooBig, [
                 'attribute' => $label,

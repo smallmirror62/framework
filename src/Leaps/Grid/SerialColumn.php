@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Grid;
@@ -16,7 +16,7 @@ namespace Leaps\Grid;
  * 'columns' => [
  *     // ...
  *     [
- *         'class' => 'Leaps\Grid\SerialColumn',
+ *         'className' => 'Leaps\Grid\SerialColumn',
  *         // you may configure additional properties here
  *     ],
  * ]

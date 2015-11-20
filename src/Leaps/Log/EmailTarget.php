@@ -1,16 +1,17 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
-namespace yii\log;
+namespace Leaps\Log;
 
 use Leaps;
-use Leaps\Base\InvalidConfigException;
 use Leaps\Di\Instance;
-use yii\mail\MailerInterface;
+use Leaps\Mail\MailerInterface;
+use Leaps\Base\InvalidConfigException;
+
 
 /**
  * EmailTarget sends selected log messages to the specified email addresses.
@@ -23,7 +24,7 @@ use yii\mail\MailerInterface;
  *     'log' => [
  *          'targets' => [
  *              [
- *                  'class' => 'yii\log\EmailTarget',
+ *                  'className' => 'Leaps\Log\EmailTarget',
  *                  'mailer' => 'mailer',
  *                  'levels' => ['error', 'warning'],
  *                  'message' => [
@@ -45,7 +46,7 @@ use yii\mail\MailerInterface;
 class EmailTarget extends Target
 {
     /**
-     * @var array the configuration array for creating a [[\yii\mail\MessageInterface|message]] object.
+     * @var array the configuration array for creating a [[\Leaps\Mail\MessageInterface|message]] object.
      * Note that the "to" option must be set, which specifies the destination email address(es).
      */
     public $message = [];
@@ -67,7 +68,7 @@ class EmailTarget extends Target
         if (empty($this->message['to'])) {
             throw new InvalidConfigException('The "to" option must be set for EmailTarget::message.');
         }
-        $this->mailer = Instance::ensure($this->mailer, 'yii\mail\MailerInterface');
+        $this->mailer = Instance::ensure($this->mailer, 'Leaps\Mail\MailerInterface');
     }
 
     /**
@@ -76,7 +77,6 @@ class EmailTarget extends Target
     public function export()
     {
         // moved initialization of subject here because of the following issue
-        // https://github.com/yiisoft/yii2/issues/1446
         if (empty($this->message['subject'])) {
             $this->message['subject'] = 'Application Log';
         }
@@ -88,7 +88,7 @@ class EmailTarget extends Target
     /**
      * Composes a mail message with the given body content.
      * @param string $body the body content
-     * @return \yii\mail\MessageInterface $message
+     * @return \Leaps\Mail\MessageInterface $message
      */
     protected function composeMessage($body)
     {

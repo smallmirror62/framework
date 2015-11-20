@@ -11,7 +11,7 @@
 namespace Leaps\Base;
 
 /**
- * ActionFilter is the base class for action filters.
+ * ActionFilter 操作过滤器
  *
  * An action filter will participate in the action execution workflow by responding to
  * the `beforeAction` and `afterAction` events triggered by modules and controllers.
@@ -106,7 +106,7 @@ class ActionFilter extends Behavior
 	}
 	
 	/**
-	 * This method is invoked right before an action is to be executed (after all possible filters.)
+	 * Action前置执行
 	 * You may override this method to do last-minute preparation for the action.
 	 *
 	 * @param Action $action the action to be executed.
@@ -118,7 +118,7 @@ class ActionFilter extends Behavior
 	}
 	
 	/**
-	 * This method is invoked right after an action is executed.
+	 * Action后置执行
 	 * You may override this method to do some postprocessing for the action.
 	 *
 	 * @param Action $action the action just executed.
@@ -131,7 +131,7 @@ class ActionFilter extends Behavior
 	}
 	
 	/**
-	 * Returns a value indicating whether the filer is active for the given action.
+	 * 该操作的过滤器是否是活动的
 	 *
 	 * @param Action $action the action being filtered
 	 * @return boolean whether the filer is active for the given action.

@@ -1,14 +1,14 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
-namespace yii\mutex;
+namespace Leaps\Mutex;
 
 use Leaps;
-use Leaps\Base\Component;
+use Leaps\Base\Service;
 
 /**
  * Mutex component allows mutual execution of the concurrent processes, preventing "race conditions".
@@ -30,7 +30,7 @@ use Leaps\Base\Component;
  * @author resurtm <resurtm@gmail.com>
  * @since 2.0
  */
-abstract class Mutex extends Component
+abstract class Mutex extends Service
 {
     /**
      * @var boolean whether all locks acquired in this process (i.e. local locks) must be released automagically

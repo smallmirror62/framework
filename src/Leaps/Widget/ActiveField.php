@@ -1,14 +1,14 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Widgets;
 
 use Leaps;
-use Leaps\Base\Component;
+use Leaps\Base\Service;
 use Leaps\Base\ErrorHandler;
 use Leaps\Helper\ArrayHelper;
 use Leaps\Helper\Html;
@@ -21,7 +21,7 @@ use Leaps\Web\JsExpression;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class ActiveField extends Component
+class ActiveField extends Service
 {
     /**
      * @var ActiveForm the form that this field is associated with.

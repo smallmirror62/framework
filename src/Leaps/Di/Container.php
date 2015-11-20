@@ -77,7 +77,7 @@ use Leaps\Base\InvalidConfigException;
  * 'dsn' => '...',
  * ]);
  * $container->set('app\models\UserFinderInterface', [
- * 'class' => 'app\models\UserFinder',
+ * 'className' => 'app\models\UserFinder',
  * ]);
  * $container->set('userLister', 'app\models\UserLister');
  *
@@ -164,8 +164,8 @@ class Container extends Service
 			$params = $this->resolveDependencies ( $this->mergeParams ( $class, $params ) );
 			$object = call_user_func ( $definition, $this, $params, $config );
 		} elseif (is_array ( $definition )) {
-			$concrete = $definition ['class'];
-			unset ( $definition ['class'] );
+			$concrete = $definition ['className'];
+			unset ( $definition ['className'] );
 			
 			$config = array_merge ( $definition, $config );
 			$params = $this->mergeParams ( $class, $params );
@@ -219,7 +219,7 @@ class Container extends Service
 	 * // register an alias name with class configuration
 	 * // In this case, a "class" element is required to specify the class
 	 * $container->set('db', [
-	 * 'class' => 'Leaps\Db\Connection',
+	 * 'className' => 'Leaps\Db\Connection',
 	 * 'dsn' => 'mysql:host=127.0.0.1;dbname=demo',
 	 * 'username' => 'root',
 	 * 'password' => '',
@@ -327,18 +327,18 @@ class Container extends Service
 	{
 		if (empty ( $definition )) {
 			return [ 
-				'class' => $class 
+				'className' => $class 
 			];
 		} elseif (is_string ( $definition )) {
 			return [ 
-				'class' => $definition 
+				'className' => $definition 
 			];
 		} elseif (is_callable ( $definition, true ) || is_object ( $definition )) {
 			return $definition;
 		} elseif (is_array ( $definition )) {
-			if (! isset ( $definition ['class'] )) {
+			if (! isset ( $definition ['className'] )) {
 				if (strpos ( $class, '\\' ) !== false) {
-					$definition ['class'] = $class;
+					$definition ['className'] = $class;
 				} else {
 					throw new InvalidConfigException ( "A class definition requires a \"class\" member." );
 				}

@@ -1,14 +1,14 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Web;
 
 use Leaps;
-use Leaps\Base\Component;
+use Leaps\Base\Service;
 use Leaps\Base\InvalidConfigException;
 use Leaps\Base\InvalidValueException;
 
@@ -56,7 +56,7 @@ use Leaps\Base\InvalidValueException;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class User extends Component
+class User extends Service
 {
     const EVENT_BEFORE_LOGIN = 'beforeLogin';
     const EVENT_AFTER_LOGIN = 'afterLogin';
@@ -255,7 +255,7 @@ class User extends Component
      * If authentication fails or [[login()]] is unsuccessful, it will return null.
      * @param string $token the access token
      * @param mixed $type the type of the token. The value of this parameter depends on the implementation.
-     * For example, [[\yii\filters\auth\HttpBearerAuth]] will set this parameter to be `yii\filters\auth\HttpBearerAuth`.
+     * For example, [[\Leaps\Filter\Auth\HttpBearerAuth]] will set this parameter to be `Leaps\Filter\Auth\HttpBearerAuth`.
      * @return IdentityInterface|null the identity associated with the given access token. Null is returned if
      * the access token is invalid or [[login()]] is unsuccessful.
      */

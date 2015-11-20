@@ -1,14 +1,14 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Db;
 
 use Leaps;
-use Leaps\Base\Component;
+use Leaps\Base\Service;
 
 /**
  * Query represents a SELECT SQL statement in a way that is independent of DBMS.
@@ -39,7 +39,7 @@ use Leaps\Base\Component;
  * @author Carsten Brandt <mail@cebe.cc>
  * @since 2.0
  */
-class Query extends Component implements QueryInterface
+class Query extends Service implements QueryInterface
 {
     use QueryTrait;
 
@@ -160,7 +160,7 @@ class Query extends Component implements QueryInterface
     public function batch($batchSize = 100, $db = null)
     {
         return Leaps::createObject([
-            'class' => BatchQueryResult::className(),
+            'className' => BatchQueryResult::className(),
             'query' => $this,
             'batchSize' => $batchSize,
             'db' => $db,
@@ -187,7 +187,7 @@ class Query extends Component implements QueryInterface
     public function each($batchSize = 100, $db = null)
     {
         return Leaps::createObject([
-            'class' => BatchQueryResult::className(),
+            'className' => BatchQueryResult::className(),
             'query' => $this,
             'batchSize' => $batchSize,
             'db' => $db,

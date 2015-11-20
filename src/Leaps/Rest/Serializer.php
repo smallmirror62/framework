@@ -1,15 +1,15 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Rest;
 
 use Leaps;
 use Leaps\Base\Arrayable;
-use Leaps\Base\Component;
+use Leaps\Base\Service;
 use Leaps\Base\Model;
 use Leaps\Data\DataProviderInterface;
 use Leaps\Data\Pagination;
@@ -30,7 +30,7 @@ use Leaps\Web\Response;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class Serializer extends Component
+class Serializer extends Service
 {
     /**
      * @var string the name of the query parameter containing the information about which fields should be returned

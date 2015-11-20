@@ -1,18 +1,18 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Rest;
 
 use Leaps;
-use yii\filters\auth\CompositeAuth;
-use yii\filters\ContentNegotiator;
-use yii\filters\RateLimiter;
 use Leaps\Web\Response;
-use yii\filters\VerbFilter;
+use Leaps\Filter\VerbFilter;
+use Leaps\Filter\RateLimiter;
+use Leaps\Filter\ContentNegotiator;
+use Leaps\Filter\Auth\CompositeAuth;
 
 /**
  * Controller is the base class for RESTful API controller classes.
@@ -21,7 +21,7 @@ use yii\filters\VerbFilter;
  *
  * 1. Resolving response format (see [[ContentNegotiator]]);
  * 2. Validating request method (see [[verbs()]]).
- * 3. Authenticating user (see [[\yii\filters\auth\AuthInterface]]);
+ * 3. Authenticating user (see [[\Leaps\Filter\Auth\AuthInterface]]);
  * 4. Rate limiting (see [[RateLimiter]]);
  * 5. Formatting response data (see [[serializeData()]]).
  *
@@ -47,21 +47,21 @@ class Controller extends \Leaps\Web\Controller
     {
         return [
             'contentNegotiator' => [
-                'class' => ContentNegotiator::className(),
+                'className' => ContentNegotiator::className(),
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
                     'application/xml' => Response::FORMAT_XML,
                 ],
             ],
             'verbFilter' => [
-                'class' => VerbFilter::className(),
+                'className' => VerbFilter::className(),
                 'actions' => $this->verbs(),
             ],
             'authenticator' => [
-                'class' => CompositeAuth::className(),
+                'className' => CompositeAuth::className(),
             ],
             'rateLimiter' => [
-                'class' => RateLimiter::className(),
+                'className' => RateLimiter::className(),
             ],
         ];
     }

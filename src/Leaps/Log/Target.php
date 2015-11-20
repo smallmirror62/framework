@@ -122,7 +122,7 @@ abstract class Target extends Service
 					$context,
 					Logger::LEVEL_INFO,
 					'application',
-					YII_BEGIN_TIME 
+					LEAPS_BEGIN_TIME 
 				];
 			}
 			// set exportInterval to 0 to avoid triggering export again while exporting

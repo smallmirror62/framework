@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 namespace Leaps\Filter;
 
@@ -39,7 +39,7 @@ use Leaps\Web\UnsupportedMediaTypeHttpException;
  * return [
  * 'bootstrap' => [
  * [
- * 'class' => 'Leaps\Filter\ContentNegotiator',
+ * 'className' => 'Leaps\Filter\ContentNegotiator',
  * 'formats' => [
  * 'application/json' => Response::FORMAT_JSON,
  * 'application/xml' => Response::FORMAT_XML,
@@ -64,7 +64,7 @@ use Leaps\Web\UnsupportedMediaTypeHttpException;
  * {
  * return [
  * [
- * 'class' => 'Leaps\Filter\ContentNegotiator',
+ * 'className' => 'Leaps\Filter\ContentNegotiator',
  * 'only' => ['view', 'index'], // in a controller
  * // if in a module, use the following IDs for user actions
  * // 'only' => ['user/view', 'user/index']

@@ -1,17 +1,19 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
-namespace yii\log;
+namespace Leaps\Log;
 
 use Leaps;
-use Leaps\Db\Connection;
-use Leaps\Base\InvalidConfigException;
 use Leaps\Di\Instance;
+use Leaps\Db\Connection;
 use Leaps\Helper\VarDumper;
+use Leaps\Base\InvalidConfigException;
+
+
 
 /**
  * DbTarget stores log messages in a database table.

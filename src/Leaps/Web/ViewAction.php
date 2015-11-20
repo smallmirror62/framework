@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Web;
@@ -86,7 +86,7 @@ class ViewAction extends Action
                 $this->controller->layout = $controllerLayout;
             }
 
-            if (YII_DEBUG) {
+            if (LEAPS_DEBUG) {
                 throw new NotFoundHttpException($e->getMessage());
             } else {
                 throw new NotFoundHttpException(
@@ -120,7 +120,7 @@ class ViewAction extends Action
         $viewName = Leaps::$app->request->get($this->viewParam, $this->defaultView);
 
         if (!is_string($viewName) || !preg_match('~^\w(?:(?!\/\.{0,2}\/)[\w\/\-\.])*$~', $viewName)) {
-            if (YII_DEBUG) {
+            if (LEAPS_DEBUG) {
                 throw new NotFoundHttpException("The requested view \"$viewName\" must start with a word character, must not contain /../ or /./, can contain only word characters, forward slashes, dots and dashes.");
             } else {
                 throw new NotFoundHttpException(Leaps::t('leaps', 'The requested view "{name}" was not found.', ['name' => $viewName]));

@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 namespace Leaps\Behavior;
 
@@ -25,7 +25,7 @@ use Leaps\Base\InvalidConfigException;
  * {
  * return [
  * [
- * 'class' => SluggableBehavior::className(),
+ * 'className' => SluggableBehavior::className(),
  * 'attribute' => 'title',
  * // 'slugAttribute' => 'slug',
  * ],
@@ -42,7 +42,7 @@ use Leaps\Base\InvalidConfigException;
  * {
  * return [
  * [
- * 'class' => SluggableBehavior::className(),
+ * 'className' => SluggableBehavior::className(),
  * 'slugAttribute' => 'alias',
  * ],
  * ];
@@ -95,7 +95,7 @@ class SluggableBehavior extends AttributeBehavior
 	public $ensureUnique = false;
 	/**
 	 *
-	 * @var array configuration for slug uniqueness validator. Parameter 'class' may be omitted - by default
+	 * @var array configuration for slug uniqueness validator. Parameter 'className' may be omitted - by default
 	 *      [[UniqueValidator]] will be used.
 	 * @see UniqueValidator
 	 */
@@ -192,7 +192,7 @@ class SluggableBehavior extends AttributeBehavior
 		/* @var $validator UniqueValidator */
 		/* @var $model BaseActiveRecord */
 		$validator = Leaps::createObject ( array_merge ( [ 
-			'class' => UniqueValidator::className () 
+			'className' => UniqueValidator::className () 
 		], $this->uniqueValidator ) );
 		
 		$model = clone $this->owner;

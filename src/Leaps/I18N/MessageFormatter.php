@@ -1,13 +1,13 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\I18n;
 
-use Leaps\Base\Component;
+use Leaps\Base\Service;
 use Leaps\Base\NotSupportedException;
 
 /**
@@ -42,7 +42,7 @@ use Leaps\Base\NotSupportedException;
  * @author Carsten Brandt <mail@cebe.cc>
  * @since 2.0
  */
-class MessageFormatter extends Component
+class MessageFormatter extends Service
 {
     private $_errorCode = 0;
     private $_errorMessage = '';

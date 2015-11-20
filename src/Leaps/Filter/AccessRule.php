@@ -1,13 +1,13 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Filter;
 
-use Leaps\Base\Component;
+use Leaps\Base\Service;
 use Leaps\Base\Action;
 use Leaps\Web\User;
 use Leaps\Web\Request;
@@ -19,7 +19,7 @@ use Leaps\Base\Controller;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class AccessRule extends Component
+class AccessRule extends Service
 {
     /**
      * @var boolean whether this is an 'allow' rule or 'deny' rule.

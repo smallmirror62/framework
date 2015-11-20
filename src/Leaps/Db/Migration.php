@@ -1,13 +1,13 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Db;
 
-use Leaps\Base\Component;
+use Leaps\Base\Service;
 use Leaps\Di\Instance;
 
 /**
@@ -36,7 +36,7 @@ use Leaps\Di\Instance;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class Migration extends Component implements MigrationInterface
+class Migration extends Service implements MigrationInterface
 {
     use SchemaBuilderTrait;
 

@@ -1,15 +1,13 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
-
-use Leaps\Base\InvalidConfigException;
 use Leaps\Db\Schema;
 use Leaps\Db\Migration;
-use yii\log\DbTarget;
-
+use Leaps\Log\DbTarget;
+use Leaps\Base\InvalidConfigException;
 /**
  * Initializes log table.
  *

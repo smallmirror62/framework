@@ -1,11 +1,11 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
-namespace yii\mail;
+namespace Leaps\Mail;
 
 /**
  * MessageInterface is the interface that should be implemented by mail message classes.
@@ -13,7 +13,7 @@ namespace yii\mail;
  * A message represents the settings and content of an email, such as the sender, recipient,
  * subject, body, etc.
  *
- * Messages are sent by a [[\yii\mail\MailerInterface|mailer]], like the following,
+ * Messages are sent by a [[\Leaps\Mail\MailerInterface|mailer]], like the following,
  *
  * ~~~
  * Leaps::$app->mailer->compose()

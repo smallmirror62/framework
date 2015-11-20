@@ -161,7 +161,7 @@ class Logger extends Service
 			$ts = debug_backtrace ( DEBUG_BACKTRACE_IGNORE_ARGS );
 			array_pop ( $ts ); // remove the last trace since it would be the entry script, not very useful
 			foreach ( $ts as $trace ) {
-				if (isset ( $trace ['file'], $trace ['line'] ) && strpos ( $trace ['file'], YII2_PATH ) !== 0) {
+				if (isset ( $trace ['file'], $trace ['line'] ) && strpos ( $trace ['file'], LEAPS_PATH ) !== 0) {
 					unset ( $trace ['object'], $trace ['args'] );
 					$traces [] = $trace;
 					if (++ $count >= $this->traceLevel) {
@@ -190,8 +190,6 @@ class Logger extends Service
 	public function flush($final = false)
 	{
 		$messages = $this->messages;
-		// https://github.com/yiisoft/yii2/issues/5619
-		// new messages could be logged while the existing ones are being handled by targets
 		$this->messages = [ ];
 		if ($this->dispatcher instanceof Dispatcher) {
 			$this->dispatcher->dispatch ( $messages, $final );
@@ -202,13 +200,13 @@ class Logger extends Service
 	 * Returns the total elapsed time since the start of the current request.
 	 * This method calculates the difference between now and the timestamp
 	 * defined by constant `YII_BEGIN_TIME` which is evaluated at the beginning
-	 * of [[\leaps \BaseYii]] class file.
+	 * of [[\Leaps \Kernel]] class file.
 	 *
 	 * @return float the total elapsed time in seconds for current request.
 	 */
 	public function getElapsedTime()
 	{
-		return microtime ( true ) - YII_BEGIN_TIME;
+		return microtime ( true ) - LEAPS_BEGIN_TIME;
 	}
 	
 	/**
@@ -220,8 +218,8 @@ class Logger extends Service
 	 *
 	 * @param array $categories list of categories that you are interested in.
 	 *        You can use an asterisk at the end of a category to do a prefix match.
-	 *        For example, 'leaps \db\*' will match categories starting with 'leaps \db\',
-	 *        such as 'leaps \db\Connection'.
+	 *        For example, 'Leaps\Db\*' will match categories starting with 'Leaps\Db\',
+	 *        such as 'Leaps\Db\Connection'.
 	 * @param array $excludeCategories list of categories that you want to exclude
 	 * @return array the profiling results. Each element is an array consisting of these elements:
 	 *         `info`, `category`, `timestamp`, `trace`, `level`, `duration`.

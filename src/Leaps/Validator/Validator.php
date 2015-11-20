@@ -1,14 +1,14 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Validator;
 
 use Leaps;
-use Leaps\Base\Component;
+use Leaps\Base\Service;
 use Leaps\Base\NotSupportedException;
 
 /**
@@ -46,7 +46,7 @@ use Leaps\Base\NotSupportedException;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class Validator extends Component
+class Validator extends Service
 {
     /**
      * @var array list of built-in validators (name => class or configuration)
@@ -66,7 +66,7 @@ class Validator extends Component
         'image' => 'Leaps\Validator\ImageValidator',
         'in' => 'Leaps\Validator\RangeValidator',
         'integer' => [
-            'class' => 'Leaps\Validator\NumberValidator',
+            'className' => 'Leaps\Validator\NumberValidator',
             'integerOnly' => true,
         ],
         'match' => 'Leaps\Validator\RegularExpressionValidator',
@@ -75,7 +75,7 @@ class Validator extends Component
         'safe' => 'Leaps\Validator\SafeValidator',
         'string' => 'Leaps\Validator\StringValidator',
         'trim' => [
-            'class' => 'Leaps\Validator\FilterValidator',
+            'className' => 'Leaps\Validator\FilterValidator',
             'filter' => 'trim',
             'skipOnArray' => true,
         ],
@@ -190,7 +190,7 @@ class Validator extends Component
 
         if ($type instanceof \Closure || $model->hasMethod($type)) {
             // method-based validator
-            $params['class'] = __NAMESPACE__ . '\InlineValidator';
+            $params['className'] = __NAMESPACE__ . '\InlineValidator';
             $params['method'] = $type;
         } else {
             if (isset(static::$builtInValidators[$type])) {
@@ -199,7 +199,7 @@ class Validator extends Component
             if (is_array($type)) {
                 $params = array_merge($type, $params);
             } else {
-                $params['class'] = $type;
+                $params['className'] = $type;
             }
         }
 

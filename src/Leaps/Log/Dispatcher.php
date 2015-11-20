@@ -30,12 +30,12 @@ use Leaps\Base\ErrorHandler;
  * 'log' => [
  * 'targets' => [
  * 'file' => [
- * 'class' => 'leaps \log\FileTarget',
+ * 'className' => 'leaps \log\FileTarget',
  * 'levels' => ['trace', 'info'],
  * 'categories' => ['leaps \*'],
  * ],
  * 'email' => [
- * 'class' => 'leaps \log\EmailTarget',
+ * 'className' => 'leaps \log\EmailTarget',
  * 'levels' => ['error', 'warning'],
  * 'message' => [
  * 'to' => 'admin@example.com',

@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Rest;
@@ -19,7 +19,7 @@ use Leaps\Web\CompositeUrlRule;
  *
  * ```php
  * [
- *     'class' => 'Leaps\Rest\UrlRule',
+ *     'className' => 'Leaps\Rest\UrlRule',
  *     'controller' => 'user',
  * ]
  * ```
@@ -41,7 +41,7 @@ use Leaps\Web\CompositeUrlRule;
  *
  * ```php
  * [
- *     'class' => 'Leaps\Rest\UrlRule',
+ *     'className' => 'Leaps\Rest\UrlRule',
  *     'controller' => ['user', 'post'],
  *     'except' => ['delete'],
  * ]
@@ -125,7 +125,7 @@ class UrlRule extends CompositeUrlRule
      * @var array the default configuration for creating each URL rule contained by this rule.
      */
     public $ruleConfig = [
-        'class' => 'Leaps\Web\UrlRule',
+        'className' => 'Leaps\Web\UrlRule',
     ];
     /**
      * @var boolean whether to automatically pluralize the URL names for controllers.

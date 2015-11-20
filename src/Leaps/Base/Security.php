@@ -26,7 +26,7 @@ use Leaps\Helper\StringHelper;
  * > Note: this class requires 'OpenSSL' PHP extension for random key/string generation on Windows and
  * for encryption/decryption on all platforms. For the highest security level PHP version >= 5.5.0 is recommended.
  */
-class Security extends Component
+class Security extends Service
 {
 	/**
 	 *

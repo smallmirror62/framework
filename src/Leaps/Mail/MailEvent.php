@@ -1,11 +1,11 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
-namespace yii\mail;
+namespace Leaps\Mail;
 
 use Leaps\Base\Event;
 
@@ -20,7 +20,7 @@ use Leaps\Base\Event;
 class MailEvent extends Event
 {
     /**
-     * @var \yii\mail\MessageInterface the mail message being send.
+     * @var \Leaps\Mail\MessageInterface the mail message being send.
      */
     public $message;
     /**
@@ -29,7 +29,7 @@ class MailEvent extends Event
     public $isSuccessful;
     /**
      * @var boolean whether to continue sending an email. Event handlers of
-     * [[\yii\mail\BaseMailer::EVENT_BEFORE_SEND]] may set this property to decide whether
+     * [[\Leaps\Mail\BaseMailer::EVENT_BEFORE_SEND]] may set this property to decide whether
      * to continue send or not.
      */
     public $isValid = true;

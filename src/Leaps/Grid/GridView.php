@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Grid;
@@ -141,18 +141,18 @@ class GridView extends BaseListView
      *
      * ```php
      * [
-     *     ['class' => SerialColumn::className()],
+     *     ['className' => SerialColumn::className()],
      *     [
-     *         'class' => DataColumn::className(), // this line is optional
+     *         'className' => DataColumn::className(), // this line is optional
      *         'attribute' => 'name',
      *         'format' => 'text',
      *         'label' => 'Name',
      *     ],
-     *     ['class' => CheckboxColumn::className()],
+     *     ['className' => CheckboxColumn::className()],
      * ]
      * ```
      *
-     * If a column is of class [[DataColumn]], the "class" element can be omitted.
+     * If a column is of class [[DataColumn]], the "className" element can be omitted.
      *
      * As a shortcut format, a string may be used to specify the configuration of a data column
      * which only contains [[DataColumn::attribute|attribute]], [[DataColumn::format|format]],

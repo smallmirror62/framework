@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Web;
@@ -102,13 +102,13 @@ class Response extends \Leaps\Base\Response
     public $format = self::FORMAT_HTML;
     /**
      * @var string the MIME type (e.g. `application/json`) from the request ACCEPT header chosen for this response.
-     * This property is mainly set by [[\yii\filters\ContentNegotiator]].
+     * This property is mainly set by [[\Leaps\Filter\ContentNegotiator]].
      */
     public $acceptMimeType;
     /**
      * @var array the parameters (e.g. `['q' => 1, 'version' => '1.0']`) associated with the [[acceptMimeType|chosen MIME type]].
      * This is a list of name-value pairs associated with [[acceptMimeType]] from the ACCEPT HTTP header.
-     * This property is mainly set by [[\yii\filters\ContentNegotiator]].
+     * This property is mainly set by [[\Leaps\Filter\ContentNegotiator]].
      */
     public $acceptParams = [];
     /**
@@ -713,7 +713,7 @@ class Response extends \Leaps\Base\Response
      * client-side JavaScript code handling the redirection. To help achieve this goal,
      * this method will send out a "X-Redirect" header instead of "Location".
      *
-     * If you use the "yii" JavaScript module, it will handle the AJAX redirection as
+     * If you use the "leaps" JavaScript module, it will handle the AJAX redirection as
      * described above. Otherwise, you should write the following JavaScript code to
      * handle the redirection:
      *
@@ -913,7 +913,7 @@ class Response extends \Leaps\Base\Response
             self::FORMAT_XML => 'Leaps\Web\XmlResponseFormatter',
             self::FORMAT_JSON => 'Leaps\Web\JsonResponseFormatter',
             self::FORMAT_JSONP => [
-                'class' => 'Leaps\Web\JsonResponseFormatter',
+                'className' => 'Leaps\Web\JsonResponseFormatter',
                 'useJsonp' => true,
             ],
         ];

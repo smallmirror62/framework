@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Grid;
@@ -21,7 +21,7 @@ use Leaps\Helper\Url;
  * 'columns' => [
  *     // ...
  *     [
- *         'class' => ActionColumn::className(),
+ *         'className' => ActionColumn::className(),
  *         // you may configure additional properties here
  *     ],
  * ]
@@ -49,7 +49,7 @@ class ActionColumn extends Column
      * As an example, to only have the view, and update button you can add the ActionColumn to your GridView columns as follows:
      *
      * ```
-     * ['class' => 'Leaps\Grid\ActionColumn', 'template' => '{view} {update}'],
+     * ['className' => 'Leaps\Grid\ActionColumn', 'template' => '{view} {update}'],
      * ```
      *
      * @see buttons

@@ -1,15 +1,16 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
-namespace yii\mutex;
+namespace Leaps\Mutex;
 
 use Leaps;
-use Leaps\Base\InvalidConfigException;
 use Leaps\Helper\FileHelper;
+use Leaps\Base\InvalidConfigException;
+
 
 /**
  * FileMutex implements mutex "lock" mechanism via local file system files.
@@ -21,7 +22,7 @@ use Leaps\Helper\FileHelper;
  * [
  *     'components' => [
  *         'mutex' => [
- *             'class' => 'yii\mutex\FileMutex'
+ *             'className' => 'Leaps\Mutex\FileMutex'
  *         ],
  *     ],
  * ]

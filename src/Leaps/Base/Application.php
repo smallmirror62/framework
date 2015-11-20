@@ -50,34 +50,42 @@ abstract class Application extends Module
 	 * @event Event an event raised before the application starts to handle a request.
 	 */
 	const EVENT_BEFORE_REQUEST = 'beforeRequest';
+	
 	/**
 	 * @event Event an event raised after the application successfully handles a request (before the response is sent out).
 	 */
 	const EVENT_AFTER_REQUEST = 'afterRequest';
+	
 	/**
 	 * Application state used by [[state]]: application just started.
 	 */
 	const STATE_BEGIN = 0;
+	
 	/**
 	 * Application state used by [[state]]: application is initializing.
 	 */
 	const STATE_INIT = 1;
+	
 	/**
 	 * Application state used by [[state]]: application is triggering [[EVENT_BEFORE_REQUEST]].
 	 */
 	const STATE_BEFORE_REQUEST = 2;
+	
 	/**
 	 * Application state used by [[state]]: application is handling the request.
 	 */
 	const STATE_HANDLING_REQUEST = 3;
+	
 	/**
 	 * Application state used by [[state]]: application is triggering [[EVENT_AFTER_REQUEST]]..
 	 */
 	const STATE_AFTER_REQUEST = 4;
+	
 	/**
 	 * Application state used by [[state]]: application is about to send response.
 	 */
 	const STATE_SENDING_RESPONSE = 5;
+	
 	/**
 	 * Application state used by [[state]]: application has ended.
 	 */
@@ -92,21 +100,25 @@ abstract class Application extends Module
 	 *      Please refer to the [guide about class autoloading](guide:concept-autoloading.md) for more details.
 	 */
 	public $controllerNamespace = 'App\\Controller';
+	
 	/**
 	 *
 	 * @var string the application name.
 	 */
 	public $name = 'My Application';
+	
 	/**
 	 *
 	 * @var string the version of this application.
 	 */
 	public $version = '1.0';
+	
 	/**
 	 *
 	 * @var string the charset currently used for the application.
 	 */
 	public $charset = 'UTF-8';
+	
 	/**
 	 *
 	 * @var string the language that is meant to be used for end users. It is recommended that you
@@ -115,6 +127,7 @@ abstract class Application extends Module
 	 * @see sourceLanguage
 	 */
 	public $language = 'en-US';
+	
 	/**
 	 *
 	 * @var string the language that the application is written in. This mainly refers to
@@ -129,27 +142,32 @@ abstract class Application extends Module
 	 * @var Controller
 	 */
 	public $controller;
+	
 	/**
 	 *
 	 * @var string|boolean the layout that should be applied for views in this application. Defaults to 'main'.
 	 *      If this is false, layout will be disabled.
 	 */
 	public $layout = 'main';
+	
 	/**
 	 *
 	 * @var string the requested route
 	 */
 	public $requestedRoute;
+	
 	/**
 	 *
 	 * @var Action the requested Action. If null, it means the request cannot be resolved into an action.
 	 */
 	public $requestedAction;
+	
 	/**
 	 *
 	 * @var array the parameters supplied to the requested action.
 	 */
 	public $requestedParams;
+	
 	/**
 	 *
 	 * @var array list of installed Leaps extensions. Each array element represents a single extension
@@ -175,6 +193,7 @@ abstract class Application extends Module
 	 *      `@vendor/leaps/extensions.php`.
 	 */
 	public $extensions;
+	
 	/**
 	 *
 	 * @var array list of components that should be run during the application [[bootstrap()|bootstrapping process]].
@@ -191,12 +210,14 @@ abstract class Application extends Module
 	 *      will be also be called.
 	 */
 	public $bootstrap = [ ];
+	
 	/**
 	 *
 	 * @var integer the current application state during a request handling life cycle.
 	 *      This property is managed by the application. Do not modify this property.
 	 */
 	public $state;
+	
 	/**
 	 *
 	 * @var array list of loaded modules indexed by their class names.
@@ -204,7 +225,7 @@ abstract class Application extends Module
 	public $loadedModules = [ ];
 	
 	/**
-	 * Constructor.
+	 * 构造方法
 	 *
 	 * @param array $config name-value pairs that will be used to initialize the object properties.
 	 *        Note that the configuration must contain both [[id]] and [[basePath]].
@@ -214,18 +235,14 @@ abstract class Application extends Module
 	{
 		Leaps::$app = $this;
 		$this->setInstance ( $this );
-		
 		$this->state = self::STATE_BEGIN;
-		
 		$this->preInit ( $config );
-		
 		$this->registerErrorHandler ( $config );
-		
 		Service::__construct ( $config );
 	}
 	
 	/**
-	 * Pre-initializes the application.
+	 * 应用前置初始化
 	 * This method is called at the beginning of the application constructor.
 	 * It initializes several important application properties.
 	 * If you override this method, please make sure you call the parent implementation.
@@ -407,7 +424,6 @@ abstract class Application extends Module
 			
 			return $response->exitStatus;
 		} catch ( ExitException $e ) {
-			
 			$this->end ( $e->statusCode, isset ( $response ) ? $response : null );
 			return $e->statusCode;
 		}
@@ -476,8 +492,8 @@ abstract class Application extends Module
 	{
 		$this->_vendorPath = Leaps::getAlias ( $path );
 		Leaps::setAlias ( '@Vendor', $this->_vendorPath );
-		Leaps::setAlias ( '@Bower', $this->_vendorPath . DIRECTORY_SEPARATOR . 'bower' );
-		Leaps::setAlias ( '@Npm', $this->_vendorPath . DIRECTORY_SEPARATOR . 'npm' );
+		Leaps::setAlias ( '@bower', $this->_vendorPath . DIRECTORY_SEPARATOR . 'bower' );
+		Leaps::setAlias ( '@npm', $this->_vendorPath . DIRECTORY_SEPARATOR . 'npm' );
 	}
 	
 	/**

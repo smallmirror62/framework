@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Validator;
@@ -283,8 +283,6 @@ class DateValidator extends Validator
         // enable strict parsing to avoid getting invalid date values
         $formatter->setLenient(false);
 
-        // There should not be a warning thrown by parse() but this seems to be the case on windows so we suppress it here
-        // See https://github.com/yiisoft/yii2/issues/5962 and https://bugs.php.net/bug.php?id=68528
         $parsePos = 0;
         $parsedDate = @$formatter->parse($value, $parsePos);
         if ($parsedDate === false || $parsePos !== mb_strlen($value, Leaps::$app ? Leaps::$app->charset : 'UTF-8')) {

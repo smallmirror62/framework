@@ -100,7 +100,7 @@ class Controller extends Service implements ViewContextInterface
 	 * return [
 	 * 'action1' => 'app\components\Action1',
 	 * 'action2' => [
-	 * 'class' => 'app\components\Action2',
+	 * 'className' => 'app\components\Action2',
 	 * 'property1' => 'value1',
 	 * 'property2' => 'value2',
 	 * ],
@@ -234,7 +234,7 @@ class Controller extends Service implements ViewContextInterface
 				$this 
 			] );
 		} elseif (preg_match ( '/^[a-z0-9\\-_]+$/', $id ) && strpos ( $id, '--' ) === false && trim ( $id, '-' ) === $id) {
-			$methodName = 'action' . str_replace ( ' ', '', ucwords ( implode ( ' ', explode ( '-', $id ) ) ) );
+			$methodName = str_replace ( ' ', '', ucwords ( implode ( ' ', explode ( '-', $id ) ) ) ) . 'Action';
 			if (method_exists ( $this, $methodName )) {
 				$method = new \ReflectionMethod ( $this, $methodName );
 				if ($method->isPublic () && $method->getName () === $methodName) {
@@ -242,7 +242,6 @@ class Controller extends Service implements ViewContextInterface
 				}
 			}
 		}
-		
 		return null;
 	}
 	

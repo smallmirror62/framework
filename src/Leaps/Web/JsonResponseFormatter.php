@@ -1,14 +1,14 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Web;
 
 use Leaps;
-use Leaps\Base\Component;
+use Leaps\Base\Service;
 use Leaps\Helper\Json;
 
 /**
@@ -19,7 +19,7 @@ use Leaps\Helper\Json;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class JsonResponseFormatter extends Component implements ResponseFormatterInterface
+class JsonResponseFormatter extends Service implements ResponseFormatterInterface
 {
     /**
      * @var boolean whether to use JSONP response format. When this is true, the [[Response::data|response data]]

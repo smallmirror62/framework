@@ -1,15 +1,15 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Db;
 
 use PDO;
 use Leaps;
-use Leaps\Base\Component;
+use Leaps\Base\Service;
 use Leaps\Base\InvalidConfigException;
 use Leaps\Base\NotSupportedException;
 use Leaps\Cache\Cache;
@@ -101,7 +101,7 @@ use Leaps\Cache\Cache;
  * ~~~
  * 'components' => [
  *     'db' => [
- *         'class' => '\Leaps\Db\Connection',
+ *         'className' => '\Leaps\Db\Connection',
  *         'dsn' => 'mysql:host=127.0.0.1;dbname=demo',
  *         'username' => 'root',
  *         'password' => '',
@@ -130,7 +130,7 @@ use Leaps\Cache\Cache;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class Connection extends Component
+class Connection extends Service
 {
     /**
      * @event Event an event that is triggered after a DB connection is established
@@ -679,7 +679,7 @@ class Connection extends Component
         } else {
             $driver = $this->getDriverName();
             if (isset($this->schemaMap[$driver])) {
-                $config = !is_array($this->schemaMap[$driver]) ? ['class' => $this->schemaMap[$driver]] : $this->schemaMap[$driver];
+                $config = !is_array($this->schemaMap[$driver]) ? ['className' => $this->schemaMap[$driver]] : $this->schemaMap[$driver];
                 $config['db'] = $this;
 
                 return $this->_schema = Leaps::createObject($config);
@@ -896,8 +896,8 @@ class Connection extends Component
             return null;
         }
 
-        if (!isset($sharedConfig['class'])) {
-            $sharedConfig['class'] = get_class($this);
+        if (!isset($sharedConfig['className'])) {
+            $sharedConfig['className'] = get_class($this);
         }
 
         $cache = is_string($this->serverStatusCache) ? Leaps::$app->get($this->serverStatusCache, false) : $this->serverStatusCache;

@@ -1,11 +1,11 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
-namespace yii\mutex;
+namespace Leaps\Mutex;
 
 use Leaps;
 use Leaps\Base\InvalidConfigException;
@@ -19,11 +19,11 @@ use Leaps\Base\InvalidConfigException;
  * [
  *     'components' => [
  *         'db' => [
- *             'class' => 'Leaps\Db\Connection',
+ *             'className' => 'Leaps\Db\Connection',
  *             'dsn' => 'mysql:host=127.0.0.1;dbname=demo',
  *         ]
  *         'mutex' => [
- *             'class' => 'yii\mutex\MysqlMutex',
+ *             'className' => 'Leaps\Mutex\MysqlMutex',
  *         ],
  *     ],
  * ]

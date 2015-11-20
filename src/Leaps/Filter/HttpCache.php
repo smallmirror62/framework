@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Filter;
@@ -25,7 +25,7 @@ use Leaps\Base\Action;
  * {
  *     return [
  *         [
- *             'class' => 'Leaps\Filter\HttpCache',
+ *             'className' => 'Leaps\Filter\HttpCache',
  *             'only' => ['index'],
  *             'lastModified' => function ($action, $params) {
  *                 $q = new \Leaps\Db\Query();

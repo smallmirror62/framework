@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Base;
@@ -52,7 +52,7 @@ use Leaps\Validator\Validator;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class Model extends Component implements IteratorAggregate, ArrayAccess, Arrayable
+class Model extends Service implements IteratorAggregate, ArrayAccess, Arrayable
 {
     use ArrayableTrait;
 
@@ -701,14 +701,14 @@ class Model extends Component implements IteratorAggregate, ArrayAccess, Arrayab
 
     /**
      * This method is invoked when an unsafe attribute is being massively assigned.
-     * The default implementation will log a warning message if YII_DEBUG is on.
+     * The default implementation will log a warning message if LEAPS_DEBUG is on.
      * It does nothing otherwise.
      * @param string $name the unsafe attribute name
      * @param mixed $value the attribute value
      */
     public function onUnsafeAttribute($name, $value)
     {
-        if (YII_DEBUG) {
+        if (LEAPS_DEBUG) {
             Leaps::trace("Failed to set unsafe attribute '$name' in '" . get_class($this) . "'.", __METHOD__);
         }
     }

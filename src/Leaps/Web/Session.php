@@ -1,14 +1,14 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Web;
 
 use Leaps;
-use Leaps\Base\Component;
+use Leaps\Base\Service;
 use Leaps\Base\InvalidConfigException;
 use Leaps\Base\InvalidParamException;
 
@@ -70,7 +70,7 @@ use Leaps\Base\InvalidParamException;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Countable
+class Session extends Service implements \IteratorAggregate, \ArrayAccess, \Countable
 {
     /**
      * @var string the name of the session variable that stores the flash message data.
@@ -255,8 +255,6 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
      */
     public function regenerateID($deleteOldSession = false)
     {
-        // add @ to inhibit possible warning due to race condition
-        // https://github.com/yiisoft/yii2/pull/1812
         @session_regenerate_id($deleteOldSession);
     }
 

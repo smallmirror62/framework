@@ -29,11 +29,11 @@ use Leaps\Base\InvalidConfigException;
  * $locator = new \Leaps\Di\ServiceLocator;
  * $locator->setComponents([
  * 'db' => [
- * 'class' => 'Leaps\Db\Connection',
+ * 'className' => 'Leaps\Db\Connection',
  * 'dsn' => 'sqlite:path/to/file.db',
  * ],
  * 'cache' => [
- * 'class' => 'Leaps\Cache\DbCache',
+ * 'className' => 'Leaps\Cache\DbCache',
  * 'db' => 'db',
  * ],
  * ]);
@@ -154,7 +154,7 @@ class ServiceLocator extends Service
 	 *
 	 * // a configuration array
 	 * $locator->set('db', [
-	 * 'class' => 'leaps \db\Connection',
+	 * 'className' => 'leaps \db\Connection',
 	 * 'dsn' => 'mysql:host=127.0.0.1;dbname=demo',
 	 * 'username' => 'root',
 	 * 'password' => '',
@@ -246,11 +246,11 @@ class ServiceLocator extends Service
 	 * ```php
 	 * [
 	 * 'db' => [
-	 * 'class' => 'Leaps\Db\Connection',
+	 * 'className' => 'Leaps\Db\Connection',
 	 * 'dsn' => 'sqlite:path/to/file.db',
 	 * ],
 	 * 'cache' => [
-	 * 'class' => 'Leaps\Cache\DbCache',
+	 * 'className' => 'Leaps\Cache\DbCache',
 	 * 'db' => 'db',
 	 * ],
 	 * ]

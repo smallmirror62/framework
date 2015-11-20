@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Filter;
@@ -28,7 +28,7 @@ use Leaps\Web\MethodNotAllowedHttpException;
  * {
  *     return [
  *         'verbs' => [
- *             'class' => \Leaps\Filter\VerbFilter::className(),
+ *             'className' => \Leaps\Filter\VerbFilter::className(),
  *             'actions' => [
  *                 'index'  => ['get'],
  *                 'view'   => ['get'],

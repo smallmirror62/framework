@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 
 namespace Leaps\Captcha;
@@ -81,7 +81,7 @@ class Captcha extends InputWidget
      * @var array the HTML attributes for the input tag.
      * @see \Leaps\Helper\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
-    public $options = ['class' => 'form-control'];
+    public $options = ['className' => 'form-control'];
 
 
     /**

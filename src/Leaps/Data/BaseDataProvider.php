@@ -1,14 +1,14 @@
 <?php
 
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
  */
 namespace Leaps\Data;
 
 use Leaps;
-use Leaps\Base\Component;
+use Leaps\Base\Service;
 use Leaps\Base\InvalidParamException;
 
 /**
@@ -28,7 +28,7 @@ use Leaps\Base\InvalidParamException;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-abstract class BaseDataProvider extends Component implements DataProviderInterface
+abstract class BaseDataProvider extends Service implements DataProviderInterface
 {
 	/**
 	 *
@@ -201,7 +201,7 @@ abstract class BaseDataProvider extends Component implements DataProviderInterfa
 	{
 		if (is_array ( $value )) {
 			$config = [ 
-				'class' => Pagination::className () 
+				'className' => Pagination::className () 
 			];
 			if ($this->id !== null) {
 				$config ['pageParam'] = $this->id . '-page';
@@ -245,7 +245,7 @@ abstract class BaseDataProvider extends Component implements DataProviderInterfa
 	{
 		if (is_array ( $value )) {
 			$config = [ 
-				'class' => Sort::className () 
+				'className' => Sort::className () 
 			];
 			if ($this->id !== null) {
 				$config ['sortParam'] = $this->id . '-sort';
