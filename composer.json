@@ -5,7 +5,7 @@
   "homepage" : "http://leaps.tintsoft.com/",
    "type" : "library",
    "license" : "BSD-3-Clause",
-  "version" : "5.0",
+  "version" : "5.0.0",
    "authors" : [ {
     "name" : "Tongle Xu",
     "email" : "xutongle@gmail.com",
