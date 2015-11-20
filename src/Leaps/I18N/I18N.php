@@ -1,79 +1,76 @@
 <?php
-// +----------------------------------------------------------------------
-// | Leaps Framework [ WE CAN DO IT JUST THINK IT ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2011-2014 Leaps Team (http://www.tintsoft.com)
-// +----------------------------------------------------------------------
-// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
-// +----------------------------------------------------------------------
-// | Author XuTongle <xutongle@gmail.com>
-// +----------------------------------------------------------------------
-namespace yii\i18n;
 
-use Yii;
-use yii\base\Component;
-use yii\base\InvalidConfigException;
+/**
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
+ */
+namespace Leaps\I18n;
+
+use Leaps;
+use Leaps\Base\Service;
+use Leaps\Base\InvalidConfigException;
 
 /**
  * I18N provides features related with internationalization (I18N) and localization (L10N).
  *
- * I18N is configured as an application component in [[\yii\base\Application]] by default.
- * You can access that instance via `Yii::$app->i18n`.
+ * I18N is configured as an application component in [[\Leaps\Base\Application]] by default.
+ * You can access that instance via `Leaps::$app->i18n`.
  *
  * @property MessageFormatter $messageFormatter The message formatter to be used to format message via ICU
- * message format. Note that the type of this property differs in getter and setter. See
- * [[getMessageFormatter()]] and [[setMessageFormatter()]] for details.
- *
+ *           message format. Note that the type of this property differs in getter and setter. See
+ *           [[getMessageFormatter()]] and [[setMessageFormatter()]] for details.
+ *          
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class I18N extends Component
+class I18N extends Service
 {
 	/**
+	 *
 	 * @var array list of [[MessageSource]] configurations or objects. The array keys are message
-	 * category patterns, and the array values are the corresponding [[MessageSource]] objects or the configurations
-	 * for creating the [[MessageSource]] objects.
-	 *
-	 * The message category patterns can contain the wildcard '*' at the end to match multiple categories with the same prefix.
-	 * For example, 'app/*' matches both 'app/cat1' and 'app/cat2'.
-	 *
-	 * The '*' category pattern will match all categories that do not match any other category patterns.
-	 *
-	 * This property may be modified on the fly by extensions who want to have their own message sources
-	 * registered under their own namespaces.
-	 *
-	 * The category "yii" and "app" are always defined. The former refers to the messages used in the Yii core
-	 * framework code, while the latter refers to the default message category for custom application code.
-	 * By default, both of these categories use [[PhpMessageSource]] and the corresponding message files are
-	 * stored under "@yii/messages" and "@app/messages", respectively.
-	 *
-	 * You may override the configuration of both categories.
+	 *      category patterns, and the array values are the corresponding [[MessageSource]] objects or the configurations
+	 *      for creating the [[MessageSource]] objects.
+	 *     
+	 *      The message category patterns can contain the wildcard '*' at the end to match multiple categories with the same prefix.
+	 *      For example, 'app/*' matches both 'app/cat1' and 'app/cat2'.
+	 *     
+	 *      The '*' category pattern will match all categories that do not match any other category patterns.
+	 *     
+	 *      This property may be modified on the fly by extensions who want to have their own message sources
+	 *      registered under their own namespaces.
+	 *     
+	 *      The category "leaps" and "app" are always defined. The former refers to the messages used in the Yii core
+	 *      framework code, while the latter refers to the default message category for custom application code.
+	 *      By default, both of these categories use [[PhpMessageSource]] and the corresponding message files are
+	 *      stored under "@Leaps/Message" and "@app/messages", respectively.
+	 *     
+	 *      You may override the configuration of both categories.
 	 */
 	public $translations;
-
-
+	
 	/**
 	 * Initializes the component by configuring the default message categories.
 	 */
 	public function init()
 	{
-		parent::init();
-		if (!isset($this->translations['yii']) && !isset($this->translations['yii*'])) {
-			$this->translations['yii'] = [
-					'class' => 'yii\i18n\PhpMessageSource',
-					'sourceLanguage' => 'en-US',
-					'basePath' => '@yii/messages',
+		parent::init ();
+		if (! isset ( $this->translations ['leaps'] ) && ! isset ( $this->translations ['leaps*'] )) {
+			$this->translations ['leaps'] = [ 
+				'className' => 'Leaps\I18n\PhpMessageSource',
+				'sourceLanguage' => 'en-US',
+				'basePath' => '@Leaps/Message' 
 			];
 		}
-		if (!isset($this->translations['app']) && !isset($this->translations['app*'])) {
-			$this->translations['app'] = [
-					'class' => 'yii\i18n\PhpMessageSource',
-					'sourceLanguage' => Yii::$app->sourceLanguage,
-					'basePath' => '@app/messages',
+		if (! isset ( $this->translations ['app'] ) && ! isset ( $this->translations ['app*'] )) {
+			$this->translations ['app'] = [ 
+				'className' => 'Leaps\I18n\PhpMessageSource',
+				'sourceLanguage' => Leaps::$app->sourceLanguage,
+				'basePath' => '@app/messages' 
 			];
 		}
 	}
-
+	
 	/**
 	 * Translates a message to the specified language.
 	 *
@@ -88,15 +85,15 @@ class I18N extends Component
 	 */
 	public function translate($category, $message, $params, $language)
 	{
-		$messageSource = $this->getMessageSource($category);
-		$translation = $messageSource->translate($category, $message, $language);
+		$messageSource = $this->getMessageSource ( $category );
+		$translation = $messageSource->translate ( $category, $message, $language );
 		if ($translation === false) {
-			return $this->format($message, $params, $messageSource->sourceLanguage);
+			return $this->format ( $message, $params, $messageSource->sourceLanguage );
 		} else {
-			return $this->format($translation, $params, $language);
+			return $this->format ( $translation, $params, $language );
 		}
 	}
-
+	
 	/**
 	 * Formats a message using [[MessageFormatter]].
 	 *
@@ -107,99 +104,103 @@ class I18N extends Component
 	 */
 	public function format($message, $params, $language)
 	{
-		$params = (array) $params;
-		if ($params === []) {
+		$params = ( array ) $params;
+		if ($params === [ ]) {
 			return $message;
 		}
-
-		if (preg_match('~{\s*[\d\w]+\s*,~u', $message)) {
-			$formatter = $this->getMessageFormatter();
-			$result = $formatter->format($message, $params, $language);
+		
+		if (preg_match ( '~{\s*[\d\w]+\s*,~u', $message )) {
+			$formatter = $this->getMessageFormatter ();
+			$result = $formatter->format ( $message, $params, $language );
 			if ($result === false) {
-				$errorMessage = $formatter->getErrorMessage();
-				Yii::warning("Formatting message for language '$language' failed with error: $errorMessage. The message being formatted was: $message.", __METHOD__);
-
+				$errorMessage = $formatter->getErrorMessage ();
+				Leaps::warning ( "Formatting message for language '$language' failed with error: $errorMessage. The message being formatted was: $message.", __METHOD__ );
+				
 				return $message;
 			} else {
 				return $result;
 			}
 		}
-
-		$p = [];
-		foreach ($params as $name => $value) {
-			$p['{' . $name . '}'] = $value;
+		
+		$p = [ ];
+		foreach ( $params as $name => $value ) {
+			$p ['{' . $name . '}'] = $value;
 		}
-
-		return strtr($message, $p);
+		
+		return strtr ( $message, $p );
 	}
-
+	
 	/**
+	 *
 	 * @var string|array|MessageFormatter
 	 */
 	private $_messageFormatter;
-
+	
 	/**
 	 * Returns the message formatter instance.
+	 *
 	 * @return MessageFormatter the message formatter to be used to format message via ICU message format.
 	 */
 	public function getMessageFormatter()
 	{
 		if ($this->_messageFormatter === null) {
-			$this->_messageFormatter = new MessageFormatter();
-		} elseif (is_array($this->_messageFormatter) || is_string($this->_messageFormatter)) {
-			$this->_messageFormatter = Yii::createObject($this->_messageFormatter);
+			$this->_messageFormatter = new MessageFormatter ();
+		} elseif (is_array ( $this->_messageFormatter ) || is_string ( $this->_messageFormatter )) {
+			$this->_messageFormatter = Leaps::createObject ( $this->_messageFormatter );
 		}
-
+		
 		return $this->_messageFormatter;
 	}
-
+	
 	/**
+	 *
 	 * @param string|array|MessageFormatter $value the message formatter to be used to format message via ICU message format.
-	 * Can be given as array or string configuration that will be given to [[Yii::createObject]] to create an instance
-	 * or a [[MessageFormatter]] instance.
+	 *        Can be given as array or string configuration that will be given to [[Leaps::createObject]] to create an instance
+	 *        or a [[MessageFormatter]] instance.
 	 */
 	public function setMessageFormatter($value)
 	{
 		$this->_messageFormatter = $value;
 	}
-
+	
 	/**
 	 * Returns the message source for the given category.
+	 *
 	 * @param string $category the category name.
 	 * @return MessageSource the message source for the given category.
 	 * @throws InvalidConfigException if there is no message source available for the specified category.
 	 */
 	public function getMessageSource($category)
 	{
-		if (isset($this->translations[$category])) {
-			$source = $this->translations[$category];
+		if (isset ( $this->translations [$category] )) {
+			$source = $this->translations [$category];
 			if ($source instanceof MessageSource) {
 				return $source;
 			} else {
-				return $this->translations[$category] = Yii::createObject($source);
+				return $this->translations [$category] = Leaps::createObject ( $source );
 			}
 		} else {
 			// try wildcard matching
-			foreach ($this->translations as $pattern => $source) {
-				if (strpos($pattern, '*') > 0 && strpos($category, rtrim($pattern, '*')) === 0) {
+			foreach ( $this->translations as $pattern => $source ) {
+				if (strpos ( $pattern, '*' ) > 0 && strpos ( $category, rtrim ( $pattern, '*' ) ) === 0) {
 					if ($source instanceof MessageSource) {
 						return $source;
 					} else {
-						return $this->translations[$category] = $this->translations[$pattern] = Yii::createObject($source);
+						return $this->translations [$category] = $this->translations [$pattern] = Leaps::createObject ( $source );
 					}
 				}
 			}
 			// match '*' in the last
-			if (isset($this->translations['*'])) {
-				$source = $this->translations['*'];
+			if (isset ( $this->translations ['*'] )) {
+				$source = $this->translations ['*'];
 				if ($source instanceof MessageSource) {
 					return $source;
 				} else {
-					return $this->translations[$category] = $this->translations['*'] = Yii::createObject($source);
+					return $this->translations [$category] = $this->translations ['*'] = Leaps::createObject ( $source );
 				}
 			}
 		}
-
-		throw new InvalidConfigException("Unable to locate message source for category '$category'.");
+		
+		throw new InvalidConfigException ( "Unable to locate message source for category '$category'." );
 	}
 }

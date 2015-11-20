@@ -9,92 +9,136 @@
 // | Author XuTongle <xutongle@gmail.com>
 // +----------------------------------------------------------------------
 namespace Leaps\Console;
-use Leaps;
-class Application extends \Leaps\Core\Application
-{
 
+use Leaps;
+use Leaps\Base\InvalidRouteException;
+
+// define STDIN, STDOUT and STDERR if the PHP SAPI did not define them (e.g. creating console application in web env)
+// http://php.net/manual/en/features.commandline.io-streams.php
+defined ( 'STDIN' ) or define ( 'STDIN', fopen ( 'php://stdin', 'r' ) );
+defined ( 'STDOUT' ) or define ( 'STDOUT', fopen ( 'php://stdout', 'w' ) );
+defined ( 'STDERR' ) or define ( 'STDERR', fopen ( 'php://stderr', 'w' ) );
+
+/**
+ * Application represents a console application.
+ *
+ * Application extends from [[\Leaps\Base\Application]] by providing functionalities that are
+ * specific to console requests. In particular, it deals with console requests
+ * through a command-based approach:
+ *
+ * - A console application consists of one or several possible user commands;
+ * - Each user command is implemented as a class extending [[\Leaps\Console\Controller]];
+ * - User specifies which command to run on the command line;
+ * - The command processes the user request with the specified parameters.
+ *
+ * The command classes should be under the namespace specified by [[controllerNamespace]].
+ * Their naming should follow the same naming convention as controllers. For example, the `help` command
+ * is implemented using the `HelpController` class.
+ *
+ * To run the console application, enter the following on the command line:
+ *
+ * ~~~
+ * Leaps <route> [--param1=value1 --param2 ...]
+ * ~~~
+ *
+ * where `<route>` refers to a controller route in the form of `ModuleID/ControllerID/ActionID`
+ * (e.g. `sitemap/create`), and `param1`, `param2` refers to a set of named parameters that
+ * will be used to initialize the controller action (e.g. `--since=0` specifies a `since` parameter
+ * whose value is 0 and a corresponding `$since` parameter is passed to the action method).
+ *
+ * A `help` command is provided by default, which lists available commands and shows their usage.
+ * To use this command, simply type:
+ *
+ * ~~~
+ * Leaps help
+ * ~~~
+ */
+class Application extends \Leaps\Base\Application
+{
 	/**
-	 * 指定程序配置文件的参数
-	 * @var string
+	 * The option name for specifying the application configuration file path.
 	 */
 	const OPTION_APPCONFIG = 'appconfig';
-
+	
 	/**
-	 * 默认路由
-	 * @var string
+	 *
+	 * @var string the default route of this application. Defaults to 'help',
+	 *      meaning the `help` command.
 	 */
 	public $defaultRoute = 'help';
-
-	public $controllerNamespace = 'App\Console\Controller';
-
 	/**
-	 * 是否启用核心框架提供的命令
-	 * @var boolean 默认是true
+	 *
+	 * @var boolean whether to enable the commands provided by the core framework.
+	 *      Defaults to true.
 	 */
 	public $enableCoreCommands = true;
-
 	/**
-	 * 控制器实例
-	 * @var Controller
+	 *
+	 * @var Controller the currently active controller instance
 	 */
 	public $controller;
-
+	
 	/**
 	 * @inheritdoc
 	 */
 	public function __construct($config = [])
 	{
-		$config = $this->loadConfig($config);
-		parent::__construct($config);
+		$config = $this->loadConfig ( $config );
+		parent::__construct ( $config );
 	}
-
+	
 	/**
-	 * 加载配置
-	 * 如果启动时指定参数 [[OPTION_APPCONFIG]] 则加载该文件
+	 * Loads the configuration.
+	 * This method will check if the command line option [[OPTION_APPCONFIG]] is specified.
+	 * If so, the corresponding file will be loaded as the application configuration.
+	 * Otherwise, the configuration provided as the parameter will be returned back.
+	 *
 	 * @param array $config the configuration provided in the constructor.
 	 * @return array the actual configuration to be used by the application.
 	 */
 	protected function loadConfig($config)
 	{
-		if (!empty($_SERVER['argv'])) {
+		if (! empty ( $_SERVER ['argv'] )) {
 			$option = '--' . self::OPTION_APPCONFIG . '=';
-			foreach ($_SERVER['argv'] as $param) {
-				if (strpos($param, $option) !== false) {
-					$path = substr($param, strlen($option));
-					if (!empty($path) && is_file($file = Leaps::getAlias($path))) {
-						return require($file);
+			foreach ( $_SERVER ['argv'] as $param ) {
+				if (strpos ( $param, $option ) !== false) {
+					$path = substr ( $param, strlen ( $option ) );
+					if (! empty ( $path ) && is_file ( $file = Leaps::getAlias ( $path ) )) {
+						return require ($file);
 					} else {
-						die("The configuration file does not exist: $path\n");
+						exit ( "The configuration file does not exist: $path\n" );
 					}
 				}
 			}
 		}
+		
 		return $config;
 	}
-
+	
 	/**
-	 * 初始化应用
+	 * Initialize the application.
 	 */
 	public function init()
 	{
-		parent::init();
+		parent::init ();
 		if ($this->enableCoreCommands) {
-			foreach ($this->coreCommands() as $id => $command) {
-				if (!isset($this->controllerMap[$id])) {
-					$this->controllerMap[$id] = $command;
+			foreach ( $this->coreCommands () as $id => $command ) {
+				if (! isset ( $this->controllerMap [$id] )) {
+					$this->controllerMap [$id] = $command;
 				}
 			}
 		}
 		// ensure we have the 'help' command so that we can list the available commands
-		if (!isset($this->controllerMap['help'])) {
-			$this->controllerMap['help'] = 'Leaps\Console\Controller\HelpController';
+		if (! isset ( $this->controllerMap ['help'] )) {
+			$this->controllerMap ['help'] = 'Leaps\Console\Controller\HelpController';
 		}
 	}
-
+	
 	/**
-	 * (non-PHPdoc)
+	 * Handles the specified request.
 	 *
-	 * @see \Leaps\Core\Application::handleRequest()
+	 * @param Request $request the request to be handled
+	 * @return Response the resulting response
 	 */
 	public function handleRequest($request)
 	{
@@ -106,59 +150,63 @@ class Application extends \Leaps\Core\Application
 		} else {
 			$response = $this->getResponse ();
 			$response->exitStatus = $result;
+			
 			return $response;
 		}
 	}
-
+	
 	/**
-	 * 运行一个控制器动作指定的路线。
+	 * Runs a controller action specified by a route.
+	 * This method parses the specified route and creates the corresponding child module(s), controller and action
+	 * instances. It then calls [[Controller::runAction()]] to run the action with the given parameters.
+	 * If the route is empty, the method will use [[defaultRoute]].
 	 *
 	 * @param string $route the route that specifies the action.
 	 * @param array $params the parameters to be passed to the action
-	 * @return integer the status code returned by the action execution. 0 means
-	 *         normal, and other values mean abnormal.
+	 * @return integer the status code returned by the action execution. 0 means normal, and other values mean abnormal.
 	 * @throws Exception if the route is invalid
 	 */
 	public function runAction($route, $params = [])
 	{
 		try {
 			return ( int ) parent::runAction ( $route, $params );
-		} catch ( \Exception $e ) {
+		} catch ( InvalidRouteException $e ) {
 			throw new Exception ( "Unknown command \"$route\".", 0, $e );
 		}
 	}
-
+	
 	/**
-	 * 返回响应组件。
+	 * Returns the configuration of the built-in commands.
 	 *
-	 * @return Response the response component
-	 */
-	public function getResponse()
-	{
-		return $this->get ( 'response' );
-	}
-
-	/**
-	 * 返回核心命令配置
 	 * @return array the configuration of the built-in commands.
 	 */
 	public function coreCommands()
 	{
-		return [
-				'help' => 'Leaps\Console\Controller\HelpController',
-				'cache' => 'Leaps\Console\Controller\CacheController'
+		return [ 
+			'message' => 'Leaps\Console\Controller\MessageController',
+			'help' => 'Leaps\Console\Controller\HelpController',
+			'migrate' => 'Leaps\Console\Controller\MigrateController',
+			'cache' => 'Leaps\Console\Controller\CacheController',
+			'asset' => 'Leaps\Console\Controller\AssetController',
+			'fixture' => 'Leaps\Console\Controller\FixtureController' 
 		];
 	}
-
+	
 	/**
-	 * (non-PHPdoc)
-	 *
-	 * @see \Leaps\Core\Application::coreServices()
+	 * @inheritdoc
 	 */
 	public function coreServices()
 	{
-		return array_merge ( parent::coreServices (), [ 'request' => [ 'className' => 'Leaps\Console\Request' ],'response' => [ 'className' => 'Leaps\Console\Response' ],'errorhandler' => [ 'className' => 'Leaps\Console\ErrorHandler' ] ]
-
-		 );
+		return array_merge ( parent::coreServices (), [ 
+			'request' => [ 
+				'className' => 'Leaps\Console\Request' 
+			],
+			'response' => [ 
+				'className' => 'Leaps\Console\Response' 
+			],
+			'errorHandler' => [ 
+				'className' => 'Leaps\Console\ErrorHandler' 
+			] 
+		] );
 	}
 }

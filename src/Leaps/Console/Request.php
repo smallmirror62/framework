@@ -10,14 +10,25 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Console;
 
-class Request extends \Leaps\Core\Base
+/**
+ * The console Request represents the environment information for a console application.
+ *
+ * It is a wrapper for the PHP `$_SERVER` variable which holds information about the
+ * currently running PHP script and the command line arguments given to it.
+ *
+ * @property array $params The command line arguments. It does not include the entry script name.
+ *          
+ * @author Qiang Xue <qiang.xue@gmail.com>
+ * @since 2.0
+ */
+class Request extends \Leaps\Base\Request
 {
 	private $_params;
-
+	
 	/**
-	 * 获取命令行参数
+	 * Returns the command line arguments.
 	 *
-	 * @return array
+	 * @return array the command line arguments. It does not include the entry script name.
 	 */
 	public function getParams()
 	{
@@ -29,11 +40,12 @@ class Request extends \Leaps\Core\Base
 				$this->_params = [ ];
 			}
 		}
+		
 		return $this->_params;
 	}
-
+	
 	/**
-	 * 设置命令行参数
+	 * Sets the command line arguments.
 	 *
 	 * @param array $params the command line arguments
 	 */
@@ -41,11 +53,11 @@ class Request extends \Leaps\Core\Base
 	{
 		$this->_params = $params;
 	}
-
+	
 	/**
-	 * (non-PHPdoc)
+	 * Resolves the current request into a route and the associated parameters.
 	 *
-	 * @see \Leaps\Http\RequestInterface::resolve()
+	 * @return array the first element is the route, and the second is the associated parameters.
 	 */
 	public function resolve()
 	{
@@ -56,15 +68,22 @@ class Request extends \Leaps\Core\Base
 		} else {
 			$route = '';
 		}
+		
 		$params = [ ];
 		foreach ( $rawParams as $param ) {
 			if (preg_match ( '/^--(\w+)(=(.*))?$/', $param, $matches )) {
 				$name = $matches [1];
-				$params [$name] = isset ( $matches [3] ) ? $matches [3] : true;
+				if ($name !== Application::OPTION_APPCONFIG) {
+					$params [$name] = isset ( $matches [3] ) ? $matches [3] : true;
+				}
 			} else {
 				$params [] = $param;
 			}
 		}
-		return [ $route,$params ];
+		
+		return [ 
+			$route,
+			$params 
+		];
 	}
 }

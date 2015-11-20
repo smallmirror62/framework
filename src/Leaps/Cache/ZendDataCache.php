@@ -1,63 +1,84 @@
 <?php
-// +----------------------------------------------------------------------
-// | Leaps Framework [ WE CAN DO IT JUST THINK IT ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2011-2014 Leaps Team (http://www.tintsoft.com)
-// +----------------------------------------------------------------------
-// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
-// +----------------------------------------------------------------------
-// | Author XuTongle <xutongle@gmail.com>
-// +----------------------------------------------------------------------
+/**
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
+ */
+
 namespace Leaps\Cache;
 
 /**
  * ZendDataCache provides Zend data caching in terms of an application component.
+ *
+ * To use this application component, the [Zend Data Cache PHP extension](http://www.zend.com/en/products/server/)
+ * must be loaded.
+ *
+ * See [[Cache]] for common cache operations that ZendDataCache supports.
+ *
+ * @author Qiang Xue <qiang.xue@gmail.com>
+ * @since 2.0
  */
-class ZendDataCache extends Adapter
+class ZendDataCache extends Cache
 {
-	/**
-	 * (non-PHPdoc)
-	 * @see \Leaps\Cache\Adapter::getValue()
-	 */
-	protected function getValue($key)
-	{
-		$result = zend_shm_cache_fetch($key);
-		return $result === null ? false : $result;
-	}
+    /**
+     * Retrieves a value from cache with a specified key.
+     * This is the implementation of the method declared in the parent class.
+     * @param string $key a unique key identifying the cached value
+     * @return string|boolean the value stored in cache, false if the value is not in the cache or expired.
+     */
+    protected function getValue($key)
+    {
+        $result = zend_shm_cache_fetch($key);
 
-	/**
-	 * (non-PHPdoc)
-	 * @see \Leaps\Cache\Adapter::setValue()
-	 */
-	protected function setValue($key, $value, $duration)
-	{
-		return zend_shm_cache_store($key, $value, $duration);
-	}
+        return $result === null ? false : $result;
+    }
 
-	/**
-	 * (non-PHPdoc)
-	 * @see \Leaps\Cache\Adapter::addValue()
-	 */
-	protected function addValue($key, $value, $duration)
-	{
-		return zend_shm_cache_fetch($key) === null ? $this->setValue($key, $value, $duration) : false;
-	}
+    /**
+     * Stores a value identified by a key in cache.
+     * This is the implementation of the method declared in the parent class.
+     *
+     * @param string $key the key identifying the value to be cached
+     * @param string $value the value to be cached
+     * @param integer $duration the number of seconds in which the cached value will expire. 0 means never expire.
+     * @return boolean true if the value is successfully stored into cache, false otherwise
+     */
+    protected function setValue($key, $value, $duration)
+    {
+        return zend_shm_cache_store($key, $value, $duration);
+    }
 
-	/**
-	 * (non-PHPdoc)
-	 * @see \Leaps\Cache\Adapter::deleteValue()
-	 */
-	protected function deleteValue($key)
-	{
-		return zend_shm_cache_delete($key);
-	}
+    /**
+     * Stores a value identified by a key into cache if the cache does not contain this key.
+     * This is the implementation of the method declared in the parent class.
+     *
+     * @param string $key the key identifying the value to be cached
+     * @param string $value the value to be cached
+     * @param integer $duration the number of seconds in which the cached value will expire. 0 means never expire.
+     * @return boolean true if the value is successfully stored into cache, false otherwise
+     */
+    protected function addValue($key, $value, $duration)
+    {
+        return zend_shm_cache_fetch($key) === null ? $this->setValue($key, $value, $duration) : false;
+    }
 
-	/**
-	 * (non-PHPdoc)
-	 * @see \Leaps\Cache\Adapter::flushValues()
-	 */
-	protected function flushValues()
-	{
-		return zend_shm_cache_clear();
-	}
+    /**
+     * Deletes a value with the specified key from cache
+     * This is the implementation of the method declared in the parent class.
+     * @param string $key the key of the value to be deleted
+     * @return boolean if no error happens during deletion
+     */
+    protected function deleteValue($key)
+    {
+        return zend_shm_cache_delete($key);
+    }
+
+    /**
+     * Deletes all values from cache.
+     * This is the implementation of the method declared in the parent class.
+     * @return boolean whether the flush operation was successful.
+     */
+    protected function flushValues()
+    {
+        return zend_shm_cache_clear();
+    }
 }

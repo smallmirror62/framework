@@ -17,10 +17,10 @@ use Leaps\Web\HttpException;
 /**
  * ErrorHandler handles uncaught PHP errors and exceptions.
  *
- * ErrorHandler is configured as an application component in [[\yii\base\Application]] by default.
- * You can access that instance via `Yii::$app->errorHandler`.
+ * ErrorHandler is configured as an application component in [[\Leaps\Base\Application]] by default.
+ * You can access that instance via `Leaps::$app->errorHandler`.
  */
-abstract class ErrorHandler extends Component
+abstract class ErrorHandler extends Service
 {
 	/**
 	 *

@@ -10,23 +10,19 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Console;
 
-use Leaps\Core\UserException;
+use Leaps\Base\UserException;
 
 /**
- * 控制台命令异常
- *
- * @author Tongle Xu <xutongle@gmail.com>
- * @since 4.0
+ * Exception represents an exception caused by incorrect usage of a console command.
  */
 class Exception extends UserException
 {
 	/**
-	 * 返回用户友好的异常名称
 	 *
-	 * @return string
+	 * @return string the user-friendly name of this exception
 	 */
 	public function getName()
 	{
-		return 'System Error';
+		return 'Error';
 	}
 }

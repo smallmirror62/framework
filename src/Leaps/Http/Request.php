@@ -414,7 +414,7 @@ class Request extends Injectable implements RequestInterface
 	 * By default this is determined based on the user request information.
 	 * You may explicitly specify it by setting the [[setHostInfo()|hostInfo]] property.
 	 *
-	 * @return string schema and hostname part (with port number if needed) of the request URL (e.g. `http://www.yiiframework.com`)
+	 * @return string schema and hostname part (with port number if needed) of the request URL (e.g. `http://www.tintsoft.com`)
 	 * @see setHostInfo()
 	 */
 	public function getHostInfo()
