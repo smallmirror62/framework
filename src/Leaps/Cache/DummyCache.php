@@ -1,59 +1,81 @@
 <?php
-// +----------------------------------------------------------------------
-// | Leaps Framework [ WE CAN DO IT JUST THINK IT ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2011-2014 Leaps Team (http://www.tintsoft.com)
-// +----------------------------------------------------------------------
-// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
-// +----------------------------------------------------------------------
-// | Author XuTongle <xutongle@gmail.com>
-// +----------------------------------------------------------------------
+/**
+ * @link http://www.tintsoft.com/
+ * @copyright Copyright (c) 2015 TintSoft
+ * @license http://www.tintsoft.com/license/
+ */
+
 namespace Leaps\Cache;
 
-class DummyCache extends Adapter
+/**
+ * DummyCache is a placeholder cache component.
+ *
+ * DummyCache does not cache anything. It is provided so that one can always configure
+ * a 'cache' application component and save the check of existence of `\Leaps::$app->cache`.
+ * By replacing DummyCache with some other cache component, one can quickly switch from
+ * non-caching mode to caching mode.
+ *
+ * @author Qiang Xue <qiang.xue@gmail.com>
+ * @since 2.0
+ */
+class DummyCache extends Cache
 {
-	/**
-	 * (non-PHPdoc)
-	 * @see \Leaps\Cache\Adapter::getValue()
-	 */
-	protected function getValue($key)
-	{
-		return false;
-	}
+    /**
+     * Retrieves a value from cache with a specified key.
+     * This is the implementation of the method declared in the parent class.
+     * @param string $key a unique key identifying the cached value
+     * @return string|boolean the value stored in cache, false if the value is not in the cache or expired.
+     */
+    protected function getValue($key)
+    {
+        return false;
+    }
 
-	/**
-	 * (non-PHPdoc)
-	 * @see \Leaps\Cache\Adapter::setValue()
-	 */
-	protected function setValue($key, $value, $duration)
-	{
-		return true;
-	}
+    /**
+     * Stores a value identified by a key in cache.
+     * This is the implementation of the method declared in the parent class.
+     *
+     * @param string $key the key identifying the value to be cached
+     * @param string $value the value to be cached
+     * @param integer $duration the number of seconds in which the cached value will expire. 0 means never expire.
+     * @return boolean true if the value is successfully stored into cache, false otherwise
+     */
+    protected function setValue($key, $value, $duration)
+    {
+        return true;
+    }
 
-	/**
-	 * (non-PHPdoc)
-	 * @see \Leaps\Cache\Adapter::addValue()
-	 */
-	protected function addValue($key, $value, $duration)
-	{
-		return true;
-	}
+    /**
+     * Stores a value identified by a key into cache if the cache does not contain this key.
+     * This is the implementation of the method declared in the parent class.
+     * @param string $key the key identifying the value to be cached
+     * @param string $value the value to be cached
+     * @param integer $duration the number of seconds in which the cached value will expire. 0 means never expire.
+     * @return boolean true if the value is successfully stored into cache, false otherwise
+     */
+    protected function addValue($key, $value, $duration)
+    {
+        return true;
+    }
 
-	/**
-	 * (non-PHPdoc)
-	 * @see \Leaps\Cache\Adapter::deleteValue()
-	 */
-	protected function deleteValue($key)
-	{
-		return true;
-	}
+    /**
+     * Deletes a value with the specified key from cache
+     * This is the implementation of the method declared in the parent class.
+     * @param string $key the key of the value to be deleted
+     * @return boolean if no error happens during deletion
+     */
+    protected function deleteValue($key)
+    {
+        return true;
+    }
 
-	/**
-	 * (non-PHPdoc)
-	 * @see \Leaps\Cache\Adapter::flushValues()
-	 */
-	protected function flushValues()
-	{
-		return true;
-	}
+    /**
+     * Deletes all values from cache.
+     * This is the implementation of the method declared in the parent class.
+     * @return boolean whether the flush operation was successful.
+     */
+    protected function flushValues()
+    {
+        return true;
+    }
 }

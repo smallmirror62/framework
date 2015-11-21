@@ -77,7 +77,7 @@ class Module extends ServiceLocator
 	 *      Each name-value pair specifies the configuration of a single controller.
 	 *      A controller configuration can be either a string or an array.
 	 *      If the former, the string should be the fully qualified class name of the controller.
-	 *      If the latter, the array must contain a 'class' element which specifies
+	 *      If the latter, the array must contain a 'className' element which specifies
 	 *      the controller's fully qualified class name, and the rest of the name-value pairs
 	 *      in the array are used to initialize the corresponding controller properties. For example,
 	 *     
@@ -85,7 +85,7 @@ class Module extends ServiceLocator
 	 *      [
 	 *      'account' => 'App\Controller\UserController',
 	 *      'article' => [
-	 *      'class' => 'App\Controller\PostController',
+	 *      'className' => 'App\Controller\PostController',
 	 *      'pageTitle' => 'something new',
 	 *      ],
 	 *      ]
@@ -449,10 +449,10 @@ class Module extends ServiceLocator
 	 * ~~~
 	 * [
 	 * 'comment' => [
-	 * 'class' => 'App\Module\Comment\CommentModule',
+	 * 'className' => 'App\Module\Comment\CommentModule',
 	 * 'db' => 'db',
 	 * ],
-	 * 'booking' => ['class' => 'App\Module\Book\BookingModule'],
+	 * 'booking' => ['className' => 'App\Module\Book\BookingModule'],
 	 * ]
 	 * ~~~
 	 *

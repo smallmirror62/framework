@@ -12,143 +12,277 @@ namespace Leaps;
 
 use Leaps\Log\Logger;
 use Leaps\Di\Container;
-use Leaps\Core\InvalidConfigException;
-use Leaps\Core\UnknownClassException;
-use Leaps\Core\InvalidParamException;
+use Leaps\Base\InvalidConfigException;
+use Leaps\Base\InvalidParamException;
+use Leaps\Base\UnknownClassException;
 
 /**
- * Leaps 基类
+ * Gets the application start timestamp.
+ */
+defined ( 'LEAPS_BEGIN_TIME' ) or define ( 'LEAPS_BEGIN_TIME', microtime ( true ) );
+/**
+ * This constant defines the framework installation directory.
+ */
+defined ( 'LEAPS_PATH' ) or define ( 'LEAPS_PATH', __DIR__ );
+/**
+ * This constant defines whether the application should be in debug mode or not.
+ * Defaults to false.
+ */
+defined ( 'LEAPS_DEBUG' ) or define ( 'LEAPS_DEBUG', false );
+/**
+ * This constant defines in which environment the application is running.
+ * Defaults to 'prod', meaning production environment.
+ * You may define this constant in the bootstrap script. The value could be 'prod' (production), 'dev' (development), 'test', 'staging', etc.
+ */
+defined ( 'LEAPS_ENV' ) or define ( 'LEAPS_ENV', 'prod' );
+/**
+ * Whether the the application is running in production environment
+ */
+defined ( 'LEAPS_ENV_PROD' ) or define ( 'LEAPS_ENV_PROD', LEAPS_ENV === 'prod' );
+/**
+ * Whether the the application is running in development environment
+ */
+defined ( 'LEAPS_ENV_DEV' ) or define ( 'LEAPS_ENV_DEV', LEAPS_ENV === 'dev' );
+/**
+ * Whether the the application is running in testing environment
+ */
+defined ( 'LEAPS_ENV_TEST' ) or define ( 'LEAPS_ENV_TEST', LEAPS_ENV === 'test' );
+
+/**
+ * This constant defines whether error handling should be enabled.
+ * Defaults to true.
+ */
+defined ( 'LEAPS_ENABLE_ERROR_HANDLER' ) or define ( 'LEAPS_ENABLE_ERROR_HANDLER', true );
+
+/**
+ * BaseLeaps is the core helper class for the Leaps framework.
  *
- * @author xutongle
+ * Do not use BaseLeaps directly. Instead, use its child class [[\Leaps]] which you can replace to
+ * customize methods of BaseLeaps.
  *
+ * @author Qiang Xue <qiang.xue@gmail.com>
+ * @since 2.0
  */
 class Kernel
 {
 	/**
-	 * 路径别名集合
 	 *
-	 * @var array
-	 */
-	public static $aliases = [ ];
-
-	/**
-	 * classMap
-	 *
-	 * @var array
+	 * @var array class map used by the Leaps autoloading mechanism.
+	 *      The array keys are the class names (without leading backslashes), and the array values
+	 *      are the corresponding class file paths (or path aliases). This property mainly affects
+	 *      how [[autoload()]] works.
+	 * @see autoload()
 	 */
 	public static $classMap = [ ];
-
 	/**
-	 * 依赖注入容器
-	 * @var \Leaps\Di\Container
-	 */
-	public static $container;
-
-	/**
-	 * 应用实例
 	 *
-	 * @var \Leaps\Core\Application
+	 * @var \Leaps\console\Application|\Leaps\web\Application the application instance
 	 */
 	public static $app;
-
 	/**
-	 * 设置应用程序实例
 	 *
-	 * @param \Leaps\Core\Application $application
-	 * @throws InvalidParamException
+	 * @var array registered path aliases
+	 * @see getAlias()
+	 * @see setAlias()
 	 */
-	public static function setApp($application)
+	public static $aliases = [ 
+		'@Leaps' => __DIR__ 
+	];
+	/**
+	 *
+	 * @var Container the dependency injection (DI) container used by [[createObject()]].
+	 *      You may use [[Container::set()]] to set up the needed dependencies of classes and
+	 *      their initial property values.
+	 * @see createObject()
+	 * @see Container
+	 */
+	public static $container;
+	
+	/**
+	 * Returns a string representing the current version of the Leaps framework.
+	 *
+	 * @return string the version of Leaps framework
+	 */
+	public static function getVersion()
 	{
-		if (static::$app !== null)
-			throw new InvalidParamException ( 'application invalid' );
-		static::$app = $application;
+		return '2.0.6';
 	}
-
+	
 	/**
-	 * 返回应用程序实例
+	 * Translates a path alias into an actual path.
 	 *
-	 * @return Leaps\Core\Application 应用程序实例
+	 * The translation is done according to the following procedure:
+	 *
+	 * 1. If the given alias does not start with '@', it is returned back without change;
+	 * 2. Otherwise, look for the longest registered alias that matches the beginning part
+	 * of the given alias. If it exists, replace the matching part of the given alias with
+	 * the corresponding registered path.
+	 * 3. Throw an exception or return false, depending on the `$throwException` parameter.
+	 *
+	 * For example, by default '@Leaps' is registered as the alias to the Leaps framework directory,
+	 * say '/path/to/Leaps'. The alias '@Leaps/web' would then be translated into '/path/to/Leaps/web'.
+	 *
+	 * If you have registered two aliases '@foo' and '@foo/bar'. Then translating '@foo/bar/config'
+	 * would replace the part '@foo/bar' (instead of '@foo') with the corresponding registered path.
+	 * This is because the longest alias takes precedence.
+	 *
+	 * However, if the alias to be translated is '@foo/barbar/config', then '@foo' will be replaced
+	 * instead of '@foo/bar', because '/' serves as the boundary character.
+	 *
+	 * Note, this method does not check if the returned path exists or not.
+	 *
+	 * @param string $alias the alias to be translated.
+	 * @param boolean $throwException whether to throw an exception if the given alias is invalid.
+	 *        If this is false and an invalid alias is given, false will be returned by this method.
+	 * @return string|boolean the path corresponding to the alias, false if the root alias is not previously registered.
+	 * @throws InvalidParamException if the alias is invalid while $throwException is true.
+	 * @see setAlias()
 	 */
-	public static function app()
+	public static function getAlias($alias, $throwException = true)
 	{
-		if (static::$app == null) {
-			throw new InvalidParamException ( 'application invalid' );
+		if (strncmp ( $alias, '@', 1 )) {
+			// not an alias
+			return $alias;
 		}
-		return static::$app;
-	}
-
-	/**
-	 * 创建新的对象
-	 * 直接传类名来创建对象
-	 * \Leaps\Kernel::createObject('Leaps\HttpClient\Adapter\Curl');
-	 * //直接传匿名方法来创建支持参数
-	 * \Leaps\Kernel::createObject(function(){
-	 * return new \Leaps\HttpClient\Adapter\Curl();
-	 * },[]);
-	 * 使用类构造方法来创建对象
-	 * \Leaps\Kernel::createObject(['className'=>'Leaps\HttpClient\Adapter\Curl','hostIp'=>'127.0.0.1']);
-	 *
-	 * @param string/array $definition
-	 * @param array $parameters
-	 * @throws InvalidConfigException
-	 * @return object
-	 */
-	public static function createObject($definition, $parameters = [], $throwException = true)
-	{
-		$instance = null;
-		if (is_string ( $definition )) {
-			if (class_exists ( $definition )) {
-				$reflection = new \ReflectionClass ( $definition );
-				if (is_array ( $parameters )) {
-					$instance = $reflection->newInstanceArgs ( $parameters );
-				} else {
-					$instance = $reflection->newInstance ();
+		
+		$pos = strpos ( $alias, '/' );
+		$root = $pos === false ? $alias : substr ( $alias, 0, $pos );
+		
+		if (isset ( static::$aliases [$root] )) {
+			if (is_string ( static::$aliases [$root] )) {
+				return $pos === false ? static::$aliases [$root] : static::$aliases [$root] . substr ( $alias, $pos );
+			} else {
+				foreach ( static::$aliases [$root] as $name => $path ) {
+					if (strpos ( $alias . '/', $name . '/' ) === 0) {
+						return $path . substr ( $alias, strlen ( $name ) );
+					}
 				}
 			}
-		} elseif (is_object ( $definition )) {
-			if ($definition instanceof \Closure) {
-				if (is_array ( $definition )) {
-					$instance = call_user_func_array ( $definition, $parameters );
+		}
+		
+		if ($throwException) {
+			throw new InvalidParamException ( "Invalid path alias: $alias" );
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Returns the root alias part of a given alias.
+	 * A root alias is an alias that has been registered via [[setAlias()]] previously.
+	 * If a given alias matches multiple root aliases, the longest one will be returned.
+	 *
+	 * @param string $alias the alias
+	 * @return string|boolean the root alias, or false if no root alias is found
+	 */
+	public static function getRootAlias($alias)
+	{
+		$pos = strpos ( $alias, '/' );
+		$root = $pos === false ? $alias : substr ( $alias, 0, $pos );
+		
+		if (isset ( static::$aliases [$root] )) {
+			if (is_string ( static::$aliases [$root] )) {
+				return $root;
+			} else {
+				foreach ( static::$aliases [$root] as $name => $path ) {
+					if (strpos ( $alias . '/', $name . '/' ) === 0) {
+						return $name;
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Registers a path alias.
+	 *
+	 * A path alias is a short name representing a long path (a file path, a URL, etc.)
+	 * For example, we use '@Leaps' as the alias of the path to the Leaps framework directory.
+	 *
+	 * A path alias must start with the character '@' so that it can be easily differentiated
+	 * from non-alias paths.
+	 *
+	 * Note that this method does not check if the given path exists or not. All it does is
+	 * to associate the alias with the path.
+	 *
+	 * Any trailing '/' and '\' characters in the given path will be trimmed.
+	 *
+	 * @param string $alias the alias name (e.g. "@Leaps"). It must start with a '@' character.
+	 *        It may contain the forward slash '/' which serves as boundary character when performing
+	 *        alias translation by [[getAlias()]].
+	 * @param string $path the path corresponding to the alias. If this is null, the alias will
+	 *        be removed. Trailing '/' and '\' characters will be trimmed. This can be
+	 *       
+	 *        - a directory or a file path (e.g. `/tmp`, `/tmp/main.txt`)
+	 *        - a URL (e.g. `http://www.Leapsframework.com`)
+	 *        - a path alias (e.g. `@Leaps/base`). In this case, the path alias will be converted into the
+	 *        actual path first by calling [[getAlias()]].
+	 *       
+	 * @throws InvalidParamException if $path is an invalid alias.
+	 * @see getAlias()
+	 */
+	public static function setAlias($alias, $path)
+	{
+		if (strncmp ( $alias, '@', 1 )) {
+			$alias = '@' . $alias;
+		}
+		$pos = strpos ( $alias, '/' );
+		$root = $pos === false ? $alias : substr ( $alias, 0, $pos );
+		if ($path !== null) {
+			$path = strncmp ( $path, '@', 1 ) ? rtrim ( $path, '\\/' ) : static::getAlias ( $path );
+			if (! isset ( static::$aliases [$root] )) {
+				if ($pos === false) {
+					static::$aliases [$root] = $path;
 				} else {
-					$instance = call_user_func ( $definition );
+					static::$aliases [$root] = [ 
+						$alias => $path 
+					];
+				}
+			} elseif (is_string ( static::$aliases [$root] )) {
+				if ($pos === false) {
+					static::$aliases [$root] = $path;
+				} else {
+					static::$aliases [$root] = [ 
+						$alias => $path,
+						$root => static::$aliases [$root] 
+					];
 				}
 			} else {
-				$instance = $definition;
+				static::$aliases [$root] [$alias] = $path;
+				krsort ( static::$aliases [$root] );
 			}
-		} elseif (is_array ( $definition ) && isset ( $definition ['className'] )) {
-			$className = $definition ['className'];
-			unset ( $definition ['className'] );
-			$reflection = new \ReflectionClass ( $className );
-			if (! empty ( $parameters )) { // 模块初始化
-				$parameters [] = $definition;
-				$instance = $reflection->newInstanceArgs ( $parameters );
-			} else {
-				if (empty ( $definition )) {
-					$instance = $reflection->newInstance ();
-				} else {
-					$instance = $reflection->newInstanceArgs ( [ $definition ] );
-				}
+		} elseif (isset ( static::$aliases [$root] )) {
+			if (is_array ( static::$aliases [$root] )) {
+				unset ( static::$aliases [$root] [$alias] );
+			} elseif ($pos === false) {
+				unset ( static::$aliases [$root] );
 			}
-		} elseif (is_array ( $definition ) && $throwException) {
-			throw new InvalidConfigException ( 'Object configuration must be an array containing a "className" element.' );
-		} elseif ($throwException) {
-			throw new InvalidConfigException ( "Unsupported configuration type: " . gettype ( $definition ) );
 		}
-
-		/**
-		 * 如果实现了 \Leaps\Di\InjectionAwareInterface 就把DI实例射进去
-		 */
-		if (is_object ( $instance ) && method_exists ( $instance, "setDI" )) {
-			$instance->setDI ( \Leaps\Di\Container::getDefault () );
-		}
-
-		return $instance;
 	}
-
+	
 	/**
-	 * 自动装载器
+	 * Class autoload loader.
+	 * This method is invoked automatically when PHP sees an unknown class.
+	 * The method will attempt to include the class file according to the following procedure:
 	 *
-	 * @param string $className 类的完全限定名称
+	 * 1. Search in [[classMap]];
+	 * 2. If the class is namespaced (e.g. `Leaps\base\Component`), it will attempt
+	 * to include the file associated with the corresponding path alias
+	 * (e.g. `@Leaps/base/Component.php`);
+	 *
+	 * This autoloader allows loading classes that follow the [PSR-4 standard](http://www.php-fig.org/psr/psr-4/)
+	 * and have its top-level namespace or sub-namespaces defined as path aliases.
+	 *
+	 * Example: When aliases `@Leaps` and `@Leaps/bootstrap` are defined, classes in the `Leaps\bootstrap` namespace
+	 * will be loaded using the `@Leaps/bootstrap` alias which points to the directory where bootstrap extension
+	 * files are installed and all classes from other `Leaps` namespaces will be loaded from the Leaps framework directory.
+	 *
+	 * Also the [guide section on autoloading](guide:concept-autoloading).
+	 *
+	 * @param string $className the fully qualified class name without a leading backslash "\"
+	 * @throws UnknownClassException if the class does not exist in the class file
 	 */
 	public static function autoload($className)
 	{
@@ -165,211 +299,75 @@ class Kernel
 		} else {
 			return;
 		}
+		
 		include ($classFile);
+		
 		if (LEAPS_DEBUG && ! class_exists ( $className, false ) && ! interface_exists ( $className, false ) && ! trait_exists ( $className, false )) {
 			throw new UnknownClassException ( "Unable to find '$className' in file: $classFile. Namespace missing?" );
 		}
 	}
-
+	
 	/**
-	 * 向Di注册服务
-	 * @param array $config
-	 */
-	public static function setService($config = []){
-		self::$container->setServices($config);
-	}
-
-	/**
-	 * 注册一个路径别名。
+	 * Creates a new object using the given configuration.
 	 *
-	 * @throws InvalidParamException 如果路径是无效的别名
-	 * @see getAlias()
-	 */
-	public static function setAlias($alias, $path)
-	{
-		if (strncmp ( $alias, '@', 1 )) {
-			$alias = '@' . $alias;
-		}
-		$pos = strpos ( $alias, '/' );
-		$root = $pos === false ? $alias : substr ( $alias, 0, $pos );
-		if ($path !== null) {
-			$path = strncmp ( $path, '@', 1 ) ? rtrim ( $path, '\\/' ) : static::getAlias ( $path );
-			if (! isset ( static::$aliases [$root] )) {
-				if ($pos === false) {
-					static::$aliases [$root] = $path;
-				} else {
-					static::$aliases [$root] = [ $alias => $path ];
-				}
-			} elseif (is_string ( static::$aliases [$root] )) {
-				if ($pos === false) {
-					static::$aliases [$root] = $path;
-				} else {
-					static::$aliases [$root] = [ $alias => $path,$root => static::$aliases [$root] ];
-				}
-			} else {
-				static::$aliases [$root] [$alias] = $path;
-				krsort ( static::$aliases [$root] );
-			}
-		} elseif (isset ( static::$aliases [$root] )) {
-			if (is_array ( static::$aliases [$root] )) {
-				unset ( static::$aliases [$root] [$alias] );
-			} elseif ($pos === false) {
-				unset ( static::$aliases [$root] );
-			}
-		}
-	}
-
-	/**
-	 * 解析路径别名，并返回路径的详情
+	 * You may view this method as an enhanced version of the `new` operator.
+	 * The method supports creating an object based on a class name, a configuration array or
+	 * an anonymous function.
 	 *
-	 * @param string $alias 要翻译的别名
-	 * @param boolean $throwException 是否抛出异常,如果给定的别名是无效的。 如果这是错误和无效的别名,该方法将返回错误。
-	 * @return string boolean
-	 * @throws InvalidParamException 如果别名无效$throwException为true
-	 * @see setAlias()
+	 * Below are some usage examples:
+	 *
+	 * ```php
+	 * // create an object using a class name
+	 * $object = Leaps::createObject('Leaps\Db\Connection');
+	 *
+	 * // create an object using a configuration array
+	 * $object = Leaps::createObject([
+	 * 'className' => 'Leaps\Db\Connection',
+	 * 'dsn' => 'mysql:host=127.0.0.1;dbname=demo',
+	 * 'username' => 'root',
+	 * 'password' => '',
+	 * 'charset' => 'utf8',
+	 * ]);
+	 *
+	 * // create an object with two constructor parameters
+	 * $object = \Leaps::createObject('MyClass', [$param1, $param2]);
+	 * ```
+	 *
+	 * Using [[\Leaps\di\Container|dependency injection container]], this method can also identify
+	 * dependent objects, instantiate them and inject them into the newly created object.
+	 *
+	 * @param string|array|callable $type the object type. This can be specified in one of the following forms:
+	 *       
+	 *        - a string: representing the class name of the object to be created
+	 *        - a configuration array: the array must contain a `class` element which is treated as the object class,
+	 *        and the rest of the name-value pairs will be used to initialize the corresponding object properties
+	 *        - a PHP callable: either an anonymous function or an array representing a class method (`[$class or $object, $method]`).
+	 *        The callable should return a new instance of the object being created.
+	 *       
+	 * @param array $params the constructor parameters
+	 * @return object the created object
+	 * @throws InvalidConfigException if the configuration is invalid.
+	 * @see \Leaps\Di\Container
 	 */
-	public static function getAlias($alias, $throwException = true)
+	public static function createObject($type, array $params = [])
 	{
-		if (strncmp ( $alias, '@', 1 )) { // 不是一个别名
-			return $alias;
-		}
-		$pos = strpos ( $alias, '/' );
-		$root = $pos === false ? $alias : substr ( $alias, 0, $pos );
-		if (isset ( static::$aliases [$root] )) {
-			if (is_string ( static::$aliases [$root] )) {
-				return $pos === false ? static::$aliases [$root] : static::$aliases [$root] . substr ( $alias, $pos );
-			} else {
-				foreach ( static::$aliases [$root] as $name => $path ) {
-					if (strpos ( $alias . '/', $name . '/' ) === 0) {
-						return $path . substr ( $alias, strlen ( $name ) );
-					}
-				}
-			}
-		}
-		if ($throwException) {
-			throw new InvalidParamException ( "Invalid path alias: $alias" );
+		if (is_string ( $type )) {
+			return static::$container->get ( $type, $params );
+		} elseif (is_array ( $type ) && isset ( $type ['className'] )) {
+			$class = $type ['className'];
+			unset ( $type ['className'] );
+			return static::$container->get ( $class, $params, $type );
+		} elseif (is_callable ( $type, true )) {
+			return call_user_func ( $type, $params );
+		} elseif (is_array ( $type )) {
+			throw new InvalidConfigException ( 'Object configuration must be an array containing a "className" element.' );
 		} else {
-			return false;
+			throw new InvalidConfigException ( "Unsupported configuration type: " . gettype ( $type ) );
 		}
 	}
-
-	/**
-	 * 返回路径别名的路径信息
-	 * 如果别名匹配多个根将返回别名最长的一个。
-	 *
-	 * @param string $alias 别名
-	 * @return string/boolean 跟别名或false
-	 */
-	public static function getRootAlias($alias)
-	{
-		$pos = strpos ( $alias, '/' );
-		$root = $pos === false ? $alias : substr ( $alias, 0, $pos );
-		if (isset ( static::$aliases [$root] )) {
-			if (is_string ( static::$aliases [$root] )) {
-				return $root;
-			} else {
-				foreach ( static::$aliases [$root] as $name => $path ) {
-					if (strpos ( $alias . '/', $name . '/' ) === 0) {
-						return $name;
-					}
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * 获取classMap
-	 *
-	 * @return multitype:
-	 */
-	public static function getClassMap($className = '')
-	{
-		if ('' === $className) {
-			return static::$classMap;
-		} elseif (isset ( static::$classMap [$className] )) {
-			return static::$classMap [$className];
-		} else {
-			return null;
-		}
-	}
-
-	/**
-	 * 注册classMap
-	 *
-	 * @param array $classMap 类文件名映射
-	 */
-	public static function addClassMap($className, $map = '')
-	{
-		if (is_array ( $className )) {
-			static::$classMap = array_merge ( static::$classMap, $className );
-		} else {
-			static::$classMap [$className] = $map;
-		}
-	}
-
-	/**
-	 * 获取一个值，如果是匿名方法就获取方法的结果
-	 *
-	 * @param mixed $var The value to get
-	 * @return mixed
-	 */
-	public static function value($value)
-	{
-		return (is_callable ( $value ) and ! is_string ( $value )) ? call_user_func ( $value ) : $value;
-	}
-
-	/**
-	 * 得到一个类或对象的名字
-	 *
-	 * @param object|string $class 类或对象
-	 * @return string
-	 */
-	public static function classBasename($class)
-	{
-		if (is_object ( $class ))
-			$class = get_class ( $class );
-		return basename ( str_replace ( '\\', '/', $class ) );
-	}
-
-	/**
-	 * 配置一个对象的初始属性值。
-	 *
-	 * @param object $object 对象配置
-	 * @param array $properties 属性初始值给定的名称-值对。
-	 */
-	public static function configure($object, $properties)
-	{
-		foreach ( $properties as $name => $value ) {
-			$object->$name = $value;
-		}
-	}
-
-	/**
-	 * 返回对象的公共成员变量。
-	 *
-	 * @param object $object 处理的对象
-	 * @return array 对象的公共成员变量
-	 */
-	public static function getObjectVars($object)
-	{
-		return get_object_vars ( $object );
-	}
-
-	/**
-	 * 获取框架版本
-	 *
-	 * @return string the version of Leaps framework
-	 */
-	public static function getVersion()
-	{
-		return Version::get ();
-	}
-
 	private static $_logger;
-
+	
 	/**
-	 * 日志消息记录器
 	 *
 	 * @return Logger message logger
 	 */
@@ -381,9 +379,9 @@ class Kernel
 			return self::$_logger = static::createObject ( 'Leaps\Log\Logger' );
 		}
 	}
-
+	
 	/**
-	 * 设置日志消息记录器
+	 * Sets the logger object.
 	 *
 	 * @param Logger $logger the logger object.
 	 */
@@ -391,12 +389,14 @@ class Kernel
 	{
 		self::$_logger = $logger;
 	}
-
+	
 	/**
-	 * 记录跟踪日志
+	 * Logs a trace message.
+	 * Trace messages are logged mainly for development purpose to see
+	 * the execution work flow of some code.
 	 *
-	 * @param string $message 消息内容
-	 * @param string $category 消息分类
+	 * @param string $message the message to be logged.
+	 * @param string $category the category of the message.
 	 */
 	public static function trace($message, $category = 'application')
 	{
@@ -404,106 +404,158 @@ class Kernel
 			static::getLogger ()->log ( $message, Logger::LEVEL_TRACE, $category );
 		}
 	}
-
+	
 	/**
-	 * 记录错误日志
+	 * Logs an error message.
+	 * An error message is typically logged when an unrecoverable error occurs
+	 * during the execution of an application.
 	 *
-	 * @param string $message 消息内容
-	 * @param string $category 消息分类
+	 * @param string $message the message to be logged.
+	 * @param string $category the category of the message.
 	 */
 	public static function error($message, $category = 'application')
 	{
 		static::getLogger ()->log ( $message, Logger::LEVEL_ERROR, $category );
 	}
-
+	
 	/**
-	 * 记录警告日志
+	 * Logs a warning message.
+	 * A warning message is typically logged when an error occurs while the execution
+	 * can still continue.
 	 *
-	 * @param string $message 消息内容
-	 * @param string $category 消息分类
+	 * @param string $message the message to be logged.
+	 * @param string $category the category of the message.
 	 */
 	public static function warning($message, $category = 'application')
 	{
 		static::getLogger ()->log ( $message, Logger::LEVEL_WARNING, $category );
 	}
-
+	
 	/**
-	 * 记录信息日志
+	 * Logs an informative message.
+	 * An informative message is typically logged by an application to keep record of
+	 * something important (e.g. an administrator logs in).
 	 *
-	 * @param string $message 消息内容
-	 * @param string $category 消息分类
+	 * @param string $message the message to be logged.
+	 * @param string $category the category of the message.
 	 */
 	public static function info($message, $category = 'application')
 	{
 		static::getLogger ()->log ( $message, Logger::LEVEL_INFO, $category );
 	}
-
+	
 	/**
-	 * 标志分析代码块开始
+	 * Marks the beginning of a code block for profiling.
+	 * This has to be matched with a call to [[endProfile]] with the same category name.
+	 * The begin- and end- calls must also be properly nested. For example,
 	 *
 	 * ~~~
-	 * \Leaps\Kernel::beginProfile('block1');
+	 * \Leaps::beginProfile('block1');
 	 * // some code to be profiled
-	 * \Leaps\Kernel::beginProfile('block2');
+	 * \Leaps::beginProfile('block2');
 	 * // some other code to be profiled
-	 * \Leaps\Kernel::endProfile('block2');
-	 * \Leaps\Kernel::endProfile('block1');
+	 * \Leaps::endProfile('block2');
+	 * \Leaps::endProfile('block1');
 	 * ~~~
 	 *
-	 * @param string $token 代码块令牌
-	 * @param string $category 消息分类
+	 * @param string $token token for the code block
+	 * @param string $category the category of this log message
 	 * @see endProfile()
 	 */
 	public static function beginProfile($token, $category = 'application')
 	{
 		static::getLogger ()->log ( $token, Logger::LEVEL_PROFILE_BEGIN, $category );
 	}
-
+	
 	/**
-	 * 标志分析代码块结束
+	 * Marks the end of a code block for profiling.
+	 * This has to be matched with a previous call to [[beginProfile]] with the same category name.
 	 *
-	 * @param string $token 代码块令牌
-	 * @param string $category 消息分类
+	 * @param string $token token for the code block
+	 * @param string $category the category of this log message
 	 * @see beginProfile()
 	 */
 	public static function endProfile($token, $category = 'application')
 	{
 		static::getLogger ()->log ( $token, Logger::LEVEL_PROFILE_END, $category );
 	}
-
+	
 	/**
-	 * 返回HTML超链接可以显示在您的网页显示 "Powered by Leaps Framework" 信息。
+	 * Returns an HTML hyperlink that can be displayed on your Web page showing "Powered by Leaps Framework" information.
 	 *
 	 * @return string an HTML hyperlink that can be displayed on your Web page showing "Powered by Leaps Framework" information
 	 */
 	public static function powered()
 	{
-		return 'Powered by <a href="http://www.tintsoft.com/" rel="external">Leaps Framework</a>';
+		return 'Powered by <a href="http://www.Leapsframework.com/" rel="external">Leaps Framework</a>';
 	}
-
+	
 	/**
-	 * 动态调用Di容器方法
+	 * Translates a message to the specified language.
 	 *
-	 * @param string $method
-	 * @param array $args
-	 * @return mixed
+	 * This is a shortcut method of [[\Leaps\i18n\I18N::translate()]].
+	 *
+	 * The translation will be conducted according to the message category and the target language will be used.
+	 *
+	 * You can add parameters to a translation message that will be substituted with the corresponding value after
+	 * translation. The format for this is to use curly brackets around the parameter name as you can see in the following example:
+	 *
+	 * ```php
+	 * $username = 'Alexander';
+	 * echo \Leaps::t('app', 'Hello, {username}!', ['username' => $username]);
+	 * ```
+	 *
+	 * Further formatting of message parameters is supported using the [PHP intl extensions](http://www.php.net/manual/en/intro.intl.php)
+	 * message formatter. See [[\Leaps\i18n\I18N::translate()]] for more details.
+	 *
+	 * @param string $category the message category.
+	 * @param string $message the message to be translated.
+	 * @param array $params the parameters that will be used to replace the corresponding placeholders in the message.
+	 * @param string $language the language code (e.g. `en-US`, `en`). If this is null, the current
+	 *        [[\Leaps\Base\Application::language|application language]] will be used.
+	 * @return string the translated message.
 	 */
-	public static function __callStatic($method, $args)
+	public static function t($category, $message, $params = [], $language = null)
 	{
-		$instance = Container::getDefault ();
-		switch (count ( $args )) {
-			case 0 :
-				return $instance->$method ();
-			case 1 :
-				return $instance->$method ( $args [0] );
-			case 2 :
-				return $instance->$method ( $args [0], $args [1] );
-			case 3 :
-				return $instance->$method ( $args [0], $args [1], $args [2] );
-			case 4 :
-				return $instance->$method ( $args [0], $args [1], $args [2], $args [3] );
-			default :
-				return call_user_func_array ( [ $instance,$method ], $args );
+		if (static::$app !== null) {
+			return static::$app->getI18n ()->translate ( $category, $message, $params, $language ?  : static::$app->language );
+		} else {
+			$p = [ ];
+			foreach ( ( array ) $params as $name => $value ) {
+				$p ['{' . $name . '}'] = $value;
+			}
+			
+			return ($p === [ ]) ? $message : strtr ( $message, $p );
 		}
+	}
+	
+	/**
+	 * Configures an object with the initial property values.
+	 *
+	 * @param object $object the object to be configured
+	 * @param array $properties the property initial values given in terms of name-value pairs.
+	 * @return object the object itself
+	 */
+	public static function configure($object, $properties)
+	{
+		foreach ( $properties as $name => $value ) {
+			$object->$name = $value;
+		}
+		
+		return $object;
+	}
+	
+	/**
+	 * Returns the public member variables of an object.
+	 * This method is provided such that we can get the public member variables of an object.
+	 * It is different from "get_object_vars()" because the latter will return private
+	 * and protected variables if it is called within the object itself.
+	 *
+	 * @param object $object the object to be handled
+	 * @return array the public member variables of the object
+	 */
+	public static function getObjectVars($object)
+	{
+		return get_object_vars ( $object );
 	}
 }

@@ -12,7 +12,7 @@ namespace Leaps\Di;
 
 use Leaps;
 use Closure;
-use Leaps\Base\Component;
+use Leaps\Base\Service;
 use Leaps\Base\InvalidConfigException;
 
 /**
@@ -29,11 +29,11 @@ use Leaps\Base\InvalidConfigException;
  * $locator = new \Leaps\Di\ServiceLocator;
  * $locator->setComponents([
  * 'db' => [
- * 'class' => 'Leaps\Db\Connection',
+ * 'className' => 'Leaps\Db\Connection',
  * 'dsn' => 'sqlite:path/to/file.db',
  * ],
  * 'cache' => [
- * 'class' => 'Leaps\Cache\DbCache',
+ * 'className' => 'Leaps\Cache\DbCache',
  * 'db' => 'db',
  * ],
  * ]);
@@ -44,17 +44,17 @@ use Leaps\Base\InvalidConfigException;
  *
  * Because [[\Leaps\Base\Module]] extends from ServiceLocator, modules and the application are all service locators.
  *
- * @property array $components The list of the component definitions or the loaded component instances (ID =>
+ * @property array $services The list of the component definitions or the loaded component instances (ID =>
  *           definition or instance).
  *          
  */
-class ServiceLocator extends Component
+class ServiceLocator extends Service
 {
 	/**
 	 *
 	 * @var array shared component instances indexed by their IDs
 	 */
-	private $_components = [ ];
+	private $_services = [ ];
 	/**
 	 *
 	 * @var array component definitions indexed by their IDs
@@ -109,7 +109,7 @@ class ServiceLocator extends Component
 	 */
 	public function has($id, $checkInstance = false)
 	{
-		return $checkInstance ? isset ( $this->_components [$id] ) : isset ( $this->_definitions [$id] );
+		return $checkInstance ? isset ( $this->_services [$id] ) : isset ( $this->_definitions [$id] );
 	}
 	
 	/**
@@ -125,16 +125,16 @@ class ServiceLocator extends Component
 	 */
 	public function get($id, $throwException = true)
 	{
-		if (isset ( $this->_components [$id] )) {
-			return $this->_components [$id];
+		if (isset ( $this->_services [$id] )) {
+			return $this->_services [$id];
 		}
 		
 		if (isset ( $this->_definitions [$id] )) {
 			$definition = $this->_definitions [$id];
 			if (is_object ( $definition ) && ! $definition instanceof Closure) {
-				return $this->_components [$id] = $definition;
+				return $this->_services [$id] = $definition;
 			} else {
-				return $this->_components [$id] = Yii::createObject ( $definition );
+				return $this->_services [$id] = Leaps::createObject ( $definition );
 			}
 		} elseif ($throwException) {
 			throw new InvalidConfigException ( "Unknown component ID: $id" );
@@ -150,11 +150,11 @@ class ServiceLocator extends Component
 	 *
 	 * ```php
 	 * // a class name
-	 * $locator->set('cache', 'yii\caching\FileCache');
+	 * $locator->set('cache', 'leaps \caching\FileCache');
 	 *
 	 * // a configuration array
 	 * $locator->set('db', [
-	 * 'class' => 'yii\db\Connection',
+	 * 'className' => 'leaps \db\Connection',
 	 * 'dsn' => 'mysql:host=127.0.0.1;dbname=demo',
 	 * 'username' => 'root',
 	 * 'password' => '',
@@ -163,11 +163,11 @@ class ServiceLocator extends Component
 	 *
 	 * // an anonymous function
 	 * $locator->set('cache', function ($params) {
-	 * return new \yii\caching\FileCache;
+	 * return new \leaps \caching\FileCache;
 	 * });
 	 *
 	 * // an instance
-	 * $locator->set('cache', new \yii\caching\FileCache);
+	 * $locator->set('cache', new \leaps \caching\FileCache);
 	 * ```
 	 *
 	 * If a component definition with the same ID already exists, it will be overwritten.
@@ -189,24 +189,24 @@ class ServiceLocator extends Component
 	public function set($id, $definition)
 	{
 		if ($definition === null) {
-			unset ( $this->_components [$id], $this->_definitions [$id] );
+			unset ( $this->_services [$id], $this->_definitions [$id] );
 			return;
 		}
 		
-		unset ( $this->_components [$id] );
+		unset ( $this->_services [$id] );
 		
 		if (is_object ( $definition ) || is_callable ( $definition, true )) {
 			// an object, a class name, or a PHP callable
 			$this->_definitions [$id] = $definition;
 		} elseif (is_array ( $definition )) {
 			// a configuration array
-			if (isset ( $definition ['class'] )) {
+			if (isset ( $definition ['className'] )) {
 				$this->_definitions [$id] = $definition;
 			} else {
-				throw new InvalidConfigException ( "The configuration for the \"$id\" component must contain a \"class\" element." );
+				throw new InvalidConfigException ( "The configuration for the \"$id\" service must contain a \"className\" element." );
 			}
 		} else {
-			throw new InvalidConfigException ( "Unexpected configuration type for the \"$id\" component: " . gettype ( $definition ) );
+			throw new InvalidConfigException ( "Unexpected configuration type for the \"$id\" service: " . gettype ( $definition ) );
 		}
 	}
 	
@@ -217,7 +217,7 @@ class ServiceLocator extends Component
 	 */
 	public function clear($id)
 	{
-		unset ( $this->_definitions [$id], $this->_components [$id] );
+		unset ( $this->_definitions [$id], $this->_services [$id] );
 	}
 	
 	/**
@@ -226,9 +226,9 @@ class ServiceLocator extends Component
 	 * @param boolean $returnDefinitions whether to return component definitions instead of the loaded component instances.
 	 * @return array the list of the component definitions or the loaded component instances (ID => definition or instance).
 	 */
-	public function getComponents($returnDefinitions = true)
+	public function getServices($returnDefinitions = true)
 	{
-		return $returnDefinitions ? $this->_definitions : $this->_components;
+		return $returnDefinitions ? $this->_definitions : $this->_services;
 	}
 	
 	/**
@@ -246,22 +246,22 @@ class ServiceLocator extends Component
 	 * ```php
 	 * [
 	 * 'db' => [
-	 * 'class' => 'Leaps\Db\Connection',
+	 * 'className' => 'Leaps\Db\Connection',
 	 * 'dsn' => 'sqlite:path/to/file.db',
 	 * ],
 	 * 'cache' => [
-	 * 'class' => 'Leaps\Cache\DbCache',
+	 * 'className' => 'Leaps\Cache\DbCache',
 	 * 'db' => 'db',
 	 * ],
 	 * ]
 	 * ```
 	 *
-	 * @param array $components component definitions or instances
+	 * @param array $services service definitions or instances
 	 */
-	public function setComponents($components)
+	public function setServices($services)
 	{
-		foreach ( $components as $id => $component ) {
-			$this->set ( $id, $component );
+		foreach ( $services as $id => $service ) {
+			$this->set ( $id, $service );
 		}
 	}
 }

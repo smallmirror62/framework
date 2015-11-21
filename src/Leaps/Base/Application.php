@@ -10,27 +10,27 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Base;
 
-use Yii;
+use Leaps;
 
 /**
  * Application 所有应用程序基类
  *
  * @property \Leaps\Web\AssetManager $assetManager The asset manager application component. This property is
  *           read-only.
- * @property \yii\rbac\ManagerInterface $authManager The auth manager application component. Null is returned
+ * @property \Leaps\Rbac\ManagerInterface $authManager The auth manager application component. Null is returned
  *           if auth manager is not configured. This property is read-only.
  * @property string $basePath The root directory of the application.
- * @property \yii\caching\Cache $cache The cache application component. Null if the component is not enabled.
+ * @property \Leaps\Cache\Cache $cache The cache application component. Null if the component is not enabled.
  *           This property is read-only.
- * @property \yii\db\Connection $db The database connection. This property is read-only.
- * @property \Leaps\Web\ErrorHandler|\yii\console\ErrorHandler $errorHandler The error handler application
+ * @property \Leaps\Db\Connection $db The database connection. This property is read-only.
+ * @property \Leaps\Web\ErrorHandler|\Leaps\console\ErrorHandler $errorHandler The error handler application
  *           component. This property is read-only.
- * @property \yii\i18n\Formatter $formatter The formatter application component. This property is read-only.
- * @property \yii\i18n\I18N $i18n The internationalization application component. This property is read-only.
- * @property \yii\log\Dispatcher $log The log dispatcher application component. This property is read-only.
- * @property \yii\mail\MailerInterface $mailer The mailer application component. This property is read-only.
- * @property \Leaps\Web\Request|\yii\console\Request $request The request component. This property is read-only.
- * @property \Leaps\Web\Response|\yii\console\Response $response The response component. This property is
+ * @property \Leaps\I18n\Formatter $formatter The formatter application component. This property is read-only.
+ * @property \Leaps\I18n\I18N $i18n The internationalization application component. This property is read-only.
+ * @property \Leaps\Log\Dispatcher $log The log dispatcher application component. This property is read-only.
+ * @property \Leaps\Mail\MailerInterface $mailer The mailer application component. This property is read-only.
+ * @property \Leaps\Web\Request|\Leaps\Console\Request $request The request component. This property is read-only.
+ * @property \Leaps\Web\Response|\Leaps\Console\Response $response The response component. This property is
  *           read-only.
  * @property string $runtimePath The directory that stores runtime files. Defaults to the "runtime"
  *           subdirectory under [[basePath]].
@@ -50,34 +50,42 @@ abstract class Application extends Module
 	 * @event Event an event raised before the application starts to handle a request.
 	 */
 	const EVENT_BEFORE_REQUEST = 'beforeRequest';
+	
 	/**
 	 * @event Event an event raised after the application successfully handles a request (before the response is sent out).
 	 */
 	const EVENT_AFTER_REQUEST = 'afterRequest';
+	
 	/**
 	 * Application state used by [[state]]: application just started.
 	 */
 	const STATE_BEGIN = 0;
+	
 	/**
 	 * Application state used by [[state]]: application is initializing.
 	 */
 	const STATE_INIT = 1;
+	
 	/**
 	 * Application state used by [[state]]: application is triggering [[EVENT_BEFORE_REQUEST]].
 	 */
 	const STATE_BEFORE_REQUEST = 2;
+	
 	/**
 	 * Application state used by [[state]]: application is handling the request.
 	 */
 	const STATE_HANDLING_REQUEST = 3;
+	
 	/**
 	 * Application state used by [[state]]: application is triggering [[EVENT_AFTER_REQUEST]]..
 	 */
 	const STATE_AFTER_REQUEST = 4;
+	
 	/**
 	 * Application state used by [[state]]: application is about to send response.
 	 */
 	const STATE_SENDING_RESPONSE = 5;
+	
 	/**
 	 * Application state used by [[state]]: application has ended.
 	 */
@@ -92,21 +100,25 @@ abstract class Application extends Module
 	 *      Please refer to the [guide about class autoloading](guide:concept-autoloading.md) for more details.
 	 */
 	public $controllerNamespace = 'App\\Controller';
+	
 	/**
 	 *
 	 * @var string the application name.
 	 */
 	public $name = 'My Application';
+	
 	/**
 	 *
 	 * @var string the version of this application.
 	 */
 	public $version = '1.0';
+	
 	/**
 	 *
 	 * @var string the charset currently used for the application.
 	 */
 	public $charset = 'UTF-8';
+	
 	/**
 	 *
 	 * @var string the language that is meant to be used for end users. It is recommended that you
@@ -115,6 +127,7 @@ abstract class Application extends Module
 	 * @see sourceLanguage
 	 */
 	public $language = 'en-US';
+	
 	/**
 	 *
 	 * @var string the language that the application is written in. This mainly refers to
@@ -129,30 +142,35 @@ abstract class Application extends Module
 	 * @var Controller
 	 */
 	public $controller;
+	
 	/**
 	 *
 	 * @var string|boolean the layout that should be applied for views in this application. Defaults to 'main'.
 	 *      If this is false, layout will be disabled.
 	 */
 	public $layout = 'main';
+	
 	/**
 	 *
 	 * @var string the requested route
 	 */
 	public $requestedRoute;
+	
 	/**
 	 *
 	 * @var Action the requested Action. If null, it means the request cannot be resolved into an action.
 	 */
 	public $requestedAction;
+	
 	/**
 	 *
 	 * @var array the parameters supplied to the requested action.
 	 */
 	public $requestedParams;
+	
 	/**
 	 *
-	 * @var array list of installed Yii extensions. Each array element represents a single extension
+	 * @var array list of installed Leaps extensions. Each array element represents a single extension
 	 *      with the following structure:
 	 *     
 	 *      ~~~
@@ -172,9 +190,10 @@ abstract class Application extends Module
 	 *      its [[BootstrapInterface::bootstrap()|bootstrap()]] method will be also be called.
 	 *     
 	 *      If not set explicitly in the application config, this property will be populated with the contents of
-	 *      `@vendor/yiisoft/extensions.php`.
+	 *      `@vendor/leaps/extensions.php`.
 	 */
 	public $extensions;
+	
 	/**
 	 *
 	 * @var array list of components that should be run during the application [[bootstrap()|bootstrapping process]].
@@ -191,12 +210,14 @@ abstract class Application extends Module
 	 *      will be also be called.
 	 */
 	public $bootstrap = [ ];
+	
 	/**
 	 *
 	 * @var integer the current application state during a request handling life cycle.
 	 *      This property is managed by the application. Do not modify this property.
 	 */
 	public $state;
+	
 	/**
 	 *
 	 * @var array list of loaded modules indexed by their class names.
@@ -204,7 +225,7 @@ abstract class Application extends Module
 	public $loadedModules = [ ];
 	
 	/**
-	 * Constructor.
+	 * 构造方法
 	 *
 	 * @param array $config name-value pairs that will be used to initialize the object properties.
 	 *        Note that the configuration must contain both [[id]] and [[basePath]].
@@ -212,20 +233,16 @@ abstract class Application extends Module
 	 */
 	public function __construct($config = [])
 	{
-		Yii::$app = $this;
+		Leaps::$app = $this;
 		$this->setInstance ( $this );
-		
 		$this->state = self::STATE_BEGIN;
-		
 		$this->preInit ( $config );
-		
 		$this->registerErrorHandler ( $config );
-		
-		Component::__construct ( $config );
+		Service::__construct ( $config );
 	}
 	
 	/**
-	 * Pre-initializes the application.
+	 * 应用前置初始化
 	 * This method is called at the beginning of the application constructor.
 	 * It initializes several important application properties.
 	 * If you override this method, please make sure you call the parent implementation.
@@ -267,12 +284,12 @@ abstract class Application extends Module
 			$this->setTimeZone ( 'UTC' );
 		}
 		
-		// merge core components with custom components
-		foreach ( $this->coreComponents () as $id => $component ) {
-			if (! isset ( $config ['components'] [$id] )) {
-				$config ['components'] [$id] = $component;
-			} elseif (is_array ( $config ['components'] [$id] ) && ! isset ( $config ['components'] [$id] ['class'] )) {
-				$config ['components'] [$id] ['class'] = $component ['class'];
+		// 合并核心服务和自定义服务
+		foreach ( $this->coreServices () as $id => $service ) {
+			if (! isset ( $config ['services'] [$id] )) {
+				$config ['services'] [$id] = $service;
+			} elseif (is_array ( $config ['services'] [$id] ) && ! isset ( $config ['services'] [$id] ['className'] )) {
+				$config ['services'] [$id] ['className'] = $service ['className'];
 			}
 		}
 	}
@@ -294,64 +311,64 @@ abstract class Application extends Module
 	protected function bootstrap()
 	{
 		if ($this->extensions === null) {
-			$file = Yii::getAlias ( '@vendor/yiisoft/extensions.php' );
+			$file = Leaps::getAlias ( '@Vendor/leaps/extensions.php' );
 			$this->extensions = is_file ( $file ) ? include ($file) : [ ];
 		}
 		foreach ( $this->extensions as $extension ) {
 			if (! empty ( $extension ['alias'] )) {
 				foreach ( $extension ['alias'] as $name => $path ) {
-					Yii::setAlias ( $name, $path );
+					Leaps::setAlias ( $name, $path );
 				}
 			}
 			if (isset ( $extension ['bootstrap'] )) {
-				$component = Yii::createObject ( $extension ['bootstrap'] );
-				if ($component instanceof BootstrapInterface) {
-					Yii::trace ( "Bootstrap with " . get_class ( $component ) . '::bootstrap()', __METHOD__ );
-					$component->bootstrap ( $this );
+				$service = Leaps::createObject ( $extension ['bootstrap'] );
+				if ($service instanceof BootstrapInterface) {
+					Leaps::trace ( "Bootstrap with " . get_class ( $service ) . '::bootstrap()', __METHOD__ );
+					$service->bootstrap ( $this );
 				} else {
-					Yii::trace ( "Bootstrap with " . get_class ( $component ), __METHOD__ );
+					Leaps::trace ( "Bootstrap with " . get_class ( $service ), __METHOD__ );
 				}
 			}
 		}
 		
 		foreach ( $this->bootstrap as $class ) {
-			$component = null;
+			$service = null;
 			if (is_string ( $class )) {
 				if ($this->has ( $class )) {
-					$component = $this->get ( $class );
+					$service = $this->get ( $class );
 				} elseif ($this->hasModule ( $class )) {
-					$component = $this->getModule ( $class );
+					$service = $this->getModule ( $class );
 				} elseif (strpos ( $class, '\\' ) === false) {
 					throw new InvalidConfigException ( "Unknown bootstrapping component ID: $class" );
 				}
 			}
-			if (! isset ( $component )) {
-				$component = Yii::createObject ( $class );
+			if (! isset ( $service )) {
+				$service = Leaps::createObject ( $class );
 			}
 			
-			if ($component instanceof BootstrapInterface) {
-				Yii::trace ( "Bootstrap with " . get_class ( $component ) . '::bootstrap()', __METHOD__ );
-				$component->bootstrap ( $this );
+			if ($service instanceof BootstrapInterface) {
+				Leaps::trace ( "Bootstrap with " . get_class ( $service ) . '::bootstrap()', __METHOD__ );
+				$service->bootstrap ( $this );
 			} else {
-				Yii::trace ( "Bootstrap with " . get_class ( $component ), __METHOD__ );
+				Leaps::trace ( "Bootstrap with " . get_class ( $service ), __METHOD__ );
 			}
 		}
 	}
 	
 	/**
-	 * Registers the errorHandler component as a PHP error handler.
+	 * Registers the errorHandler service as a PHP error handler.
 	 *
 	 * @param array $config application config
 	 */
 	protected function registerErrorHandler(&$config)
 	{
-		if (YII_ENABLE_ERROR_HANDLER) {
-			if (! isset ( $config ['components'] ['errorHandler'] ['class'] )) {
-				echo "Error: no errorHandler component is configured.\n";
+		if (LEAPS_ENABLE_ERROR_HANDLER) {
+			if (! isset ( $config ['services'] ['errorHandler'] ['className'] )) {
+				echo "Error: no errorHandler service is configured.\n";
 				exit ( 1 );
 			}
-			$this->set ( 'errorHandler', $config ['components'] ['errorHandler'] );
-			unset ( $config ['components'] ['errorHandler'] );
+			$this->set ( 'errorHandler', $config ['services'] ['errorHandler'] );
+			unset ( $config ['services'] ['errorHandler'] );
 			$this->getErrorHandler ()->register ();
 		}
 	}
@@ -378,7 +395,7 @@ abstract class Application extends Module
 	public function setBasePath($path)
 	{
 		parent::setBasePath ( $path );
-		Yii::setAlias ( '@app', $this->getBasePath () );
+		Leaps::setAlias ( '@app', $this->getBasePath () );
 	}
 	
 	/**
@@ -407,7 +424,6 @@ abstract class Application extends Module
 			
 			return $response->exitStatus;
 		} catch ( ExitException $e ) {
-			
 			$this->end ( $e->statusCode, isset ( $response ) ? $response : null );
 			return $e->statusCode;
 		}
@@ -434,7 +450,7 @@ abstract class Application extends Module
 	public function getRuntimePath()
 	{
 		if ($this->_runtimePath === null) {
-			$this->setRuntimePath ( $this->getBasePath () . DIRECTORY_SEPARATOR . 'runtime' );
+			$this->setRuntimePath ( $this->getBasePath () . DIRECTORY_SEPARATOR . 'Runtime' );
 		}
 		
 		return $this->_runtimePath;
@@ -447,8 +463,8 @@ abstract class Application extends Module
 	 */
 	public function setRuntimePath($path)
 	{
-		$this->_runtimePath = Yii::getAlias ( $path );
-		Yii::setAlias ( '@runtime', $this->_runtimePath );
+		$this->_runtimePath = Leaps::getAlias ( $path );
+		Leaps::setAlias ( '@Runtime', $this->_runtimePath );
 	}
 	private $_vendorPath;
 	
@@ -461,7 +477,7 @@ abstract class Application extends Module
 	public function getVendorPath()
 	{
 		if ($this->_vendorPath === null) {
-			$this->setVendorPath ( $this->getBasePath () . DIRECTORY_SEPARATOR . 'vendor' );
+			$this->setVendorPath ( $this->getBasePath () . DIRECTORY_SEPARATOR . 'Vendor' );
 		}
 		
 		return $this->_vendorPath;
@@ -474,10 +490,10 @@ abstract class Application extends Module
 	 */
 	public function setVendorPath($path)
 	{
-		$this->_vendorPath = Yii::getAlias ( $path );
-		Yii::setAlias ( '@vendor', $this->_vendorPath );
-		Yii::setAlias ( '@bower', $this->_vendorPath . DIRECTORY_SEPARATOR . 'bower' );
-		Yii::setAlias ( '@npm', $this->_vendorPath . DIRECTORY_SEPARATOR . 'npm' );
+		$this->_vendorPath = Leaps::getAlias ( $path );
+		Leaps::setAlias ( '@Vendor', $this->_vendorPath );
+		Leaps::setAlias ( '@bower', $this->_vendorPath . DIRECTORY_SEPARATOR . 'bower' );
+		Leaps::setAlias ( '@npm', $this->_vendorPath . DIRECTORY_SEPARATOR . 'npm' );
 	}
 	
 	/**
@@ -510,7 +526,7 @@ abstract class Application extends Module
 	/**
 	 * Returns the database connection component.
 	 *
-	 * @return \yii\db\Connection the database connection.
+	 * @return \Leaps\Db\Connection the database connection.
 	 */
 	public function getDb()
 	{
@@ -520,7 +536,7 @@ abstract class Application extends Module
 	/**
 	 * Returns the log dispatcher component.
 	 *
-	 * @return \yii\log\Dispatcher the log dispatcher application component.
+	 * @return \Leaps\Log\Dispatcher the log dispatcher application component.
 	 */
 	public function getLog()
 	{
@@ -530,7 +546,7 @@ abstract class Application extends Module
 	/**
 	 * Returns the error handler component.
 	 *
-	 * @return \Leaps\Web\ErrorHandler|\yii\console\ErrorHandler the error handler application component.
+	 * @return \Leaps\Web\ErrorHandler|\Leaps\Console\ErrorHandler the error handler application component.
 	 */
 	public function getErrorHandler()
 	{
@@ -540,7 +556,7 @@ abstract class Application extends Module
 	/**
 	 * Returns the cache component.
 	 *
-	 * @return \yii\caching\Cache the cache application component. Null if the component is not enabled.
+	 * @return \Leaps\cache\Cache the cache application component. Null if the component is not enabled.
 	 */
 	public function getCache()
 	{
@@ -550,7 +566,7 @@ abstract class Application extends Module
 	/**
 	 * Returns the formatter component.
 	 *
-	 * @return \yii\i18n\Formatter the formatter application component.
+	 * @return \Leaps\I18n\Formatter the formatter application component.
 	 */
 	public function getFormatter()
 	{
@@ -560,7 +576,7 @@ abstract class Application extends Module
 	/**
 	 * Returns the request component.
 	 *
-	 * @return \Leaps\Web\Request|\yii\console\Request the request component.
+	 * @return \Leaps\Web\Request|\Leaps\Console\Request the request component.
 	 */
 	public function getRequest()
 	{
@@ -570,7 +586,7 @@ abstract class Application extends Module
 	/**
 	 * Returns the response component.
 	 *
-	 * @return \Leaps\Web\Response|\yii\console\Response the response component.
+	 * @return \Leaps\Web\Response|\Leaps\Console\Response the response component.
 	 */
 	public function getResponse()
 	{
@@ -600,7 +616,7 @@ abstract class Application extends Module
 	/**
 	 * Returns the internationalization (i18n) component
 	 *
-	 * @return \yii\i18n\I18N the internationalization application component.
+	 * @return \Leaps\I18n\I18N the internationalization application component.
 	 */
 	public function getI18n()
 	{
@@ -653,32 +669,32 @@ abstract class Application extends Module
 	 *
 	 * @see set()
 	 */
-	public function coreComponents()
+	public function coreServices()
 	{
 		return [ 
 			'log' => [ 
-				'class' => 'Leaps\Log\Dispatcher' 
+				'className' => 'Leaps\Log\Dispatcher' 
 			],
 			'view' => [ 
-				'class' => 'Leaps\Web\View' 
+				'className' => 'Leaps\Web\View' 
 			],
 			'formatter' => [ 
-				'class' => 'Leaps\I18n\Formatter' 
+				'className' => 'Leaps\I18n\Formatter' 
 			],
 			'i18n' => [ 
-				'class' => 'Leaps\I18n\I18N' 
+				'className' => 'Leaps\I18n\I18N' 
 			],
 			'mailer' => [ 
-				'class' => 'Leaps\Swiftmailer\Mailer' 
+				'className' => 'Leaps\Swiftmailer\Mailer' 
 			],
 			'urlManager' => [ 
-				'class' => 'Leaps\Web\UrlManager' 
+				'className' => 'Leaps\Web\UrlManager' 
 			],
 			'assetManager' => [ 
-				'class' => 'Leaps\Web\AssetManager' 
+				'className' => 'Leaps\Web\AssetManager' 
 			],
 			'security' => [ 
-				'class' => 'Leaps\Base\Security' 
+				'className' => 'Leaps\Base\Security' 
 			] 
 		];
 	}
@@ -705,7 +721,7 @@ abstract class Application extends Module
 			$response->send ();
 		}
 		
-		if (YII_ENV_TEST) {
+		if (LEAPS_ENV_TEST) {
 			throw new ExitException ( $status );
 		} else {
 			exit ( $status );
