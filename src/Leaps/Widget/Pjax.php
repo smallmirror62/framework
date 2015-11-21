@@ -31,7 +31,7 @@ use Leaps\Web\Response;
  * sorting and filtering can be done via pjax:
  *
  * ```php
- * use Leaps\Widgets\Pjax;
+ * use Leaps\Widget\Pjax;
  *
  * Pjax::begin();
  * echo GridView::widget([...]);

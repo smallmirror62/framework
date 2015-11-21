@@ -20,7 +20,7 @@ use Leaps\Base\InvalidConfigException;
  * @property MessageFormatter $messageFormatter The message formatter to be used to format message via ICU
  *           message format. Note that the type of this property differs in getter and setter. See
  *           [[getMessageFormatter()]] and [[setMessageFormatter()]] for details.
- *          
+ *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
@@ -31,24 +31,24 @@ class I18N extends Service
 	 * @var array list of [[MessageSource]] configurations or objects. The array keys are message
 	 *      category patterns, and the array values are the corresponding [[MessageSource]] objects or the configurations
 	 *      for creating the [[MessageSource]] objects.
-	 *     
+	 *
 	 *      The message category patterns can contain the wildcard '*' at the end to match multiple categories with the same prefix.
 	 *      For example, 'app/*' matches both 'app/cat1' and 'app/cat2'.
-	 *     
+	 *
 	 *      The '*' category pattern will match all categories that do not match any other category patterns.
-	 *     
+	 *
 	 *      This property may be modified on the fly by extensions who want to have their own message sources
 	 *      registered under their own namespaces.
-	 *     
+	 *
 	 *      The category "leaps" and "app" are always defined. The former refers to the messages used in the Yii core
 	 *      framework code, while the latter refers to the default message category for custom application code.
 	 *      By default, both of these categories use [[PhpMessageSource]] and the corresponding message files are
 	 *      stored under "@Leaps/Message" and "@app/messages", respectively.
-	 *     
+	 *
 	 *      You may override the configuration of both categories.
 	 */
 	public $translations;
-	
+
 	/**
 	 * Initializes the component by configuring the default message categories.
 	 */
@@ -56,21 +56,21 @@ class I18N extends Service
 	{
 		parent::init ();
 		if (! isset ( $this->translations ['leaps'] ) && ! isset ( $this->translations ['leaps*'] )) {
-			$this->translations ['leaps'] = [ 
+			$this->translations ['leaps'] = [
 				'className' => 'Leaps\I18n\PhpMessageSource',
 				'sourceLanguage' => 'en-US',
-				'basePath' => '@Leaps/Message' 
+				'basePath' => '@Leaps/Message'
 			];
 		}
 		if (! isset ( $this->translations ['app'] ) && ! isset ( $this->translations ['app*'] )) {
-			$this->translations ['app'] = [ 
+			$this->translations ['app'] = [
 				'className' => 'Leaps\I18n\PhpMessageSource',
 				'sourceLanguage' => Leaps::$app->sourceLanguage,
-				'basePath' => '@app/messages' 
+				'basePath' => '@app/Message'
 			];
 		}
 	}
-	
+
 	/**
 	 * Translates a message to the specified language.
 	 *
@@ -93,7 +93,7 @@ class I18N extends Service
 			return $this->format ( $translation, $params, $language );
 		}
 	}
-	
+
 	/**
 	 * Formats a message using [[MessageFormatter]].
 	 *
@@ -108,34 +108,34 @@ class I18N extends Service
 		if ($params === [ ]) {
 			return $message;
 		}
-		
+
 		if (preg_match ( '~{\s*[\d\w]+\s*,~u', $message )) {
 			$formatter = $this->getMessageFormatter ();
 			$result = $formatter->format ( $message, $params, $language );
 			if ($result === false) {
 				$errorMessage = $formatter->getErrorMessage ();
 				Leaps::warning ( "Formatting message for language '$language' failed with error: $errorMessage. The message being formatted was: $message.", __METHOD__ );
-				
+
 				return $message;
 			} else {
 				return $result;
 			}
 		}
-		
+
 		$p = [ ];
 		foreach ( $params as $name => $value ) {
 			$p ['{' . $name . '}'] = $value;
 		}
-		
+
 		return strtr ( $message, $p );
 	}
-	
+
 	/**
 	 *
 	 * @var string|array|MessageFormatter
 	 */
 	private $_messageFormatter;
-	
+
 	/**
 	 * Returns the message formatter instance.
 	 *
@@ -148,10 +148,10 @@ class I18N extends Service
 		} elseif (is_array ( $this->_messageFormatter ) || is_string ( $this->_messageFormatter )) {
 			$this->_messageFormatter = Leaps::createObject ( $this->_messageFormatter );
 		}
-		
+
 		return $this->_messageFormatter;
 	}
-	
+
 	/**
 	 *
 	 * @param string|array|MessageFormatter $value the message formatter to be used to format message via ICU message format.
@@ -162,7 +162,7 @@ class I18N extends Service
 	{
 		$this->_messageFormatter = $value;
 	}
-	
+
 	/**
 	 * Returns the message source for the given category.
 	 *
@@ -200,7 +200,7 @@ class I18N extends Service
 				}
 			}
 		}
-		
+
 		throw new InvalidConfigException ( "Unable to locate message source for category '$category'." );
 	}
 }

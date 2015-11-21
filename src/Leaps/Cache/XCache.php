@@ -34,7 +34,6 @@ class XCache extends Cache
     public function exists($key)
     {
         $key = $this->buildKey($key);
-
         return xcache_isset($key);
     }
 
@@ -100,7 +99,6 @@ class XCache extends Cache
                 return false;
             }
         }
-
         return true;
     }
 }

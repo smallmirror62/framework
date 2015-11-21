@@ -29,11 +29,11 @@ use Leaps\Base\InvalidConfigException;
 class FileTarget extends Target
 {
 	/**
-	 *
-	 * @var string log file path or path alias. If not set, it will use the "@runtime/logs/app.log" file.
-	 *      The directory containing the log files will be automatically created if not existing.
+	 * 日志文件路径或别名
+	 * @var string  日志文件路径或别名，如果未设置，将使用"@Runtime/logs/app.log" 文件，如果该文件不存在将自动创建。
 	 */
 	public $logFile;
+
 	/**
 	 *
 	 * @var bool whether log files should be rotated when they reach a certain [[maxFileSize|maximum size]].
@@ -73,7 +73,7 @@ class FileTarget extends Target
 	 *      renaming files. Defaults to `true` to be more compatible with log tailers and is windows
 	 *      systems which do not play well with rename on open files. Rotation by renaming however is
 	 *      a bit faster.
-	 *     
+	 *
 	 *      The problem with windows systems where the [rename()](http://www.php.net/manual/en/function.rename.php)
 	 *      function does not work with files that are opened by some process is described in a
 	 *      [comment by Martin Pelletier](http://www.php.net/manual/en/function.rename.php#102274) in
@@ -81,7 +81,7 @@ class FileTarget extends Target
 	 *      around this problem.
 	 */
 	public $rotateByCopy = true;
-	
+
 	/**
 	 * Initializes the route.
 	 * This method is invoked after the route is created by the route manager.
@@ -105,7 +105,7 @@ class FileTarget extends Target
 			$this->maxFileSize = 1;
 		}
 	}
-	
+
 	/**
 	 * Writes log messages to a file.
 	 *
@@ -113,9 +113,9 @@ class FileTarget extends Target
 	 */
 	public function export()
 	{
-		$text = implode ( "\n", array_map ( [ 
+		$text = implode ( "\n", array_map ( [
 			$this,
-			'formatMessage' 
+			'formatMessage'
 		], $this->messages ) ) . "\n";
 		if (($fp = @fopen ( $this->logFile, 'a' )) === false) {
 			throw new InvalidConfigException ( "Unable to append to log file: {$this->logFile}" );
@@ -140,7 +140,7 @@ class FileTarget extends Target
 			@chmod ( $this->logFile, $this->fileMode );
 		}
 	}
-	
+
 	/**
 	 * Rotates log files.
 	 */

@@ -34,7 +34,7 @@ use Leaps\Console\Controller;
  * available commands will be displayed.
  *
  * @property array $commands All available command names. This property is read-only.
- *          
+ *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
@@ -57,9 +57,9 @@ class HelpController extends Controller
 				$name = $this->ansiFormat ( $command, Console::FG_YELLOW );
 				throw new Exception ( "No help for unknown command \"$name\"." );
 			}
-			
+
 			list ( $controller, $actionID ) = $result;
-			
+
 			$actions = $this->getActions ( $controller );
 			if ($actionID !== '' || count ( $actions ) === 1 && $actions [0] === $controller->defaultAction) {
 				$this->getSubCommandHelp ( $controller, $actionID );
@@ -70,7 +70,7 @@ class HelpController extends Controller
 			$this->getDefaultHelp ();
 		}
 	}
-	
+
 	/**
 	 * Returns all available command names.
 	 *
@@ -82,7 +82,7 @@ class HelpController extends Controller
 		sort ( $commands );
 		return array_unique ( $commands );
 	}
-	
+
 	/**
 	 * Returns an array of commands an their descriptions.
 	 *
@@ -93,20 +93,20 @@ class HelpController extends Controller
 		$descriptions = [ ];
 		foreach ( $this->getCommands () as $command ) {
 			$description = '';
-			
+
 			$result = Leaps::$app->createController ( $command );
 			if ($result !== false) {
 				list ( $controller, $actionID ) = $result;
 				/** @var Controller $controller */
 				$description = $controller->getHelpSummary ();
 			}
-			
+
 			$descriptions [$command] = $description;
 		}
-		
+
 		return $descriptions;
 	}
-	
+
 	/**
 	 * Returns all available actions of the specified controller.
 	 *
@@ -124,10 +124,10 @@ class HelpController extends Controller
 			}
 		}
 		sort ( $actions );
-		
+
 		return array_unique ( $actions );
 	}
-	
+
 	/**
 	 * Returns available commands of a specified module.
 	 *
@@ -137,12 +137,12 @@ class HelpController extends Controller
 	protected function getModuleCommands($module)
 	{
 		$prefix = $module instanceof Application ? '' : $module->getUniqueID () . '/';
-		
+
 		$commands = [ ];
 		foreach ( array_keys ( $module->controllerMap ) as $id ) {
 			$commands [] = $prefix . $id;
 		}
-		
+
 		foreach ( $module->getModules () as $id => $child ) {
 			if (($child = $module->getModule ( $id )) === null) {
 				continue;
@@ -151,7 +151,7 @@ class HelpController extends Controller
 				$commands [] = $command;
 			}
 		}
-		
+
 		$controllerPath = $module->getControllerPath ();
 		if (is_dir ( $controllerPath )) {
 			$files = scandir ( $controllerPath );
@@ -164,10 +164,10 @@ class HelpController extends Controller
 				}
 			}
 		}
-		
+
 		return $commands;
 	}
-	
+
 	/**
 	 * Validates if the given class is a valid console controller class.
 	 *
@@ -183,7 +183,7 @@ class HelpController extends Controller
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Displays all available commands.
 	 */
@@ -221,7 +221,7 @@ class HelpController extends Controller
 				$this->stdout ( str_repeat ( ' ', $len + 4 - strlen ( $command ) ) );
 				$this->stdout ( Console::wrapText ( $description, $len + 4 + 2 ), Console::BOLD );
 				$this->stdout ( "\n" );
-				
+
 				$result = Leaps::$app->createController ( $command );
 				if ($result !== false) {
 					list ( $controller, $actionID ) = $result;
@@ -253,7 +253,7 @@ class HelpController extends Controller
 			$this->stdout ( "\nNo commands are found.\n\n", Console::BOLD );
 		}
 	}
-	
+
 	/**
 	 * Displays the overall information of the command.
 	 *
@@ -262,18 +262,18 @@ class HelpController extends Controller
 	protected function getCommandHelp($controller)
 	{
 		$controller->color = $this->color;
-		
+
 		$this->stdout ( "\nDESCRIPTION\n", Console::BOLD );
 		$comment = $controller->getHelp ();
 		if ($comment !== '') {
 			$this->stdout ( "\n$comment\n\n" );
 		}
-		
+
 		$actions = $this->getActions ( $controller );
 		if (! empty ( $actions )) {
 			$this->stdout ( "\nSUB-COMMANDS\n\n", Console::BOLD );
 			$prefix = $controller->getUniqueId ();
-			
+
 			$maxlen = 5;
 			foreach ( $actions as $action ) {
 				$len = strlen ( $prefix . '/' . $action ) + 2 + ($action === $controller->defaultAction ? 10 : 0);
@@ -299,7 +299,7 @@ class HelpController extends Controller
 			$this->stdout ( "\n  $scriptName " . $this->ansiFormat ( 'help', Console::FG_YELLOW ) . ' ' . $this->ansiFormat ( '<sub-command>', Console::FG_CYAN ) . "\n\n" );
 		}
 	}
-	
+
 	/**
 	 * Displays the detailed information of a command action.
 	 *
@@ -314,13 +314,13 @@ class HelpController extends Controller
 			$name = $this->ansiFormat ( rtrim ( $controller->getUniqueId () . '/' . $actionID, '/' ), Console::FG_YELLOW );
 			throw new Exception ( "No help for unknown sub-command \"$name\"." );
 		}
-		
+
 		$description = $controller->getActionHelp ( $action );
 		if ($description != '') {
 			$this->stdout ( "\nDESCRIPTION\n", Console::BOLD );
 			$this->stdout ( "\n$description\n\n" );
 		}
-		
+
 		$this->stdout ( "\nUSAGE\n\n", Console::BOLD );
 		$scriptName = $this->getScriptName ();
 		if ($action->id === $controller->defaultAction) {
@@ -328,7 +328,7 @@ class HelpController extends Controller
 		} else {
 			$this->stdout ( $scriptName . ' ' . $this->ansiFormat ( $action->getUniqueId (), Console::FG_YELLOW ) );
 		}
-		
+
 		$args = $controller->getActionArgsHelp ( $action );
 		foreach ( $args as $name => $arg ) {
 			if ($arg ['required']) {
@@ -337,26 +337,26 @@ class HelpController extends Controller
 				$this->stdout ( ' [' . $name . ']', Console::FG_CYAN );
 			}
 		}
-		
+
 		$options = $controller->getActionOptionsHelp ( $action );
-		$options [\Leaps\Console\Application::OPTION_APPCONFIG] = [ 
+		$options [\Leaps\Console\Application::OPTION_APPCONFIG] = [
 			'type' => 'string',
 			'default' => null,
-			'comment' => "custom application configuration file path.\nIf not set, default application configuration is used." 
+			'comment' => "custom application configuration file path.\nIf not set, default application configuration is used."
 		];
 		ksort ( $options );
-		
+
 		if (! empty ( $options )) {
 			$this->stdout ( ' [...options...]', Console::FG_RED );
 		}
 		$this->stdout ( "\n\n" );
-		
+
 		if (! empty ( $args )) {
 			foreach ( $args as $name => $arg ) {
 				$this->stdout ( $this->formatOptionHelp ( '- ' . $this->ansiFormat ( $name, Console::FG_CYAN ), $arg ['required'], $arg ['type'], $arg ['default'], $arg ['comment'] ) . "\n\n" );
 			}
 		}
-		
+
 		if (! empty ( $options )) {
 			$this->stdout ( "\nOPTIONS\n\n", Console::BOLD );
 			foreach ( $options as $name => $option ) {
@@ -364,7 +364,7 @@ class HelpController extends Controller
 			}
 		}
 	}
-	
+
 	/**
 	 * Generates a well-formed string for an argument or option.
 	 *
@@ -382,7 +382,7 @@ class HelpController extends Controller
 		if (strncmp ( $type, 'bool', 4 ) === 0) {
 			$type = 'boolean, 0 or 1';
 		}
-		
+
 		if ($defaultValue !== null && ! is_array ( $defaultValue )) {
 			if ($type === null) {
 				$type = gettype ( $defaultValue );
@@ -400,18 +400,18 @@ class HelpController extends Controller
 		} else {
 			$doc = $type;
 		}
-		
+
 		if ($doc === '') {
 			$doc = $comment;
 		} elseif ($comment !== '') {
 			$doc .= "\n" . preg_replace ( "/^/m", "  ", $comment );
 		}
-		
+
 		$name = $required ? "$name (required)" : $name;
-		
+
 		return $doc === '' ? $name : "$name: $doc";
 	}
-	
+
 	/**
 	 *
 	 * @return string the name of the cli script currently running.

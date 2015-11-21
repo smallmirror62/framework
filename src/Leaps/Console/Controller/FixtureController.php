@@ -42,7 +42,7 @@ use Leaps\Console\Controller;
 class FixtureController extends Controller
 {
 	use FixtureTrait;
-	
+
 	/**
 	 *
 	 * @var string controller default action ID.
@@ -58,21 +58,21 @@ class FixtureController extends Controller
 	 * @var array global fixtures that should be applied when loading and unloading. By default it is set to `InitDbFixture`
 	 *      that disables and enables integrity check, so your data can be safely loaded.
 	 */
-	public $globalFixtures = [ 
-		'Leaps\test\InitDb' 
+	public $globalFixtures = [
+		'Leaps\test\InitDb'
 	];
-	
+
 	/**
 	 * @inheritdoc
 	 */
 	public function options($actionID)
 	{
-		return array_merge ( parent::options ( $actionID ), [ 
+		return array_merge ( parent::options ( $actionID ), [
 			'namespace',
-			'globalFixtures' 
+			'globalFixtures'
 		] );
 	}
-	
+
 	/**
 	 * Loads the specified fixture data.
 	 * For example,
@@ -96,62 +96,62 @@ class FixtureController extends Controller
 		$fixturesInput = func_get_args ();
 		if ($fixturesInput === [ ]) {
 			$this->stdout ( $this->getHelpSummary () . "\n" );
-			
-			$helpCommand = Console::ansiFormat ( "leaps help fixture", [ 
-				Console::FG_CYAN 
+
+			$helpCommand = Console::ansiFormat ( "leaps help fixture", [
+				Console::FG_CYAN
 			] );
 			$this->stdout ( "Use $helpCommand to get usage info.\n" );
-			
+
 			return self::EXIT_CODE_NORMAL;
 		}
-		
+
 		$filtered = $this->filterFixtures ( $fixturesInput );
 		$except = $filtered ['except'];
-		
+
 		if (! $this->needToApplyAll ( $fixturesInput [0] )) {
-			
+
 			$fixtures = $filtered ['apply'];
-			
+
 			$foundFixtures = $this->findFixtures ( $fixtures );
 			$notFoundFixtures = array_diff ( $fixtures, $foundFixtures );
-			
+
 			if ($notFoundFixtures) {
 				$this->notifyNotFound ( $notFoundFixtures );
 			}
 		} else {
 			$foundFixtures = $this->findFixtures ();
 		}
-		
+
 		$fixturesToLoad = array_diff ( $foundFixtures, $except );
-		
+
 		if (! $foundFixtures) {
 			throw new Exception ( "No files were found by name: \"" . implode ( ', ', $fixturesInput ) . "\".\n" . "Check that files with these name exists, under fixtures path: \n\"" . $this->getFixturePath () . "\"." );
 		}
-		
+
 		if (! $fixturesToLoad) {
 			$this->notifyNothingToLoad ( $foundFixtures, $except );
 			return static::EXIT_CODE_NORMAL;
 		}
-		
+
 		if (! $this->confirmLoad ( $fixturesToLoad, $except )) {
 			return static::EXIT_CODE_NORMAL;
 		}
-		
+
 		$fixtures = $this->getFixturesConfig ( array_merge ( $this->globalFixtures, $fixturesToLoad ) );
-		
+
 		if (! $fixtures) {
 			throw new Exception ( 'No fixtures were found in namespace: "' . $this->namespace . '"' . '' );
 		}
-		
+
 		$fixturesObjects = $this->createFixtures ( $fixtures );
-		
+
 		$this->unloadFixtures ( $fixturesObjects );
 		$this->loadFixtures ( $fixturesObjects );
 		$this->notifyLoaded ( $fixtures );
-		
+
 		return static::EXIT_CODE_NORMAL;
 	}
-	
+
 	/**
 	 * Unloads the specified fixtures.
 	 * For example,
@@ -174,46 +174,46 @@ class FixtureController extends Controller
 		$fixturesInput = func_get_args ();
 		$filtered = $this->filterFixtures ( $fixturesInput );
 		$except = $filtered ['except'];
-		
+
 		if (! $this->needToApplyAll ( $fixturesInput [0] )) {
-			
+
 			$fixtures = $filtered ['apply'];
-			
+
 			$foundFixtures = $this->findFixtures ( $fixtures );
 			$notFoundFixtures = array_diff ( $fixtures, $foundFixtures );
-			
+
 			if ($notFoundFixtures) {
 				$this->notifyNotFound ( $notFoundFixtures );
 			}
 		} else {
 			$foundFixtures = $this->findFixtures ();
 		}
-		
+
 		$fixturesToUnload = array_diff ( $foundFixtures, $except );
-		
+
 		if (! $foundFixtures) {
 			throw new Exception ( "No files were found by name: \"" . implode ( ', ', $fixturesInput ) . "\".\n" . "Check that files with these name exists, under fixtures path: \n\"" . $this->getFixturePath () . "\"." );
 		}
-		
+
 		if (! $fixturesToUnload) {
 			$this->notifyNothingToUnload ( $foundFixtures, $except );
 			return static::EXIT_CODE_NORMAL;
 		}
-		
+
 		if (! $this->confirmUnload ( $fixturesToUnload, $except )) {
 			return static::EXIT_CODE_NORMAL;
 		}
-		
+
 		$fixtures = $this->getFixturesConfig ( array_merge ( $this->globalFixtures, $fixturesToUnload ) );
-		
+
 		if (! $fixtures) {
 			throw new Exception ( 'No fixtures were found in namespace: ' . $this->namespace . '".' );
 		}
-		
+
 		$this->unloadFixtures ( $this->createFixtures ( $fixtures ) );
 		$this->notifyUnloaded ( $fixtures );
 	}
-	
+
 	/**
 	 * Notifies user that fixtures were successfully loaded.
 	 *
@@ -225,7 +225,7 @@ class FixtureController extends Controller
 		$this->stdout ( "\t\"" . Leaps::getAlias ( $this->namespace ) . "\"\n\n", Console::FG_GREEN );
 		$this->outputList ( $fixtures );
 	}
-	
+
 	/**
 	 * Notifies user that there are no fixtures to load according input conditions
 	 *
@@ -237,18 +237,18 @@ class FixtureController extends Controller
 		$this->stdout ( "Fixtures to load could not be found according given conditions:\n\n", Console::FG_RED );
 		$this->stdout ( "Fixtures namespace is: \n", Console::FG_YELLOW );
 		$this->stdout ( "\t" . $this->namespace . "\n", Console::FG_GREEN );
-		
+
 		if (count ( $foundFixtures )) {
 			$this->stdout ( "\nFixtures founded under the namespace:\n\n", Console::FG_YELLOW );
 			$this->outputList ( $foundFixtures );
 		}
-		
+
 		if (count ( $except )) {
 			$this->stdout ( "\nFixtures that will NOT be loaded: \n\n", Console::FG_YELLOW );
 			$this->outputList ( $except );
 		}
 	}
-	
+
 	/**
 	 * Notifies user that there are no fixtures to unload according input conditions
 	 *
@@ -260,18 +260,18 @@ class FixtureController extends Controller
 		$this->stdout ( "Fixtures to unload could not be found according given conditions:\n\n", Console::FG_RED );
 		$this->stdout ( "Fixtures namespace is: \n", Console::FG_YELLOW );
 		$this->stdout ( "\t" . $this->namespace . "\n", Console::FG_GREEN );
-		
+
 		if (count ( $foundFixtures )) {
 			$this->stdout ( "\nFixtures founded under the namespace:\n\n", Console::FG_YELLOW );
 			$this->outputList ( $foundFixtures );
 		}
-		
+
 		if (count ( $except )) {
 			$this->stdout ( "\nFixtures that will NOT be unloaded: \n\n", Console::FG_YELLOW );
 			$this->outputList ( $except );
 		}
 	}
-	
+
 	/**
 	 * Notifies user that fixtures were successfully unloaded.
 	 *
@@ -283,7 +283,7 @@ class FixtureController extends Controller
 		$this->stdout ( Leaps::getAlias ( $this->namespace ) . "\"\n\n", Console::FG_GREEN );
 		$this->outputList ( $fixtures );
 	}
-	
+
 	/**
 	 * Notifies user that fixtures were not found under fixtures path.
 	 *
@@ -297,7 +297,7 @@ class FixtureController extends Controller
 		$this->outputList ( $fixtures );
 		$this->stdout ( "\n" );
 	}
-	
+
 	/**
 	 * Prompts user with confirmation if fixtures should be loaded.
 	 *
@@ -309,25 +309,25 @@ class FixtureController extends Controller
 	{
 		$this->stdout ( "Fixtures namespace is: \n", Console::FG_YELLOW );
 		$this->stdout ( "\t" . $this->namespace . "\n\n", Console::FG_GREEN );
-		
+
 		if (count ( $this->globalFixtures )) {
 			$this->stdout ( "Global fixtures will be used:\n\n", Console::FG_YELLOW );
 			$this->outputList ( $this->globalFixtures );
 		}
-		
+
 		if (count ( $fixtures )) {
 			$this->stdout ( "\nFixtures below will be loaded:\n\n", Console::FG_YELLOW );
 			$this->outputList ( $fixtures );
 		}
-		
+
 		if (count ( $except )) {
 			$this->stdout ( "\nFixtures that will NOT be loaded: \n\n", Console::FG_YELLOW );
 			$this->outputList ( $except );
 		}
-		
+
 		return $this->confirm ( "\nLoad above fixtures?" );
 	}
-	
+
 	/**
 	 * Prompts user with confirmation for fixtures that should be unloaded.
 	 *
@@ -339,25 +339,25 @@ class FixtureController extends Controller
 	{
 		$this->stdout ( "Fixtures namespace is: \n", Console::FG_YELLOW );
 		$this->stdout ( "\t" . $this->namespace . "\n\n", Console::FG_GREEN );
-		
+
 		if (count ( $this->globalFixtures )) {
 			$this->stdout ( "Global fixtures will be used:\n\n", Console::FG_YELLOW );
 			$this->outputList ( $this->globalFixtures );
 		}
-		
+
 		if (count ( $fixtures )) {
 			$this->stdout ( "\nFixtures below will be unloaded:\n\n", Console::FG_YELLOW );
 			$this->outputList ( $fixtures );
 		}
-		
+
 		if (count ( $except )) {
 			$this->stdout ( "\nFixtures that will NOT be unloaded:\n\n", Console::FG_YELLOW );
 			$this->outputList ( $except );
 		}
-		
+
 		return $this->confirm ( "\nUnload fixtures?" );
 	}
-	
+
 	/**
 	 * Outputs data to the console as a list.
 	 *
@@ -369,7 +369,7 @@ class FixtureController extends Controller
 			$this->stdout ( "\t" . ($index + 1) . ". {$item}\n", Console::FG_GREEN );
 		}
 	}
-	
+
 	/**
 	 * Checks if needed to apply all fixtures.
 	 *
@@ -380,7 +380,7 @@ class FixtureController extends Controller
 	{
 		return $fixture == '*';
 	}
-	
+
 	/**
 	 * Finds fixtures to be loaded, for example "User", if no fixtures were specified then all of them
 	 * will be searching by suffix "Fixture.php".
@@ -391,33 +391,33 @@ class FixtureController extends Controller
 	private function findFixtures(array $fixtures = [])
 	{
 		$fixturesPath = $this->getFixturePath ();
-		
-		$filesToSearch = [ 
-			'*Fixture.php' 
+
+		$filesToSearch = [
+			'*Fixture.php'
 		];
 		$findAll = ($fixtures == [ ]);
-		
+
 		if (! $findAll) {
-			
+
 			$filesToSearch = [ ];
-			
+
 			foreach ( $fixtures as $fileName ) {
 				$filesToSearch [] = $fileName . 'Fixture.php';
 			}
 		}
-		
-		$files = FileHelper::findFiles ( $fixturesPath, [ 
-			'only' => $filesToSearch 
+
+		$files = FileHelper::findFiles ( $fixturesPath, [
+			'only' => $filesToSearch
 		] );
 		$foundFixtures = [ ];
-		
+
 		foreach ( $files as $fixture ) {
 			$foundFixtures [] = basename ( $fixture, 'Fixture.php' );
 		}
-		
+
 		return $foundFixtures;
 	}
-	
+
 	/**
 	 * Returns valid fixtures config that can be used to load them.
 	 *
@@ -427,20 +427,20 @@ class FixtureController extends Controller
 	private function getFixturesConfig($fixtures)
 	{
 		$config = [ ];
-		
+
 		foreach ( $fixtures as $fixture ) {
-			
+
 			$isNamespaced = (strpos ( $fixture, '\\' ) !== false);
 			$fullClassName = $isNamespaced ? $fixture . 'Fixture' : $this->namespace . '\\' . $fixture . 'Fixture';
-			
+
 			if (class_exists ( $fullClassName )) {
 				$config [] = $fullClassName;
 			}
 		}
-		
+
 		return $config;
 	}
-	
+
 	/**
 	 * Filters fixtures by splitting them in two categories: one that should be applied and not.
 	 * If fixture is prefixed with "-", for example "-User", that means that fixture should not be loaded,
@@ -464,11 +464,11 @@ class FixtureController extends Controller
 	 */
 	private function filterFixtures($fixtures)
 	{
-		$filtered = [ 
+		$filtered = [
 			'apply' => [ ],
-			'except' => [ ] 
+			'except' => [ ]
 		];
-		
+
 		foreach ( $fixtures as $fixture ) {
 			if (mb_strpos ( $fixture, '-' ) !== false) {
 				$filtered ['except'] [] = str_replace ( '-', '', $fixture );
@@ -476,10 +476,10 @@ class FixtureController extends Controller
 				$filtered ['apply'] [] = $fixture;
 			}
 		}
-		
+
 		return $filtered;
 	}
-	
+
 	/**
 	 * Returns fixture path that determined on fixtures namespace.
 	 *

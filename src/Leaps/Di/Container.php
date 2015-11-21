@@ -92,7 +92,7 @@ use Leaps\Base\InvalidConfigException;
  *
  * @property array $definitions The list of the object definitions or the loaded shared objects (type or ID =>
  *           definition or instance). This property is read-only.
- *          
+ *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
@@ -124,7 +124,7 @@ class Container extends Service
 	 *      is associated with a list of constructor parameter types or default values.
 	 */
 	private $_dependencies = [ ];
-	
+
 	/**
 	 * Returns an instance of the requested class.
 	 *
@@ -157,19 +157,19 @@ class Container extends Service
 		} elseif (! isset ( $this->_definitions [$class] )) {
 			return $this->build ( $class, $params, $config );
 		}
-		
+
 		$definition = $this->_definitions [$class];
-		
+
 		if (is_callable ( $definition, true )) {
 			$params = $this->resolveDependencies ( $this->mergeParams ( $class, $params ) );
 			$object = call_user_func ( $definition, $this, $params, $config );
 		} elseif (is_array ( $definition )) {
 			$concrete = $definition ['className'];
 			unset ( $definition ['className'] );
-			
+
 			$config = array_merge ( $definition, $config );
 			$params = $this->mergeParams ( $class, $params );
-			
+
 			if ($concrete === $class) {
 				$object = $this->build ( $class, $params, $config );
 			} else {
@@ -180,15 +180,15 @@ class Container extends Service
 		} else {
 			throw new InvalidConfigException ( "Unexpected object definition type: " . gettype ( $definition ) );
 		}
-		
+
 		if (array_key_exists ( $class, $this->_singletons )) {
 			// singleton
 			$this->_singletons [$class] = $object;
 		}
-		
+
 		return $object;
 	}
-	
+
 	/**
 	 * Registers a class definition with this container.
 	 *
@@ -238,7 +238,7 @@ class Container extends Service
 	 *
 	 * @param string $class class name, interface name or alias name
 	 * @param mixed $definition the definition associated with `$class`. It can be one of the following:
-	 *       
+	 *
 	 *        - a PHP callable: The callable will be executed when [[get()]] is invoked. The signature of the callable
 	 *        should be `function ($container, $params, $config)`, where `$params` stands for the list of constructor
 	 *        parameters, `$config` the object configuration, and `$container` the container object. The return value
@@ -258,7 +258,7 @@ class Container extends Service
 		unset ( $this->_singletons [$class] );
 		return $this;
 	}
-	
+
 	/**
 	 * Registers a class definition with this container and marks the class as a singleton class.
 	 *
@@ -279,7 +279,7 @@ class Container extends Service
 		$this->_singletons [$class] = null;
 		return $this;
 	}
-	
+
 	/**
 	 * Returns a value indicating whether the container has the definition of the specified name.
 	 *
@@ -291,7 +291,7 @@ class Container extends Service
 	{
 		return isset ( $this->_definitions [$class] );
 	}
-	
+
 	/**
 	 * Returns a value indicating whether the given name corresponds to a registered singleton.
 	 *
@@ -304,7 +304,7 @@ class Container extends Service
 	{
 		return $checkInstance ? isset ( $this->_singletons [$class] ) : array_key_exists ( $class, $this->_singletons );
 	}
-	
+
 	/**
 	 * Removes the definition for the specified name.
 	 *
@@ -314,7 +314,7 @@ class Container extends Service
 	{
 		unset ( $this->_definitions [$class], $this->_singletons [$class] );
 	}
-	
+
 	/**
 	 * Normalizes the class definition.
 	 *
@@ -326,12 +326,12 @@ class Container extends Service
 	protected function normalizeDefinition($class, $definition)
 	{
 		if (empty ( $definition )) {
-			return [ 
-				'className' => $class 
+			return [
+				'className' => $class
 			];
 		} elseif (is_string ( $definition )) {
-			return [ 
-				'className' => $definition 
+			return [
+				'className' => $definition
 			];
 		} elseif (is_callable ( $definition, true ) || is_object ( $definition )) {
 			return $definition;
@@ -348,7 +348,7 @@ class Container extends Service
 			throw new InvalidConfigException ( "Unsupported definition type for \"$class\": " . gettype ( $definition ) );
 		}
 	}
-	
+
 	/**
 	 * Returns the list of the object definitions or the loaded shared objects.
 	 *
@@ -358,7 +358,7 @@ class Container extends Service
 	{
 		return $this->_definitions;
 	}
-	
+
 	/**
 	 * Creates an instance of the specified class.
 	 * This method will resolve dependencies of the specified class, instantiate them, and inject
@@ -373,16 +373,16 @@ class Container extends Service
 	{
 		/* @var $reflection ReflectionClass */
 		list ( $reflection, $dependencies ) = $this->getDependencies ( $class );
-		
+
 		foreach ( $params as $index => $param ) {
 			$dependencies [$index] = $param;
 		}
-		
+
 		$dependencies = $this->resolveDependencies ( $dependencies, $reflection );
 		if (empty ( $config )) {
 			return $reflection->newInstanceArgs ( $dependencies );
 		}
-		
+
 		if (! empty ( $dependencies ) && $reflection->implementsInterface ( 'Leaps\Base\Configurable' )) {
 			// set $config as the last parameter (existing one will be overwritten)
 			$dependencies [count ( $dependencies ) - 1] = $config;
@@ -395,7 +395,7 @@ class Container extends Service
 			return $object;
 		}
 	}
-	
+
 	/**
 	 * Merges the user-specified constructor parameters with the ones registered via [[set()]].
 	 *
@@ -417,7 +417,7 @@ class Container extends Service
 			return $ps;
 		}
 	}
-	
+
 	/**
 	 * Returns the dependencies of the specified class.
 	 *
@@ -427,15 +427,15 @@ class Container extends Service
 	protected function getDependencies($class)
 	{
 		if (isset ( $this->_reflections [$class] )) {
-			return [ 
+			return [
 				$this->_reflections [$class],
-				$this->_dependencies [$class] 
+				$this->_dependencies [$class]
 			];
 		}
-		
+
 		$dependencies = [ ];
 		$reflection = new ReflectionClass ( $class );
-		
+
 		$constructor = $reflection->getConstructor ();
 		if ($constructor !== null) {
 			foreach ( $constructor->getParameters () as $param ) {
@@ -447,16 +447,16 @@ class Container extends Service
 				}
 			}
 		}
-		
+
 		$this->_reflections [$class] = $reflection;
 		$this->_dependencies [$class] = $dependencies;
-		
-		return [ 
+
+		return [
 			$reflection,
-			$dependencies 
+			$dependencies
 		];
 	}
-	
+
 	/**
 	 * Resolves dependencies by replacing them with the actual object instances.
 	 *

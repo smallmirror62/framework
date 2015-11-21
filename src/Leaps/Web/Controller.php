@@ -111,7 +111,7 @@ class Controller extends \Leaps\Base\Controller
             }
             return true;
         }
-        
+
         return false;
     }
 

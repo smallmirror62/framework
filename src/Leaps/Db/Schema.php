@@ -8,11 +8,13 @@
 namespace Leaps\Db;
 
 use Leaps;
+use Leaps\Cache\Cache;
 use Leaps\Base\Object;
+use Leaps\Cache\TagDependency;
 use Leaps\Base\NotSupportedException;
 use Leaps\Base\InvalidCallException;
-use Leaps\Cache\Cache;
-use Leaps\Cache\TagDependency;
+
+
 
 /**
  * Schema is the base class for concrete DBMS-specific schema classes.

@@ -58,8 +58,8 @@ use Leaps\Base\ErrorHandler;
  * @property Logger $logger The logger. If not set, [[\Leaps::getLogger()]] will be used.
  * @property integer $traceLevel How many application call stacks should be logged together with each message.
  *           This method returns the value of [[Logger::traceLevel]]. Defaults to 0.
- *          
- *          
+ *
+ *
  */
 class Dispatcher extends Service
 {
@@ -69,13 +69,13 @@ class Dispatcher extends Service
 	 *      or the configuration for creating the log target instance.
 	 */
 	public $targets = [ ];
-	
+
 	/**
 	 *
 	 * @var Logger the logger.
 	 */
 	private $_logger;
-	
+
 	/**
 	 * @inheritdoc
 	 */
@@ -88,24 +88,24 @@ class Dispatcher extends Service
 		}
 		// connect logger and dispatcher
 		$this->getLogger ();
-		
+
 		parent::__construct ( $config );
 	}
-	
+
 	/**
 	 * @inheritdoc
 	 */
 	public function init()
 	{
 		parent::init ();
-		
+
 		foreach ( $this->targets as $name => $target ) {
 			if (! $target instanceof Target) {
 				$this->targets [$name] = Leaps::createObject ( $target );
 			}
 		}
 	}
-	
+
 	/**
 	 * Gets the connected logger.
 	 * If not set, [[\Leaps::getLogger()]] will be used.
@@ -120,7 +120,7 @@ class Dispatcher extends Service
 		}
 		return $this->_logger;
 	}
-	
+
 	/**
 	 * Sets the connected logger.
 	 *
@@ -131,7 +131,7 @@ class Dispatcher extends Service
 		$this->_logger = $value;
 		$this->_logger->dispatcher = $this;
 	}
-	
+
 	/**
 	 *
 	 * @return integer how many application call stacks should be logged together with each message.
@@ -141,7 +141,7 @@ class Dispatcher extends Service
 	{
 		return $this->getLogger ()->traceLevel;
 	}
-	
+
 	/**
 	 *
 	 * @param integer $value how many application call stacks should be logged together with each message.
@@ -153,7 +153,7 @@ class Dispatcher extends Service
 	{
 		$this->getLogger ()->traceLevel = $value;
 	}
-	
+
 	/**
 	 *
 	 * @return integer how many messages should be logged before they are sent to targets.
@@ -163,7 +163,7 @@ class Dispatcher extends Service
 	{
 		return $this->getLogger ()->flushInterval;
 	}
-	
+
 	/**
 	 *
 	 * @param integer $value how many messages should be logged before they are sent to targets.
@@ -177,7 +177,7 @@ class Dispatcher extends Service
 	{
 		$this->getLogger ()->flushInterval = $value;
 	}
-	
+
 	/**
 	 * Dispatches the logged messages to [[targets]].
 	 *
@@ -193,17 +193,17 @@ class Dispatcher extends Service
 					$target->collect ( $messages, $final );
 				} catch ( \Exception $e ) {
 					$target->enabled = false;
-					$targetErrors [] = [ 
+					$targetErrors [] = [
 						'Unable to send log via ' . get_class ( $target ) . ': ' . ErrorHandler::convertExceptionToString ( $e ),
 						Logger::LEVEL_WARNING,
 						__METHOD__,
 						microtime ( true ),
-						[ ] 
+						[ ]
 					];
 				}
 			}
 		}
-		
+
 		if (! empty ( $targetErrors )) {
 			$this->dispatch ( $targetErrors, true );
 		}

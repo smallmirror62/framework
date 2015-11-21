@@ -37,8 +37,8 @@ use Leaps\Base\Service;
  *           read-only.
  * @property array $profiling The profiling results. Each element is an array consisting of these elements:
  *           `info`, `category`, `timestamp`, `trace`, `level`, `duration`. This property is read-only.
- *          
- *          
+ *
+ *
  */
 class Logger extends Service
 {
@@ -82,12 +82,12 @@ class Logger extends Service
 	 * end of a profiling block.
 	 */
 	const LEVEL_PROFILE_END = 0x60;
-	
+
 	/**
 	 *
 	 * @var array logged messages. This property is managed by [[log()]] and [[flush()]].
 	 *      Each log message is of the following structure:
-	 *     
+	 *
 	 *      ~~~
 	 *      [
 	 *      [0] => message (mixed, can be a string or some complex data, such as an exception object)
@@ -120,7 +120,7 @@ class Logger extends Service
 	 * @var Dispatcher the message dispatcher
 	 */
 	public $dispatcher;
-	
+
 	/**
 	 * Initializes the logger by registering [[flush()]] as a shutdown function.
 	 */
@@ -133,13 +133,13 @@ class Logger extends Service
 			$this->flush ();
 			// make sure log entries written by shutdown functions are also flushed
 			// ensure "flush()" is called last when there are multiple shutdown functions
-			register_shutdown_function ( [ 
+			register_shutdown_function ( [
 				$this,
-				'flush' 
+				'flush'
 			], true );
 		} );
 	}
-	
+
 	/**
 	 * Logs a message with the given type and category.
 	 * If [[traceLevel]] is greater than 0, additional call stack information about
@@ -170,18 +170,18 @@ class Logger extends Service
 				}
 			}
 		}
-		$this->messages [] = [ 
+		$this->messages [] = [
 			$message,
 			$level,
 			$category,
 			$time,
-			$traces 
+			$traces
 		];
 		if ($this->flushInterval > 0 && count ( $this->messages ) >= $this->flushInterval) {
 			$this->flush ();
 		}
 	}
-	
+
 	/**
 	 * Flushes log messages from memory to targets.
 	 *
@@ -195,7 +195,7 @@ class Logger extends Service
 			$this->dispatcher->dispatch ( $messages, $final );
 		}
 	}
-	
+
 	/**
 	 * Returns the total elapsed time since the start of the current request.
 	 * This method calculates the difference between now and the timestamp
@@ -208,7 +208,7 @@ class Logger extends Service
 	{
 		return microtime ( true ) - LEAPS_BEGIN_TIME;
 	}
-	
+
 	/**
 	 * Returns the profiling results.
 	 *
@@ -230,7 +230,7 @@ class Logger extends Service
 		if (empty ( $categories ) && empty ( $excludeCategories )) {
 			return $timings;
 		}
-		
+
 		foreach ( $timings as $i => $timing ) {
 			$matched = empty ( $categories );
 			foreach ( $categories as $category ) {
@@ -240,7 +240,7 @@ class Logger extends Service
 					break;
 				}
 			}
-			
+
 			if ($matched) {
 				foreach ( $excludeCategories as $category ) {
 					$prefix = rtrim ( $category, '*' );
@@ -252,15 +252,15 @@ class Logger extends Service
 					}
 				}
 			}
-			
+
 			if (! $matched) {
 				unset ( $timings [$i] );
 			}
 		}
-		
+
 		return array_values ( $timings );
 	}
-	
+
 	/**
 	 * Returns the statistical results of DB queries.
 	 * The results returned include the number of SQL statements executed and
@@ -271,22 +271,22 @@ class Logger extends Service
 	 */
 	public function getDbProfiling()
 	{
-		$timings = $this->getProfiling ( [ 
+		$timings = $this->getProfiling ( [
 			'leaps \db\Command::query',
-			'leaps \db\Command::execute' 
+			'leaps \db\Command::execute'
 		] );
 		$count = count ( $timings );
 		$time = 0;
 		foreach ( $timings as $timing ) {
 			$time += $timing ['duration'];
 		}
-		
-		return [ 
+
+		return [
 			$count,
-			$time 
+			$time
 		];
 	}
-	
+
 	/**
 	 * Calculates the elapsed time for the given log messages.
 	 *
@@ -298,7 +298,7 @@ class Logger extends Service
 	{
 		$timings = [ ];
 		$stack = [ ];
-		
+
 		foreach ( $messages as $i => $log ) {
 			list ( $token, $level, $category, $timestamp, $traces ) = $log;
 			$log [5] = $i;
@@ -306,23 +306,23 @@ class Logger extends Service
 				$stack [] = $log;
 			} elseif ($level == Logger::LEVEL_PROFILE_END) {
 				if (($last = array_pop ( $stack )) !== null && $last [0] === $token) {
-					$timings [$last [5]] = [ 
+					$timings [$last [5]] = [
 						'info' => $last [0],
 						'category' => $last [2],
 						'timestamp' => $last [3],
 						'trace' => $last [4],
 						'level' => count ( $stack ),
-						'duration' => $timestamp - $last [3] 
+						'duration' => $timestamp - $last [3]
 					];
 				}
 			}
 		}
-		
+
 		ksort ( $timings );
-		
+
 		return array_values ( $timings );
 	}
-	
+
 	/**
 	 * Returns the text display of the specified level.
 	 *
@@ -331,15 +331,15 @@ class Logger extends Service
 	 */
 	public static function getLevelName($level)
 	{
-		static $levels = [ 
+		static $levels = [
 			self::LEVEL_ERROR => 'error',
 			self::LEVEL_WARNING => 'warning',
 			self::LEVEL_INFO => 'info',
 			self::LEVEL_TRACE => 'trace',
 			self::LEVEL_PROFILE_BEGIN => 'profile begin',
-			self::LEVEL_PROFILE_END => 'profile end' 
+			self::LEVEL_PROFILE_END => 'profile end'
 		];
-		
+
 		return isset ( $levels [$level] ) ? $levels [$level] : 'unknown';
 	}
 }

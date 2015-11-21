@@ -11,10 +11,10 @@
 namespace Leaps\Console;
 
 use Leaps;
-use Leaps\base\Action;
-use Leaps\base\InlineAction;
-use Leaps\base\InvalidRouteException;
+use Leaps\Base\Action;
 use Leaps\Helper\Console;
+use Leaps\Base\InlineAction;
+use Leaps\Base\InvalidRouteException;
 
 /**
  * Controller is the base class of console command classes.
@@ -32,14 +32,14 @@ use Leaps\Helper\Console;
  *
  * @property string $help This property is read-only.
  * @property string $helpSummary This property is read-only.
- *          
- *          
+ *
+ *
  */
 class Controller extends \Leaps\Base\Controller
 {
 	const EXIT_CODE_NORMAL = 0;
 	const EXIT_CODE_ERROR = 1;
-	
+
 	/**
 	 *
 	 * @var boolean whether to run the command interactively.
@@ -51,7 +51,7 @@ class Controller extends \Leaps\Base\Controller
 	 *      If not set, ANSI color will only be enabled for terminals that support it.
 	 */
 	public $color;
-	
+
 	/**
 	 * Returns a value indicating whether ANSI color is enabled.
 	 *
@@ -65,7 +65,7 @@ class Controller extends \Leaps\Base\Controller
 	{
 		return $this->color === null ? Console::streamSupportsAnsiColors ( $stream ) : $this->color;
 	}
-	
+
 	/**
 	 * Runs an action with the specified action ID and parameters.
 	 * If the action ID is empty, the method will use [[defaultAction]].
@@ -88,15 +88,13 @@ class Controller extends \Leaps\Base\Controller
 					$this->$name = is_array ( $default ) ? preg_split ( '/\s*,\s*/', $value ) : $value;
 					unset ( $params [$name] );
 				} elseif (! is_int ( $name )) {
-					throw new Exception ( Leaps::t ( 'Leaps', 'Unknown option: --{name}', [ 
-						'name' => $name 
-					] ) );
+					throw new Exception ( Leaps::t ( 'Leaps', 'Unknown option: --{name}', [ 'name' => $name ] ) );
 				}
 			}
 		}
 		return parent::runAction ( $id, $params );
 	}
-	
+
 	/**
 	 * Binds the parameters to the action.
 	 * This method is invoked by [[Action]] when it begins to run with the given parameters.
@@ -115,9 +113,9 @@ class Controller extends \Leaps\Base\Controller
 		} else {
 			$method = new \ReflectionMethod ( $action, 'run' );
 		}
-		
+
 		$args = array_values ( $params );
-		
+
 		$missing = [ ];
 		foreach ( $method->getParameters () as $i => $param ) {
 			if ($param->isArray () && isset ( $args [$i] )) {
@@ -131,16 +129,14 @@ class Controller extends \Leaps\Base\Controller
 				}
 			}
 		}
-		
+
 		if (! empty ( $missing )) {
-			throw new Exception ( Leaps::t ( 'Leaps', 'Missing required arguments: {params}', [ 
-				'params' => implode ( ', ', $missing ) 
-			] ) );
+			throw new Exception ( Leaps::t ( 'Leaps', 'Missing required arguments: {params}', [ 'params' => implode ( ', ', $missing ) ] ) );
 		}
-		
+
 		return $args;
 	}
-	
+
 	/**
 	 * Formats a string with ANSI codes
 	 *
@@ -164,7 +160,7 @@ class Controller extends \Leaps\Base\Controller
 		}
 		return $string;
 	}
-	
+
 	/**
 	 * Prints a string to STDOUT
 	 *
@@ -189,7 +185,7 @@ class Controller extends \Leaps\Base\Controller
 		}
 		return Console::stdout ( $string );
 	}
-	
+
 	/**
 	 * Prints a string to STDERR
 	 *
@@ -214,13 +210,13 @@ class Controller extends \Leaps\Base\Controller
 		}
 		return fwrite ( \STDERR, $string );
 	}
-	
+
 	/**
 	 * Prompts the user for input and validates it
 	 *
 	 * @param string $text prompt string
 	 * @param array $options the options to validate the input:
-	 *       
+	 *
 	 *        - required: whether it is required or not
 	 *        - default: default value if no input is inserted by the user
 	 *        - pattern: regular expression pattern to validate user input
@@ -237,7 +233,7 @@ class Controller extends \Leaps\Base\Controller
 			return isset ( $options ['default'] ) ? $options ['default'] : '';
 		}
 	}
-	
+
 	/**
 	 * Asks user to confirm by typing y or n.
 	 *
@@ -254,7 +250,7 @@ class Controller extends \Leaps\Base\Controller
 			return true;
 		}
 	}
-	
+
 	/**
 	 * Gives the user an option to choose from.
 	 * Giving '?' as an input will show
@@ -262,14 +258,14 @@ class Controller extends \Leaps\Base\Controller
 	 *
 	 * @param string $prompt the prompt message
 	 * @param array $options Key-value array of options to choose from
-	 *       
+	 *
 	 * @return string An option character the user chose
 	 */
 	public function select($prompt, $options = [])
 	{
 		return Console::select ( $prompt, $options );
 	}
-	
+
 	/**
 	 * Returns the names of valid options for the action (id)
 	 * An option requires the existence of a public member variable whose
@@ -285,12 +281,9 @@ class Controller extends \Leaps\Base\Controller
 	public function options($actionID)
 	{
 		// $actionId might be used in subclasses to provide options specific to action id
-		return [ 
-			'color',
-			'interactive' 
-		];
+		return [ 'color','interactive' ];
 	}
-	
+
 	/**
 	 * Returns one-line short summary describing this controller.
 	 *
@@ -303,7 +296,7 @@ class Controller extends \Leaps\Base\Controller
 	{
 		return $this->parseDocCommentSummary ( new \ReflectionClass ( $this ) );
 	}
-	
+
 	/**
 	 * Returns help information for this controller.
 	 *
@@ -316,7 +309,7 @@ class Controller extends \Leaps\Base\Controller
 	{
 		return $this->parseDocCommentDetail ( new \ReflectionClass ( $this ) );
 	}
-	
+
 	/**
 	 * Returns a one-line short summary describing the specified action.
 	 *
@@ -327,7 +320,7 @@ class Controller extends \Leaps\Base\Controller
 	{
 		return $this->parseDocCommentSummary ( $this->getActionMethodReflection ( $action ) );
 	}
-	
+
 	/**
 	 * Returns the detailed help information for the specified action.
 	 *
@@ -338,7 +331,7 @@ class Controller extends \Leaps\Base\Controller
 	{
 		return $this->parseDocCommentDetail ( $this->getActionMethodReflection ( $action ) );
 	}
-	
+
 	/**
 	 * Returns the help information for the anonymous arguments for the action.
 	 * The returned value should be an array. The keys are the argument names, and the values are
@@ -360,7 +353,7 @@ class Controller extends \Leaps\Base\Controller
 		$method = $this->getActionMethodReflection ( $action );
 		$tags = $this->parseDocCommentTags ( $method );
 		$params = isset ( $tags ['param'] ) ? ( array ) $tags ['param'] : [ ];
-		
+
 		$args = [ ];
 		foreach ( $method->getParameters () as $i => $reflection ) {
 			$name = $reflection->getName ();
@@ -373,24 +366,14 @@ class Controller extends \Leaps\Base\Controller
 				$comment = $tag;
 			}
 			if ($reflection->isDefaultValueAvailable ()) {
-				$args [$name] = [ 
-					'required' => false,
-					'type' => $type,
-					'default' => $reflection->getDefaultValue (),
-					'comment' => $comment 
-				];
+				$args [$name] = [ 'required' => false,'type' => $type,'default' => $reflection->getDefaultValue (),'comment' => $comment ];
 			} else {
-				$args [$name] = [ 
-					'required' => true,
-					'type' => $type,
-					'default' => null,
-					'comment' => $comment 
-				];
+				$args [$name] = [ 'required' => true,'type' => $type,'default' => null,'comment' => $comment ];
 			}
 		}
 		return $args;
 	}
-	
+
 	/**
 	 * Returns the help information for the options for the action.
 	 * The returned value should be an array. The keys are the option names, and the values are
@@ -412,7 +395,7 @@ class Controller extends \Leaps\Base\Controller
 		if (empty ( $optionNames )) {
 			return [ ];
 		}
-		
+
 		$class = new \ReflectionClass ( $this );
 		$options = [ ];
 		foreach ( $class->getProperties () as $property ) {
@@ -434,23 +417,15 @@ class Controller extends \Leaps\Base\Controller
 					$type = null;
 					$comment = $doc;
 				}
-				$options [$name] = [ 
-					'type' => $type,
-					'default' => $defaultValue,
-					'comment' => $comment 
-				];
+				$options [$name] = [ 'type' => $type,'default' => $defaultValue,'comment' => $comment ];
 			} else {
-				$options [$name] = [ 
-					'type' => null,
-					'default' => $defaultValue,
-					'comment' => '' 
-				];
+				$options [$name] = [ 'type' => null,'default' => $defaultValue,'comment' => '' ];
 			}
 		}
 		return $options;
 	}
 	private $_reflections = [ ];
-	
+
 	/**
 	 *
 	 * @param Action $action
@@ -467,7 +442,7 @@ class Controller extends \Leaps\Base\Controller
 		}
 		return $this->_reflections [$action->id];
 	}
-	
+
 	/**
 	 * Parses the comment block into tags.
 	 *
@@ -488,16 +463,13 @@ class Controller extends \Leaps\Base\Controller
 				} elseif (is_array ( $tags [$name] )) {
 					$tags [$name] [] = trim ( $matches [2] );
 				} else {
-					$tags [$name] = [ 
-						$tags [$name],
-						trim ( $matches [2] ) 
-					];
+					$tags [$name] = [ $tags [$name],trim ( $matches [2] ) ];
 				}
 			}
 		}
 		return $tags;
 	}
-	
+
 	/**
 	 * Returns the first line of docblock.
 	 *
@@ -512,7 +484,7 @@ class Controller extends \Leaps\Base\Controller
 		}
 		return '';
 	}
-	
+
 	/**
 	 * Returns full description from the docblock.
 	 *

@@ -16,7 +16,7 @@ use Leaps\Base\InvalidRouteException;
  * @property string $homeUrl The homepage URL.
  * @property Session $session The session component. This property is read-only.
  * @property User $user The user component. This property is read-only.
- *          
+ *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
@@ -28,7 +28,7 @@ class Application extends \Leaps\Base\Application
 	 * @var string 默认为 'site'.
 	 */
 	public $defaultRoute = 'site';
-	
+
 	/**
 	 * 定义一个控制器处理所有请求
 	 *
@@ -38,7 +38,7 @@ class Application extends \Leaps\Base\Application
 	 *      The configuration is an array whose first element specifies the route of the action.
 	 *      The rest of the array elements (key-value pairs) specify the parameters to be bound
 	 *      to the action. For example,
-	 *     
+	 *
 	 *      ~~~
 	 *      [
 	 *      'offline/notice',
@@ -46,18 +46,18 @@ class Application extends \Leaps\Base\Application
 	 *      'param2' => 'value2',
 	 *      ]
 	 *      ~~~
-	 *     
+	 *
 	 *      Defaults to null, meaning catch-all is not used.
 	 */
 	public $catchAll;
-	
+
 	/**
 	 * 当前活动的控制器实例
 	 *
 	 * @var Controller
 	 */
 	public $controller;
-	
+
 	/**
 	 * @inheritdoc
 	 */
@@ -68,7 +68,7 @@ class Application extends \Leaps\Base\Application
 		Leaps::setAlias ( '@web', $request->getBaseUrl () );
 		parent::bootstrap ();
 	}
-	
+
 	/**
 	 * 处理指定的请求
 	 *
@@ -96,7 +96,7 @@ class Application extends \Leaps\Base\Application
 				if ($result !== null) {
 					$response->data = $result;
 				}
-				
+
 				return $response;
 			}
 		} catch ( InvalidRouteException $e ) {
@@ -104,7 +104,7 @@ class Application extends \Leaps\Base\Application
 		}
 	}
 	private $_homeUrl;
-	
+
 	/**
 	 * 首页URL
 	 *
@@ -122,7 +122,7 @@ class Application extends \Leaps\Base\Application
 			return $this->_homeUrl;
 		}
 	}
-	
+
 	/**
 	 * 设置首页URL
 	 *
@@ -132,7 +132,7 @@ class Application extends \Leaps\Base\Application
 	{
 		$this->_homeUrl = $value;
 	}
-	
+
 	/**
 	 * 返回Session组件
 	 *
@@ -142,7 +142,7 @@ class Application extends \Leaps\Base\Application
 	{
 		return $this->get ( 'session' );
 	}
-	
+
 	/**
 	 * 返回用户组件
 	 *
@@ -152,28 +152,12 @@ class Application extends \Leaps\Base\Application
 	{
 		return $this->get ( 'user' );
 	}
-	
+
 	/**
 	 * @inheritdoc
 	 */
 	public function coreServices()
 	{
-		return array_merge ( parent::coreServices (), [ 
-			'request' => [ 
-				'className' => 'Leaps\Web\Request' 
-			],
-			'response' => [ 
-				'className' => 'Leaps\Web\Response' 
-			],
-			'session' => [ 
-				'className' => 'Leaps\Web\Session' 
-			],
-			'user' => [ 
-				'className' => 'Leaps\Web\User' 
-			],
-			'errorHandler' => [ 
-				'className' => 'Leaps\Web\ErrorHandler' 
-			] 
-		] );
+		return array_merge ( parent::coreServices (), [ 'request' => [ 'className' => 'Leaps\Web\Request' ],'response' => [ 'className' => 'Leaps\Web\Response' ],'session' => [ 'className' => 'Leaps\Web\Session' ],'user' => [ 'className' => 'Leaps\Web\User' ],'errorHandler' => [ 'className' => 'Leaps\Web\ErrorHandler' ] ] );
 	}
 }

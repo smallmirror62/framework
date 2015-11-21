@@ -85,8 +85,8 @@ class Kernel
 	 * @see getAlias()
 	 * @see setAlias()
 	 */
-	public static $aliases = [ 
-		'@Leaps' => __DIR__ 
+	public static $aliases = [
+		'@Leaps' => __DIR__
 	];
 	/**
 	 *
@@ -97,7 +97,7 @@ class Kernel
 	 * @see Container
 	 */
 	public static $container;
-	
+
 	/**
 	 * Returns a string representing the current version of the Leaps framework.
 	 *
@@ -107,7 +107,7 @@ class Kernel
 	{
 		return '2.0.6';
 	}
-	
+
 	/**
 	 * Translates a path alias into an actual path.
 	 *
@@ -144,10 +144,10 @@ class Kernel
 			// not an alias
 			return $alias;
 		}
-		
+
 		$pos = strpos ( $alias, '/' );
 		$root = $pos === false ? $alias : substr ( $alias, 0, $pos );
-		
+
 		if (isset ( static::$aliases [$root] )) {
 			if (is_string ( static::$aliases [$root] )) {
 				return $pos === false ? static::$aliases [$root] : static::$aliases [$root] . substr ( $alias, $pos );
@@ -159,14 +159,14 @@ class Kernel
 				}
 			}
 		}
-		
+
 		if ($throwException) {
 			throw new InvalidParamException ( "Invalid path alias: $alias" );
 		} else {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Returns the root alias part of a given alias.
 	 * A root alias is an alias that has been registered via [[setAlias()]] previously.
@@ -179,7 +179,7 @@ class Kernel
 	{
 		$pos = strpos ( $alias, '/' );
 		$root = $pos === false ? $alias : substr ( $alias, 0, $pos );
-		
+
 		if (isset ( static::$aliases [$root] )) {
 			if (is_string ( static::$aliases [$root] )) {
 				return $root;
@@ -191,10 +191,10 @@ class Kernel
 				}
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Registers a path alias.
 	 *
@@ -214,12 +214,12 @@ class Kernel
 	 *        alias translation by [[getAlias()]].
 	 * @param string $path the path corresponding to the alias. If this is null, the alias will
 	 *        be removed. Trailing '/' and '\' characters will be trimmed. This can be
-	 *       
+	 *
 	 *        - a directory or a file path (e.g. `/tmp`, `/tmp/main.txt`)
 	 *        - a URL (e.g. `http://www.Leapsframework.com`)
 	 *        - a path alias (e.g. `@Leaps/base`). In this case, the path alias will be converted into the
 	 *        actual path first by calling [[getAlias()]].
-	 *       
+	 *
 	 * @throws InvalidParamException if $path is an invalid alias.
 	 * @see getAlias()
 	 */
@@ -236,17 +236,17 @@ class Kernel
 				if ($pos === false) {
 					static::$aliases [$root] = $path;
 				} else {
-					static::$aliases [$root] = [ 
-						$alias => $path 
+					static::$aliases [$root] = [
+						$alias => $path
 					];
 				}
 			} elseif (is_string ( static::$aliases [$root] )) {
 				if ($pos === false) {
 					static::$aliases [$root] = $path;
 				} else {
-					static::$aliases [$root] = [ 
+					static::$aliases [$root] = [
 						$alias => $path,
-						$root => static::$aliases [$root] 
+						$root => static::$aliases [$root]
 					];
 				}
 			} else {
@@ -261,7 +261,7 @@ class Kernel
 			}
 		}
 	}
-	
+
 	/**
 	 * Class autoload loader.
 	 * This method is invoked automatically when PHP sees an unknown class.
@@ -299,14 +299,14 @@ class Kernel
 		} else {
 			return;
 		}
-		
+
 		include ($classFile);
-		
+
 		if (LEAPS_DEBUG && ! class_exists ( $className, false ) && ! interface_exists ( $className, false ) && ! trait_exists ( $className, false )) {
 			throw new UnknownClassException ( "Unable to find '$className' in file: $classFile. Namespace missing?" );
 		}
 	}
-	
+
 	/**
 	 * Creates a new object using the given configuration.
 	 *
@@ -337,13 +337,13 @@ class Kernel
 	 * dependent objects, instantiate them and inject them into the newly created object.
 	 *
 	 * @param string|array|callable $type the object type. This can be specified in one of the following forms:
-	 *       
+	 *
 	 *        - a string: representing the class name of the object to be created
 	 *        - a configuration array: the array must contain a `class` element which is treated as the object class,
 	 *        and the rest of the name-value pairs will be used to initialize the corresponding object properties
 	 *        - a PHP callable: either an anonymous function or an array representing a class method (`[$class or $object, $method]`).
 	 *        The callable should return a new instance of the object being created.
-	 *       
+	 *
 	 * @param array $params the constructor parameters
 	 * @return object the created object
 	 * @throws InvalidConfigException if the configuration is invalid.
@@ -366,7 +366,7 @@ class Kernel
 		}
 	}
 	private static $_logger;
-	
+
 	/**
 	 *
 	 * @return Logger message logger
@@ -379,7 +379,7 @@ class Kernel
 			return self::$_logger = static::createObject ( 'Leaps\Log\Logger' );
 		}
 	}
-	
+
 	/**
 	 * Sets the logger object.
 	 *
@@ -389,7 +389,7 @@ class Kernel
 	{
 		self::$_logger = $logger;
 	}
-	
+
 	/**
 	 * Logs a trace message.
 	 * Trace messages are logged mainly for development purpose to see
@@ -404,7 +404,7 @@ class Kernel
 			static::getLogger ()->log ( $message, Logger::LEVEL_TRACE, $category );
 		}
 	}
-	
+
 	/**
 	 * Logs an error message.
 	 * An error message is typically logged when an unrecoverable error occurs
@@ -417,7 +417,7 @@ class Kernel
 	{
 		static::getLogger ()->log ( $message, Logger::LEVEL_ERROR, $category );
 	}
-	
+
 	/**
 	 * Logs a warning message.
 	 * A warning message is typically logged when an error occurs while the execution
@@ -430,7 +430,7 @@ class Kernel
 	{
 		static::getLogger ()->log ( $message, Logger::LEVEL_WARNING, $category );
 	}
-	
+
 	/**
 	 * Logs an informative message.
 	 * An informative message is typically logged by an application to keep record of
@@ -443,7 +443,7 @@ class Kernel
 	{
 		static::getLogger ()->log ( $message, Logger::LEVEL_INFO, $category );
 	}
-	
+
 	/**
 	 * Marks the beginning of a code block for profiling.
 	 * This has to be matched with a call to [[endProfile]] with the same category name.
@@ -466,7 +466,7 @@ class Kernel
 	{
 		static::getLogger ()->log ( $token, Logger::LEVEL_PROFILE_BEGIN, $category );
 	}
-	
+
 	/**
 	 * Marks the end of a code block for profiling.
 	 * This has to be matched with a previous call to [[beginProfile]] with the same category name.
@@ -479,7 +479,7 @@ class Kernel
 	{
 		static::getLogger ()->log ( $token, Logger::LEVEL_PROFILE_END, $category );
 	}
-	
+
 	/**
 	 * Returns an HTML hyperlink that can be displayed on your Web page showing "Powered by Leaps Framework" information.
 	 *
@@ -489,7 +489,7 @@ class Kernel
 	{
 		return 'Powered by <a href="http://www.Leapsframework.com/" rel="external">Leaps Framework</a>';
 	}
-	
+
 	/**
 	 * Translates a message to the specified language.
 	 *
@@ -524,11 +524,11 @@ class Kernel
 			foreach ( ( array ) $params as $name => $value ) {
 				$p ['{' . $name . '}'] = $value;
 			}
-			
+
 			return ($p === [ ]) ? $message : strtr ( $message, $p );
 		}
 	}
-	
+
 	/**
 	 * Configures an object with the initial property values.
 	 *
@@ -541,10 +541,10 @@ class Kernel
 		foreach ( $properties as $name => $value ) {
 			$object->$name = $value;
 		}
-		
+
 		return $object;
 	}
-	
+
 	/**
 	 * Returns the public member variables of an object.
 	 * This method is provided such that we can get the public member variables of an object.

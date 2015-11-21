@@ -9,10 +9,11 @@ namespace Leaps\Db;
 
 use PDO;
 use Leaps;
+use Leaps\Cache\Cache;
 use Leaps\Base\Service;
 use Leaps\Base\InvalidConfigException;
 use Leaps\Base\NotSupportedException;
-use Leaps\Cache\Cache;
+
 
 /**
  * Connection represents a connection to a database via [PDO](php.net/manual/en/book.pdo.php).

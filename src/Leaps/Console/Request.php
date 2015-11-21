@@ -17,14 +17,14 @@ namespace Leaps\Console;
  * currently running PHP script and the command line arguments given to it.
  *
  * @property array $params The command line arguments. It does not include the entry script name.
- *          
+ *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
 class Request extends \Leaps\Base\Request
 {
 	private $_params;
-	
+
 	/**
 	 * Returns the command line arguments.
 	 *
@@ -40,10 +40,10 @@ class Request extends \Leaps\Base\Request
 				$this->_params = [ ];
 			}
 		}
-		
+
 		return $this->_params;
 	}
-	
+
 	/**
 	 * Sets the command line arguments.
 	 *
@@ -53,7 +53,7 @@ class Request extends \Leaps\Base\Request
 	{
 		$this->_params = $params;
 	}
-	
+
 	/**
 	 * Resolves the current request into a route and the associated parameters.
 	 *
@@ -68,7 +68,7 @@ class Request extends \Leaps\Base\Request
 		} else {
 			$route = '';
 		}
-		
+
 		$params = [ ];
 		foreach ( $rawParams as $param ) {
 			if (preg_match ( '/^--(\w+)(=(.*))?$/', $param, $matches )) {
@@ -80,10 +80,10 @@ class Request extends \Leaps\Base\Request
 				$params [] = $param;
 			}
 		}
-		
-		return [ 
+
+		return [
 			$route,
-			$params 
+			$params
 		];
 	}
 }

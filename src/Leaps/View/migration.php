@@ -1,6 +1,6 @@
 <?php
 /**
- * This view is used by console/controllers/MigrateController.php
+ * This view is used by Console/Controller/MigrateController.php
  * The following variables are available in this view:
  */
 /* @var $className string the new migration class name */

@@ -5,7 +5,7 @@
  * @license http://www.tintsoft.com/license/
  */
 
-namespace leaps \test;
+namespace Leaps\Test;
 
 use Leaps;
 use Leaps\Base\ArrayAccessTrait;

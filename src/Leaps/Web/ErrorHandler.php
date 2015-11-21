@@ -66,7 +66,7 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 	 * @var string the path of the view file for rendering previous exceptions.
 	 */
 	public $previousExceptionView = '@Leaps/View/errorHandler/previousException.php';
-	
+
 	/**
 	 * Renders the exception.
 	 *
@@ -85,9 +85,9 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 		} else {
 			$response = new Response ();
 		}
-		
+
 		$useErrorView = $response->format === Response::FORMAT_HTML && (! LEAPS_DEBUG || $exception instanceof UserException);
-		
+
 		if ($useErrorView && $this->errorAction !== null) {
 			$result = Leaps::$app->runAction ( $this->errorAction );
 			if ($result instanceof Response) {
@@ -106,8 +106,8 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 					ini_set ( 'display_errors', 1 );
 				}
 				$file = $useErrorView ? $this->errorView : $this->exceptionView;
-				$response->data = $this->renderFile ( $file, [ 
-					'exception' => $exception 
+				$response->data = $this->renderFile ( $file, [
+					'exception' => $exception
 				] );
 			}
 		} elseif ($response->format === Response::FORMAT_RAW) {
@@ -115,16 +115,16 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 		} else {
 			$response->data = $this->convertExceptionToArray ( $exception );
 		}
-		
+
 		if ($exception instanceof HttpException) {
 			$response->setStatusCode ( $exception->statusCode );
 		} else {
 			$response->setStatusCode ( 500 );
 		}
-		
+
 		$response->send ();
 	}
-	
+
 	/**
 	 * Converts an exception into an array.
 	 *
@@ -136,11 +136,11 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 		if (! LEAPS_DEBUG && ! $exception instanceof UserException && ! $exception instanceof HttpException) {
 			$exception = new HttpException ( 500, 'There was an error at the server.' );
 		}
-		
-		$array = [ 
+
+		$array = [
 			'name' => ($exception instanceof Exception || $exception instanceof ErrorException) ? $exception->getName () : 'Exception',
 			'message' => $exception->getMessage (),
-			'code' => $exception->getCode () 
+			'code' => $exception->getCode ()
 		];
 		if ($exception instanceof HttpException) {
 			$array ['status'] = $exception->statusCode;
@@ -159,10 +159,10 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 		if (($prev = $exception->getPrevious ()) !== null) {
 			$array ['previous'] = $this->convertExceptionToArray ( $prev );
 		}
-		
+
 		return $array;
 	}
-	
+
 	/**
 	 * Converts special characters to HTML entities.
 	 *
@@ -173,7 +173,7 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 	{
 		return htmlspecialchars ( $text, ENT_QUOTES, Leaps::$app->charset );
 	}
-	
+
 	/**
 	 * Adds informational links to the given PHP type/class.
 	 *
@@ -191,16 +191,16 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 			$method = null;
 			$text = $this->htmlEncode ( $class );
 		}
-		
+
 		$url = $this->getTypeUrl ( $class, $method );
-		
+
 		if (! $url) {
 			return $text;
 		}
-		
+
 		return '<a href="' . $url . '" target="_blank">' . $text . '</a>';
 	}
-	
+
 	/**
 	 * Returns the informational link URL for a given PHP type/class.
 	 *
@@ -214,16 +214,16 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 		if (strpos ( $class, 'Leaps\\' ) !== 0) {
 			return null;
 		}
-		
+
 		$page = $this->htmlEncode ( strtolower ( str_replace ( '\\', '-', $class ) ) );
 		$url = "http://www.yiiframework.com/doc-2.0/$page.html";
 		if ($method) {
 			$url .= "#$method()-detail";
 		}
-		
+
 		return $url;
 	}
-	
+
 	/**
 	 * Renders a view file as a PHP script.
 	 *
@@ -239,13 +239,13 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 			ob_implicit_flush ( false );
 			extract ( $_params_, EXTR_OVERWRITE );
 			require (Leaps::getAlias ( $_file_ ));
-			
+
 			return ob_get_clean ();
 		} else {
 			return Leaps::$app->getView ()->renderFile ( $_file_, $_params_, $this );
 		}
 	}
-	
+
 	/**
 	 * Renders the previous exception stack for a given Exception.
 	 *
@@ -256,14 +256,14 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 	public function renderPreviousExceptions($exception)
 	{
 		if (($previous = $exception->getPrevious ()) !== null) {
-			return $this->renderFile ( $this->previousExceptionView, [ 
-				'exception' => $previous 
+			return $this->renderFile ( $this->previousExceptionView, [
+				'exception' => $previous
 			] );
 		} else {
 			return '';
 		}
 	}
-	
+
 	/**
 	 * Renders a single call stack element.
 	 *
@@ -285,13 +285,13 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 			if ($line < 0 || $lines === false || ($lineCount = count ( $lines )) < $line) {
 				return '';
 			}
-			
+
 			$half = ( int ) (($index === 1 ? $this->maxSourceLines : $this->maxTraceSourceLines) / 2);
 			$begin = $line - $half > 0 ? $line - $half : 0;
 			$end = $line + $half < $lineCount ? $line + $half : $lineCount - 1;
 		}
-		
-		return $this->renderFile ( $this->callStackItemView, [ 
+
+		return $this->renderFile ( $this->callStackItemView, [
 			'file' => $file,
 			'line' => $line,
 			'class' => $class,
@@ -300,10 +300,10 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 			'lines' => $lines,
 			'begin' => $begin,
 			'end' => $end,
-			'args' => $args 
+			'args' => $args
 		] );
 	}
-	
+
 	/**
 	 * Renders the request information.
 	 *
@@ -312,23 +312,23 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 	public function renderRequest()
 	{
 		$request = '';
-		foreach ( [ 
+		foreach ( [
 			'_GET',
 			'_POST',
 			'_SERVER',
 			'_FILES',
 			'_COOKIE',
 			'_SESSION',
-			'_ENV' 
+			'_ENV'
 		] as $name ) {
 			if (! empty ( $GLOBALS [$name] )) {
 				$request .= '$' . $name . ' = ' . VarDumper::export ( $GLOBALS [$name] ) . ";\n\n";
 			}
 		}
-		
+
 		return '<pre>' . rtrim ( $request, "\n" ) . '</pre>';
 	}
-	
+
 	/**
 	 * Determines whether given name of the file belongs to the framework.
 	 *
@@ -339,7 +339,7 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 	{
 		return $file === null || strpos ( realpath ( $file ), LEAPS_PATH . DIRECTORY_SEPARATOR ) === 0;
 	}
-	
+
 	/**
 	 * Creates HTML containing link to the page with the information on given HTTP status code.
 	 *
@@ -351,7 +351,7 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 	{
 		return '<a href="http://en.wikipedia.org/wiki/List_of_HTTP_status_codes#' . ( int ) $statusCode . '" target="_blank">HTTP ' . ( int ) $statusCode . ' &ndash; ' . $statusDescription . '</a>';
 	}
-	
+
 	/**
 	 * Creates string containing HTML link which refers to the home page of determined web-server software
 	 * and its full name.
@@ -360,27 +360,27 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 	 */
 	public function createServerInformationLink()
 	{
-		$serverUrls = [ 
-			'http://httpd.apache.org/' => [ 
-				'apache' 
+		$serverUrls = [
+			'http://httpd.apache.org/' => [
+				'apache'
 			],
-			'http://nginx.org/' => [ 
-				'nginx' 
+			'http://nginx.org/' => [
+				'nginx'
 			],
-			'http://lighttpd.net/' => [ 
-				'lighttpd' 
+			'http://lighttpd.net/' => [
+				'lighttpd'
 			],
-			'http://gwan.com/' => [ 
+			'http://gwan.com/' => [
 				'g-wan',
-				'gwan' 
+				'gwan'
 			],
-			'http://iis.net/' => [ 
+			'http://iis.net/' => [
 				'iis',
-				'services' 
+				'services'
 			],
-			'http://php.net/manual/en/features.commandline.webserver.php' => [ 
-				'development' 
-			] 
+			'http://php.net/manual/en/features.commandline.webserver.php' => [
+				'development'
+			]
 		];
 		if (isset ( $_SERVER ['SERVER_SOFTWARE'] )) {
 			foreach ( $serverUrls as $url => $keywords ) {
@@ -391,10 +391,10 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 				}
 			}
 		}
-		
+
 		return '';
 	}
-	
+
 	/**
 	 * Creates string containing HTML link which refers to the page with the current version
 	 * of the framework and version number text.
@@ -405,7 +405,7 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 	{
 		return '<a href="http://github.com/yiisoft/yii2/" target="_blank">' . $this->htmlEncode ( Leaps::getVersion () ) . '</a>';
 	}
-	
+
 	/**
 	 * Converts arguments array to its string representation
 	 *
@@ -416,7 +416,7 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 	{
 		$count = 0;
 		$isAssoc = $args !== array_values ( $args );
-		
+
 		foreach ( $args as $key => $value ) {
 			$count ++;
 			if ($count >= 5) {
@@ -427,7 +427,7 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 				}
 				continue;
 			}
-			
+
 			if (is_object ( $value )) {
 				$args [$key] = '<span class="title">' . $this->htmlEncode ( get_class ( $value ) ) . '</span>';
 			} elseif (is_bool ( $value )) {
@@ -449,7 +449,7 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 			} else {
 				$args [$key] = '<span class="number">' . $value . '</span>';
 			}
-			
+
 			if (is_string ( $key )) {
 				$args [$key] = '<span class="string">\'' . $this->htmlEncode ( $key ) . "'</span> => $args[$key]";
 			} elseif ($isAssoc) {
@@ -457,10 +457,10 @@ class ErrorHandler extends \Leaps\Base\ErrorHandler
 			}
 		}
 		$out = implode ( ", ", $args );
-		
+
 		return $out;
 	}
-	
+
 	/**
 	 * Returns human-readable exception name
 	 *

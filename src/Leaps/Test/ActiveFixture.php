@@ -5,11 +5,12 @@
  * @license http://www.tintsoft.com/license/
  */
 
-namespace leaps \test;
+namespace Leaps\Test;
 
 use Leaps;
+use Leaps\Db\TableSchema;
 use Leaps\Base\InvalidConfigException;
-use leaps \db\TableSchema;
+
 
 /**
  * ActiveFixture represents a fixture backed up by a [[modelClass|ActiveRecord class]] or a [[tableName|database table]].
@@ -130,7 +131,7 @@ class ActiveFixture extends BaseActiveFixture
         $db = $this->db;
         $tableName = $this->tableName;
         if ($tableName === null) {
-            /* @var $modelClass \leaps \db\ActiveRecord */
+            /* @var $modelClass \Leaps\Db\ActiveRecord */
             $modelClass = $this->modelClass;
             $tableName = $modelClass::tableName();
         }

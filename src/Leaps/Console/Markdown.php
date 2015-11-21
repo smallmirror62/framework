@@ -10,11 +10,13 @@
 // +----------------------------------------------------------------------
 namespace Leaps\Console;
 
-use cebe\markdown\block\FencedCodeTrait;
+use Leaps\Helper\Console;
 use cebe\markdown\inline\CodeTrait;
-use cebe\markdown\inline\EmphStrongTrait;
 use cebe\markdown\inline\StrikeoutTrait;
-use Leaps\Helpers\Console;
+use cebe\markdown\block\FencedCodeTrait;
+use cebe\markdown\inline\EmphStrongTrait;
+
+
 
 /**
  * A Markdown parser that enhances markdown for reading in console environments.
@@ -30,21 +32,21 @@ class Markdown extends \cebe\markdown\Parser
 	use CodeTrait;
 	use EmphStrongTrait;
 	use StrikeoutTrait;
-	
+
 	/**
 	 *
 	 * @var array these are "escapeable" characters. When using one of these prefixed with a
 	 *      backslash, the character will be outputted without the backslash and is not interpreted
 	 *      as markdown.
 	 */
-	protected $escapeCharacters = [ 
+	protected $escapeCharacters = [
 		'\\', // backslash
 		'`', // backtick
 		'*', // asterisk
 		'_', // underscore
-		'~' 
+		'~'
 	]; // tilde
-	
+
 	/**
 	 * Renders a code block
 	 *
@@ -53,11 +55,11 @@ class Markdown extends \cebe\markdown\Parser
 	 */
 	protected function renderCode($block)
 	{
-		return Console::ansiFormat ( $block ['content'], [ 
-			Console::NEGATIVE 
+		return Console::ansiFormat ( $block ['content'], [
+			Console::NEGATIVE
 		] ) . "\n\n";
 	}
-	
+
 	/**
 	 * @inheritdoc
 	 */
@@ -65,7 +67,7 @@ class Markdown extends \cebe\markdown\Parser
 	{
 		return rtrim ( $this->renderAbsy ( $block ['content'] ) ) . "\n\n";
 	}
-	
+
 	/**
 	 * Renders an inline code span `` ` ``.
 	 *
@@ -74,11 +76,11 @@ class Markdown extends \cebe\markdown\Parser
 	 */
 	protected function renderInlineCode($element)
 	{
-		return Console::ansiFormat ( $element [1], [ 
-			Console::UNDERLINE 
+		return Console::ansiFormat ( $element [1], [
+			Console::UNDERLINE
 		] );
 	}
-	
+
 	/**
 	 * Renders empathized elements.
 	 *
@@ -87,11 +89,11 @@ class Markdown extends \cebe\markdown\Parser
 	 */
 	protected function renderEmph($element)
 	{
-		return Console::ansiFormat ( $this->renderAbsy ( $element [1] ), [ 
-			Console::ITALIC 
+		return Console::ansiFormat ( $this->renderAbsy ( $element [1] ), [
+			Console::ITALIC
 		] );
 	}
-	
+
 	/**
 	 * Renders strong elements.
 	 *
@@ -100,11 +102,11 @@ class Markdown extends \cebe\markdown\Parser
 	 */
 	protected function renderStrong($element)
 	{
-		return Console::ansiFormat ( $this->renderAbsy ( $element [1] ), [ 
-			Console::BOLD 
+		return Console::ansiFormat ( $this->renderAbsy ( $element [1] ), [
+			Console::BOLD
 		] );
 	}
-	
+
 	/**
 	 * Renders the strike through feature.
 	 *
@@ -113,8 +115,8 @@ class Markdown extends \cebe\markdown\Parser
 	 */
 	protected function renderStrike($element)
 	{
-		return Console::ansiFormat ( $this->parseInline ( $this->renderAbsy ( $element [1] ) ), [ 
-			Console::CROSSED_OUT 
+		return Console::ansiFormat ( $this->parseInline ( $this->renderAbsy ( $element [1] ) ), [
+			Console::CROSSED_OUT
 		] );
 	}
 }

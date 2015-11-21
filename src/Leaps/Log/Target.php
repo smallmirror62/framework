@@ -30,8 +30,8 @@ use Leaps\Base\InvalidConfigException;
  * @property integer $levels The message levels that this target is interested in. This is a bitmap of level
  *           values. Defaults to 0, meaning all available levels. Note that the type of this property differs in getter
  *           and setter. See [[getLevels()]] and [[setLevels()]] for details.
- *          
- *          
+ *
+ *
  */
 abstract class Target extends Service
 {
@@ -64,21 +64,14 @@ abstract class Target extends Service
 	 *      Note that a variable must be accessible via `$GLOBALS`. Otherwise it won't be logged.
 	 *      Defaults to `['_GET', '_POST', '_FILES', '_COOKIE', '_SESSION', '_SERVER']`.
 	 */
-	public $logVars = [ 
-		'_GET',
-		'_POST',
-		'_FILES',
-		'_COOKIE',
-		'_SESSION',
-		'_SERVER' 
-	];
+	public $logVars = [ '_GET','_POST','_FILES','_COOKIE','_SESSION','_SERVER' ];
 	/**
 	 *
 	 * @var callable a PHP callable that returns a string to be prefixed to every exported message.
-	 *     
+	 *
 	 *      If not set, [[getMessagePrefix()]] will be used, which prefixes the message with context information
 	 *      such as user IP, user ID and session ID.
-	 *     
+	 *
 	 *      The signature of the callable should be `function ($message)`.
 	 */
 	public $prefix;
@@ -96,13 +89,13 @@ abstract class Target extends Service
 	 */
 	public $messages = [ ];
 	private $_levels = 0;
-	
+
 	/**
 	 * Exports log [[messages]] to a specific destination.
 	 * Child classes must implement this method.
 	 */
 	abstract public function export();
-	
+
 	/**
 	 * Processes the given log messages.
 	 * This method will filter the given messages with [[levels]] and [[categories]].
@@ -118,23 +111,18 @@ abstract class Target extends Service
 		$count = count ( $this->messages );
 		if ($count > 0 && ($final || $this->exportInterval > 0 && $count >= $this->exportInterval)) {
 			if (($context = $this->getContextMessage ()) !== '') {
-				$this->messages [] = [ 
-					$context,
-					Logger::LEVEL_INFO,
-					'application',
-					LEAPS_BEGIN_TIME 
-				];
+				$this->messages [] = [ $context,Logger::LEVEL_INFO,'application',LEAPS_BEGIN_TIME ];
 			}
 			// set exportInterval to 0 to avoid triggering export again while exporting
 			$oldExportInterval = $this->exportInterval;
 			$this->exportInterval = 0;
 			$this->export ();
 			$this->exportInterval = $oldExportInterval;
-			
+
 			$this->messages = [ ];
 		}
 	}
-	
+
 	/**
 	 * Generates the context information to be logged.
 	 * The default implementation will dump user information, system variables, etc.
@@ -149,10 +137,10 @@ abstract class Target extends Service
 				$context [] = "\${$name} = " . VarDumper::dumpAsString ( $GLOBALS [$name] );
 			}
 		}
-		
+
 		return implode ( "\n\n", $context );
 	}
-	
+
 	/**
 	 *
 	 * @return integer the message levels that this target is interested in. This is a bitmap of
@@ -162,7 +150,7 @@ abstract class Target extends Service
 	{
 		return $this->_levels;
 	}
-	
+
 	/**
 	 * Sets the message levels that this target is interested in.
 	 *
@@ -185,13 +173,7 @@ abstract class Target extends Service
 	 */
 	public function setLevels($levels)
 	{
-		static $levelMap = [ 
-			'error' => Logger::LEVEL_ERROR,
-			'warning' => Logger::LEVEL_WARNING,
-			'info' => Logger::LEVEL_INFO,
-			'trace' => Logger::LEVEL_TRACE,
-			'profile' => Logger::LEVEL_PROFILE 
-		];
+		static $levelMap = [ 'error' => Logger::LEVEL_ERROR,'warning' => Logger::LEVEL_WARNING,'info' => Logger::LEVEL_INFO,'trace' => Logger::LEVEL_TRACE,'profile' => Logger::LEVEL_PROFILE ];
 		if (is_array ( $levels )) {
 			$this->_levels = 0;
 			foreach ( $levels as $level ) {
@@ -205,7 +187,7 @@ abstract class Target extends Service
 			$this->_levels = $levels;
 		}
 	}
-	
+
 	/**
 	 * Filters the given messages according to their categories and levels.
 	 *
@@ -224,7 +206,7 @@ abstract class Target extends Service
 				unset ( $messages [$i] );
 				continue;
 			}
-			
+
 			$matched = empty ( $categories );
 			foreach ( $categories as $category ) {
 				if ($message [2] === $category || ! empty ( $category ) && substr_compare ( $category, '*', - 1, 1 ) === 0 && strpos ( $message [2], rtrim ( $category, '*' ) ) === 0) {
@@ -232,7 +214,7 @@ abstract class Target extends Service
 					break;
 				}
 			}
-			
+
 			if ($matched) {
 				foreach ( $except as $category ) {
 					$prefix = rtrim ( $category, '*' );
@@ -242,14 +224,14 @@ abstract class Target extends Service
 					}
 				}
 			}
-			
+
 			if (! $matched) {
 				unset ( $messages [$i] );
 			}
 		}
 		return $messages;
 	}
-	
+
 	/**
 	 * Formats a log message for display as a string.
 	 *
@@ -275,11 +257,11 @@ abstract class Target extends Service
 				$traces [] = "in {$trace['file']}:{$trace['line']}";
 			}
 		}
-		
+
 		$prefix = $this->getMessagePrefix ( $message );
 		return date ( 'Y-m-d H:i:s', $timestamp ) . " {$prefix}[$level][$category] $text" . (empty ( $traces ) ? '' : "\n    " . implode ( "\n    ", $traces ));
 	}
-	
+
 	/**
 	 * Returns a string to be prefixed to the given message.
 	 * If [[prefix]] is configured it will return the result of the callback.
@@ -294,26 +276,26 @@ abstract class Target extends Service
 		if ($this->prefix !== null) {
 			return call_user_func ( $this->prefix, $message );
 		}
-		
+
 		if (Leaps::$app === null) {
 			return '';
 		}
-		
+
 		$request = Leaps::$app->getRequest ();
 		$ip = $request instanceof Request ? $request->getUserIP () : '-';
-		
-		/* @var $user \leaps \web\User */
+
+		/* @var $user \Leaps\Web\User */
 		$user = Leaps::$app->has ( 'user', true ) ? Leaps::$app->get ( 'user' ) : null;
 		if ($user && ($identity = $user->getIdentity ( false ))) {
 			$userID = $identity->getId ();
 		} else {
 			$userID = '-';
 		}
-		
-		/* @var $session \leaps \web\Session */
+
+		/* @var $session \Leaps\Web\Session */
 		$session = Leaps::$app->has ( 'session', true ) ? Leaps::$app->get ( 'session' ) : null;
 		$sessionID = $session && $session->getIsActive () ? $session->getId () : '-';
-		
+
 		return "[$ip][$userID][$sessionID]";
 	}
 }

@@ -5,7 +5,7 @@
  * @license http://www.tintsoft.com/license/
  */
 
-namespace leaps \test;
+namespace Leaps\Test;
 
 use Leaps;
 use Leaps\Base\ArrayAccessTrait;
@@ -36,7 +36,7 @@ abstract class BaseActiveFixture extends DbFixture implements \IteratorAggregate
     public $dataFile;
 
     /**
-     * @var \leaps \db\ActiveRecord[] the loaded AR models
+     * @var \Leaps\Db\ActiveRecord[] the loaded AR models
      */
     private $_models = [];
 
@@ -61,9 +61,9 @@ abstract class BaseActiveFixture extends DbFixture implements \IteratorAggregate
             throw new InvalidConfigException('The "modelClass" property must be set.');
         }
         $row = $this->data[$name];
-        /* @var $modelClass \leaps \db\ActiveRecord */
+        /* @var $modelClass \Leaps\Db\ActiveRecord */
         $modelClass = $this->modelClass;
-        /* @var $model \leaps \db\ActiveRecord */
+        /* @var $model \Leaps\Db\ActiveRecord */
         $model = new $modelClass;
         $keys = [];
         foreach ($model->primaryKey() as $key) {

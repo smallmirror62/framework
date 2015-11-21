@@ -59,7 +59,7 @@ class Application extends \Leaps\Base\Application
 	 * The option name for specifying the application configuration file path.
 	 */
 	const OPTION_APPCONFIG = 'appconfig';
-	
+
 	/**
 	 *
 	 * @var string the default route of this application. Defaults to 'help',
@@ -77,7 +77,7 @@ class Application extends \Leaps\Base\Application
 	 * @var Controller the currently active controller instance
 	 */
 	public $controller;
-	
+
 	/**
 	 * @inheritdoc
 	 */
@@ -86,7 +86,7 @@ class Application extends \Leaps\Base\Application
 		$config = $this->loadConfig ( $config );
 		parent::__construct ( $config );
 	}
-	
+
 	/**
 	 * Loads the configuration.
 	 * This method will check if the command line option [[OPTION_APPCONFIG]] is specified.
@@ -111,10 +111,10 @@ class Application extends \Leaps\Base\Application
 				}
 			}
 		}
-		
+
 		return $config;
 	}
-	
+
 	/**
 	 * Initialize the application.
 	 */
@@ -133,7 +133,7 @@ class Application extends \Leaps\Base\Application
 			$this->controllerMap ['help'] = 'Leaps\Console\Controller\HelpController';
 		}
 	}
-	
+
 	/**
 	 * Handles the specified request.
 	 *
@@ -150,11 +150,11 @@ class Application extends \Leaps\Base\Application
 		} else {
 			$response = $this->getResponse ();
 			$response->exitStatus = $result;
-			
+
 			return $response;
 		}
 	}
-	
+
 	/**
 	 * Runs a controller action specified by a route.
 	 * This method parses the specified route and creates the corresponding child module(s), controller and action
@@ -174,7 +174,7 @@ class Application extends \Leaps\Base\Application
 			throw new Exception ( "Unknown command \"$route\".", 0, $e );
 		}
 	}
-	
+
 	/**
 	 * Returns the configuration of the built-in commands.
 	 *
@@ -182,31 +182,31 @@ class Application extends \Leaps\Base\Application
 	 */
 	public function coreCommands()
 	{
-		return [ 
+		return [
 			'message' => 'Leaps\Console\Controller\MessageController',
 			'help' => 'Leaps\Console\Controller\HelpController',
 			'migrate' => 'Leaps\Console\Controller\MigrateController',
 			'cache' => 'Leaps\Console\Controller\CacheController',
 			'asset' => 'Leaps\Console\Controller\AssetController',
-			'fixture' => 'Leaps\Console\Controller\FixtureController' 
+			'fixture' => 'Leaps\Console\Controller\FixtureController'
 		];
 	}
-	
+
 	/**
 	 * @inheritdoc
 	 */
 	public function coreServices()
 	{
-		return array_merge ( parent::coreServices (), [ 
-			'request' => [ 
-				'className' => 'Leaps\Console\Request' 
+		return array_merge ( parent::coreServices (), [
+			'request' => [
+				'className' => 'Leaps\Console\Request'
 			],
-			'response' => [ 
-				'className' => 'Leaps\Console\Response' 
+			'response' => [
+				'className' => 'Leaps\Console\Response'
 			],
-			'errorHandler' => [ 
-				'className' => 'Leaps\Console\ErrorHandler' 
-			] 
+			'errorHandler' => [
+				'className' => 'Leaps\Console\ErrorHandler'
+			]
 		] );
 	}
 }

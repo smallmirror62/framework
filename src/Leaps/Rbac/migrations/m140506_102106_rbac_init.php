@@ -4,10 +4,9 @@
  * @copyright Copyright (c) 2015 TintSoft
  * @license http://www.tintsoft.com/license/
  */
-
-use Leaps\Base\InvalidConfigException;
 use Leaps\Db\Schema;
 use Leaps\Rbac\DbManager;
+use Leaps\Base\InvalidConfigException;
 
 /**
  * Initializes RBAC tables
