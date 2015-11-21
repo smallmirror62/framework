@@ -18,7 +18,7 @@ use ReflectionClass;
  *           type of this property differs in getter and setter. See [[getView()]] and [[setView()]] for details.
  * @property string $viewPath The directory containing the view files for this widget. This property is
  *           read-only.
- *          
+ *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
@@ -45,9 +45,9 @@ class Widget extends Service implements ViewContextInterface
 	 *
 	 */
 	public static $stack = [ ];
-	
+
 	/**
-	 * Begins a widget.
+	 * 开始一个小部件
 	 * This method creates an instance of the calling class. It will apply the configuration
 	 * to the created instance. A matching [[end()]] call should be called later.
 	 *
@@ -60,12 +60,12 @@ class Widget extends Service implements ViewContextInterface
 		/* @var $widget Widget */
 		$widget = Leaps::createObject ( $config );
 		static::$stack [] = $widget;
-		
+
 		return $widget;
 	}
-	
+
 	/**
-	 * Ends a widget.
+	 * 结束一个小部件
 	 * Note that the rendering result of the widget is directly echoed out.
 	 *
 	 * @return static the widget instance that is ended.
@@ -85,7 +85,7 @@ class Widget extends Service implements ViewContextInterface
 			throw new InvalidCallException ( "Unexpected " . get_called_class () . '::end() call. A matching begin() is not found.' );
 		}
 	}
-	
+
 	/**
 	 * Creates a widget instance and runs it.
 	 * The widget rendering result is returned by this method.
@@ -110,13 +110,13 @@ class Widget extends Service implements ViewContextInterface
 			}
 			throw $e;
 		}
-		
+
 		return ob_get_clean () . $out;
 	}
 	private $_id;
-	
+
 	/**
-	 * Returns the ID of the widget.
+	 * 返回小部件ID
 	 *
 	 * @param boolean $autoGenerate whether to generate an ID if it is not set previously
 	 * @return string ID of the widget.
@@ -126,12 +126,12 @@ class Widget extends Service implements ViewContextInterface
 		if ($autoGenerate && $this->_id === null) {
 			$this->_id = static::$autoIdPrefix . static::$counter ++;
 		}
-		
+
 		return $this->_id;
 	}
-	
+
 	/**
-	 * Sets the ID of the widget.
+	 * 设置小部件ID
 	 *
 	 * @param string $value id of the widget.
 	 */
@@ -140,7 +140,7 @@ class Widget extends Service implements ViewContextInterface
 		$this->_id = $value;
 	}
 	private $_view;
-	
+
 	/**
 	 * Returns the view object that can be used to render views or view files.
 	 * The [[render()]] and [[renderFile()]] methods will use
@@ -154,10 +154,10 @@ class Widget extends Service implements ViewContextInterface
 		if ($this->_view === null) {
 			$this->_view = Leaps::$app->getView ();
 		}
-		
+
 		return $this->_view;
 	}
-	
+
 	/**
 	 * Sets the view object to be used by this widget.
 	 *
@@ -167,16 +167,16 @@ class Widget extends Service implements ViewContextInterface
 	{
 		$this->_view = $view;
 	}
-	
+
 	/**
-	 * Executes the widget.
+	 * 执行小部件
 	 *
 	 * @return string the result of widget execution to be outputted.
 	 */
 	public function run()
 	{
 	}
-	
+
 	/**
 	 * Renders a view.
 	 * The view to be rendered can be specified in one of the following formats:
@@ -200,7 +200,7 @@ class Widget extends Service implements ViewContextInterface
 	{
 		return $this->getView ()->render ( $view, $params, $this );
 	}
-	
+
 	/**
 	 * Renders a view file.
 	 *
@@ -213,7 +213,7 @@ class Widget extends Service implements ViewContextInterface
 	{
 		return $this->getView ()->renderFile ( $file, $params, $this );
 	}
-	
+
 	/**
 	 * Returns the directory containing the view files for this widget.
 	 * The default implementation returns the 'views' subdirectory under the directory containing the widget class file.
@@ -223,7 +223,7 @@ class Widget extends Service implements ViewContextInterface
 	public function getViewPath()
 	{
 		$class = new ReflectionClass ( $this );
-		
+
 		return dirname ( $class->getFileName () ) . DIRECTORY_SEPARATOR . 'views';
 	}
 }
