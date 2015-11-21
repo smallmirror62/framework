@@ -5,7 +5,7 @@
  * @license http://www.tintsoft.com/license/
  */
 
-namespace Leaps\Widgets;
+namespace Leaps\Widget;
 
 use Leaps\Base\InvalidConfigException;
 use Leaps\Helper\Html;

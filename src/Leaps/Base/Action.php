@@ -33,8 +33,8 @@ use Leaps;
  *
  * @property string $uniqueId The unique ID of this action among the whole application. This property is
  *           read-only.
- *          
- *          
+ *
+ *
  */
 class Action extends Service
 {
@@ -43,12 +43,13 @@ class Action extends Service
 	 * @var string ID of the action
 	 */
 	public $id;
+
 	/**
 	 *
 	 * @var Controller|\Leaps\Web\Controller the controller that owns this action
 	 */
 	public $controller;
-	
+
 	/**
 	 * Constructor.
 	 *
@@ -62,7 +63,7 @@ class Action extends Service
 		$this->controller = $controller;
 		parent::__construct ( $config );
 	}
-	
+
 	/**
 	 * Returns the unique ID of this action among the whole application.
 	 *
@@ -72,7 +73,7 @@ class Action extends Service
 	{
 		return $this->controller->getUniqueId () . '/' . $this->id;
 	}
-	
+
 	/**
 	 * Runs this action with the specified parameters.
 	 * This method is mainly invoked by the controller.
@@ -92,18 +93,16 @@ class Action extends Service
 			Leaps::$app->requestedParams = $args;
 		}
 		if ($this->beforeRun ()) {
-			$result = call_user_func_array ( [ 
-				$this,
-				'run' 
-			], $args );
+			$result = call_user_func_array ( [
+					$this,'run' ], $args );
 			$this->afterRun ();
-			
+
 			return $result;
 		} else {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * This method is called right before `run()` is executed.
 	 * You may override this method to do preparation work for the action run.
@@ -115,7 +114,7 @@ class Action extends Service
 	{
 		return true;
 	}
-	
+
 	/**
 	 * This method is called right after `run()` is executed.
 	 * You may override this method to do post-processing work for the action run.

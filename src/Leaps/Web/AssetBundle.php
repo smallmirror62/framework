@@ -6,10 +6,10 @@
  */
 
 namespace Leaps\Web;
-
+use Leaps;
 use Leaps\Base\Object;
 use Leaps\Helper\Url;
-use Leaps;
+
 
 /**
  * AssetBundle represents a collection of asset files, such as CSS, JS, images.
