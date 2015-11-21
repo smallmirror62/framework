@@ -13,9 +13,9 @@ use Leaps\Base\InvalidRouteException;
 /**
  * Application is the base class for all web application classes.
  *
- * @property string $homeUrl The homepage URL.
- * @property Session $session The session component. This property is read-only.
- * @property User $user The user component. This property is read-only.
+ * @property string $homeUrl Home Url
+ * @property \Leaps\Web\Session $session Session组件，此属性为只读。
+ * @property \Leaps\Web\User $user 用户组件，此属性为只读。
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0

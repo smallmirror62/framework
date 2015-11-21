@@ -141,12 +141,11 @@ class User extends Service
 
 
     /**
-     * Initializes the application component.
+     * 初始化
      */
     public function init()
     {
         parent::init();
-
         if ($this->identityClass === null) {
             throw new InvalidConfigException('User::identityClass must be set.');
         }
@@ -205,7 +204,7 @@ class User extends Service
     }
 
     /**
-     * Logs in a user.
+     * 登陆用户
      *
      * After logging in a user, you may obtain the user's identity information from the [[identity]] property.
      * If [[enableSession]] is true, you may even get the identity information in the next requests without
