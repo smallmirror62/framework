@@ -8,10 +8,10 @@
 namespace Leaps\Filter;
 
 use Leaps;
-use Leaps\Base\Action;
-use Leaps\Base\ActionFilter;
-use Leaps\Di\Instance;
 use Leaps\Web\User;
+use Leaps\Base\Action;
+use Leaps\Di\Instance;
+use Leaps\Base\ActionFilter;
 use Leaps\Web\ForbiddenHttpException;
 
 /**
@@ -56,27 +56,30 @@ use Leaps\Web\ForbiddenHttpException;
  */
 class AccessControl extends ActionFilter
 {
+
 	/**
 	 *
 	 * @var User|array|string the user object representing the authentication status or the ID of the user application component.
 	 *      Starting from version 2.0.2, this can also be a configuration array for creating the object.
 	 */
 	public $user = 'user';
+
 	/**
 	 *
 	 * @var callable a callback that will be called if the access should be denied
 	 *      to the current user. If not set, [[denyAccess()]] will be called.
-	 *     
+	 *
 	 *      The signature of the callback should be as follows:
-	 *     
+	 *
 	 *      ~~~
 	 *      function ($rule, $action)
 	 *      ~~~
-	 *     
+	 *
 	 *      where `$rule` is the rule that denies the user, and `$action` is the current [[Action|action]] object.
 	 *      `$rule` can be `null` if access is denied because none of the rules matched.
 	 */
 	public $denyCallback;
+
 	/**
 	 *
 	 * @var array the default configuration of access rules. Individual rule configurations
@@ -85,6 +88,7 @@ class AccessControl extends ActionFilter
 	public $ruleConfig = [ 
 		'className' => 'Leaps\Filter\AccessRule' 
 	];
+
 	/**
 	 *
 	 * @var array a list of access rule objects or configuration arrays for creating the rule objects.
@@ -93,7 +97,7 @@ class AccessControl extends ActionFilter
 	 * @see ruleConfig
 	 */
 	public $rules = [ ];
-	
+
 	/**
 	 * Initializes the [[rules]] array by instantiating rule objects from configurations.
 	 */
@@ -107,7 +111,7 @@ class AccessControl extends ActionFilter
 			}
 		}
 	}
-	
+
 	/**
 	 * This method is invoked right before an action is to be executed (after all possible filters.)
 	 * You may override this method to do last-minute preparation for the action.
@@ -141,7 +145,7 @@ class AccessControl extends ActionFilter
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Denies the access of the user.
 	 * The default implementation will redirect the user to the login page if he is a guest;

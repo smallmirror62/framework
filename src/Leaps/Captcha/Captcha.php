@@ -1,18 +1,18 @@
 <?php
+
 /**
  * @link http://www.tintsoft.com/
  * @copyright Copyright (c) 2015 TintSoft
  * @license http://www.tintsoft.com/license/
  */
-
 namespace Leaps\Captcha;
 
 use Leaps;
-use Leaps\Base\InvalidConfigException;
 use Leaps\Helper\Url;
 use Leaps\Helper\Html;
 use Leaps\Helper\Json;
-use Leaps\Widgets\InputWidget;
+use Leaps\Widget\InputWidget;
+use Leaps\Base\InvalidConfigException;
 
 /**
  * Captcha renders a CAPTCHA image and an input field that takes user-entered verification code.
@@ -60,123 +60,134 @@ use Leaps\Widgets\InputWidget;
  */
 class Captcha extends InputWidget
 {
-    /**
-     * @var string|array the route of the action that generates the CAPTCHA images.
-     * The action represented by this route must be an action of [[CaptchaAction]].
-     * Please refer to [[\Leaps\Helper\Url::toRoute()]] for acceptable formats.
-     */
-    public $captchaAction = 'site/captcha';
-    /**
-     * @var array HTML attributes to be applied to the CAPTCHA image tag.
-     * @see \Leaps\Helper\Html::renderTagAttributes() for details on how attributes are being rendered.
-     */
-    public $imageOptions = [];
-    /**
-     * @var string the template for arranging the CAPTCHA image tag and the text input tag.
-     * In this template, the token `{image}` will be replaced with the actual image tag,
-     * while `{input}` will be replaced with the text input tag.
-     */
-    public $template = '{image} {input}';
-    /**
-     * @var array the HTML attributes for the input tag.
-     * @see \Leaps\Helper\Html::renderTagAttributes() for details on how attributes are being rendered.
-     */
-    public $options = ['className' => 'form-control'];
 
+	/**
+	 * @var string|array the route of the action that generates the CAPTCHA images.
+	 * The action represented by this route must be an action of [[CaptchaAction]].
+	 * Please refer to [[\Leaps\Helper\Url::toRoute()]] for acceptable formats.
+	 */
+	public $captchaAction = 'site/captcha';
 
-    /**
-     * Initializes the widget.
-     */
-    public function init()
-    {
-        parent::init();
+	/**
+	 * @var array HTML attributes to be applied to the CAPTCHA image tag.
+	 * @see \Leaps\Helper\Html::renderTagAttributes() for details on how attributes are being rendered.
+	 */
+	public $imageOptions = [ ];
 
-        $this->checkRequirements();
+	/**
+	 * @var string the template for arranging the CAPTCHA image tag and the text input tag.
+	 * In this template, the token `{image}` will be replaced with the actual image tag,
+	 * while `{input}` will be replaced with the text input tag.
+	 */
+	public $template = '{image} {input}';
 
-        if (!isset($this->imageOptions['id'])) {
-            $this->imageOptions['id'] = $this->options['id'] . '-image';
-        }
-    }
+	/**
+	 * @var array the HTML attributes for the input tag.
+	 * @see \Leaps\Helper\Html::renderTagAttributes() for details on how attributes are being rendered.
+	 */
+	public $options = [ 
+		'className' => 'form-control' 
+	];
 
-    /**
-     * Renders the widget.
-     */
-    public function run()
-    {
-        $this->registerClientScript();
-        if ($this->hasModel()) {
-            $input = Html::activeTextInput($this->model, $this->attribute, $this->options);
-        } else {
-            $input = Html::textInput($this->name, $this->value, $this->options);
-        }
-        $route = $this->captchaAction;
-        if (is_array($route)) {
-            $route['v'] = uniqid();
-        } else {
-            $route = [$route, 'v' => uniqid()];
-        }
-        $image = Html::img($route, $this->imageOptions);
-        echo strtr($this->template, [
-            '{input}' => $input,
-            '{image}' => $image,
-        ]);
-    }
+	/**
+	 * Initializes the widget.
+	 */
+	public function init()
+	{
+		parent::init ();
+		
+		$this->checkRequirements ();
+		
+		if (! isset ( $this->imageOptions ['id'] )) {
+			$this->imageOptions ['id'] = $this->options ['id'] . '-image';
+		}
+	}
 
-    /**
-     * Registers the needed JavaScript.
-     */
-    public function registerClientScript()
-    {
-        $options = $this->getClientOptions();
-        $options = empty($options) ? '' : Json::htmlEncode($options);
-        $id = $this->imageOptions['id'];
-        $view = $this->getView();
-        CaptchaAsset::register($view);
-        $view->registerJs("jQuery('#$id').leapsCaptcha($options);");
-    }
+	/**
+	 * Renders the widget.
+	 */
+	public function run()
+	{
+		$this->registerClientScript ();
+		if ($this->hasModel ()) {
+			$input = Html::activeTextInput ( $this->model, $this->attribute, $this->options );
+		} else {
+			$input = Html::textInput ( $this->name, $this->value, $this->options );
+		}
+		$route = $this->captchaAction;
+		if (is_array ( $route )) {
+			$route ['v'] = uniqid ();
+		} else {
+			$route = [ 
+				$route,
+				'v' => uniqid () 
+			];
+		}
+		$image = Html::img ( $route, $this->imageOptions );
+		echo strtr ( $this->template, [ 
+			'{input}' => $input,
+			'{image}' => $image 
+		] );
+	}
 
-    /**
-     * Returns the options for the captcha JS widget.
-     * @return array the options
-     */
-    protected function getClientOptions()
-    {
-        $route = $this->captchaAction;
-        if (is_array($route)) {
-            $route[CaptchaAction::REFRESH_GET_VAR] = 1;
-        } else {
-            $route = [$route, CaptchaAction::REFRESH_GET_VAR => 1];
-        }
+	/**
+	 * Registers the needed JavaScript.
+	 */
+	public function registerClientScript()
+	{
+		$options = $this->getClientOptions ();
+		$options = empty ( $options ) ? '' : Json::htmlEncode ( $options );
+		$id = $this->imageOptions ['id'];
+		$view = $this->getView ();
+		CaptchaAsset::register ( $view );
+		$view->registerJs ( "jQuery('#$id').leapsCaptcha($options);" );
+	}
 
-        $options = [
-            'refreshUrl' => Url::toRoute($route),
-            'hashKey' => "leapsCaptcha/{$route[0]}",
-        ];
+	/**
+	 * Returns the options for the captcha JS widget.
+	 * @return array the options
+	 */
+	protected function getClientOptions()
+	{
+		$route = $this->captchaAction;
+		if (is_array ( $route )) {
+			$route [CaptchaAction::REFRESH_GET_VAR] = 1;
+		} else {
+			$route = [ 
+				$route,
+				CaptchaAction::REFRESH_GET_VAR => 1 
+			];
+		}
+		
+		$options = [ 
+			'refreshUrl' => Url::toRoute ( $route ),
+			'hashKey' => "leapsCaptcha/{$route[0]}" 
+		];
+		
+		return $options;
+	}
 
-        return $options;
-    }
-
-    /**
-     * Checks if there is graphic extension available to generate CAPTCHA images.
-     * This method will check the existence of ImageMagick and GD extensions.
-     * @return string the name of the graphic extension, either "imagick" or "gd".
-     * @throws InvalidConfigException if neither ImageMagick nor GD is installed.
-     */
-    public static function checkRequirements()
-    {
-        if (extension_loaded('imagick')) {
-            $imagick = new \Imagick();
-            $imagickFormats = $imagick->queryFormats('PNG');
-            if (in_array('PNG', $imagickFormats)) {
-                return 'imagick';
-            }
-        }
-        if (extension_loaded('gd')) {
-            $gdInfo = gd_info();
-            if (!empty($gdInfo['FreeType Support'])) {
-                return 'gd';
-            }
-        }
-        throw new InvalidConfigException('Either GD PHP extension with FreeType support or ImageMagick PHP extension with PNG support is required.');
-    }
+	/**
+	 * Checks if there is graphic extension available to generate CAPTCHA images.
+	 * This method will check the existence of ImageMagick and GD extensions.
+	 * @return string the name of the graphic extension, either "imagick" or "gd".
+	 * @throws InvalidConfigException if neither ImageMagick nor GD is installed.
+	 */
+	public static function checkRequirements()
+	{
+		if (extension_loaded ( 'imagick' )) {
+			$imagick = new \Imagick ();
+			$imagickFormats = $imagick->queryFormats ( 'PNG' );
+			if (in_array ( 'PNG', $imagickFormats )) {
+				return 'imagick';
+			}
+		}
+		if (extension_loaded ( 'gd' )) {
+			$gdInfo = gd_info ();
+			if (! empty ( $gdInfo ['FreeType Support'] )) {
+				return 'gd';
+			}
+		}
+		throw new InvalidConfigException ( 'Either GD PHP extension with FreeType support or ImageMagick PHP extension with PNG support is required.' );
+	}
 }

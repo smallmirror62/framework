@@ -16,8 +16,6 @@ use cebe\markdown\inline\StrikeoutTrait;
 use cebe\markdown\block\FencedCodeTrait;
 use cebe\markdown\inline\EmphStrongTrait;
 
-
-
 /**
  * A Markdown parser that enhances markdown for reading in console environments.
  *
@@ -39,13 +37,15 @@ class Markdown extends \cebe\markdown\Parser
 	 *      backslash, the character will be outputted without the backslash and is not interpreted
 	 *      as markdown.
 	 */
-	protected $escapeCharacters = [
+	protected $escapeCharacters = [ 
 		'\\', // backslash
 		'`', // backtick
 		'*', // asterisk
 		'_', // underscore
-		'~'
-	]; // tilde
+		'~' 
+	];
+ // tilde
+	
 
 	/**
 	 * Renders a code block
@@ -55,8 +55,8 @@ class Markdown extends \cebe\markdown\Parser
 	 */
 	protected function renderCode($block)
 	{
-		return Console::ansiFormat ( $block ['content'], [
-			Console::NEGATIVE
+		return Console::ansiFormat ( $block ['content'], [ 
+			Console::NEGATIVE 
 		] ) . "\n\n";
 	}
 
@@ -76,8 +76,8 @@ class Markdown extends \cebe\markdown\Parser
 	 */
 	protected function renderInlineCode($element)
 	{
-		return Console::ansiFormat ( $element [1], [
-			Console::UNDERLINE
+		return Console::ansiFormat ( $element [1], [ 
+			Console::UNDERLINE 
 		] );
 	}
 
@@ -89,8 +89,8 @@ class Markdown extends \cebe\markdown\Parser
 	 */
 	protected function renderEmph($element)
 	{
-		return Console::ansiFormat ( $this->renderAbsy ( $element [1] ), [
-			Console::ITALIC
+		return Console::ansiFormat ( $this->renderAbsy ( $element [1] ), [ 
+			Console::ITALIC 
 		] );
 	}
 
@@ -102,8 +102,8 @@ class Markdown extends \cebe\markdown\Parser
 	 */
 	protected function renderStrong($element)
 	{
-		return Console::ansiFormat ( $this->renderAbsy ( $element [1] ), [
-			Console::BOLD
+		return Console::ansiFormat ( $this->renderAbsy ( $element [1] ), [ 
+			Console::BOLD 
 		] );
 	}
 
@@ -115,8 +115,8 @@ class Markdown extends \cebe\markdown\Parser
 	 */
 	protected function renderStrike($element)
 	{
-		return Console::ansiFormat ( $this->parseInline ( $this->renderAbsy ( $element [1] ) ), [
-			Console::CROSSED_OUT
+		return Console::ansiFormat ( $this->parseInline ( $this->renderAbsy ( $element [1] ) ), [ 
+			Console::CROSSED_OUT 
 		] );
 	}
 }
