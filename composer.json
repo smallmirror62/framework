@@ -37,13 +37,5 @@
         "psr-4": {
             "Leaps\\": "src/Leaps/"
         }
-    }, 
-    "bin": [
-        "src/bin/leaps"
-    ], 
-    "extra": {
-        "branch-alias": {
-            "dev-master": "develop"
-        }
     }
 }
