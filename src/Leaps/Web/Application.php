@@ -22,6 +22,7 @@ use Leaps\Base\InvalidRouteException;
  */
 class Application extends \Leaps\Base\Application
 {
+
 	/**
 	 * 应用路由
 	 *
@@ -96,13 +97,14 @@ class Application extends \Leaps\Base\Application
 				if ($result !== null) {
 					$response->data = $result;
 				}
-
+				
 				return $response;
 			}
 		} catch ( InvalidRouteException $e ) {
 			throw new NotFoundHttpException ( Leaps::t ( 'leaps', 'Page not found.' ), $e->getCode (), $e );
 		}
 	}
+
 	private $_homeUrl;
 
 	/**
@@ -158,6 +160,22 @@ class Application extends \Leaps\Base\Application
 	 */
 	public function coreServices()
 	{
-		return array_merge ( parent::coreServices (), [ 'request' => [ 'className' => 'Leaps\Web\Request' ],'response' => [ 'className' => 'Leaps\Web\Response' ],'session' => [ 'className' => 'Leaps\Web\Session' ],'user' => [ 'className' => 'Leaps\Web\User' ],'errorHandler' => [ 'className' => 'Leaps\Web\ErrorHandler' ] ] );
+		return array_merge ( parent::coreServices (), [ 
+			'request' => [ 
+				'className' => 'Leaps\Web\Request' 
+			],
+			'response' => [ 
+				'className' => 'Leaps\Web\Response' 
+			],
+			'session' => [ 
+				'className' => 'Leaps\Web\Session' 
+			],
+			'user' => [ 
+				'className' => 'Leaps\Web\User' 
+			],
+			'errorHandler' => [ 
+				'className' => 'Leaps\Web\ErrorHandler' 
+			] 
+		] );
 	}
 }

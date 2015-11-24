@@ -8,11 +8,11 @@
 namespace Leaps\Web;
 
 use Leaps;
-use Leaps\Base\Service;
-use Leaps\Base\InvalidConfigException;
-use Leaps\Base\InvalidParamException;
-use Leaps\Helper\FileHelper;
 use Leaps\Helper\Url;
+use Leaps\Base\Service;
+use Leaps\Helper\FileHelper;
+use Leaps\Base\InvalidParamException;
+use Leaps\Base\InvalidConfigException;
 
 /**
  * AssetManager manages asset bundle configuration and loading.
@@ -33,28 +33,29 @@ use Leaps\Helper\Url;
  *
  * @property AssetConverterInterface $converter The asset converter. Note that the type of this property
  *           differs in getter and setter. See [[getConverter()]] and [[setConverter()]] for details.
- *          
+ *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
 class AssetManager extends Service
 {
+
 	/**
 	 *
 	 * @var array|boolean list of asset bundle configurations. This property is provided to customize asset bundles.
 	 *      When a bundle is being loaded by [[getBundle()]], if it has a corresponding configuration specified here,
 	 *      the configuration will be applied to the bundle.
-	 *     
+	 *
 	 *      The array keys are the asset bundle names, which typically are asset bundle class names without leading backslash.
 	 *      The array values are the corresponding configurations. If a value is false, it means the corresponding asset
 	 *      bundle is disabled and [[getBundle()]] should return null.
-	 *     
+	 *
 	 *      If this property is false, it means the whole asset bundle feature is disabled and [[getBundle()]]
 	 *      will always return null.
-	 *     
+	 *
 	 *      The following example shows how to disable the bootstrap css file used by Bootstrap widgets
 	 *      (because you want to use your own styles):
-	 *     
+	 *
 	 *      ~~~
 	 *      [
 	 *      'Leaps\Bootstrap\BootstrapAsset' => [
@@ -64,41 +65,44 @@ class AssetManager extends Service
 	 *      ~~~
 	 */
 	public $bundles = [ ];
+
 	/**
 	 *
 	 * @var string the root directory storing the published asset files.
 	 */
 	public $basePath = '@webroot/assets';
+
 	/**
 	 *
 	 * @var string the base URL through which the published asset files can be accessed.
 	 */
 	public $baseUrl = '@web/assets';
+
 	/**
 	 *
 	 * @var array mapping from source asset files (keys) to target asset files (values).
-	 *     
+	 *
 	 *      This property is provided to support fixing incorrect asset file paths in some asset bundles.
 	 *      When an asset bundle is registered with a view, each relative asset file in its [[AssetBundle::css|css]]
 	 *      and [[AssetBundle::js|js]] arrays will be examined against this map. If any of the keys is found
 	 *      to be the last part of an asset file (which is prefixed with [[AssetBundle::sourcePath]] if available),
 	 *      the corresponding value will replace the asset and be registered with the view.
 	 *      For example, an asset file `my/path/to/jquery.js` matches a key `jquery.js`.
-	 *     
+	 *
 	 *      Note that the target asset files should be absolute URLs, domain relative URLs (starting from '/') or paths
 	 *      relative to [[baseUrl]] and [[basePath]].
-	 *     
+	 *
 	 *      In the following example, any assets ending with `jquery.min.js` will be replaced with `jquery/dist/jquery.js`
 	 *      which is relative to [[baseUrl]] and [[basePath]].
-	 *     
+	 *
 	 *      ```php
 	 *      [
 	 *      'jquery.min.js' => 'jquery/dist/jquery.js',
 	 *      ]
 	 *      ```
-	 *     
+	 *
 	 *      You may also use aliases while specifying map value, for example:
-	 *     
+	 *
 	 *      ```php
 	 *      [
 	 *      'jquery.min.js' => '@web/js/jquery/jquery.js',
@@ -106,25 +110,27 @@ class AssetManager extends Service
 	 *      ```
 	 */
 	public $assetMap = [ ];
+
 	/**
 	 *
 	 * @var boolean whether to use symbolic link to publish asset files. Defaults to false, meaning
 	 *      asset files are copied to [[basePath]]. Using symbolic links has the benefit that the published
 	 *      assets will always be consistent with the source assets and there is no copy operation required.
 	 *      This is especially useful during development.
-	 *     
+	 *
 	 *      However, there are special requirements for hosting environments in order to use symbolic links.
 	 *      In particular, symbolic links are supported only on Linux/Unix, and Windows Vista/2008 or greater.
-	 *     
+	 *
 	 *      Moreover, some Web servers need to be properly configured so that the linked assets are accessible
 	 *      to Web users. For example, for Apache Web server, the following configuration directive should be added
 	 *      for the Web folder:
-	 *     
+	 *
 	 *      ~~~
 	 *      Options FollowSymLinks
 	 *      ~~~
 	 */
 	public $linkAssets = false;
+
 	/**
 	 *
 	 * @var integer the permission to be set for newly published asset files.
@@ -132,6 +138,7 @@ class AssetManager extends Service
 	 *      If not set, the permission will be determined by the current environment.
 	 */
 	public $fileMode;
+
 	/**
 	 *
 	 * @var integer the permission to be set for newly generated asset directories.
@@ -140,18 +147,20 @@ class AssetManager extends Service
 	 *      but read-only for other users.
 	 */
 	public $dirMode = 0775;
+
 	/**
 	 *
 	 * @var callback a PHP callback that is called before copying each sub-directory or file.
 	 *      This option is used only when publishing a directory. If the callback returns false, the copy
 	 *      operation for the sub-directory or file will be cancelled.
-	 *     
+	 *
 	 *      The signature of the callback should be: `function ($from, $to)`, where `$from` is the sub-directory or
 	 *      file to be copied from, while `$to` is the copy target.
-	 *     
+	 *
 	 *      This is passed as a parameter `beforeCopy` to [[\Leaps\Helper\FileHelper::copyDirectory()]].
 	 */
 	public $beforeCopy;
+
 	/**
 	 *
 	 * @var callback a PHP callback that is called after a sub-directory or file is successfully copied.
@@ -160,6 +169,7 @@ class AssetManager extends Service
 	 *      This is passed as a parameter `afterCopy` to [[\Leaps\Helper\FileHelper::copyDirectory()]].
 	 */
 	public $afterCopy;
+
 	/**
 	 *
 	 * @var boolean whether the directory being published should be copied even if
@@ -169,6 +179,7 @@ class AssetManager extends Service
 	 *      significantly degrade the performance.
 	 */
 	public $forceCopy = false;
+
 	/**
 	 *
 	 * @var boolean whether to append a timestamp to the URL of every published asset. When this is true,
@@ -179,38 +190,40 @@ class AssetManager extends Service
 	 * @since 2.0.3
 	 */
 	public $appendTimestamp = false;
+
 	/**
 	 *
 	 * @var callable a callback that will be called to produce hash for asset directory generation.
 	 *      The signature of the callback should be as follows:
-	 *     
+	 *
 	 *      ```
 	 *      function ($path)
 	 *      ```
-	 *     
+	 *
 	 *      where `$path` is the asset path. Note that the `$path` can be either directory where the asset
 	 *      files reside or a single file. For a CSS file that uses relative path in `url()`, the hash
 	 *      implementation should use the directory path of the file instead of the file path to include
 	 *      the relative asset files in the copying.
-	 *     
+	 *
 	 *      If this is not set, the asset manager will use the default CRC32 and filemtime in the `hash`
 	 *      method.
-	 *     
+	 *
 	 *      Example of an implementation using MD4 hash:
-	 *     
+	 *
 	 *      ```php
 	 *      function ($path) {
 	 *      return hash('md4', $path);
 	 *      }
 	 *      ```
-	 *     
+	 *
 	 * @since 2.0.6
 	 */
 	public $hashCallback;
+
 	private $_dummyBundles = [ ];
-	
+
 	/**
-	 * Initializes the component.
+	 * 初始化
 	 *
 	 * @throws InvalidConfigException if [[basePath]] is invalid
 	 */
@@ -227,9 +240,9 @@ class AssetManager extends Service
 		}
 		$this->baseUrl = rtrim ( Leaps::getAlias ( $this->baseUrl ), '/' );
 	}
-	
+
 	/**
-	 * Returns the named asset bundle.
+	 * 返回指定的资源包
 	 *
 	 * This method will first look for the bundle in [[bundles]]. If not found,
 	 * it will treat `$name` as the class of the asset bundle and create a new instance of it.
@@ -256,12 +269,12 @@ class AssetManager extends Service
 			throw new InvalidConfigException ( "Invalid asset bundle configuration: $name" );
 		}
 	}
-	
+
 	/**
-	 * Loads asset bundle class by name
+	 * 加载资源包类名
 	 *
-	 * @param string $name bundle name
-	 * @param array $config bundle object configuration
+	 * @param string $name 包名
+	 * @param array $config 包对象配置
 	 * @param boolean $publish if bundle should be published
 	 * @return AssetBundle
 	 * @throws InvalidConfigException if configuration isn't valid
@@ -278,9 +291,9 @@ class AssetManager extends Service
 		}
 		return $bundle;
 	}
-	
+
 	/**
-	 * Loads dummy bundle by name
+	 * 加载虚拟包的名字
 	 *
 	 * @param string $name
 	 * @return AssetBundle
@@ -297,9 +310,9 @@ class AssetManager extends Service
 		}
 		return $this->_dummyBundles [$name];
 	}
-	
+
 	/**
-	 * Returns the actual URL for the specified asset.
+	 * 返回资源的实际URL
 	 * The actual URL is obtained by prepending either [[baseUrl]] or [[AssetManager::baseUrl]] to the given asset path.
 	 *
 	 * @param AssetBundle $bundle the asset bundle which the asset file belongs to
@@ -333,9 +346,9 @@ class AssetManager extends Service
 			return "$baseUrl/$asset";
 		}
 	}
-	
+
 	/**
-	 * Returns the actual file path for the specified asset.
+	 * 返回指定资源的实际文件路径
 	 *
 	 * @param AssetBundle $bundle the asset bundle which the asset file belongs to
 	 * @param string $asset the asset path. This should be one of the assets listed in [[js]] or [[css]].
@@ -349,7 +362,7 @@ class AssetManager extends Service
 			return Url::isRelative ( $asset ) ? $bundle->basePath . '/' . $asset : false;
 		}
 	}
-	
+
 	/**
 	 *
 	 * @param AssetBundle $bundle
@@ -375,8 +388,9 @@ class AssetManager extends Service
 		
 		return false;
 	}
+
 	private $_converter;
-	
+
 	/**
 	 * Returns the asset converter.
 	 *
@@ -395,7 +409,7 @@ class AssetManager extends Service
 		
 		return $this->_converter;
 	}
-	
+
 	/**
 	 * Sets the asset converter.
 	 *
@@ -407,15 +421,15 @@ class AssetManager extends Service
 	{
 		$this->_converter = $value;
 	}
-	
+
 	/**
 	 *
 	 * @var array published assets
 	 */
 	private $_published = [ ];
-	
+
 	/**
-	 * Publishes a file or a directory.
+	 * 发布文件到文件夹
 	 *
 	 * This method will copy the specified file or directory to [[basePath]] so that
 	 * it can be accessed via the Web server.
@@ -431,17 +445,10 @@ class AssetManager extends Service
 	 * will NOT be published. If you want to change this behavior, you may specify the "beforeCopy" option
 	 * as explained in the `$options` parameter.
 	 *
-	 * Note: On rare scenario, a race condition can develop that will lead to a
-	 * one-time-manifestation of a non-critical problem in the creation of the directory
-	 * that holds the published assets. This problem can be avoided altogether by 'requesting'
-	 * in advance all the resources that are supposed to trigger a 'publish()' call, and doing
-	 * that in the application deployment phase, before system goes live. See more in the following
-	 * discussion: http://code.google.com/p/yii/issues/detail?id=2579
-	 *
 	 * @param string $path the asset (file or directory) to be published
 	 * @param array $options the options to be applied when publishing a directory.
 	 *        The following options are supported:
-	 *       
+	 *
 	 *        - only: array, list of patterns that the file paths should match if they want to be copied.
 	 *        - except: array, list of patterns that the files or directories should match if they want to be excluded from being copied.
 	 *        - caseSensitive: boolean, whether patterns specified at "only" or "except" should be case sensitive. Defaults to true.
@@ -452,7 +459,7 @@ class AssetManager extends Service
 	 *        - forceCopy: boolean, whether the directory being published should be copied even if
 	 *        it is found in the target directory. This option is used only when publishing a directory.
 	 *        This overrides [[forceCopy]] if set.
-	 *       
+	 *
 	 * @return array the path (directory or file path) and the URL that the asset is published as.
 	 * @throws InvalidParamException if the asset to be published does not exist.
 	 */
@@ -474,9 +481,9 @@ class AssetManager extends Service
 			return $this->_published [$path] = $this->publishDirectory ( $src, $options );
 		}
 	}
-	
+
 	/**
-	 * Publishes a file.
+	 * 发布文件
 	 *
 	 * @param string $src the asset file to be published
 	 * @return array the path and the URL that the asset is published as.
@@ -509,14 +516,14 @@ class AssetManager extends Service
 			$this->baseUrl . "/$dir/$fileName" 
 		];
 	}
-	
+
 	/**
-	 * Publishes a directory.
+	 * 发布文件夹
 	 *
 	 * @param string $src the asset directory to be published
 	 * @param array $options the options to be applied when publishing a directory.
 	 *        The following options are supported:
-	 *       
+	 *
 	 *        - only: array, list of patterns that the file paths should match if they want to be copied.
 	 *        - except: array, list of patterns that the files or directories should match if they want to be excluded from being copied.
 	 *        - caseSensitive: boolean, whether patterns specified at "only" or "except" should be case sensitive. Defaults to true.
@@ -527,7 +534,7 @@ class AssetManager extends Service
 	 *        - forceCopy: boolean, whether the directory being published should be copied even if
 	 *        it is found in the target directory. This option is used only when publishing a directory.
 	 *        This overrides [[forceCopy]] if set.
-	 *       
+	 *
 	 * @return array the path directory and the URL that the asset is published as.
 	 * @throws InvalidParamException if the asset to be published does not exist.
 	 */
@@ -565,9 +572,9 @@ class AssetManager extends Service
 			$this->baseUrl . '/' . $dir 
 		];
 	}
-	
+
 	/**
-	 * Returns the published path of a file path.
+	 * 返回发布路径的文件路径。
 	 * This method does not perform any publishing. It merely tells you
 	 * if the file or directory is published, where it will go.
 	 *
@@ -587,9 +594,9 @@ class AssetManager extends Service
 			return false;
 		}
 	}
-	
+
 	/**
-	 * Returns the URL of a published file path.
+	 * 返回发布文件的URL路径。
 	 * This method does not perform any publishing. It merely tells you
 	 * if the file path is published, what the URL will be to access it.
 	 *
@@ -609,9 +616,9 @@ class AssetManager extends Service
 			return false;
 		}
 	}
-	
+
 	/**
-	 * Generate a CRC32 hash for the directory path.
+	 * 生成一个目录路径的CRC32散列。
 	 * Collisions are higher
 	 * than MD5 but generates a much smaller hash string.
 	 *
