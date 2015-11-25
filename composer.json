@@ -1,13 +1,17 @@
 {
     "name": "leaps/framework", 
     "description": "Leaps PHP Framework Version 5", 
-    "keywords": [
-        "leaps", 
-        "framework"
-    ], 
+    "keywords": ["leaps", "framework" ], 
     "homepage": "http://leaps.tintsoft.com/", 
     "type": "library", 
     "license": "BSD-3-Clause", 
+    "support": {
+        "issues": "https://github.com/leaps/framework/issues?state=open", 
+        "forum": "http://leaps.tintsoft.com/forum/", 
+        "wiki": "https://github.com/leaps/framework/wiki", 
+        "irc": "irc://irc.freenode.net/leaps", 
+        "source": "https://github.com/tintsoft/leaps"
+    }, 
     "authors": [
         {
             "name": "Tongle Xu", 
@@ -16,13 +20,6 @@
             "role": "Founder and project lead"
         }
     ], 
-    "support": {
-        "issues": "https://github.com/leaps/framework/issues?state=open", 
-        "forum": "http://leaps.tintsoft.com/forum/", 
-        "wiki": "https://github.com/leaps/framework/wiki", 
-        "irc": "irc://irc.freenode.net/leaps", 
-        "source": "https://github.com/tintsoft/leaps"
-    }, 
     "require": {
         "php": ">=5.4.0", 
         "ext-mbstring": "*", 
