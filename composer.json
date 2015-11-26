@@ -24,7 +24,7 @@
         "php": ">=5.4.0", 
         "ext-mbstring": "*", 
         "lib-pcre": "*", 
-        "leaps/composer": "*",
+        "leaps/composer": "1.0.0",
         "ezyang/htmlpurifier": "4.6.*", 
         "cebe/markdown": "~1.0.0 | ~1.1.0", 
         "bower-asset/jquery": "2.1.*@stable | 1.11.*@stable", 

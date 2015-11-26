@@ -12,26 +12,25 @@ nbproject
 # windows thumbnail cache
 Thumbs.db
 
-# Dreamweaver added files
-_notes
-dwsync.xml
+# composer vendor dir
+/vendor
+# cubrid install dir
+/cubrid
+
+# composer itself is not needed
+composer.phar
+
+# composer.lock in applications is ignored since it's automatically created by composer when application is installed
+/apps/*/composer.lock
 
 # Mac DS_Store Files
 .DS_Store
 
-# svn Files
-.svn
+# phpunit itself is not needed
+phpunit.phar
+# local phpunit config
+/phpunit.xml
 
-# Composer Files
-composer.lock
-/vendor
-
-# Leaps RunTime Files
-*.log
-*.bin
-
-
-
-
-
-
+# ignore sub directory for dev installed apps and extensions
+/apps
+/extensions

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<phpunit bootstrap="./tests/bootstrap.php"
+		colors="true"
+		convertErrorsToExceptions="true"
+		convertNoticesToExceptions="true"
+		convertWarningsToExceptions="true"
+		stopOnFailure="false">
+		<testsuites>
+			<testsuite name="Leaps Test Suite">
+				<directory>./tests</directory>
+			</testsuite>
+		</testsuites>
+		<filter>
+			<blacklist>
+				<file>src/Leaps/Helper/Json.php</file>
+				<file>src/Leaps/Helper/StringHelper.php</file>
+				<file>src/Leaps/Helper/VarDumper.php</file>
+				<file>src/Leaps/Helper/Html.php</file>
+				<file>src/Leaps/Helper/Inflector.php</file>
+				<file>src/Leaps/Helper/FileHelper.php</file>
+				<file>src/Leaps/Helper/ArrayHelper.php</file>
+				<file>src/Leaps/Helper/Console.php</file>
+				<file>src/Leaps/I18n/GettextFile.php</file>
+				<file>src/Leaps/Web/ResponseFormatterInterface.php</file>
+				<directory suffix="Exception.php">src/Leaps/Base</directory>
+				<directory suffix=".php">src/Leaps/Db/mssql</directory>
+				<directory suffix=".php">src/Leaps/Bootstrap</directory>
+			</blacklist>
+		</filter>
+</phpunit>

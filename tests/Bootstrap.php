@@ -1,12 +1,22 @@
 <?php
-// +----------------------------------------------------------------------
-// | Leaps Framework [ WE CAN DO IT JUST THINK IT ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2011-2014 Leaps Team (http://www.tintsoft.com)
-// +----------------------------------------------------------------------
-// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
-// +----------------------------------------------------------------------
-// | Author XuTongle <xutongle@gmail.com>
-// +----------------------------------------------------------------------
-$loader = include __DIR__ . '../../vendor/autoload.php';
-$loader->add('Leaps', __DIR__ . '../src');
+
+// ensure we get report on all possible php errors
+error_reporting ( - 1 );
+
+define ( 'LEAPS_ENABLE_ERROR_HANDLER', false );
+define ( 'LEAPS_DEBUG', true );
+$_SERVER ['SCRIPT_NAME'] = '/' . __DIR__;
+$_SERVER ['SCRIPT_FILENAME'] = __FILE__;
+
+// require composer autoloader if available
+$composerAutoload = __DIR__ . '/../vendor/autoload.php';
+if (is_file ( $composerAutoload )) {
+	require_once ($composerAutoload);
+} else {
+	require_once (__DIR__ . '/../../../autoload.php');
+}
+require_once (__DIR__ . '/../Leaps.php');
+
+Leaps::setAlias ( '@leapsunit', __DIR__ );
+
+require_once (__DIR__ . '/TestCase.php');

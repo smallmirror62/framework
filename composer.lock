@@ -1,0 +1,297 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "fd83a19000b4393baf259b53964910de",
+    "content-hash": "bcf3f14d6c915396b1bfed9b1cebe630",
+    "packages": [
+        {
+            "name": "bower-asset/jquery",
+            "version": "2.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jquery/jquery.git",
+                "reference": "7751e69b615c6eca6f783a81e292a55725af6b85"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jquery/jquery/zipball/7751e69b615c6eca6f783a81e292a55725af6b85",
+                "reference": "7751e69b615c6eca6f783a81e292a55725af6b85",
+                "shasum": ""
+            },
+            "require-dev": {
+                "bower-asset/qunit": "1.14.0",
+                "bower-asset/requirejs": "2.1.10",
+                "bower-asset/sinon": "1.8.1",
+                "bower-asset/sizzle": "2.1.1-patch2"
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": "dist/jquery.js",
+                "bower-asset-ignore": [
+                    "**/.*",
+                    "build",
+                    "dist/cdn",
+                    "speed",
+                    "test",
+                    "*.md",
+                    "AUTHORS.txt",
+                    "Gruntfile.js",
+                    "package.json"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "keywords": [
+                "javascript",
+                "jquery",
+                "library"
+            ]
+        },
+        {
+            "name": "bower-asset/jquery.inputmask",
+            "version": "3.1.63",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/RobinHerbots/jquery.inputmask.git",
+                "reference": "c40c7287eadc31e341ebbf0c02352eb55b9cbc48"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/RobinHerbots/jquery.inputmask/zipball/c40c7287eadc31e341ebbf0c02352eb55b9cbc48",
+                "reference": "c40c7287eadc31e341ebbf0c02352eb55b9cbc48",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.7"
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": [
+                    "./dist/inputmask/jquery.inputmask.js",
+                    "./dist/inputmask/jquery.inputmask.extensions.js",
+                    "./dist/inputmask/jquery.inputmask.date.extensions.js",
+                    "./dist/inputmask/jquery.inputmask.numeric.extensions.js",
+                    "./dist/inputmask/jquery.inputmask.phone.extensions.js",
+                    "./dist/inputmask/jquery.inputmask.regex.extensions.js"
+                ],
+                "bower-asset-ignore": [
+                    "**/.*",
+                    "qunit/",
+                    "nuget/",
+                    "tools/",
+                    "js/",
+                    "*.md",
+                    "build.properties",
+                    "build.xml",
+                    "jquery.inputmask.jquery.json"
+                ]
+            },
+            "license": [
+                "http://opensource.org/licenses/mit-license.php"
+            ],
+            "description": "jquery.inputmask is a jquery plugin which create an input mask.",
+            "keywords": [
+                "form",
+                "input",
+                "inputmask",
+                "jquery",
+                "mask",
+                "plugins"
+            ]
+        },
+        {
+            "name": "bower-asset/punycode",
+            "version": "v1.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bestiejs/punycode.js.git",
+                "reference": "38c8d3131a82567bfef18da09f7f4db68c84f8a3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bestiejs/punycode.js/zipball/38c8d3131a82567bfef18da09f7f4db68c84f8a3",
+                "reference": "38c8d3131a82567bfef18da09f7f4db68c84f8a3",
+                "shasum": ""
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": "punycode.js",
+                "bower-asset-ignore": [
+                    "coverage",
+                    "tests",
+                    ".*",
+                    "component.json",
+                    "Gruntfile.js",
+                    "node_modules",
+                    "package.json"
+                ]
+            }
+        },
+        {
+            "name": "cebe/markdown",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cebe/markdown.git",
+                "reference": "54a2c49de31cc44e864ebf0500a35ef21d0010b2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cebe/markdown/zipball/54a2c49de31cc44e864ebf0500a35ef21d0010b2",
+                "reference": "54a2c49de31cc44e864ebf0500a35ef21d0010b2",
+                "shasum": ""
+            },
+            "require": {
+                "lib-pcre": "*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "cebe/indent": "*",
+                "facebook/xhprof": "*@dev",
+                "phpunit/phpunit": "4.1.*"
+            },
+            "bin": [
+                "bin/markdown"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "cebe\\markdown\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Carsten Brandt",
+                    "email": "mail@cebe.cc",
+                    "homepage": "http://cebe.cc/",
+                    "role": "Creator"
+                }
+            ],
+            "description": "A super fast, highly extensible markdown parser for PHP",
+            "homepage": "https://github.com/cebe/markdown#readme",
+            "keywords": [
+                "extensible",
+                "fast",
+                "gfm",
+                "markdown",
+                "markdown-extra"
+            ],
+            "time": "2015-03-06 05:28:07"
+        },
+        {
+            "name": "ezyang/htmlpurifier",
+            "version": "v4.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ezyang/htmlpurifier.git",
+                "reference": "6f389f0f25b90d0b495308efcfa073981177f0fd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/6f389f0f25b90d0b495308efcfa073981177f0fd",
+                "reference": "6f389f0f25b90d0b495308efcfa073981177f0fd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "HTMLPurifier": "library/"
+                },
+                "files": [
+                    "library/HTMLPurifier.composer.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Edward Z. Yang",
+                    "email": "admin@htmlpurifier.org",
+                    "homepage": "http://ezyang.com"
+                }
+            ],
+            "description": "Standards compliant HTML filter written in PHP",
+            "homepage": "http://htmlpurifier.org/",
+            "keywords": [
+                "html"
+            ],
+            "time": "2013-11-30 08:25:19"
+        },
+        {
+            "name": "leaps/composer",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/leaps/composer.git",
+                "reference": "cd5928d0b77d6414661bcdb74a64102361ecd845"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/leaps/composer/zipball/cd5928d0b77d6414661bcdb74a64102361ecd845",
+                "reference": "cd5928d0b77d6414661bcdb74a64102361ecd845",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "1.0.0"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Leaps\\Composer\\Plugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Leaps\\Composer\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Tongle Xu",
+                    "email": "xutongle@gmail.com"
+                }
+            ],
+            "description": "The composer plugin for Leaps extension installer",
+            "keywords": [
+                "composer",
+                "extension installer",
+                "leaps"
+            ],
+            "time": "2015-11-24 13:08:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "bower-asset/jquery": 0
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.4.0",
+        "ext-mbstring": "*",
+        "lib-pcre": "*"
+    },
+    "platform-dev": []
+}
