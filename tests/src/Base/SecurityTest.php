@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace leapsunit\src\base;
+namespace leapsunit\src\Base;
 
 use leapsunit\TestCase;
 

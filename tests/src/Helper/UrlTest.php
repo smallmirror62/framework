@@ -1,10 +1,10 @@
 <?php
-namespace leapsunit\src\helpers;
+namespace leapsunit\src\Helper;
 
 use Leaps\Base\Action;
 use Leaps\Base\Module;
 use Leaps\Helper\Url;
-use yii\web\Controller;
+use Leaps\Web\Controller;
 use leapsunit\TestCase;
 
 /**
@@ -19,19 +19,19 @@ class UrlTest extends TestCase
         $this->mockApplication([
             'components' => [
                 'request' => [
-                    'class' => 'yii\web\Request',
+                    'class' => 'Leaps\Web\Request',
                     'scriptUrl' => '/base/index.php',
                     'hostInfo' => 'http://example.com/',
                     'url' => '/base/index.php&r=site%2Fcurrent&id=42'
                 ],
                 'urlManager' => [
-                    'class' => 'yii\web\UrlManager',
+                    'class' => 'Leaps\Web\UrlManager',
                     'baseUrl' => '/base',
                     'scriptUrl' => '/base/index.php',
                     'hostInfo' => 'http://example.com/',
                 ]
             ],
-        ], '\yii\web\Application');
+        ], '\Leaps\Web\Application');
     }
 
     /**
@@ -136,7 +136,7 @@ class UrlTest extends TestCase
 
         // is a non-empty string: it will first be processed by [[Leaps::getAlias()]]. If the result
         // is an absolute URL, it will be returned either without any change or, if schema was specified, with schema
-        // replaced; Otherwise, the result will be prefixed with [[\yii\web\Request::baseUrl]] and returned.
+        // replaced; Otherwise, the result will be prefixed with [[\Leaps\Web\Request::baseUrl]] and returned.
         \Leaps::setAlias('@web1', 'http://test.example.com/test/me1');
         \Leaps::setAlias('@web2', 'test/me2');
         \Leaps::setAlias('@web3', '');

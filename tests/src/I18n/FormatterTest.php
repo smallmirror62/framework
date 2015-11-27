@@ -1,8 +1,8 @@
 <?php
 
-namespace leapsunit\src\i18n;
+namespace leapsunit\src\I18n;
 
-use yii\i18n\Formatter;
+use Leaps\I18n\Formatter;
 use Leaps;
 use leapsunit\TestCase;
 

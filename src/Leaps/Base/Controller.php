@@ -98,9 +98,9 @@ class Controller extends Service implements ViewContextInterface
 	 *
 	 * ~~~
 	 * return [
-	 * 'action1' => 'app\components\Action1',
+	 * 'action1' => 'app\service\Action1',
 	 * 'action2' => [
-	 * 'className' => 'app\components\Action2',
+	 * 'className' => 'app\service\Action2',
 	 * 'property1' => 'value1',
 	 * 'property2' => 'value2',
 	 * ],

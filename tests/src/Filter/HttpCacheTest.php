@@ -1,6 +1,6 @@
 <?php
 
-namespace leapsunit\src\filters;
+namespace leapsunit\src\Filter;
 
 use Leaps;
 use Leaps\Filter\HttpCache;
@@ -29,7 +29,7 @@ class HttpCacheTest extends \leapsunit\TestCase
     }
 
     /**
-     * @covers yii\filters\HttpCache::validateCache
+     * @covers Leaps\Filter\HttpCache::validateCache
      */
     public function testValidateCache()
     {
@@ -59,7 +59,7 @@ class HttpCacheTest extends \leapsunit\TestCase
     }
 
     /**
-     * @covers yii\filters\HttpCache::generateEtag
+     * @covers Leaps\Filter\HttpCache::generateEtag
      */
     public function testGenerateEtag()
     {

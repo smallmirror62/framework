@@ -7,7 +7,7 @@
 
 namespace leapsunit\src\web;
 
-use yii\web\XmlResponseFormatter;
+use Leaps\Web\XmlResponseFormatter;
 
 /**
  * @author Qiang Xue <qiang.xue@gmail.com>

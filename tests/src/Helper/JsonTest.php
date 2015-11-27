@@ -1,12 +1,12 @@
 <?php
 
-namespace leapsunit\src\helpers;
+namespace leapsunit\src\Helper;
 
 use Leaps\Base\Model;
 use Leaps\Helper\BaseJson;
 use Leaps\Helper\Json;
 use leapsunit\TestCase;
-use yii\web\JsExpression;
+use Leaps\Web\JsExpression;
 
 /**
  * @group helpers

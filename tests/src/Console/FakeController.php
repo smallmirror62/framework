@@ -10,7 +10,7 @@ namespace leapsunit\src\Console;
 use Leaps\Console\Controller;
 use leapsunit\src\Web\Stub\Bar;
 use Leaps\Validator\EmailValidator;
-use leapsunit\src\di\stubs\QuxInterface;
+use leapsunit\src\Di\Stub\QuxInterface;
 
 
 /**

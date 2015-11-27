@@ -1,11 +1,11 @@
 <?php
 
-namespace leapsunit\src\helpers;
+namespace leapsunit\src\Helper;
 
 use Leaps;
 use Leaps\Helper\FormatConverter;
-use yii\i18n\Formatter;
-use leapsunit\src\i18n\IntlTestHelper;
+use Leaps\I18n\Formatter;
+use leapsunit\src\I18n\IntlTestHelper;
 use leapsunit\TestCase;
 
 /**

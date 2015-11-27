@@ -9,9 +9,9 @@ namespace leapsunit\src\Console;
 
 use Leaps;
 use leapsunit\TestCase;
-use leapsunit\src\di\stubs\Qux;
-use leapsunit\src\web\stubs\Bar;
-use leapsunit\src\web\stubs\OtherQux;
+use leapsunit\src\Di\Stub\Qux;
+use leapsunit\src\Web\Stub\Bar;
+use leapsunit\src\Web\Stub\OtherQux;
 
 /**
  * @group console

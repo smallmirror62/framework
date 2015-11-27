@@ -1,8 +1,8 @@
 <?php
 
-namespace leapsunit\src\widgets;
+namespace leapsunit\src\Widget;
 
-use yii\widgets\Menu;
+use Leaps\Widget\Menu;
 
 /**
  * @group widgets
@@ -67,9 +67,6 @@ HTML
 
     }
 
-    /**
-     * @see https://github.com/yiisoft/yii2/issues/8064
-     */
     public function testTagOption()
     {
         $output = Menu::widget([

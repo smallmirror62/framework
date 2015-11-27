@@ -3,7 +3,7 @@
 namespace leapsunit\src\Validator;
 
 use Leaps\Validator\FileValidator;
-use yii\web\UploadedFile;
+use Leaps\Web\UploadedFile;
 use Leaps;
 use leapsunit\data\validators\models\FakedValidationModel;
 use leapsunit\TestCase;

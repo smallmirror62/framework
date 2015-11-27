@@ -5,7 +5,7 @@ namespace leapsunit\src\widgets;
 use Leaps;
 use Leaps\Cache\ArrayCache;
 use Leaps\Base\View;
-use yii\widgets\Breadcrumbs;
+use Leaps\Widget\Breadcrumbs;
 
 /**
  * @group widgets

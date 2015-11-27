@@ -5,9 +5,9 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace leapsunit\src\i18n;
+namespace leapsunit\src\I18n;
 
-use yii\i18n\MessageFormatter;
+use Leaps\I18n\MessageFormatter;
 use leapsunit\TestCase;
 
 /**

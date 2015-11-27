@@ -5,11 +5,11 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace leapsunit\src\i18n;
+namespace leapsunit\src\I18n;
 
 use Leaps\Base\Event;
-use yii\i18n\I18N;
-use yii\i18n\PhpMessageSource;
+use Leaps\I18n\I18N;
+use Leaps\I18n\PhpMessageSource;
 use leapsunit\TestCase;
 
 /**

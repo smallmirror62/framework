@@ -4,7 +4,7 @@ namespace leapsunit\src\web;
 
 use Leaps;
 use Leaps\Cache\FileCache;
-use yii\web\CacheSession;
+use Leaps\Web\CacheSession;
 
 /**
  * @group web

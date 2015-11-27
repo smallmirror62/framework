@@ -8,9 +8,9 @@
 namespace leapsunit\src\web;
 
 use Leaps;
-use yii\web\View;
-use yii\web\AssetBundle;
-use yii\web\AssetManager;
+use Leaps\Web\View;
+use Leaps\Web\AssetBundle;
+use Leaps\Web\AssetManager;
 
 /**
  * @group web

@@ -11,7 +11,7 @@ use Leaps\Helper\StringHelper;
 class ResponseTest extends \leapsunit\TestCase
 {
     /**
-     * @var \yii\web\Response
+     * @var \Leaps\Web\Response
      */
     public $response;
 
@@ -19,7 +19,7 @@ class ResponseTest extends \leapsunit\TestCase
     {
         parent::setUp();
         $this->mockApplication();
-        $this->response = new \yii\web\Response;
+        $this->response = new \Leaps\Web\Response;
     }
 
     public function rightRanges()
@@ -71,7 +71,7 @@ class ResponseTest extends \leapsunit\TestCase
      */
     public function testSendFileWrongRanges($rangeHeader)
     {
-        $this->setExpectedException('yii\web\HttpException');
+        $this->setExpectedException('Leaps\Web\HttpException');
 
         $dataFile = \Leaps::getAlias('@leapsunit/data/web/data.txt');
         $_SERVER['HTTP_RANGE'] = 'bytes=' . $rangeHeader;

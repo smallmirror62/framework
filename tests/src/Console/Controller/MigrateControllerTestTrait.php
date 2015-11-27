@@ -53,7 +53,7 @@ trait MigrateControllerTestTrait
      */
     protected function createMigrateController()
     {
-        $module = $this->getMock('yii\\base\\Module', ['fake'], ['console']);
+        $module = $this->getMock('Leaps\\Base\\Module', ['fake'], ['console']);
         $class = $this->migrateControllerClass;
         $migrateController = new $class('migrate', $module);
         $migrateController->interactive = false;

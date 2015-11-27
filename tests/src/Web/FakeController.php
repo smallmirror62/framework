@@ -7,7 +7,7 @@
 
 namespace leapsunit\src\web;
 
-use yii\web\Controller;
+use Leaps\Web\Controller;
 use leapsunit\src\di\stubs\QuxInterface;
 use leapsunit\src\web\stubs\Bar;
 use Leaps\Validator\EmailValidator;

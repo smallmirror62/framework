@@ -626,7 +626,7 @@ class PhpDocController extends Controller
         $sets = [];
         // split subject by double newlines because regex sometimes has problems with matching
         // in the complete set of methods
-        // example: yii\di\ServiceLocator setComponents() is not recognized in the whole but in
+        // example: Leaps\Di\ServiceLocator setComponents() is not recognized in the whole but in
         // a part of the class.
         $parts = $split ? explode("\n\n", $subject) : [$subject];
         foreach($parts as $part) {

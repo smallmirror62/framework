@@ -7,7 +7,7 @@
 
 namespace leapsunit\src\web;
 
-use yii\web\Request;
+use Leaps\Web\Request;
 use leapsunit\TestCase;
 
 /**

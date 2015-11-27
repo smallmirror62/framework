@@ -1,5 +1,5 @@
 <?php
-namespace leapsunit\src\helpers;
+namespace leapsunit\src\Helper;
 
 use Leaps\Helper\StringHelper;
 use leapsunit\TestCase;

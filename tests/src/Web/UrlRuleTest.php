@@ -2,9 +2,9 @@
 
 namespace leapsunit\src\web;
 
-use yii\web\UrlManager;
-use yii\web\UrlRule;
-use yii\web\Request;
+use Leaps\Web\UrlManager;
+use Leaps\Web\UrlRule;
+use Leaps\Web\Request;
 use leapsunit\TestCase;
 
 /**

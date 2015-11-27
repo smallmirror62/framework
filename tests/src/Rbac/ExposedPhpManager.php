@@ -1,7 +1,7 @@
 <?php
 namespace leapsunit\src\rbac;
 
-use yii\rbac\PhpManager;
+use Leaps\Rbac\PhpManager;
 
 /**
  * Exposes protected properties and methods to inspect from outside
@@ -9,7 +9,7 @@ use yii\rbac\PhpManager;
 class ExposedPhpManager extends PhpManager
 {
     /**
-     * @var \yii\rbac\Item[]
+     * @var \Leaps\Rbac\Item[]
      */
     public $items = []; // itemName => item
     /**
@@ -17,11 +17,11 @@ class ExposedPhpManager extends PhpManager
      */
     public $children = []; // itemName, childName => child
     /**
-     * @var \yii\rbac\Assignment[]
+     * @var \Leaps\Rbac\Assignment[]
      */
     public $assignments = []; // userId, itemName => assignment
     /**
-     * @var \yii\rbac\Rule[]
+     * @var \Leaps\Rbac\Rule[]
      */
     public $rules = []; // ruleName => rule
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace leapsunit\src\i18n;
+namespace leapsunit\src\I18n;
 
 use leapsunit\TestCase;
 

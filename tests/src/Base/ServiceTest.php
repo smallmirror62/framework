@@ -1,9 +1,9 @@
 <?php
-namespace leapsunit\src\base;
-
-use Leaps\Base\Behavior;
-use Leaps\Base\Component;
+namespace leapsunit\src\Base;
 use Leaps\Base\Event;
+use Leaps\Base\Behavior;
+use Leaps\Base\Service;
+
 use leapsunit\TestCase;
 
 function globalEventHandler($event)
@@ -23,26 +23,26 @@ function globalEventHandler2($event)
 class ServiceTest extends TestCase
 {
     /**
-     * @var NewComponent
+     * @var NewService
      */
-    protected $component;
+    protected $service;
 
     protected function setUp()
     {
         parent::setUp();
         $this->mockApplication();
-        $this->component = new NewComponent();
+        $this->service = new NewService();
     }
 
     protected function tearDown()
     {
         parent::tearDown();
-        $this->component = null;
+        $this->service = null;
     }
 
     public function testClone()
     {
-        $component = new NewComponent();
+        $component = new NewService();
         $behavior = new NewBehavior();
         $component->attachBehavior('a', $behavior);
         $this->assertSame($behavior, $component->getBehavior('a'));
@@ -57,180 +57,180 @@ class ServiceTest extends TestCase
 
     public function testHasProperty()
     {
-        $this->assertTrue($this->component->hasProperty('Text'));
-        $this->assertTrue($this->component->hasProperty('text'));
-        $this->assertFalse($this->component->hasProperty('Caption'));
-        $this->assertTrue($this->component->hasProperty('content'));
-        $this->assertFalse($this->component->hasProperty('content', false));
-        $this->assertFalse($this->component->hasProperty('Content'));
+        $this->assertTrue($this->service->hasProperty('Text'));
+        $this->assertTrue($this->service->hasProperty('text'));
+        $this->assertFalse($this->service->hasProperty('Caption'));
+        $this->assertTrue($this->service->hasProperty('content'));
+        $this->assertFalse($this->service->hasProperty('content', false));
+        $this->assertFalse($this->service->hasProperty('Content'));
     }
 
     public function testCanGetProperty()
     {
-        $this->assertTrue($this->component->canGetProperty('Text'));
-        $this->assertTrue($this->component->canGetProperty('text'));
-        $this->assertFalse($this->component->canGetProperty('Caption'));
-        $this->assertTrue($this->component->canGetProperty('content'));
-        $this->assertFalse($this->component->canGetProperty('content', false));
-        $this->assertFalse($this->component->canGetProperty('Content'));
+        $this->assertTrue($this->service->canGetProperty('Text'));
+        $this->assertTrue($this->service->canGetProperty('text'));
+        $this->assertFalse($this->service->canGetProperty('Caption'));
+        $this->assertTrue($this->service->canGetProperty('content'));
+        $this->assertFalse($this->service->canGetProperty('content', false));
+        $this->assertFalse($this->service->canGetProperty('Content'));
     }
 
     public function testCanSetProperty()
     {
-        $this->assertTrue($this->component->canSetProperty('Text'));
-        $this->assertTrue($this->component->canSetProperty('text'));
-        $this->assertFalse($this->component->canSetProperty('Object'));
-        $this->assertFalse($this->component->canSetProperty('Caption'));
-        $this->assertTrue($this->component->canSetProperty('content'));
-        $this->assertFalse($this->component->canSetProperty('content', false));
-        $this->assertFalse($this->component->canSetProperty('Content'));
+        $this->assertTrue($this->service->canSetProperty('Text'));
+        $this->assertTrue($this->service->canSetProperty('text'));
+        $this->assertFalse($this->service->canSetProperty('Object'));
+        $this->assertFalse($this->service->canSetProperty('Caption'));
+        $this->assertTrue($this->service->canSetProperty('content'));
+        $this->assertFalse($this->service->canSetProperty('content', false));
+        $this->assertFalse($this->service->canSetProperty('Content'));
 
         // behavior
-        $this->assertFalse($this->component->canSetProperty('p2'));
+        $this->assertFalse($this->service->canSetProperty('p2'));
         $behavior = new NewBehavior();
-        $this->component->attachBehavior('a', $behavior);
-        $this->assertTrue($this->component->canSetProperty('p2'));
-        $this->component->detachBehavior('a');
+        $this->service->attachBehavior('a', $behavior);
+        $this->assertTrue($this->service->canSetProperty('p2'));
+        $this->service->detachBehavior('a');
     }
 
     public function testGetProperty()
     {
-        $this->assertTrue('default' === $this->component->Text);
+        $this->assertTrue('default' === $this->service->Text);
         $this->setExpectedException('Leaps\Base\UnknownPropertyException');
-        $value2 = $this->component->Caption;
+        $value2 = $this->service->Caption;
     }
 
     public function testSetProperty()
     {
         $value = 'new value';
-        $this->component->Text = $value;
-        $this->assertEquals($value, $this->component->Text);
+        $this->service->Text = $value;
+        $this->assertEquals($value, $this->service->Text);
         $this->setExpectedException('Leaps\Base\UnknownPropertyException');
-        $this->component->NewMember = $value;
+        $this->service->NewMember = $value;
     }
 
     public function testIsset()
     {
-        $this->assertTrue(isset($this->component->Text));
-        $this->assertFalse(empty($this->component->Text));
+        $this->assertTrue(isset($this->service->Text));
+        $this->assertFalse(empty($this->service->Text));
 
-        $this->component->Text = '';
-        $this->assertTrue(isset($this->component->Text));
-        $this->assertTrue(empty($this->component->Text));
+        $this->service->Text = '';
+        $this->assertTrue(isset($this->service->Text));
+        $this->assertTrue(empty($this->service->Text));
 
-        $this->component->Text = null;
-        $this->assertFalse(isset($this->component->Text));
-        $this->assertTrue(empty($this->component->Text));
+        $this->service->Text = null;
+        $this->assertFalse(isset($this->service->Text));
+        $this->assertTrue(empty($this->service->Text));
 
-        $this->assertFalse(isset($this->component->p2));
-        $this->component->attachBehavior('a', new NewBehavior());
-        $this->component->setP2('test');
-        $this->assertTrue(isset($this->component->p2));
+        $this->assertFalse(isset($this->service->p2));
+        $this->service->attachBehavior('a', new NewBehavior());
+        $this->service->setP2('test');
+        $this->assertTrue(isset($this->service->p2));
     }
 
     public function testCallUnknownMethod()
     {
         $this->setExpectedException('Leaps\Base\UnknownMethodException');
-        $this->component->unknownMethod();
+        $this->service->unknownMethod();
     }
 
     public function testUnset()
     {
-        unset($this->component->Text);
-        $this->assertFalse(isset($this->component->Text));
-        $this->assertTrue(empty($this->component->Text));
+        unset($this->service->Text);
+        $this->assertFalse(isset($this->service->Text));
+        $this->assertTrue(empty($this->service->Text));
 
-        $this->component->attachBehavior('a', new NewBehavior());
-        $this->component->setP2('test');
-        $this->assertEquals('test', $this->component->getP2());
+        $this->service->attachBehavior('a', new NewBehavior());
+        $this->service->setP2('test');
+        $this->assertEquals('test', $this->service->getP2());
 
-        unset($this->component->p2);
-        $this->assertNull($this->component->getP2());
+        unset($this->service->p2);
+        $this->assertNull($this->service->getP2());
     }
 
     public function testUnsetReadonly()
     {
         $this->setExpectedException('Leaps\Base\InvalidCallException');
-        unset($this->component->object);
+        unset($this->service->object);
     }
 
     public function testOn()
     {
-        $this->assertFalse($this->component->hasEventHandlers('click'));
-        $this->component->on('click', 'foo');
-        $this->assertTrue($this->component->hasEventHandlers('click'));
+        $this->assertFalse($this->service->hasEventHandlers('click'));
+        $this->service->on('click', 'foo');
+        $this->assertTrue($this->service->hasEventHandlers('click'));
 
-        $this->assertFalse($this->component->hasEventHandlers('click2'));
+        $this->assertFalse($this->service->hasEventHandlers('click2'));
         $p = 'on click2';
-        $this->component->$p = 'foo2';
-        $this->assertTrue($this->component->hasEventHandlers('click2'));
+        $this->service->$p = 'foo2';
+        $this->assertTrue($this->service->hasEventHandlers('click2'));
     }
 
     public function testOff()
     {
-        $this->assertFalse($this->component->hasEventHandlers('click'));
-        $this->component->on('click', 'foo');
-        $this->assertTrue($this->component->hasEventHandlers('click'));
-        $this->component->off('click', 'foo');
-        $this->assertFalse($this->component->hasEventHandlers('click'));
+        $this->assertFalse($this->service->hasEventHandlers('click'));
+        $this->service->on('click', 'foo');
+        $this->assertTrue($this->service->hasEventHandlers('click'));
+        $this->service->off('click', 'foo');
+        $this->assertFalse($this->service->hasEventHandlers('click'));
 
-        $this->component->on('click2', 'foo');
-        $this->component->on('click2', 'foo2');
-        $this->component->on('click2', 'foo3');
-        $this->assertTrue($this->component->hasEventHandlers('click2'));
-        $this->component->off('click2', 'foo3');
-        $this->assertTrue($this->component->hasEventHandlers('click2'));
-        $this->component->off('click2');
-        $this->assertFalse($this->component->hasEventHandlers('click2'));
+        $this->service->on('click2', 'foo');
+        $this->service->on('click2', 'foo2');
+        $this->service->on('click2', 'foo3');
+        $this->assertTrue($this->service->hasEventHandlers('click2'));
+        $this->service->off('click2', 'foo3');
+        $this->assertTrue($this->service->hasEventHandlers('click2'));
+        $this->service->off('click2');
+        $this->assertFalse($this->service->hasEventHandlers('click2'));
     }
 
     public function testTrigger()
     {
-        $this->component->on('click', [$this->component, 'myEventHandler']);
-        $this->assertFalse($this->component->eventHandled);
-        $this->assertNull($this->component->event);
-        $this->component->raiseEvent();
-        $this->assertTrue($this->component->eventHandled);
-        $this->assertEquals('click', $this->component->event->name);
-        $this->assertEquals($this->component, $this->component->event->sender);
-        $this->assertFalse($this->component->event->handled);
+        $this->service->on('click', [$this->service, 'myEventHandler']);
+        $this->assertFalse($this->service->eventHandled);
+        $this->assertNull($this->service->event);
+        $this->service->raiseEvent();
+        $this->assertTrue($this->service->eventHandled);
+        $this->assertEquals('click', $this->service->event->name);
+        $this->assertEquals($this->service, $this->service->event->sender);
+        $this->assertFalse($this->service->event->handled);
 
         $eventRaised = false;
-        $this->component->on('click', function ($event) use (&$eventRaised) {
+        $this->service->on('click', function ($event) use (&$eventRaised) {
             $eventRaised = true;
         });
-        $this->component->raiseEvent();
+        $this->service->raiseEvent();
         $this->assertTrue($eventRaised);
 
         // raise event w/o parameters
         $eventRaised = false;
-        $this->component->on('test', function ($event) use (&$eventRaised) {
+        $this->service->on('test', function ($event) use (&$eventRaised) {
             $eventRaised = true;
         });
-        $this->component->trigger('test');
+        $this->service->trigger('test');
         $this->assertTrue($eventRaised);
     }
 
     public function testHasEventHandlers()
     {
-        $this->assertFalse($this->component->hasEventHandlers('click'));
-        $this->component->on('click', 'foo');
-        $this->assertTrue($this->component->hasEventHandlers('click'));
+        $this->assertFalse($this->service->hasEventHandlers('click'));
+        $this->service->on('click', 'foo');
+        $this->assertTrue($this->service->hasEventHandlers('click'));
     }
 
     public function testStopEvent()
     {
-        $component = new NewComponent;
+        $component = new NewService;
         $component->on('click', 'leapsunit\src\base\globalEventHandler2');
-        $component->on('click', [$this->component, 'myEventHandler']);
+        $component->on('click', [$this->service, 'myEventHandler']);
         $component->raiseEvent();
         $this->assertTrue($component->eventHandled);
-        $this->assertFalse($this->component->eventHandled);
+        $this->assertFalse($this->service->eventHandled);
     }
 
     public function testAttachBehavior()
     {
-        $component = new NewComponent;
+        $component = new NewService;
         $this->assertFalse($component->hasProperty('p'));
         $this->assertFalse($component->behaviorCalled);
         $this->assertNull($component->getBehavior('a'));
@@ -248,7 +248,7 @@ class ServiceTest extends TestCase
         $component->test();
 
         $p = 'as b';
-        $component = new NewComponent;
+        $component = new NewService;
         $component->$p = ['class' => 'NewBehavior'];
         $this->assertSame($behavior, $component->getBehavior('a'));
         $this->assertTrue($component->hasProperty('p'));
@@ -258,7 +258,7 @@ class ServiceTest extends TestCase
 
     public function testAttachBehaviors()
     {
-        $component = new NewComponent;
+        $component = new NewService;
         $this->assertNull($component->getBehavior('a'));
         $this->assertNull($component->getBehavior('b'));
 
@@ -274,7 +274,7 @@ class ServiceTest extends TestCase
 
     public function testDetachBehavior()
     {
-        $component = new NewComponent;
+        $component = new NewService;
         $behavior = new NewBehavior;
 
         $component->attachBehavior('a', $behavior);
@@ -290,7 +290,7 @@ class ServiceTest extends TestCase
 
     public function testDetachBehaviors()
     {
-        $component = new NewComponent;
+        $component = new NewService;
         $behavior = new NewBehavior;
 
         $component->attachBehavior('a', $behavior);
@@ -307,55 +307,55 @@ class ServiceTest extends TestCase
     {
         $this->setExpectedException(
             '\Leaps\Base\InvalidCallException',
-            'Setting read-only property: leapsunit\src\base\NewComponent::object'
+            'Setting read-only property: leapsunit\src\base\NewService::object'
         );
-        $this->component->object = 'z';
+        $this->service->object = 'z';
     }
 
     public function testSetPropertyOfBehavior()
     {
-        $this->assertNull($this->component->getBehavior('a'));
+        $this->assertNull($this->service->getBehavior('a'));
 
         $behavior = new NewBehavior;
-        $this->component->attachBehaviors([
+        $this->service->attachBehaviors([
             'a' => $behavior,
         ]);
-        $this->component->p = 'Leaps is cool.';
+        $this->service->p = 'Leaps is cool.';
 
-        $this->assertSame('Leaps is cool.', $this->component->getBehavior('a')->p);
+        $this->assertSame('Leaps is cool.', $this->service->getBehavior('a')->p);
     }
 
     public function testSettingBehaviorWithSetter()
     {
         $behaviorName = 'foo';
-        $this->assertNull($this->component->getBehavior($behaviorName));
+        $this->assertNull($this->service->getBehavior($behaviorName));
         $p = 'as ' . $behaviorName;
-        $this->component->$p = __NAMESPACE__ .  '\NewBehavior';
-        $this->assertSame(__NAMESPACE__ .  '\NewBehavior', get_class($this->component->getBehavior($behaviorName)));
+        $this->service->$p = __NAMESPACE__ .  '\NewBehavior';
+        $this->assertSame(__NAMESPACE__ .  '\NewBehavior', get_class($this->service->getBehavior($behaviorName)));
     }
 
     public function testWriteOnlyProperty()
     {
         $this->setExpectedException(
             '\Leaps\Base\InvalidCallException',
-            'Getting write-only property: leapsunit\src\base\NewComponent::writeOnly'
+            'Getting write-only property: leapsunit\src\base\NewService::writeOnly'
         );
-        $this->component->writeOnly;
+        $this->service->writeOnly;
     }
 
     public function testSuccessfulMethodCheck()
     {
-        $this->assertTrue($this->component->hasMethod('hasProperty'));
+        $this->assertTrue($this->service->hasMethod('hasProperty'));
     }
 
     public function testTurningOffNonExistingBehavior()
     {
-        $this->assertFalse($this->component->hasEventHandlers('foo'));
-        $this->assertFalse($this->component->off('foo'));
+        $this->assertFalse($this->service->hasEventHandlers('foo'));
+        $this->assertFalse($this->service->off('foo'));
     }
 }
 
-class NewComponent extends Service
+class NewService extends Service
 {
     private $_object = null;
     private $_text = 'default';
@@ -437,7 +437,7 @@ class NewBehavior extends Behavior
     }
 }
 
-class NewComponent2 extends Service
+class NewService2 extends Service
 {
     public $a;
     public $b;

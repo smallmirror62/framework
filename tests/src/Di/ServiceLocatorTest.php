@@ -8,7 +8,7 @@
 namespace leapsunit\src\di;
 
 use Leaps\Base\Object;
-use yii\di\ServiceLocator;
+use Leaps\Di\ServiceLocator;
 use leapsunit\TestCase;
 
 class Creator

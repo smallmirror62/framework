@@ -1,11 +1,11 @@
 <?php
-namespace leapsunit\src\rbac;
+namespace leapsunit\src\Rbac;
 
 use Leaps;
 use Leaps\Console\Application;
 use Leaps\Console\Controller;
 use Leaps\Db\Connection;
-use yii\rbac\DbManager;
+use Leaps\Rbac\DbManager;
 use leapsunit\src\Console\Controller\EchoMigrateController;
 
 /**
@@ -32,7 +32,7 @@ abstract class DbManagerTestCase extends ManagerTestCase
                 ],
                 'components' => [
                     'db' => static::getConnection(),
-                    'authManager' => '\yii\rbac\DbManager',
+                    'authManager' => '\Leaps\Rbac\DbManager',
                 ],
             ]);
         }
@@ -110,7 +110,7 @@ abstract class DbManagerTestCase extends ManagerTestCase
     }
 
     /**
-     * @return \yii\rbac\ManagerInterface
+     * @return \Leaps\Rbac\ManagerInterface
      */
     protected function createManager()
     {

@@ -44,7 +44,7 @@ class CacheControllerTest extends TestCase
             'components' => [
                 'firstCache' => 'Leaps\Cache\ArrayCache',
                 'secondCache' => 'Leaps\Cache\ArrayCache',
-                'session' => 'yii\web\CacheSession', // should be ignored at `actionFlushAll()`
+                'session' => 'Leaps\Web\CacheSession', // should be ignored at `actionFlushAll()`
                 'db' => [
                     'class' => isset($config['class']) ? $config['class'] : 'Leaps\Db\Connection',
                     'dsn' => $config['dsn'],

@@ -2,7 +2,7 @@
 namespace leapsunit\src\rbac;
 
 use Leaps\Cache\FileCache;
-use yii\rbac\DbManager;
+use Leaps\Rbac\DbManager;
 
 /**
  * MySQLManagerCacheTest
@@ -12,7 +12,7 @@ use yii\rbac\DbManager;
 class MySQLManagerCacheTest extends MySQLManagerTest
 {
     /**
-     * @return \yii\rbac\ManagerInterface
+     * @return \Leaps\Rbac\ManagerInterface
      */
     protected function createManager()
     {

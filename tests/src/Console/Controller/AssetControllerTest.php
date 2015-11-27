@@ -208,7 +208,7 @@ class AssetControllerTest extends TestCase
 		$source = <<<EOL
 namespace {$config['namespace']};
 
-use yii\web\AssetBundle;
+use Leaps\Web\AssetBundle;
 
 class {$config['class']} extends AssetBundle
 {

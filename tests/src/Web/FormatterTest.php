@@ -3,8 +3,8 @@
 
 namespace leapsunit\src\web;
 
-use yii\web\Response;
-use yii\web\ResponseFormatterInterface;
+use Leaps\Web\Response;
+use Leaps\Web\ResponseFormatterInterface;
 
 abstract class FormatterTest extends \leapsunit\TestCase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace leapsunit\src\helpers;
+namespace leapsunit\src\Helper;
 
 use Leaps;
 use Leaps\Base\Model;
@@ -18,12 +18,12 @@ class HtmlTest extends TestCase
         $this->mockApplication([
             'components' => [
                 'request' => [
-                    'class' => 'yii\web\Request',
+                    'class' => 'Leaps\Web\Request',
                     'url' => '/test',
                     'enableCsrfValidation' => false,
                 ],
                 'response' => [
-                    'class' => 'yii\web\Response',
+                    'class' => 'Leaps\Web\Response',
                 ],
             ],
         ]);

@@ -1,12 +1,12 @@
 <?php
 
-namespace leapsunit\src\filters\auth;
+namespace leapsunit\src\Filter\Auth;
 
 use Leaps;
-use yii\filters\auth\AuthMethod;
-use yii\filters\auth\CompositeAuth;
-use yii\rest\Controller;
-use leapsunit\src\web\UserIdentity;
+use Leaps\Filter\Auth\AuthMethod;
+use Leaps\Filter\Auth\CompositeAuth;
+use Leaps\Rest\Controller;
+use leapsunit\src\Web\UserIdentity;
 
 /**
  * @author Ezekiel Fernandez <ezekiel_p_fernandez@yahoo.com>
@@ -60,7 +60,7 @@ class TestController extends Controller
          */
         return [
             'authenticator' => [
-                'class' => CompositeAuth::className(),
+                'className' => CompositeAuth::className(),
                 'authMethods' => [
                     TestAuth::className()
                 ],
@@ -82,7 +82,7 @@ class CompositeAuthTest extends \leapsunit\TestCase
         $_SERVER['SCRIPT_NAME'] = "/index.php";
 
         $appConfig = [
-            'components' => [
+            'services' => [
                 'user' => [
                     'identityClass' => UserIdentity::className()
                 ],

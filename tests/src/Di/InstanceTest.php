@@ -9,8 +9,8 @@ namespace leapsunit\src\di;
 
 use Leaps\Base\Component;
 use Leaps\Db\Connection;
-use yii\di\Container;
-use yii\di\Instance;
+use Leaps\Di\Container;
+use Leaps\Di\Instance;
 use leapsunit\TestCase;
 
 /**

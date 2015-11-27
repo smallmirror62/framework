@@ -7,7 +7,7 @@
 
 namespace leapsunit\src\web;
 
-use yii\web\JsonResponseFormatter;
+use Leaps\Web\JsonResponseFormatter;
 
 /**
  * @author Alexander Makarov <sam@rmcreative.ru>

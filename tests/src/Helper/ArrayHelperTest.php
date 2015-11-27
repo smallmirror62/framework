@@ -1,11 +1,11 @@
 <?php
 
-namespace leapsunit\src\helpers;
+namespace leapsunit\src\Helper;
 
 use Leaps\Base\Object;
 use Leaps\Helper\ArrayHelper;
 use leapsunit\TestCase;
-use yii\data\Sort;
+use Leaps\Data\Sort;
 
 class Post1
 {

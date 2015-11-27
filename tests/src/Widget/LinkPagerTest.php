@@ -2,8 +2,8 @@
 
 namespace leapsunit\src\widgets;
 
-use yii\data\Pagination;
-use yii\widgets\LinkPager;
+use Leaps\Data\Pagination;
+use Leaps\Widget\LinkPager;
 
 /**
  * @group widgets

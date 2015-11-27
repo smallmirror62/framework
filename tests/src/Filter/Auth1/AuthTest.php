@@ -1,15 +1,15 @@
 <?php
 
-namespace leapsunit\src\filters\auth;
+namespace leapsunit\src\Filter\Auth;
 
 use Leaps;
-use yii\filters\auth\HttpBasicAuth;
-use yii\filters\auth\HttpBearerAuth;
-use yii\filters\auth\QueryParamAuth;
+use Leaps\Filter\Auth\HttpBasicAuth;
+use Leaps\Filter\Auth\HttpBearerAuth;
+use Leaps\Filter\Auth\QueryParamAuth;
 use Leaps\Helper\ArrayHelper;
-use yii\rest\Controller;
-use yii\web\UnauthorizedHttpException;
-use leapsunit\src\filters\stubs\UserIdentity;
+use Leaps\Rest\Controller;
+use Leaps\Web\UnauthorizedHttpException;
+use leapsunit\src\Filter\Stub\UserIdentity;
 
 /**
  * @group filters
@@ -91,7 +91,7 @@ class AuthTest extends \leapsunit\TestCase
      */
     public function testQueryParamAuth($token, $login) {
         $_GET['access-token'] = $token;
-        $filter = ['class' => QueryParamAuth::className()];
+        $filter = ['className' => QueryParamAuth::className()];
         $this->authOnly($token, $login, $filter, 'query-param-auth');
         $this->authOptional($token, $login, $filter, 'query-param-auth');
         $this->authExcept($token, $login, $filter, 'query-param-auth');
@@ -103,7 +103,7 @@ class AuthTest extends \leapsunit\TestCase
     public function testHttpBasicAuth($token, $login) {
         $_SERVER['PHP_AUTH_USER'] = $token;
         $_SERVER['PHP_AUTH_PW'] = 'whatever, we are testers';
-        $filter = ['class' => HttpBasicAuth::className()];
+        $filter = ['className' => HttpBasicAuth::className()];
         $this->authOnly($token, $login, $filter, 'basic-auth');
         $this->authOptional($token, $login, $filter, 'basic-auth');
         $this->authExcept($token, $login, $filter, 'basic-auth');
@@ -116,7 +116,7 @@ class AuthTest extends \leapsunit\TestCase
         $_SERVER['PHP_AUTH_USER'] = $login;
         $_SERVER['PHP_AUTH_PW'] = 'whatever, we are testers';
         $filter = [
-            'class' => HttpBasicAuth::className(),
+            'className' => HttpBasicAuth::className(),
             'auth' => function ($username, $password) {
                 if (preg_match('/\d$/', $username)) {
                     return UserIdentity::findIdentity($username);
@@ -135,7 +135,7 @@ class AuthTest extends \leapsunit\TestCase
      */
     public function testHttpBearerAuth($token, $login) {
         Leaps::$app->request->headers->set('Authorization', "Bearer $token");
-        $filter = ['class' => HttpBearerAuth::className()];
+        $filter = ['className' => HttpBearerAuth::className()];
         $this->authOnly($token, $login, $filter, 'bearer-auth');
         $this->authOptional($token, $login, $filter, 'bearer-auth');
         $this->authExcept($token, $login, $filter, 'bearer-auth');

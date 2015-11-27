@@ -2,7 +2,7 @@
 namespace leapsunit\src\db\oci;
 
 use leapsunit\src\data\ActiveDataProviderTest;
-use yii\data\ActiveDataProvider;
+use Leaps\Data\ActiveDataProvider;
 use leapsunit\data\ar\Order;
 
 /**

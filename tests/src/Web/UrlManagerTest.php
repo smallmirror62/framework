@@ -1,8 +1,8 @@
 <?php
 namespace leapsunit\src\web;
 
-use yii\web\Request;
-use yii\web\UrlManager;
+use Leaps\Web\Request;
+use Leaps\Web\UrlManager;
 use leapsunit\TestCase;
 
 /**
@@ -383,7 +383,7 @@ class UrlManagerTest extends TestCase
                     'baseUrl' => '/app'
                 ]
             ]
-        ], \yii\web\Application::className());
+        ], \Leaps\Web\Application::className());
         $this->assertEquals('/app/post/delete?id=123', $manager->createUrl(['post/delete', 'id' => 123]));
         $this->destroyApplication();
 

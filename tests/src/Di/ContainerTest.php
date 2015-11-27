@@ -5,14 +5,14 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace leapsunit\src\di;
-
-use yii\di\Container;
-use yii\di\Instance;
+namespace leapsunit\src\Di;
+use leapsunit\TestCase;
+use Leaps\Di\Container;
+use Leaps\Di\Instance;
 use leapsunit\src\di\stubs\Bar;
 use leapsunit\src\di\stubs\Foo;
 use leapsunit\src\di\stubs\Qux;
-use leapsunit\TestCase;
+
 
 
 /**

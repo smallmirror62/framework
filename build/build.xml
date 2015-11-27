@@ -94,7 +94,7 @@
   </fileset>
 
   <fileset dir="." id="executables">
-    <include name="${build.src.dir}/**/yii" />
+    <include name="${build.src.dir}/**/leaps" />
   </fileset>
 
   <target name="src" depends="sync">
@@ -115,7 +115,7 @@
     <echo>Generating source release file...</echo>
     <mkdir dir="${build.dist.dir}" />
     <if>
-      <equals arg1="${yii.winbuild}" arg2="true"/>
+      <equals arg1="${leaps.winbuild}" arg2="true"/>
       <then>
         <tar destfile="${build.dist.dir}/${pkgname}.tar.gz" compression="gzip">
           <fileset dir="${build.base.dir}">
@@ -143,14 +143,14 @@
     <exec command="${pdflatex} guide.tex -interaction=nonstopmode -max-print-line=120" dir="commands/guide" passthru="true"/>
     <exec command="${pdflatex} guide.tex -interaction=nonstopmode -max-print-line=120" dir="commands/guide" passthru="true"/>
     <exec command="${pdflatex} guide.tex -interaction=nonstopmode -max-print-line=120" dir="commands/guide" passthru="true"/>
-    <move file="commands/guide/guide.pdf" tofile="${build.doc.dir}/yii-guide-${yii.version}.pdf" />
+    <move file="commands/guide/guide.pdf" tofile="${build.doc.dir}/leaps-guide-${yii.version}.pdf" />
 
     <echo>Building Blog PDF...</echo>
     <exec command="${build} blogLatex" dir="." passthru="true" />
     <exec command="${pdflatex} blog.tex -interaction=nonstopmode -max-print-line=120" dir="commands/blog" passthru="true"/>
     <exec command="${pdflatex} blog.tex -interaction=nonstopmode -max-print-line=120" dir="commands/blog" passthru="true"/>
     <exec command="${pdflatex} blog.tex -interaction=nonstopmode -max-print-line=120" dir="commands/blog" passthru="true"/>
-    <move file="commands/blog/blog.pdf" tofile="${build.doc.dir}/yii-blog-${yii.version}.pdf" />
+    <move file="commands/blog/blog.pdf" tofile="${build.doc.dir}/leaps-blog-${leaps.version}.pdf" />
 
     <echo>Building API...</echo>
     <exec command="${build} api ${build.doc.dir}" dir="." passthru="true" />
@@ -158,7 +158,7 @@
     <!--
     <echo>Building API CHM...</echo>
     <exec command="${hhc} ${build.doc.dir}/api/manual.hhp" />
-    <move file="${build.doc.dir}/api/manual.chm" tofile="${build.doc.dir}/yii-api-${yii.version}.chm" />
+    <move file="${build.doc.dir}/api/manual.chm" tofile="${build.doc.dir}/leaps-api-${leaps.version}.chm" />
     <delete>
       <fileset dir="${build.doc.dir}/api">
         <include name="manual.*" />
@@ -202,7 +202,7 @@
 	<echo>
 
 Finished building Web files.
-Please update yiisite/common/data/versions.php file with the following code:
+Please update leapssite/common/data/versions.php file with the following code:
 
     '1.1'=>array(
         'version'=>'${leaps.version}',
@@ -220,7 +220,7 @@ Please update yiisite/common/data/versions.php file with the following code:
     <echo>Building autoload map...</echo>
     <exec command="${build} autoload" dir="." passthru="true"/>
 
-    <echo>Building yiilite.php...</echo>
+    <echo>Building leapslite.php...</echo>
     <exec command="${build} lite" dir="." passthru="true"/>
   </target>
 
@@ -233,7 +233,7 @@ Please update yiisite/common/data/versions.php file with the following code:
   <target name="pear" depends="clean,build">
     <echo>Generating pear package for ${phing.project.name}-${leaps.release}</echo>
     <mkdir dir="${build.dist.dir}" />
-    <yii-pear   pkgdir="${build.pear.src.dir}"
+    <leaps-pear pkgdir="${build.pear.src.dir}"
                 channel="pear.php.net"
                 version="${leaps.release}"
                 state="stable"

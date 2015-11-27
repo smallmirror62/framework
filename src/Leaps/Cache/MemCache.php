@@ -29,7 +29,7 @@ use Leaps\Base\InvalidConfigException;
  *
  * ~~~
  * [
- *     'components' => [
+ *     'services' => [
  *         'cache' => [
  *             'className' => 'Leaps\Cache\MemCache',
  *             'servers' => [

@@ -6,7 +6,7 @@
 namespace leapsunit\src\web;
 
 use Leaps\Helper\FileHelper;
-use yii\web\AssetConverter;
+use Leaps\Web\AssetConverter;
 
 /**
  * @group web

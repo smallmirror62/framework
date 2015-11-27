@@ -6,7 +6,7 @@
 namespace leapsunit\src\widgets;
 
 use Leaps\Base\DynamicModel;
-use yii\widgets\ActiveForm;
+use Leaps\Widget\ActiveForm;
 
 /**
  * @group widgets

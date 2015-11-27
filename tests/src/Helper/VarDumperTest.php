@@ -1,5 +1,5 @@
 <?php
-namespace leapsunit\src\helpers;
+namespace leapsunit\src\Helper;
 
 use Leaps\Helper\VarDumper;
 use leapsunit\TestCase;

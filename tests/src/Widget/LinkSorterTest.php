@@ -3,12 +3,12 @@
 namespace leapsunit\src\widgets;
 
 use Leaps;
-use yii\data\ActiveDataProvider;
+use Leaps\Data\ActiveDataProvider;
 use Leaps\Db\Connection;
 use Leaps\Db\Query;
-use yii\widgets\Breadcrumbs;
-use yii\widgets\LinkSorter;
-use yii\widgets\ListView;
+use Leaps\Widget\Breadcrumbs;
+use Leaps\Widget\LinkSorter;
+use Leaps\Widget\ListView;
 use leapsunit\data\ar\ActiveRecord;
 use leapsunit\data\ar\Order;
 use leapsunit\src\db\DatabaseTestCase;

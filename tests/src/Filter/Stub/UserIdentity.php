@@ -1,17 +1,17 @@
 <?php
 
-namespace leapsunit\src\filters\stubs;
+namespace leapsunit\src\Filter\Stub;
 
-use Leaps\Base\Component;
+use Leaps\Base\Service;
 use Leaps\Base\NotSupportedException;
-use yii\web\IdentityInterface;
+use Leaps\Web\IdentityInterface;
 
 /**
  * Class UserIdentity
  * @author Dmitry Naumenko <d.naumenko.a@gmail.com>
  * @since 2.0.7
  */
-class UserIdentity extends Component implements IdentityInterface
+class UserIdentity extends Service implements IdentityInterface
 {
     private static $ids = [
         'user1',

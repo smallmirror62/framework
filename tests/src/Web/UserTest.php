@@ -1,7 +1,7 @@
 <?php
 
 
-namespace yii\web;
+namespace Leaps\Web;
 
 /**
  * Mock for the time() function for web classes
@@ -16,11 +16,11 @@ namespace leapsunit\src\web;
 
 use Leaps\Base\NotSupportedException;
 use Leaps\Base\Component;
-use yii\rbac\PhpManager;
-use yii\web\IdentityInterface;
-use yii\web\UrlManager;
-use yii\web\UrlRule;
-use yii\web\Request;
+use Leaps\Rbac\PhpManager;
+use Leaps\Web\IdentityInterface;
+use Leaps\Web\UrlManager;
+use Leaps\Web\UrlRule;
+use Leaps\Web\Request;
 use Leaps;
 use leapsunit\TestCase;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace yii\rbac;
+namespace Leaps\Rbac;
 
 /**
  * Mock for the filemtime() function for rbac classes. Avoid random test fails.

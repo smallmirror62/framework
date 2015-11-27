@@ -5,7 +5,7 @@ namespace leapsunit\src\Validator;
 use DateTime;
 use Leaps\Validator\DateValidator;
 use leapsunit\data\validators\models\FakedValidationModel;
-use leapsunit\src\i18n\IntlTestHelper;
+use leapsunit\src\I18n\IntlTestHelper;
 use leapsunit\TestCase;
 use IntlDateFormatter;
 

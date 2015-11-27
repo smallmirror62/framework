@@ -5,7 +5,7 @@ namespace leapsunit\src\web;
 use Leaps;
 use Leaps\Db\Connection;
 use Leaps\Db\Query;
-use yii\web\DbSession;
+use Leaps\Web\DbSession;
 use leapsunit\TestCase;
 
 /**

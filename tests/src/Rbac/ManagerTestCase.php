@@ -2,10 +2,10 @@
 
 namespace leapsunit\src\rbac;
 
-use yii\rbac\Item;
-use yii\rbac\Permission;
-use yii\rbac\PhpManager;
-use yii\rbac\Role;
+use Leaps\Rbac\Item;
+use Leaps\Rbac\Permission;
+use Leaps\Rbac\PhpManager;
+use Leaps\Rbac\Role;
 use leapsunit\TestCase;
 
 /**
@@ -14,12 +14,12 @@ use leapsunit\TestCase;
 abstract class ManagerTestCase extends TestCase
 {
     /**
-     * @var \yii\rbac\ManagerInterface
+     * @var \Leaps\Rbac\ManagerInterface
      */
     protected $auth;
 
     /**
-     * @return \yii\rbac\ManagerInterface
+     * @return \Leaps\Rbac\ManagerInterface
      */
     abstract protected function createManager();
 
@@ -72,7 +72,7 @@ abstract class ManagerTestCase extends TestCase
         $this->prepareData();
 
         $rule = $this->auth->getRule('isAuthor');
-        $this->assertInstanceOf('yii\rbac\Rule', $rule);
+        $this->assertInstanceOf('Leaps\Rbac\Rule', $rule);
         $this->assertEquals('isAuthor', $rule->name);
 
         $rule = $this->auth->getRule('nonExisting');

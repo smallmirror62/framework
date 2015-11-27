@@ -1,5 +1,5 @@
 <?php
-namespace leapsunit\src\base;
+namespace leapsunit\src\Base;
 
 
 use Leaps\Base\Security;

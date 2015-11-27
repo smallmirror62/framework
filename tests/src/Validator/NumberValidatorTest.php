@@ -3,7 +3,7 @@
 namespace leapsunit\src\Validator;
 
 use Leaps\Validator\NumberValidator;
-use yii\web\View;
+use Leaps\Web\View;
 use leapsunit\data\validators\models\FakedValidationModel;
 use leapsunit\TestCase;
 

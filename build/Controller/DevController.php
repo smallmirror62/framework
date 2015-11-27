@@ -18,8 +18,8 @@ use Leaps\Base\InvalidParamException;
 /**
  * This command helps to set up a dev environment with all extensions and applications
  *
- * It will clone an extension or app repo and link the yii2 dev installation to the containted applications/extensions vendor dirs
- * to help working on yii using the application to test it.
+ * It will clone an extension or app repo and link the leaps dev installation to the containted applications/extensions vendor dirs
+ * to help working on leaps using the application to test it.
  *
  * @author Carsten Brandt <mail@cebe.cc>
  * @since 2.0
@@ -34,29 +34,29 @@ class DevController extends Controller
     public $useHttp = false;
 
     public $apps = [
-        'basic' => 'git@github.com:yiisoft/yii2-app-basic.git',
-        'advanced' => 'git@github.com:yiisoft/yii2-app-advanced.git',
-        'benchmark' => 'git@github.com:yiisoft/yii2-app-benchmark.git',
+        'basic' => 'git@github.com:leaps/yii2-app-basic.git',
+        'advanced' => 'git@github.com:leaps/yii2-app-advanced.git',
+        'benchmark' => 'git@github.com:leaps/yii2-app-benchmark.git',
     ];
 
     public $extensions = [
-        'apidoc' => 'git@github.com:yiisoft/yii2-apidoc.git',
-        'authclient' => 'git@github.com:yiisoft/yii2-authclient.git',
-        'bootstrap' => 'git@github.com:yiisoft/yii2-bootstrap.git',
-        'codeception' => 'git@github.com:yiisoft/yii2-codeception.git',
-        'composer' => 'git@github.com:yiisoft/yii2-composer.git',
-        'debug' => 'git@github.com:yiisoft/yii2-debug.git',
+        'apidoc' => 'git@github.com:leaps/yii2-apidoc.git',
+        'authclient' => 'git@github.com:leaps/yii2-authclient.git',
+        'bootstrap' => 'git@github.com:leaps/yii2-bootstrap.git',
+        'codeception' => 'git@github.com:leaps/yii2-codeception.git',
+        'composer' => 'git@github.com:leaps/yii2-composer.git',
+        'debug' => 'git@github.com:leaps/yii2-debug.git',
         'elasticsearch' => 'git@github.com:yiisoft/yii2-elasticsearch.git',
-        'faker' => 'git@github.com:yiisoft/yii2-faker.git',
-        'gii' => 'git@github.com:yiisoft/yii2-gii.git',
-        'imagine' => 'git@github.com:yiisoft/yii2-imagine.git',
-        'jui' => 'git@github.com:yiisoft/yii2-jui.git',
-        'mongodb' => 'git@github.com:yiisoft/yii2-mongodb.git',
-        'redis' => 'git@github.com:yiisoft/yii2-redis.git',
-        'smarty' => 'git@github.com:yiisoft/yii2-smarty.git',
-        'sphinx' => 'git@github.com:yiisoft/yii2-sphinx.git',
-        'swiftmailer' => 'git@github.com:yiisoft/yii2-swiftmailer.git',
-        'twig' => 'git@github.com:yiisoft/yii2-twig.git',
+        'faker' => 'git@github.com:leaps/yii2-faker.git',
+        'gii' => 'git@github.com:leaps/yii2-gii.git',
+        'imagine' => 'git@github.com:leaps/yii2-imagine.git',
+        'jui' => 'git@github.com:leaps/yii2-jui.git',
+        'mongodb' => 'git@github.com:leaps/yii2-mongodb.git',
+        'redis' => 'git@github.com:leaps/yii2-redis.git',
+        'smarty' => 'git@github.com:leaps/yii2-smarty.git',
+        'sphinx' => 'git@github.com:leaps/yii2-sphinx.git',
+        'swiftmailer' => 'git@github.com:leaps/yii2-swiftmailer.git',
+        'twig' => 'git@github.com:leaps/yii2-twig.git',
     ];
 
 

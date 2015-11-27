@@ -3,7 +3,7 @@
 namespace leapsunit\src\widgets;
 
 use Leaps;
-use yii\widgets\Breadcrumbs;
+use Leaps\Widget\Breadcrumbs;
 
 /**
  * @author Nelson J Morais <njmorais@gmail.com>
@@ -165,7 +165,7 @@ class BreadcrumbsTest extends \leapsunit\TestCase
     /**
      * Helper methods
      */
-    protected function reflectMethod($class = '\yii\widgets\Breadcrumbs', $method = 'renderItem')
+    protected function reflectMethod($class = '\Leaps\Widget\Breadcrumbs', $method = 'renderItem')
     {
         $value = new \ReflectionMethod($class, $method);
         $value->setAccessible(true);
