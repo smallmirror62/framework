@@ -24,7 +24,7 @@ use Leaps;
  * @property View|\Leaps\web\View $view The view object that can be used to render views or view files.
  * @property string $viewPath The directory containing the view files for this controller. This property is
  *           read-only.
- *          
+ *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
@@ -39,7 +39,7 @@ class Controller extends Service implements ViewContextInterface
 	 * @event ActionEvent an event raised right after executing a controller action.
 	 */
 	const EVENT_AFTER_ACTION = 'afterAction';
-	
+
 	/**
 	 *
 	 * @var string the ID of this controller.
@@ -70,13 +70,13 @@ class Controller extends Service implements ViewContextInterface
 	 *      by [[run()]] when it is called by [[Application]] to run an action.
 	 */
 	public $action;
-	
+
 	/**
 	 *
 	 * @var View the view object that can be used to render views or view files.
 	 */
 	private $_view;
-	
+
 	/**
 	 *
 	 * @param string $id the ID of this controller.
@@ -89,7 +89,7 @@ class Controller extends Service implements ViewContextInterface
 		$this->module = $module;
 		parent::__construct ( $config );
 	}
-	
+
 	/**
 	 * Declares external actions for the controller.
 	 * This method is meant to be overwritten to declare external actions for the controller.
@@ -114,7 +114,7 @@ class Controller extends Service implements ViewContextInterface
 	{
 		return [ ];
 	}
-	
+
 	/**
 	 * Runs an action within this controller with the specified action ID and parameters.
 	 * If the action ID is empty, the method will use [[defaultAction]].
@@ -131,19 +131,19 @@ class Controller extends Service implements ViewContextInterface
 		if ($action === null) {
 			throw new InvalidRouteException ( 'Unable to resolve the request: ' . $this->getUniqueId () . '/' . $id );
 		}
-		
+
 		Leaps::trace ( "Route to run: " . $action->getUniqueId (), __METHOD__ );
-		
+
 		if (Leaps::$app->requestedAction === null) {
 			Leaps::$app->requestedAction = $action;
 		}
-		
+
 		$oldAction = $this->action;
 		$this->action = $action;
-		
+
 		$modules = [ ];
 		$runAction = true;
-		
+
 		// call beforeAction on modules
 		foreach ( $this->getModules () as $module ) {
 			if ($module->beforeAction ( $action )) {
@@ -153,27 +153,27 @@ class Controller extends Service implements ViewContextInterface
 				break;
 			}
 		}
-		
+
 		$result = null;
-		
+
 		if ($runAction && $this->beforeAction ( $action )) {
 			// run the action
 			$result = $action->runWithParams ( $params );
-			
+
 			$result = $this->afterAction ( $action, $result );
-			
+
 			// call afterAction on modules
 			foreach ( $modules as $module ) {
 				/* @var $module Module */
 				$result = $module->afterAction ( $action, $result );
 			}
 		}
-		
+
 		$this->action = $oldAction;
-		
+
 		return $result;
 	}
-	
+
 	/**
 	 * Runs a request specified in terms of a route.
 	 * The route can be either an ID of an action within this controller or a complete route consisting
@@ -196,7 +196,7 @@ class Controller extends Service implements ViewContextInterface
 			return Leaps::$app->runAction ( ltrim ( $route, '/' ), $params );
 		}
 	}
-	
+
 	/**
 	 * Binds the parameters to the action.
 	 * This method is invoked by [[Action]] when it begins to run with the given parameters.
@@ -209,7 +209,7 @@ class Controller extends Service implements ViewContextInterface
 	{
 		return [ ];
 	}
-	
+
 	/**
 	 * Creates an action based on the given action ID.
 	 * The method first checks if the action ID has been declared in [[actions()]]. If so,
@@ -226,15 +226,15 @@ class Controller extends Service implements ViewContextInterface
 		if ($id === '') {
 			$id = $this->defaultAction;
 		}
-		
+
 		$actionMap = $this->actions ();
 		if (isset ( $actionMap [$id] )) {
-			return Leaps::createObject ( $actionMap [$id], [ 
+			return Leaps::createObject ( $actionMap [$id], [
 				$id,
-				$this 
+				$this
 			] );
 		} elseif (preg_match ( '/^[a-z0-9\\-_]+$/', $id ) && strpos ( $id, '--' ) === false && trim ( $id, '-' ) === $id) {
-			$methodName = str_replace ( ' ', '', ucwords ( implode ( ' ', explode ( '-', $id ) ) ) ) . 'Action';
+			$methodName = 'action'.str_replace ( ' ', '', ucwords ( implode ( ' ', explode ( '-', $id ) ) ) );
 			if (method_exists ( $this, $methodName )) {
 				$method = new \ReflectionMethod ( $this, $methodName );
 				if ($method->isPublic () && $method->getName () === $methodName) {
@@ -244,7 +244,7 @@ class Controller extends Service implements ViewContextInterface
 		}
 		return null;
 	}
-	
+
 	/**
 	 * This method is invoked right before an action is executed.
 	 *
@@ -278,7 +278,7 @@ class Controller extends Service implements ViewContextInterface
 		$this->trigger ( self::EVENT_BEFORE_ACTION, $event );
 		return $event->isValid;
 	}
-	
+
 	/**
 	 * This method is invoked right after an action is executed.
 	 *
@@ -307,7 +307,7 @@ class Controller extends Service implements ViewContextInterface
 		$this->trigger ( self::EVENT_AFTER_ACTION, $event );
 		return $event->result;
 	}
-	
+
 	/**
 	 * Returns all ancestor modules of this controller.
 	 * The first module in the array is the outermost one (i.e., the application instance),
@@ -317,8 +317,8 @@ class Controller extends Service implements ViewContextInterface
 	 */
 	public function getModules()
 	{
-		$modules = [ 
-			$this->module 
+		$modules = [
+			$this->module
 		];
 		$module = $this->module;
 		while ( $module->module !== null ) {
@@ -327,7 +327,7 @@ class Controller extends Service implements ViewContextInterface
 		}
 		return $modules;
 	}
-	
+
 	/**
 	 *
 	 * @return string the controller ID that is prefixed with the module ID (if any).
@@ -336,7 +336,7 @@ class Controller extends Service implements ViewContextInterface
 	{
 		return $this->module instanceof Application ? $this->id : $this->module->getUniqueId () . '/' . $this->id;
 	}
-	
+
 	/**
 	 * Returns the route of the current request.
 	 *
@@ -346,7 +346,7 @@ class Controller extends Service implements ViewContextInterface
 	{
 		return $this->action !== null ? $this->action->getUniqueId () : $this->getUniqueId ();
 	}
-	
+
 	/**
 	 * Renders a view and applies layout if available.
 	 *
@@ -391,7 +391,7 @@ class Controller extends Service implements ViewContextInterface
 		$content = $this->getView ()->render ( $view, $params, $this );
 		return $this->renderContent ( $content );
 	}
-	
+
 	/**
 	 * Renders a static string by applying a layout.
 	 *
@@ -404,14 +404,14 @@ class Controller extends Service implements ViewContextInterface
 	{
 		$layoutFile = $this->findLayoutFile ( $this->getView () );
 		if ($layoutFile !== false) {
-			return $this->getView ()->renderFile ( $layoutFile, [ 
-				'content' => $content 
+			return $this->getView ()->renderFile ( $layoutFile, [
+				'content' => $content
 			], $this );
 		} else {
 			return $content;
 		}
 	}
-	
+
 	/**
 	 * Renders a view without applying layout.
 	 * This method differs from [[render()]] in that it does not apply any layout.
@@ -425,7 +425,7 @@ class Controller extends Service implements ViewContextInterface
 	{
 		return $this->getView ()->render ( $view, $params, $this );
 	}
-	
+
 	/**
 	 * Renders a view file.
 	 *
@@ -438,7 +438,7 @@ class Controller extends Service implements ViewContextInterface
 	{
 		return $this->getView ()->renderFile ( $file, $params, $this );
 	}
-	
+
 	/**
 	 * Returns the view object that can be used to render views or view files.
 	 * The [[render()]], [[renderPartial()]] and [[renderFile()]] methods will use
@@ -454,7 +454,7 @@ class Controller extends Service implements ViewContextInterface
 		}
 		return $this->_view;
 	}
-	
+
 	/**
 	 * Sets the view object to be used by this controller.
 	 *
@@ -464,7 +464,7 @@ class Controller extends Service implements ViewContextInterface
 	{
 		$this->_view = $view;
 	}
-	
+
 	/**
 	 * Returns the directory containing view files for this controller.
 	 * The default implementation returns the directory named as controller [[id]] under the [[module]]'s
@@ -476,7 +476,7 @@ class Controller extends Service implements ViewContextInterface
 	{
 		return $this->module->getViewPath () . DIRECTORY_SEPARATOR . $this->id;
 	}
-	
+
 	/**
 	 * Finds the applicable layout file.
 	 *
@@ -498,11 +498,11 @@ class Controller extends Service implements ViewContextInterface
 				$layout = $module->layout;
 			}
 		}
-		
+
 		if (! isset ( $layout )) {
 			return false;
 		}
-		
+
 		if (strncmp ( $layout, '@', 1 ) === 0) {
 			$file = Leaps::getAlias ( $layout );
 		} elseif (strncmp ( $layout, '/', 1 ) === 0) {
@@ -510,7 +510,7 @@ class Controller extends Service implements ViewContextInterface
 		} else {
 			$file = $module->getLayoutPath () . DIRECTORY_SEPARATOR . $layout;
 		}
-		
+
 		if (pathinfo ( $file, PATHINFO_EXTENSION ) !== '') {
 			return $file;
 		}
@@ -518,7 +518,7 @@ class Controller extends Service implements ViewContextInterface
 		if ($view->defaultExtension !== 'php' && ! is_file ( $path )) {
 			$path = $file . '.php';
 		}
-		
+
 		return $path;
 	}
 }
