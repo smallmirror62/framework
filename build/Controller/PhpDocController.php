@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace Leaps\Build\controllers;
+namespace Leaps\Build\Controller;
 
 use Leaps;
 use Leaps\Console\Controller;
@@ -112,7 +112,7 @@ class PhpDocController extends Controller
     {
         $except = [];
         if ($root === null) {
-            $root = dirname(YII2_PATH);
+            $root = dirname(LEAPS_PATH);
             $extensionPath = "$root/extensions";
             foreach (scandir($extensionPath) as $extension) {
                 if (ctype_alpha($extension) && is_dir($extensionPath . '/' . $extension)) {

@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace Leaps\Build\controllers;
+namespace Leaps\Build\Controller;
 
 use Leaps;
 use Leaps\Base\Exception;
@@ -36,7 +36,7 @@ class ReleaseController extends Controller
         $this->resortChangelogs($what, $version);
         $this->closeChangelogs($what, $version);
         $this->composerSetStability($what, $version);
-        if (in_array('framework', $what)) {
+        if (in_array('src', $what)) {
             $this->updateLeapsVersion($version);
         }
     }
@@ -53,7 +53,7 @@ class ReleaseController extends Controller
     {
         $this->openChangelogs($what, $nextVersion);
         $this->composerSetStability($what, 'dev');
-        if (in_array('framework', $what)) {
+        if (in_array('src', $what)) {
             $this->updateLeapsVersion($devVersion);
         }
     }
@@ -153,7 +153,7 @@ class ReleaseController extends Controller
     protected function getChangelogs($what)
     {
         $changelogs = [];
-        if (in_array('framework', $what)) {
+        if (in_array('src', $what)) {
             $changelogs[] = $this->getFrameworkChangelog();
         }
 
@@ -162,12 +162,12 @@ class ReleaseController extends Controller
 
     protected function getFrameworkChangelog()
     {
-        return YII2_PATH . '/CHANGELOG.md';
+        return LEAPS_PATH . '/CHANGELOG.md';
     }
 
     protected function getExtensionChangelogs($what)
     {
-        return array_filter(glob(dirname(YII2_PATH) . '/extensions/*/CHANGELOG.md'), function($elem) use ($what) {
+        return array_filter(glob(dirname(LEAPS_PATH) . '/extensions/*/CHANGELOG.md'), function($elem) use ($what) {
             foreach($what as $ext) {
                 if (strpos($elem, "extensions/$ext/CHANGELOG.md") !== false) {
                     return true;
@@ -181,13 +181,13 @@ class ReleaseController extends Controller
     {
         $apps = [];
         if (in_array('app-advanced', $what)) {
-            $apps[] = dirname(YII2_PATH) . '/apps/advanced/composer.json';
+            $apps[] = dirname(LEAPS_PATH) . '/apps/advanced/composer.json';
         }
         if (in_array('app-basic', $what)) {
-            $apps[] = dirname(YII2_PATH) . '/apps/basic/composer.json';
+            $apps[] = dirname(LEAPS_PATH) . '/apps/basic/composer.json';
         }
         if (in_array('app-benchmark', $what)) {
-            $apps[] = dirname(YII2_PATH) . '/apps/benchmark/composer.json';
+            $apps[] = dirname(LEAPS_PATH) . '/apps/benchmark/composer.json';
         }
         if (empty($apps)) {
             return;
@@ -216,7 +216,7 @@ class ReleaseController extends Controller
         $this->sed(
             '/function getVersion\(\)\n    \{\n        return \'(.+?)\';/',
             "function getVersion()\n    {\n        return '$version';",
-            YII2_PATH . '/BaseLeaps.php');
+            LEAPS_PATH . '/Kernel.php');
     }
 
     protected function sed($pattern, $replace, $files)
