@@ -17,7 +17,7 @@ class Singer extends Model
         return [
             [['lastName'], 'default', 'value' => 'Lennon'],
             [['lastName'], 'required'],
-            [['underscore_style'], 'yii\captcha\CaptchaValidator'],
+            [['underscore_style'], 'Leaps\Captcha\CaptchaValidator'],
             [['test'], 'required', 'when' => function($model) { return $model->firstName === 'cebe'; }],
         ];
     }

@@ -10,9 +10,9 @@ namespace leapsunit\src\Ar;
 use Leaps\Base\Event;
 use leapsunit\TestCase;
 use leapsunit\data\Ar\Order;
-use Leaps\db\BaseActiveRecord;
+use Leaps\Db\BaseActiveRecord;
 use leapsunit\data\Ar\Customer;
-use Leaps\db\ActiveQueryInterface;
+use Leaps\Db\ActiveQueryInterface;
 
 /**
  * This trait provides unit tests shared by the different AR implementations
