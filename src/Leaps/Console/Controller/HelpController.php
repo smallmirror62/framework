@@ -1,21 +1,18 @@
 <?php
-// +----------------------------------------------------------------------
-// | Leaps Framework [ WE CAN DO IT JUST THINK IT ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2011-2014 Leaps Team (http://www.tintsoft.com)
-// +----------------------------------------------------------------------
-// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
-// +----------------------------------------------------------------------
-// | Author XuTongle <xutongle@gmail.com>
-// +----------------------------------------------------------------------
+
+/**
+ * @link http://www.yiiframework.com/
+ * @copyright Copyright (c) 2008 Yii Software LLC
+ * @license http://www.yiiframework.com/license/
+ */
 namespace Leaps\Console\Controller;
 
 use Leaps;
 use Leaps\Helper\Console;
 use Leaps\Helper\Inflector;
 use Leaps\Base\Application;
-use Leaps\Console\Exception;
 use Leaps\Console\Controller;
+use Leaps\Console\Exception;
 
 /**
  * Provides help information about console commands.
@@ -27,7 +24,7 @@ use Leaps\Console\Controller;
  * This command can be used as follows on command line:
  *
  * ~~~
- * leaps help [command name]
+ * yii help [command name]
  * ~~~
  *
  * In the above, if the command name is not provided, all
@@ -46,11 +43,11 @@ class HelpController extends Controller
 	 * about a particular command.
 	 *
 	 * @param string $command The name of the command to show help about.
-	 *        If not provided, all available commands will be displayed.
+	 * If not provided, all available commands will be displayed.
 	 * @return integer the exit status
 	 * @throws Exception if the command for help is unknown
 	 */
-	public function IndexAction($command = null)
+	public function actionIndex($command = null)
 	{
 		if ($command !== null) {
 			$result = Leaps::$app->createController ( $command );
@@ -74,7 +71,6 @@ class HelpController extends Controller
 
 	/**
 	 * Returns all available command names.
-	 *
 	 * @return array all available command names
 	 */
 	public function getCommands()
@@ -86,7 +82,6 @@ class HelpController extends Controller
 
 	/**
 	 * Returns an array of commands an their descriptions.
-	 *
 	 * @return array all available commands as keys and their description as values.
 	 */
 	protected function getCommandDescriptions()
@@ -110,7 +105,6 @@ class HelpController extends Controller
 
 	/**
 	 * Returns all available actions of the specified controller.
-	 *
 	 * @param Controller $controller the controller instance
 	 * @return array all available action IDs.
 	 */
@@ -120,8 +114,8 @@ class HelpController extends Controller
 		$class = new \ReflectionClass ( $controller );
 		foreach ( $class->getMethods () as $method ) {
 			$name = $method->getName ();
-			if ($name !== 'actions' && $name != 'runAction' && $name != 'beforeAction' && $name != 'afterAction' && $name != 'createAction' && $method->isPublic () && ! $method->isStatic () && strpos ( substr ( $name, - 6 ), 'Action' ) === 0) {
-				$actions[] = Inflector::camel2id ( substr ( $name, 0, - 6 ), '-', true );
+			if ($name !== 'actions' && $method->isPublic () && ! $method->isStatic () && strpos ( $name, 'action' ) === 0) {
+				$actions[] = Inflector::camel2id ( substr ( $name, 6 ), '-', true );
 			}
 		}
 		sort ( $actions );
@@ -131,8 +125,7 @@ class HelpController extends Controller
 
 	/**
 	 * Returns available commands of a specified module.
-	 *
-	 * @param \Leaps\Base\Module $module the module instance
+	 * @param \yii\base\Module $module the module instance
 	 * @return array the available command names
 	 */
 	protected function getModuleCommands($module)
@@ -171,7 +164,6 @@ class HelpController extends Controller
 
 	/**
 	 * Validates if the given class is a valid console controller class.
-	 *
 	 * @param string $controllerClass
 	 * @return bool
 	 */
@@ -257,7 +249,6 @@ class HelpController extends Controller
 
 	/**
 	 * Displays the overall information of the command.
-	 *
 	 * @param Controller $controller the controller instance
 	 */
 	protected function getCommandHelp($controller)
@@ -303,7 +294,6 @@ class HelpController extends Controller
 
 	/**
 	 * Displays the detailed information of a command action.
-	 *
 	 * @param Controller $controller the controller instance
 	 * @param string $actionID action ID
 	 * @throws Exception if the action does not exist
@@ -368,7 +358,6 @@ class HelpController extends Controller
 
 	/**
 	 * Generates a well-formed string for an argument or option.
-	 *
 	 * @param string $name the name of the argument or option
 	 * @param boolean $required whether the argument is required
 	 * @param string $type the type of the option or argument
@@ -414,7 +403,6 @@ class HelpController extends Controller
 	}
 
 	/**
-	 *
 	 * @return string the name of the cli script currently running.
 	 */
 	protected function getScriptName()
