@@ -251,8 +251,8 @@ END;
 
 /* TRIGGERS */
 
-INSERT INTO "animal" ("type") VALUES ('leapsunit\data\ar\Cat');
-INSERT INTO "animal" ("type") VALUES ('leapsunit\data\ar\Dog');
+INSERT INTO "animal" ("type") VALUES ('leapsunit\data\Ar\Cat');
+INSERT INTO "animal" ("type") VALUES ('leapsunit\data\Ar\Dog');
 
 
 INSERT INTO "profile" ("description") VALUES ('profile customer 1');

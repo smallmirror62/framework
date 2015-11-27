@@ -5,11 +5,11 @@ namespace leapsunit\src\Validator;
 use Leaps;
 use Leaps\Base\Exception;
 use Leaps\Validator\ExistValidator;
-use leapsunit\data\ar\ActiveRecord;
-use leapsunit\data\ar\Order;
-use leapsunit\data\ar\OrderItem;
-use leapsunit\data\validators\models\ValidatorTestMainModel;
-use leapsunit\data\validators\models\ValidatorTestRefModel;
+use leapsunit\data\Ar\ActiveRecord;
+use leapsunit\data\Ar\Order;
+use leapsunit\data\Ar\OrderItem;
+use leapsunit\data\Validator\Model\ValidatorTestMainModel;
+use leapsunit\data\Validator\Model\ValidatorTestRefModel;
 use leapsunit\src\db\DatabaseTestCase;
 
 /**

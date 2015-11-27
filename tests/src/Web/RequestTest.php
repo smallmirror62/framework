@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace leapsunit\src\web;
+namespace leapsunit\src\Web;
 
 use Leaps\Web\Request;
 use leapsunit\TestCase;

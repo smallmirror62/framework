@@ -3,7 +3,7 @@
  * @author Carsten Brandt <mail@cebe.cc>
  */
 
-namespace leapsunit\data\ar;
+namespace leapsunit\data\Ar;
 
 /**
  * Class Profile

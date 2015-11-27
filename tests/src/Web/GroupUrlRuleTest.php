@@ -1,6 +1,6 @@
 <?php
 
-namespace leapsunit\src\web;
+namespace leapsunit\src\Web;
 
 use Leaps\Web\UrlManager;
 use Leaps\Web\GroupUrlRule;

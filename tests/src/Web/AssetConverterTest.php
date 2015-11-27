@@ -3,7 +3,7 @@
  * @author Carsten Brandt <mail@cebe.cc>
  */
 
-namespace leapsunit\src\web;
+namespace leapsunit\src\Web;
 
 use Leaps\Helper\FileHelper;
 use Leaps\Web\AssetConverter;

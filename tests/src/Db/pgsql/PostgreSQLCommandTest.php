@@ -1,5 +1,5 @@
 <?php
-namespace yii\tests\unit\framework\db\pgsql;
+namespace Leaps\Tests\unit\framework\db\pgsql;
 
 use leapsunit\src\db\CommandTest;
 

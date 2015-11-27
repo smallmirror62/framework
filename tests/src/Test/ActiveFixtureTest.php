@@ -5,18 +5,18 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace leapsunit\src\test;
+namespace leapsunit\src\Test;
 
-use yii\test\ActiveFixture;
-use leapsunit\data\ar\ActiveRecord;
-use yii\test\FixtureTrait;
-use yii\test\InitDbFixture;
-use leapsunit\data\ar\Customer;
-use leapsunit\src\db\DatabaseTestCase;
+use Leaps\Test\ActiveFixture;
+use leapsunit\data\Ar\ActiveRecord;
+use Leaps\Test\FixtureTrait;
+use Leaps\Test\InitDbFixture;
+use leapsunit\data\Ar\Customer;
+use leapsunit\src\Db\DatabaseTestCase;
 
 class CustomerFixture extends ActiveFixture
 {
-    public $modelClass = 'leapsunit\data\ar\Customer';
+    public $modelClass = 'leapsunit\data\Ar\Customer';
 }
 
 class MyDbTestCase

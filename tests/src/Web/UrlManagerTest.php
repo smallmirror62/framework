@@ -1,5 +1,5 @@
 <?php
-namespace leapsunit\src\web;
+namespace leapsunit\src\Web;
 
 use Leaps\Web\Request;
 use Leaps\Web\UrlManager;

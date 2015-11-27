@@ -1,5 +1,5 @@
 <?php
-namespace leapsunit\src\db;
+namespace leapsunit\src\Db;
 
 use Leaps\Db\Connection;
 use leapsunit\TestCase as TestCase;

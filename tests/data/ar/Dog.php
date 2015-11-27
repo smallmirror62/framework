@@ -6,7 +6,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace leapsunit\data\ar;
+namespace leapsunit\data\Ar;
 
 /**
  * Class Dog

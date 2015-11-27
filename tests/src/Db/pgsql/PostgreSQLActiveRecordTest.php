@@ -4,8 +4,8 @@ namespace leapsunit\src\db\pgsql;
 
 use Leaps\Behaviors\TimestampBehavior;
 use Leaps\Db\pgsql\Schema;
-use leapsunit\data\ar\ActiveRecord;
-use leapsunit\data\ar\DefaultPk;
+use leapsunit\data\Ar\ActiveRecord;
+use leapsunit\data\Ar\DefaultPk;
 use leapsunit\src\ar\ActiveRecordTestTrait;
 use leapsunit\src\db\ActiveRecordTest;
 use leapsunit\TestCase;

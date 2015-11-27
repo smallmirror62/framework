@@ -1,6 +1,6 @@
 <?php
 
-namespace leapsunit\src\web;
+namespace leapsunit\src\Web;
 
 use Leaps;
 use Leaps\Helper\StringHelper;

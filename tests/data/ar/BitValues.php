@@ -6,7 +6,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace leapsunit\data\ar;
+namespace leapsunit\data\Ar;
 
 /**
  * https://github.com/yiisoft/yii2/issues/9006

@@ -4,8 +4,8 @@ namespace leapsunit\src\db\sqlite;
 use Leaps\Db\Connection;
 use Leaps\Db\Transaction;
 use leapsunit\src\db\ConnectionTest;
-use leapsunit\data\ar\ActiveRecord;
-use leapsunit\data\ar\Customer;
+use leapsunit\data\Ar\ActiveRecord;
+use leapsunit\data\Ar\Customer;
 
 /**
  * @group db

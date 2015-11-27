@@ -9,9 +9,9 @@ namespace leapsunit\src\Di;
 use leapsunit\TestCase;
 use Leaps\Di\Container;
 use Leaps\Di\Instance;
-use leapsunit\src\di\stubs\Bar;
-use leapsunit\src\di\stubs\Foo;
-use leapsunit\src\di\stubs\Qux;
+use leapsunit\src\Di\Stub\Bar;
+use leapsunit\src\Di\Stub\Foo;
+use leapsunit\src\Di\Stub\Qux;
 
 
 

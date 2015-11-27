@@ -5,10 +5,10 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace leapsunit\src\web\stubs;
+namespace leapsunit\src\Web\Stub;
 
 use Leaps\Base\Object;
-use leapsunit\src\di\stubs\QuxInterface;
+use leapsunit\src\Di\Stub\QuxInterface;
 
 /**
  * @author Misbahul D Munir <misbahuldmunir@gmail.com>

@@ -6,16 +6,16 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace leapsunit\src\test;
+namespace leapsunit\src\Test;
 
 use leapsunit\TestCase;
-use yii\test\ArrayFixture;
+use Leaps\Test\ArrayFixture;
 
 class ArrayFixtureTest extends TestCase
 {
 
     /**
-     * @var \yii\test\ArrayFixture
+     * @var \Leaps\Test\ArrayFixture
      */
     private $_fixture;
 
@@ -27,7 +27,7 @@ class ArrayFixtureTest extends TestCase
 
     public function testLoadUnloadParticularFile()
     {
-        $this->_fixture->dataFile = '@leapsunit/framework/test/data/array_fixture.php';
+        $this->_fixture->dataFile = '@leapsunit/src/Test/data/array_fixture.php';
         $this->assertEmpty($this->_fixture->data, 'fixture data should be empty');
 
         $this->_fixture->load();

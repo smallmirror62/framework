@@ -8,11 +8,11 @@
 namespace leapsunit\src\Data;
 
 use Leaps\Db\Query;
-use leapsunit\data\ar\Item;
-use leapsunit\data\ar\Order;
-use leapsunit\data\ar\Customer;
+use leapsunit\data\Ar\Item;
+use leapsunit\data\Ar\Order;
+use leapsunit\data\Ar\Customer;
 use Leaps\Data\ActiveDataProvider;
-use leapsunit\data\ar\ActiveRecord;
+use leapsunit\data\Ar\ActiveRecord;
 use leapsunit\src\db\DatabaseTestCase;
 
 /**

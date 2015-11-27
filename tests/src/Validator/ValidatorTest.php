@@ -5,7 +5,7 @@ namespace leapsunit\src\Validator;
 use Leaps\Validator\BooleanValidator;
 use Leaps\Validator\InlineValidator;
 use Leaps\Validator\NumberValidator;
-use leapsunit\data\validators\models\FakedValidationModel;
+use leapsunit\data\Validator\Model\FakedValidationModel;
 use leapsunit\data\validators\TestValidator;
 use leapsunit\TestCase;
 

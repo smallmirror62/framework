@@ -1,6 +1,6 @@
 <?php
 
-namespace leapsunit\src\rbac;
+namespace leapsunit\src\Rbac;
 
 use Leaps\Rbac\Item;
 use Leaps\Rbac\Permission;

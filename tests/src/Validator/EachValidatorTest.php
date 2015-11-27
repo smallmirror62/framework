@@ -3,7 +3,7 @@
 namespace leapsunit\src\Validator;
 
 use Leaps\Validator\EachValidator;
-use leapsunit\data\validators\models\FakedValidationModel;
+use leapsunit\data\Validator\Model\FakedValidationModel;
 use leapsunit\TestCase;
 
 /**

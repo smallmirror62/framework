@@ -1,7 +1,7 @@
 <?php
 namespace leapsunit\src\Validator;
 
-use leapsunit\data\validators\models\FakedValidationModel;
+use leapsunit\data\Validator\Model\FakedValidationModel;
 use Leaps\Validator\BooleanValidator;
 use leapsunit\TestCase;
 

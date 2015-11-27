@@ -5,15 +5,15 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace leapsunit\src\test;
+namespace leapsunit\src\Test;
 
-use yii\test\Fixture;
-use yii\test\FixtureTrait;
+use Leaps\Test\Fixture;
+use Leaps\Test\FixtureTrait;
 use leapsunit\TestCase;
 
 class Fixture1 extends Fixture
 {
-    public $depends = ['leapsunit\src\test\Fixture2'];
+    public $depends = ['leapsunit\src\Test\Fixture2'];
 
     public function load()
     {
@@ -28,7 +28,7 @@ class Fixture1 extends Fixture
 
 class Fixture2 extends Fixture
 {
-    public $depends = ['leapsunit\src\test\Fixture3'];
+    public $depends = ['leapsunit\src\Test\Fixture3'];
     public function load()
     {
         MyTestCase::$load .= '2';

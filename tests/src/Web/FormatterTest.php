@@ -1,7 +1,7 @@
 <?php
 
 
-namespace leapsunit\src\web;
+namespace leapsunit\src\Web;
 
 use Leaps\Web\Response;
 use Leaps\Web\ResponseFormatterInterface;

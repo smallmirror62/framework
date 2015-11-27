@@ -3,7 +3,7 @@ namespace leapsunit\src\db\oci;
 
 use leapsunit\src\data\ActiveDataProviderTest;
 use Leaps\Data\ActiveDataProvider;
-use leapsunit\data\ar\Order;
+use leapsunit\data\Ar\Order;
 
 /**
  * @group db

@@ -5,7 +5,7 @@
  * @author Carsten Brandt <mail@cebe.cc>
  */
 
-namespace leapsunit\src\web;
+namespace leapsunit\src\Web;
 
 use Leaps;
 use Leaps\Web\View;
@@ -44,8 +44,8 @@ class AssetBundleTest extends \leapsunit\TestCase
         $this->assertEmpty($view->assetBundles);
         TestSimpleAsset::register($view);
         $this->assertEquals(1, count($view->assetBundles));
-        $this->assertArrayHasKey('leapsunit\\framework\\web\\TestSimpleAsset', $view->assetBundles);
-        $this->assertTrue($view->assetBundles['leapsunit\\framework\\web\\TestSimpleAsset'] instanceof AssetBundle);
+        $this->assertArrayHasKey('leapsunit\\src\\Web\\TestSimpleAsset', $view->assetBundles);
+        $this->assertTrue($view->assetBundles['leapsunit\\src\\Web\\TestSimpleAsset'] instanceof AssetBundle);
 
         $expected = <<<EOF
 123<script src="/js/jquery.js"></script>4
@@ -60,12 +60,12 @@ EOF;
         $this->assertEmpty($view->assetBundles);
         TestAssetBundle::register($view);
         $this->assertEquals(3, count($view->assetBundles));
-        $this->assertArrayHasKey('leapsunit\\framework\\web\\TestAssetBundle', $view->assetBundles);
-        $this->assertArrayHasKey('leapsunit\\framework\\web\\TestJqueryAsset', $view->assetBundles);
-        $this->assertArrayHasKey('leapsunit\\framework\\web\\TestAssetLevel3', $view->assetBundles);
-        $this->assertTrue($view->assetBundles['leapsunit\\framework\\web\\TestAssetBundle'] instanceof AssetBundle);
-        $this->assertTrue($view->assetBundles['leapsunit\\framework\\web\\TestJqueryAsset'] instanceof AssetBundle);
-        $this->assertTrue($view->assetBundles['leapsunit\\framework\\web\\TestAssetLevel3'] instanceof AssetBundle);
+        $this->assertArrayHasKey('leapsunit\\src\\Web\\TestAssetBundle', $view->assetBundles);
+        $this->assertArrayHasKey('leapsunit\\src\\Web\\TestJqueryAsset', $view->assetBundles);
+        $this->assertArrayHasKey('leapsunit\\src\\Web\\TestAssetLevel3', $view->assetBundles);
+        $this->assertTrue($view->assetBundles['leapsunit\\src\\Web\\TestAssetBundle'] instanceof AssetBundle);
+        $this->assertTrue($view->assetBundles['leapsunit\\src\\Web\\TestJqueryAsset'] instanceof AssetBundle);
+        $this->assertTrue($view->assetBundles['leapsunit\\src\\Web\\TestAssetLevel3'] instanceof AssetBundle);
 
         $expected = <<<EOF
 1<link href="/files/cssFile.css" rel="stylesheet">23<script src="/js/jquery.js"></script>
@@ -93,7 +93,7 @@ EOF;
     {
         $view = $this->getView();
 
-        $view->getAssetManager()->bundles['leapsunit\\framework\\web\\TestAssetBundle'] = [
+        $view->getAssetManager()->bundles['leapsunit\\src\\Web\\TestAssetBundle'] = [
             'jsOptions' => [
                 'position' => $pos,
             ],
@@ -105,20 +105,20 @@ EOF;
         }
         TestAssetBundle::register($view);
         $this->assertEquals(3, count($view->assetBundles));
-        $this->assertArrayHasKey('leapsunit\\framework\\web\\TestAssetBundle', $view->assetBundles);
-        $this->assertArrayHasKey('leapsunit\\framework\\web\\TestJqueryAsset', $view->assetBundles);
-        $this->assertArrayHasKey('leapsunit\\framework\\web\\TestAssetLevel3', $view->assetBundles);
+        $this->assertArrayHasKey('leapsunit\\src\\Web\\TestAssetBundle', $view->assetBundles);
+        $this->assertArrayHasKey('leapsunit\\src\\Web\\TestJqueryAsset', $view->assetBundles);
+        $this->assertArrayHasKey('leapsunit\\src\\Web\\TestAssetLevel3', $view->assetBundles);
 
-        $this->assertTrue($view->assetBundles['leapsunit\\framework\\web\\TestAssetBundle'] instanceof AssetBundle);
-        $this->assertTrue($view->assetBundles['leapsunit\\framework\\web\\TestJqueryAsset'] instanceof AssetBundle);
-        $this->assertTrue($view->assetBundles['leapsunit\\framework\\web\\TestAssetLevel3'] instanceof AssetBundle);
+        $this->assertTrue($view->assetBundles['leapsunit\\src\\Web\\TestAssetBundle'] instanceof AssetBundle);
+        $this->assertTrue($view->assetBundles['leapsunit\\src\\Web\\TestJqueryAsset'] instanceof AssetBundle);
+        $this->assertTrue($view->assetBundles['leapsunit\\src\\Web\\TestAssetLevel3'] instanceof AssetBundle);
 
-        $this->assertArrayHasKey('position', $view->assetBundles['leapsunit\\framework\\web\\TestAssetBundle']->jsOptions);
-        $this->assertEquals($pos, $view->assetBundles['leapsunit\\framework\\web\\TestAssetBundle']->jsOptions['position']);
-        $this->assertArrayHasKey('position', $view->assetBundles['leapsunit\\framework\\web\\TestJqueryAsset']->jsOptions);
-        $this->assertEquals($pos, $view->assetBundles['leapsunit\\framework\\web\\TestJqueryAsset']->jsOptions['position']);
-        $this->assertArrayHasKey('position', $view->assetBundles['leapsunit\\framework\\web\\TestAssetLevel3']->jsOptions);
-        $this->assertEquals($pos, $view->assetBundles['leapsunit\\framework\\web\\TestAssetLevel3']->jsOptions['position']);
+        $this->assertArrayHasKey('position', $view->assetBundles['leapsunit\\src\\Web\\TestAssetBundle']->jsOptions);
+        $this->assertEquals($pos, $view->assetBundles['leapsunit\\src\\Web\\TestAssetBundle']->jsOptions['position']);
+        $this->assertArrayHasKey('position', $view->assetBundles['leapsunit\\src\\Web\\TestJqueryAsset']->jsOptions);
+        $this->assertEquals($pos, $view->assetBundles['leapsunit\\src\\Web\\TestJqueryAsset']->jsOptions['position']);
+        $this->assertArrayHasKey('position', $view->assetBundles['leapsunit\\src\\Web\\TestAssetLevel3']->jsOptions);
+        $this->assertEquals($pos, $view->assetBundles['leapsunit\\src\\Web\\TestAssetLevel3']->jsOptions['position']);
 
         switch ($pos) {
             case View::POS_HEAD:
@@ -162,12 +162,12 @@ EOF;
     {
         $view = $this->getView();
 
-        $view->getAssetManager()->bundles['leapsunit\\framework\\web\\TestAssetBundle'] = [
+        $view->getAssetManager()->bundles['leapsunit\\src\\Web\\TestAssetBundle'] = [
             'jsOptions' => [
                 'position' => $pos - 1,
             ],
         ];
-        $view->getAssetManager()->bundles['leapsunit\\framework\\web\\TestJqueryAsset'] = [
+        $view->getAssetManager()->bundles['leapsunit\\src\\Web\\TestJqueryAsset'] = [
             'jsOptions' => [
                 'position' => $pos,
             ],
@@ -177,13 +177,13 @@ EOF;
         if ($jqAlreadyRegistered) {
             TestJqueryAsset::register($view);
         }
-        $this->setExpectedException('yii\\base\\InvalidConfigException');
+        $this->setExpectedException('Leaps\\Base\\InvalidConfigException');
         TestAssetBundle::register($view);
     }
 
     public function testCircularDependency()
     {
-        $this->setExpectedException('yii\\base\\InvalidConfigException');
+        $this->setExpectedException('Leaps\\Base\\InvalidConfigException');
         TestAssetCircleA::register($this->getView());
     }
 
@@ -194,8 +194,8 @@ EOF;
         $this->assertEmpty($view->assetBundles);
         TestSimpleAsset::register($view);
         $this->assertEquals(1, count($view->assetBundles));
-        $this->assertArrayHasKey('leapsunit\\framework\\web\\TestSimpleAsset', $view->assetBundles);
-        $this->assertTrue($view->assetBundles['leapsunit\\framework\\web\\TestSimpleAsset'] instanceof AssetBundle);
+        $this->assertArrayHasKey('leapsunit\\src\\Web\\TestSimpleAsset', $view->assetBundles);
+        $this->assertTrue($view->assetBundles['leapsunit\\src\\Web\\TestSimpleAsset'] instanceof AssetBundle);
         // register TestJqueryAsset which also has the jquery.js
         TestJqueryAsset::register($view);
 
@@ -242,7 +242,7 @@ class TestAssetBundle extends AssetBundle
         'jsFile.js',
     ];
     public $depends = [
-        'leapsunit\\framework\\web\\TestJqueryAsset'
+        'leapsunit\\src\\Web\\TestJqueryAsset'
     ];
 }
 
@@ -254,7 +254,7 @@ class TestJqueryAsset extends AssetBundle
         'jquery.js',
     ];
     public $depends = [
-        'leapsunit\\framework\\web\\TestAssetLevel3'
+        'leapsunit\\src\\Web\\TestAssetLevel3'
     ];
 }
 
@@ -272,7 +272,7 @@ class TestAssetCircleA extends AssetBundle
         'jquery.js',
     ];
     public $depends = [
-        'leapsunit\\framework\\web\\TestAssetCircleB'
+        'leapsunit\\src\\Web\\TestAssetCircleB'
     ];
 }
 
@@ -284,7 +284,7 @@ class TestAssetCircleB extends AssetBundle
         'jquery.js',
     ];
     public $depends = [
-        'leapsunit\\framework\\web\\TestAssetCircleA'
+        'leapsunit\\src\\Web\\TestAssetCircleA'
     ];
 }
 

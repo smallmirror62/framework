@@ -4,7 +4,7 @@ namespace leapsunit\src\Validator;
 
 use Leaps\Validator\NumberValidator;
 use Leaps\Web\View;
-use leapsunit\data\validators\models\FakedValidationModel;
+use leapsunit\data\Validator\Model\FakedValidationModel;
 use leapsunit\TestCase;
 
 /**

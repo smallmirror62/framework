@@ -1,8 +1,8 @@
 <?php
 
-namespace leapsunit\data\validators\models;
+namespace leapsunit\data\Validator\Model;
 
-use leapsunit\data\ar\ActiveRecord;
+use leapsunit\data\Ar\ActiveRecord;
 
 class ValidatorTestMainModel extends ActiveRecord
 {

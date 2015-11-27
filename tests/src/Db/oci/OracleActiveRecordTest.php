@@ -2,8 +2,8 @@
 namespace leapsunit\src\db\oci;
 
 use leapsunit\src\db\ActiveRecordTest;
-use leapsunit\data\ar\DefaultPk;
-use leapsunit\data\ar\Type;
+use leapsunit\data\Ar\DefaultPk;
+use leapsunit\data\Ar\Type;
 
 /**
  * @group db

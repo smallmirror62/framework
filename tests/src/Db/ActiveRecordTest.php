@@ -1,24 +1,24 @@
 <?php
 namespace leapsunit\src\db;
 
-use leapsunit\data\ar\ActiveRecord;
-use leapsunit\data\ar\BitValues;
-use leapsunit\data\ar\Category;
-use leapsunit\data\ar\Customer;
-use leapsunit\data\ar\Document;
-use leapsunit\data\ar\NullValues;
-use leapsunit\data\ar\OrderItem;
-use leapsunit\data\ar\Order;
-use leapsunit\data\ar\Item;
-use leapsunit\data\ar\OrderItemWithNullFK;
-use leapsunit\data\ar\OrderWithNullFK;
-use leapsunit\data\ar\Profile;
-use leapsunit\data\ar\Type;
+use leapsunit\data\Ar\ActiveRecord;
+use leapsunit\data\Ar\BitValues;
+use leapsunit\data\Ar\Category;
+use leapsunit\data\Ar\Customer;
+use leapsunit\data\Ar\Document;
+use leapsunit\data\Ar\NullValues;
+use leapsunit\data\Ar\OrderItem;
+use leapsunit\data\Ar\Order;
+use leapsunit\data\Ar\Item;
+use leapsunit\data\Ar\OrderItemWithNullFK;
+use leapsunit\data\Ar\OrderWithNullFK;
+use leapsunit\data\Ar\Profile;
+use leapsunit\data\Ar\Type;
 use leapsunit\src\ar\ActiveRecordTestTrait;
 use leapsunit\src\db\cubrid\CubridActiveRecordTest;
-use leapsunit\data\ar\Animal;
-use leapsunit\data\ar\Cat;
-use leapsunit\data\ar\Dog;
+use leapsunit\data\Ar\Animal;
+use leapsunit\data\Ar\Cat;
+use leapsunit\data\Ar\Dog;
 
 /**
  * @group db

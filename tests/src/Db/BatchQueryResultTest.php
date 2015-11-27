@@ -8,10 +8,10 @@
 namespace leapsunit\src\db;
 
 use Leaps;
-use leapsunit\data\ar\ActiveRecord;
+use leapsunit\data\Ar\ActiveRecord;
 use Leaps\Db\Query;
 use Leaps\Db\BatchQueryResult;
-use leapsunit\data\ar\Customer;
+use leapsunit\data\Ar\Customer;
 
 /**
  * @group db

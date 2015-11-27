@@ -1,5 +1,5 @@
 <?php
-namespace leapsunit\src\rbac;
+namespace leapsunit\src\Rbac;
 
 use Leaps\Cache\FileCache;
 use Leaps\Rbac\DbManager;

@@ -5,7 +5,7 @@ namespace leapsunit\src\Validator;
 use Leaps\Validator\FileValidator;
 use Leaps\Web\UploadedFile;
 use Leaps;
-use leapsunit\data\validators\models\FakedValidationModel;
+use leapsunit\data\Validator\Model\FakedValidationModel;
 use leapsunit\TestCase;
 
 /**

@@ -2,7 +2,7 @@
 
 namespace leapsunit\data\console\controllers\fixtures;
 
-use yii\test\Fixture;
+use Leaps\Test\Fixture;
 
 class SecondFixture extends Fixture
 {

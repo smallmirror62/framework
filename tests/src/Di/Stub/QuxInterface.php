@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace leapsunit\src\di\stubs;
+namespace leapsunit\src\Di\Stub;
 
 /**
  * @author Qiang Xue <qiang.xue@gmail.com>

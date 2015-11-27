@@ -5,13 +5,13 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace leapsunit\src\web;
+namespace leapsunit\src\Web;
 
 use Leaps;
 use leapsunit\TestCase;
-use leapsunit\src\di\stubs\Qux;
-use leapsunit\src\web\stubs\Bar;
-use leapsunit\src\web\stubs\OtherQux;
+use leapsunit\src\Di\Stub\Qux;
+use leapsunit\src\Web\Stub\Bar;
+use leapsunit\src\Web\Stub\OtherQux;
 use Leaps\Base\InlineAction;
 
 /**
@@ -40,14 +40,14 @@ class ControllerTest extends TestCase
         $aksi2 = new InlineAction('aksi2', $controller, 'actionAksi2');
         $aksi3 = new InlineAction('aksi3', $controller, 'actionAksi3');
 
-        Leaps::$container->set('leapsunit\src\di\stubs\QuxInterface', [
-            'class' => Qux::className(),
+        Leaps::$container->set('leapsunit\src\Di\Stub\QuxInterface', [
+            'className' => Qux::className(),
             'a' => 'D426'
         ]);
         Leaps::$container->set(Bar::className(),[
             'foo' => 'independent'
         ]);
-        
+
         $params = ['fromGet'=>'from query params','q'=>'d426','validator'=>'avaliable'];
 
         list($bar, $fromGet, $other) = $controller->bindActionParams($aksi1, $params);
@@ -77,14 +77,14 @@ class ControllerTest extends TestCase
 
         $result = $controller->runAction('aksi6', $params);
         $this->assertEquals(['d426', false, true], $result);
-        
+
         // Manually inject an instance of \StdClass
         // In this case we don't want a newly created instance, but use the existing one
         $stdClass = new \StdClass;
         $stdClass->test = 'dummy';
         $result = $controller->runAction('aksi7', array_merge($params, ['validator' => $stdClass]));
         $this->assertEquals(['d426', 'dummy'], $result);
-        
+
         // Manually inject a string instead of an instance of \StdClass
         // Since this is wrong usage, we expect a new instance of the type hinted \StdClass anyway
         $stdClass = 'string';

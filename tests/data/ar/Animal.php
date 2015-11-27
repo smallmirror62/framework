@@ -6,7 +6,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace leapsunit\data\ar;
+namespace leapsunit\data\Ar;
 
 /**
  * Class Animal
@@ -37,9 +37,9 @@ class Animal extends ActiveRecord
     }
 
     /**
-     * 
+     *
      * @param type $row
-     * @return \leapsunit\data\ar\Animal
+     * @return \leapsunit\data\Ar\Animal
      */
     public static function instantiate($row)
     {

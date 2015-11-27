@@ -1,6 +1,6 @@
 <?php
 
-namespace leapsunit\data\validators\models;
+namespace leapsunit\data\Validator\Model;
 
 use Leaps\Base\Model;
 

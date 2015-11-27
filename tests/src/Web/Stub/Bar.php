@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace Leapsunit\framework\web\stubs;
+namespace Leapsunit\src\Web\Stub;
 
 use Leaps\Base\Object;
 

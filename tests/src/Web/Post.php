@@ -1,5 +1,5 @@
 <?php
-namespace leapsunit\src\web;
+namespace leapsunit\src\Web;
 
 use Leaps\Base\Object;
 

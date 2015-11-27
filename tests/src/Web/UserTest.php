@@ -9,18 +9,15 @@ namespace Leaps\Web;
  */
 function time()
 {
-    return \leapsunit\src\web\UserTest::$time ?: \time();
+    return \leapsunit\src\Web\UserTest::$time ?: \time();
 }
 
-namespace leapsunit\src\web;
+namespace leapsunit\src\Web;
 
 use Leaps\Base\NotSupportedException;
-use Leaps\Base\Component;
+use Leaps\Base\Service;
 use Leaps\Rbac\PhpManager;
 use Leaps\Web\IdentityInterface;
-use Leaps\Web\UrlManager;
-use Leaps\Web\UrlRule;
-use Leaps\Web\Request;
 use Leaps;
 use leapsunit\TestCase;
 
@@ -96,7 +93,7 @@ class UserTest extends TestCase
 
 }
 
-class UserIdentity extends Component implements IdentityInterface
+class UserIdentity extends Service implements IdentityInterface
 {
     private static $ids = [
         'user1',

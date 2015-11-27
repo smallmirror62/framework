@@ -1,8 +1,8 @@
 <?php
-namespace leapsunit\data\ar;
+namespace leapsunit\data\Ar;
 
 use Leaps\Db\ActiveQuery;
-use leapsunit\src\db\ActiveRecordTest;
+use leapsunit\src\Db\ActiveRecordTest;
 
 /**
  * Class Customer

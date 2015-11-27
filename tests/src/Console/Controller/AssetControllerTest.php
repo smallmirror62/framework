@@ -67,7 +67,7 @@ class AssetControllerTest extends TestCase
 	 */
 	protected function createAssetController()
 	{
-		$module = $this->getMock ( 'yii\\base\\Module', [
+		$module = $this->getMock ( 'Leaps\\Base\\Module', [
 			'fake'
 		], [
 			'console'

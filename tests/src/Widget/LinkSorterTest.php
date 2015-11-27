@@ -1,6 +1,6 @@
 <?php
 
-namespace leapsunit\src\widgets;
+namespace leapsunit\src\Widget;
 
 use Leaps;
 use Leaps\Data\ActiveDataProvider;
@@ -9,9 +9,9 @@ use Leaps\Db\Query;
 use Leaps\Widget\Breadcrumbs;
 use Leaps\Widget\LinkSorter;
 use Leaps\Widget\ListView;
-use leapsunit\data\ar\ActiveRecord;
-use leapsunit\data\ar\Order;
-use leapsunit\src\db\DatabaseTestCase;
+use leapsunit\data\Ar\ActiveRecord;
+use leapsunit\data\Ar\Order;
+use leapsunit\src\Db\DatabaseTestCase;
 
 /**
  * @group widgets

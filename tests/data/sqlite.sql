@@ -134,8 +134,8 @@ CREATE TABLE "document" (
 
 CREATE VIEW "animal_view" AS SELECT * FROM "animal";
 
-INSERT INTO "animal" ("type") VALUES ('leapsunit\data\ar\Cat');
-INSERT INTO "animal" ("type") VALUES ('leapsunit\data\ar\Dog');
+INSERT INTO "animal" ("type") VALUES ('leapsunit\data\Ar\Cat');
+INSERT INTO "animal" ("type") VALUES ('leapsunit\data\Ar\Dog');
 
 INSERT INTO "profile" (description) VALUES ('profile customer 1');
 INSERT INTO "profile" (description) VALUES ('profile customer 3');

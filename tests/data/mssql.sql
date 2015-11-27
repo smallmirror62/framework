@@ -137,8 +137,8 @@ CREATE TABLE [dbo].[document] (
 
 CREATE VIEW [dbo].[animal_view] AS SELECT * FROM [dbo].[animal];
 
-INSERT INTO [dbo].[animal] (type) VALUES ('leapsunit\data\ar\Cat');
-INSERT INTO [dbo].[animal] (type) VALUES ('leapsunit\data\ar\Dog');
+INSERT INTO [dbo].[animal] (type) VALUES ('leapsunit\data\Ar\Cat');
+INSERT INTO [dbo].[animal] (type) VALUES ('leapsunit\data\Ar\Dog');
 
 INSERT INTO [dbo].[profile] ([description]) VALUES ('profile customer 1');
 INSERT INTO [dbo].[profile] ([description]) VALUES ('profile customer 3');

@@ -1,6 +1,6 @@
 <?php
 
-namespace leapsunit\data\ar;
+namespace leapsunit\data\Ar;
 
 /**
  * Class Order

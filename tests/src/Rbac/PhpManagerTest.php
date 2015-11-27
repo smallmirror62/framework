@@ -8,7 +8,7 @@ namespace Leaps\Rbac;
  */
 function filemtime($file)
 {
-    return \leapsunit\src\rbac\PhpManagerTest::$filemtime ?: \filemtime($file);
+    return \leapsunit\src\Rbac\PhpManagerTest::$filemtime ?: \filemtime($file);
 }
 
 /**
@@ -17,10 +17,10 @@ function filemtime($file)
  */
 function time()
 {
-    return \leapsunit\src\rbac\PhpManagerTest::$time ?: \time();
+    return \leapsunit\src\Rbac\PhpManagerTest::$time ?: \time();
 }
 
-namespace leapsunit\src\rbac;
+namespace leapsunit\src\Rbac;
 
 use Leaps;
 

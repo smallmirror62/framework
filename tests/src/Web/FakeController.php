@@ -5,11 +5,11 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace leapsunit\src\web;
+namespace leapsunit\src\Web;
 
 use Leaps\Web\Controller;
-use leapsunit\src\di\stubs\QuxInterface;
-use leapsunit\src\web\stubs\Bar;
+use leapsunit\src\Di\Stub\QuxInterface;
+use leapsunit\src\Web\stubs\Bar;
 use Leaps\Validator\EmailValidator;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace leapsunit\src\widgets;
+namespace leapsunit\src\Widget;
 
 use Leaps;
 use Leaps\Cache\ArrayCache;
@@ -18,7 +18,7 @@ class FragmentCacheTest extends \leapsunit\TestCase
         parent::setUp();
         $this->mockWebApplication();
         Leaps::$app->set('cache', [
-            'class' => ArrayCache::className(),
+            'className' => ArrayCache::className(),
         ]);
     }
 

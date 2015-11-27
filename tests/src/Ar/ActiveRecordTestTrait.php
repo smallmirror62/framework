@@ -9,9 +9,9 @@ namespace leapsunit\src\Ar;
 
 use Leaps\Base\Event;
 use leapsunit\TestCase;
-use leapsunit\data\ar\Order;
+use leapsunit\data\Ar\Order;
 use Leaps\db\BaseActiveRecord;
-use leapsunit\data\ar\Customer;
+use leapsunit\data\Ar\Customer;
 use Leaps\db\ActiveQueryInterface;
 
 /**

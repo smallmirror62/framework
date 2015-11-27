@@ -4,12 +4,12 @@ namespace leapsunit\src\Validator;
 
 use Leaps\Validator\UniqueValidator;
 use Leaps;
-use leapsunit\data\ar\ActiveRecord;
-use leapsunit\data\ar\Order;
-use leapsunit\data\ar\OrderItem;
-use leapsunit\data\validators\models\FakedValidationModel;
-use leapsunit\data\validators\models\ValidatorTestMainModel;
-use leapsunit\data\validators\models\ValidatorTestRefModel;
+use leapsunit\data\Ar\ActiveRecord;
+use leapsunit\data\Ar\Order;
+use leapsunit\data\Ar\OrderItem;
+use leapsunit\data\Validator\Model\FakedValidationModel;
+use leapsunit\data\Validator\Model\ValidatorTestMainModel;
+use leapsunit\data\Validator\Model\ValidatorTestRefModel;
 use leapsunit\src\db\DatabaseTestCase;
 
 /**
