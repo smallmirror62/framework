@@ -1,4 +1,4 @@
-Yii 2.0 Unit tests
+Leaps Unit tests
 ==================
 
 DIRECTORY STRUCTURE
@@ -7,7 +7,7 @@ DIRECTORY STRUCTURE
     data/            models, config and other test data
         config.php   this file contains configuration for database and caching backends
     framework/       the framework unit tests
-    runtime/         the application runtime dir for the yii test app
+    runtime/         the application runtime dir for the leaps test app
 
 
 HOW TO RUN THE TESTS
@@ -15,7 +15,7 @@ HOW TO RUN THE TESTS
 
 Make sure you have PHPUnit installed and that you installed all composer dependencies (run `composer update` in the repo base directory).
 
-Run PHPUnit in the yii repo base directory.
+Run PHPUnit in the leaps repo base directory.
 
 ```
 phpunit
@@ -50,6 +50,6 @@ contain the following:
 
 ```php
 <?php
-$config['databases']['mysql']['username'] = 'yiitest';
+$config['databases']['mysql']['username'] = 'leapstest';
 $config['databases']['mysql']['password'] = 'changeme';
 ```

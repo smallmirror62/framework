@@ -5,9 +5,9 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\web\stubs;
+namespace Leapsunit\framework\web\stubs;
 
-use yii\base\Object;
+use Leaps\Base\Object;
 
 /**
  * @author Misbahul D Munir <misbahuldmunir@gmail.com>

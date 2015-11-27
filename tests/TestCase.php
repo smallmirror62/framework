@@ -1,11 +1,11 @@
 <?php
 
-namespace yiiunit;
+namespace leapsunit;
 
-use yii\helpers\ArrayHelper;
+use Leaps\Helper\ArrayHelper;
 
 /**
- * This is the base class for all yii framework unit tests.
+ * This is the base class for all leaps framework unit tests.
  */
 abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
@@ -37,12 +37,12 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Populates Yii::$app with a new application
+     * Populates Leaps::$app with a new application
      * The application will be destroyed on tearDown() automatically.
      * @param array $config The application configuration, if needed
      * @param string $appClass name of the application class to create
      */
-    protected function mockApplication($config = [], $appClass = '\yii\console\Application')
+    protected function mockApplication($config = [], $appClass = '\Leaps\Console\Application')
     {
         new $appClass(ArrayHelper::merge([
             'id' => 'testapp',
@@ -51,13 +51,13 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         ], $config));
     }
 
-    protected function mockWebApplication($config = [], $appClass = '\yii\web\Application')
+    protected function mockWebApplication($config = [], $appClass = '\Leaps\web\Application')
     {
         new $appClass(ArrayHelper::merge([
             'id' => 'testapp',
             'basePath' => __DIR__,
             'vendorPath' => $this->getVendorPath(),
-            'components' => [
+            'services' => [
                 'request' => [
                     'cookieValidationKey' => 'wefJDF8sfdsfSDefwqdxj9oq',
                     'scriptFile' => __DIR__ .'/index.php',
@@ -77,14 +77,14 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Destroys application in Yii::$app by setting it to null.
+     * Destroys application in Leaps::$app by setting it to null.
      */
     protected function destroyApplication()
     {
-        if (\Yii::$app && \Yii::$app->has('session', true)) {
-            \Yii::$app->session->close();
+        if (\Leaps::$app && \Leaps::$app->has('session', true)) {
+            \Leaps::$app->session->close();
         }
-        \Yii::$app = null;
+        \Leaps::$app = null;
     }
 
     /**
