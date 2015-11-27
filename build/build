@@ -8,11 +8,11 @@
  * @license http://www.yiiframework.com/license/
  */
 
-define('YII_DEBUG', true);
+define('LEAPS_DEBUG', true);
 
 $composerAutoload = [
-    __DIR__ . '/../vendor/autoload.php', // yii2 as the root package
-    __DIR__ . '/../../../autoload.php', // yii2-basic or yii2-advanced as the root package
+    __DIR__ . '/../vendor/autoload.php', // leaps as the root package
+    __DIR__ . '/../../../autoload.php', // leaps-basic or leaps-advanced as the root package
 ];
 
 foreach ($composerAutoload as $autoload) {
@@ -27,14 +27,14 @@ if (!isset($vendorPath)) {
 	echo "composer autoloader could not be found.\nYou should run `composer install` in repo root directory.\n";
 	exit(1);
 }
-require(__DIR__ . '/../framework/Yii.php');
+require(__DIR__ . '/../src/Leaps.php');
 
-Yii::setAlias('@yii/build', __DIR__);
+Leaps::setAlias('@leaps/build', __DIR__);
 
-$application = new yii\console\Application([
-	'id' => 'yii-build',
+$application = new Leaps\Console\Application([
+	'id' => 'leaps-build',
 	'basePath' => __DIR__,
-	'controllerNamespace' => 'yii\build\controllers',
+	'controllerNamespace' => 'Leaps\build\Controller',
 	'enableCoreCommands' => false,
 ]);
 $application->run();

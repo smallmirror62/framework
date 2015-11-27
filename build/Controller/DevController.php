@@ -5,13 +5,15 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\build\controllers;
+namespace Leaps\build\controllers;
 
-use Yii;
-use yii\base\InvalidParamException;
-use yii\console\Controller;
-use yii\helpers\Console;
-use yii\helpers\FileHelper;
+use Leaps;
+use Leaps\Helper\Console;
+use Leaps\Helper\FileHelper;
+use Leaps\Console\Controller;
+use Leaps\Base\InvalidParamException;
+
+
 
 /**
  * This command helps to set up a dev environment with all extensions and applications
