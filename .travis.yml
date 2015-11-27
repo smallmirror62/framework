@@ -51,8 +51,8 @@ before_script:
   - psql --version
 
   # initialize databases
-  - mysql -e 'CREATE DATABASE yiitest;';
-  - psql -U postgres -c 'CREATE DATABASE yiitest;';
+  - mysql -e 'CREATE DATABASE leapstest;';
+  - psql -U postgres -c 'CREATE DATABASE leapstest;';
 
   - |
     if [ $TRAVIS_PHP_VERSION = '5.6' ]; then
