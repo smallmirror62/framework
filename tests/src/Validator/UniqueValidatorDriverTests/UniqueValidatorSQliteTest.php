@@ -1,8 +1,8 @@
 <?php
 
-namespace yiiunit\framework\validators\UniqueValidatorDriverTests;
+namespace leapsunit\src\validators\UniqueValidatorDriverTests;
 
-use yiiunit\framework\validators\UniqueValidatorTest;
+use leapsunit\src\validators\UniqueValidatorTest;
 
 /**
  * @group validators

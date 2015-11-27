@@ -1,7 +1,7 @@
 <?php
-namespace yiiunit\framework\rbac;
+namespace leapsunit\src\rbac;
 
-use yii\caching\FileCache;
+use Leaps\Cache\FileCache;
 use yii\rbac\DbManager;
 
 /**
@@ -18,7 +18,7 @@ class MySQLManagerCacheTest extends MySQLManagerTest
     {
         return new DbManager([
             'db' => $this->getConnection(),
-            'cache' => new FileCache(['cachePath' => '@yiiunit/runtime/cache']),
+            'cache' => new FileCache(['cachePath' => '@leapsunit/runtime/cache']),
         ]);
     }
 }

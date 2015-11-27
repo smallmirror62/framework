@@ -1,7 +1,7 @@
 <?php
-namespace yiiunit\framework\db\pgsql;
+namespace leapsunit\src\db\pgsql;
 
-use yiiunit\framework\data\ActiveDataProviderTest;
+use leapsunit\src\data\ActiveDataProviderTest;
 
 /**
  * @group db

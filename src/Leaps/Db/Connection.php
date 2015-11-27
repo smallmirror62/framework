@@ -262,7 +262,7 @@ class Connection extends Service
      *
      * This property is mainly used by [[getSchema()]] when fetching the database schema information.
      * You normally do not need to set this property unless you want to use your own
-     * [[Schema]] class to support DBMS that is not supported by Yii.
+     * [[Schema]] class to support DBMS that is not supported by Leaps.
      */
     public $schemaMap = [
         'pgsql' => 'Leaps\Db\pgsql\Schema', // PostgreSQL

@@ -1,16 +1,17 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\console;
+namespace leapsunit\src\Console;
 
-use yii\console\Controller;
-use yiiunit\framework\di\stubs\QuxInterface;
-use yiiunit\framework\web\stubs\Bar;
-use yii\validators\EmailValidator;
+use Leaps\Console\Controller;
+use leapsunit\src\Web\Stub\Bar;
+use Leaps\Validator\EmailValidator;
+use leapsunit\src\di\stubs\QuxInterface;
+
 
 /**
  * @author Misbahul D Munir <misbahuldmunir@gmail.com>
@@ -48,10 +49,10 @@ class FakeController extends Controller
     {
         return [$q, $validator->validate($q), $validator->validate('misbahuldmunir@gmail.com')];
     }
-    
+
     public function actionAksi7(Bar $bar, $avaliable, $missing)
     {
-        
+
     }
 
     public function actionAksi8($arg1, $arg2)

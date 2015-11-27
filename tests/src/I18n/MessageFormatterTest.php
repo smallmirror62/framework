@@ -1,14 +1,14 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\i18n;
+namespace leapsunit\src\i18n;
 
 use yii\i18n\MessageFormatter;
-use yiiunit\TestCase;
+use leapsunit\TestCase;
 
 /**
  * @author Alexander Makarov <sam@rmcreative.ru>
@@ -75,8 +75,8 @@ _MSG_
             ],
 
             [
-                '{name} is {gender} and {gender, select, female{she} male{he} other{it}} loves Yii!',
-                'Alexander is male and he loves Yii!',
+                '{name} is {gender} and {gender, select, female{she} male{he} other{it}} loves Leaps!',
+                'Alexander is male and he loves Leaps!',
                 [
                     'name' => 'Alexander',
                     'gender' => 'male',
@@ -87,8 +87,8 @@ _MSG_
 
             // verify pattern in select does not get replaced
             [
-                '{name} is {gender} and {gender, select, female{she} male{he} other{it}} loves Yii!',
-                'Alexander is male and he loves Yii!',
+                '{name} is {gender} and {gender, select, female{she} male{he} other{it}} loves Leaps!',
+                'Alexander is male and he loves Leaps!',
                 [
                     'name' => 'Alexander',
                     'gender' => 'male',
@@ -103,8 +103,8 @@ _MSG_
 
             // verify pattern in select message gets replaced
             [
-                '{name} is {gender} and {gender, select, female{she} male{{he}} other{it}} loves Yii!',
-                'Alexander is male and wtf loves Yii!',
+                '{name} is {gender} and {gender, select, female{she} male{{he}} other{it}} loves Leaps!',
+                'Alexander is male and wtf loves Leaps!',
                 [
                     'name' => 'Alexander',
                     'gender' => 'male',

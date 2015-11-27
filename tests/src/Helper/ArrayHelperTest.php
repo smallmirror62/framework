@@ -1,10 +1,10 @@
 <?php
 
-namespace yiiunit\framework\helpers;
+namespace leapsunit\src\helpers;
 
-use yii\base\Object;
-use yii\helpers\ArrayHelper;
-use yiiunit\TestCase;
+use Leaps\Base\Object;
+use Leaps\Helper\ArrayHelper;
+use leapsunit\TestCase;
 use yii\data\Sort;
 
 class Post1
@@ -187,7 +187,7 @@ class ArrayHelperTest extends TestCase
     public function testMerge()
     {
         $a = [
-            'name' => 'Yii',
+            'name' => 'Leaps',
             'version' => '1.0',
             'options' => [
                 'namespace' => false,
@@ -218,7 +218,7 @@ class ArrayHelperTest extends TestCase
 
         $result = ArrayHelper::merge($a, $b, $c);
         $expected = [
-            'name' => 'Yii',
+            'name' => 'Leaps',
             'version' => '2.0',
             'options' => [
                 'namespace' => true,

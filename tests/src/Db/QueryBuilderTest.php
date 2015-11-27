@@ -1,18 +1,18 @@
 <?php
 
-namespace yiiunit\framework\db;
+namespace leapsunit\src\db;
 
-use yii\db\Expression;
-use yii\db\Query;
-use yii\db\QueryBuilder;
-use yii\db\Schema;
-use yii\db\mysql\QueryBuilder as MysqlQueryBuilder;
-use yii\db\SchemaBuilderTrait;
-use yii\db\sqlite\QueryBuilder as SqliteQueryBuilder;
-use yii\db\mssql\QueryBuilder as MssqlQueryBuilder;
-use yii\db\pgsql\QueryBuilder as PgsqlQueryBuilder;
-use yii\db\cubrid\QueryBuilder as CubridQueryBuilder;
-use yii\db\oci\QueryBuilder as OracleQueryBuilder;
+use Leaps\Db\Expression;
+use Leaps\Db\Query;
+use Leaps\Db\QueryBuilder;
+use Leaps\Db\Schema;
+use Leaps\Db\mysql\QueryBuilder as MysqlQueryBuilder;
+use Leaps\Db\SchemaBuilderTrait;
+use Leaps\Db\sqlite\QueryBuilder as SqliteQueryBuilder;
+use Leaps\Db\mssql\QueryBuilder as MssqlQueryBuilder;
+use Leaps\Db\pgsql\QueryBuilder as PgsqlQueryBuilder;
+use Leaps\Db\cubrid\QueryBuilder as CubridQueryBuilder;
+use Leaps\Db\oci\QueryBuilder as OracleQueryBuilder;
 
 /**
  * @group db
@@ -35,7 +35,7 @@ class QueryBuilderTest extends DatabaseTestCase
     {
         $connection = $this->getConnection(true, false);
 
-        \Yii::$container->set('db', $connection);
+        \Leaps::$container->set('db', $connection);
 
         switch ($this->driverName) {
             case 'mysql':

@@ -1,8 +1,8 @@
 <?php
 
-namespace yiiunit\data\validators\models;
+namespace leapsunit\data\validators\models;
 
-use yiiunit\data\ar\ActiveRecord;
+use leapsunit\data\ar\ActiveRecord;
 
 class ValidatorTestRefModel extends ActiveRecord
 {

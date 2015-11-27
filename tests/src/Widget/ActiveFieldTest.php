@@ -1,10 +1,10 @@
 <?php
 
-namespace yiiunit\framework\widgets;
+namespace leapsunit\src\widgets;
 
-use Yii;
+use Leaps;
 use yii\widgets\ActiveField;
-use yii\base\DynamicModel;
+use Leaps\Base\DynamicModel;
 use yii\widgets\ActiveForm;
 use yii\web\View;
 use yii\web\AssetManager;
@@ -14,7 +14,7 @@ use yii\web\AssetManager;
  *
  * @group widgets
  */
-class ActiveFieldTest extends \yiiunit\TestCase
+class ActiveFieldTest extends \leapsunit\TestCase
 {
     /**
      * @var ActiveField
@@ -39,8 +39,8 @@ class ActiveFieldTest extends \yiiunit\TestCase
 
         $this->mockWebApplication();
 
-        Yii::setAlias('@testWeb', '/');
-        Yii::setAlias('@testWebRoot', '@yiiunit/data/web');
+        Leaps::setAlias('@testWeb', '/');
+        Leaps::setAlias('@testWebRoot', '@leapsunit/data/web');
 
         $this->helperModel = new DynamicModel(['attributeName']);
         ob_start();
@@ -284,7 +284,7 @@ EOD;
     {
         $this->activeField->setClientOptionsEmpty(false);
 
-        $this->activeField->model->addRule($this->attributeName, 'yiiunit\framework\widgets\TestValidator');
+        $this->activeField->model->addRule($this->attributeName, 'leapsunit\src\widgets\TestValidator');
         $this->activeField->form->enableClientValidation = false;
 
         // expected empty
@@ -297,7 +297,7 @@ EOD;
     {
         $this->activeField->setClientOptionsEmpty(false);
 
-        $this->activeField->model->addRule($this->attributeName, 'yiiunit\framework\widgets\TestValidator');
+        $this->activeField->model->addRule($this->attributeName, 'leapsunit\src\widgets\TestValidator');
         $this->activeField->enableClientValidation = true;
         $actualValue = $this->activeField->getClientOptions();
         $expectedJsExpression = "function (attribute, value, messages, deferred, \$form) {return true;}";
@@ -328,7 +328,7 @@ EOD;
     {
         $this->activeField->setClientOptionsEmpty(false);
         $this->activeField->enableAjaxValidation = true;
-        $this->activeField->model->addRule($this->attributeName, 'yiiunit\framework\widgets\TestValidator');
+        $this->activeField->model->addRule($this->attributeName, 'leapsunit\src\widgets\TestValidator');
 
         foreach($this->activeField->model->validators as $validator) {
             $validator->whenClient = "function (attribute, value) { return 'yii2' == 'yii2'; }"; // js

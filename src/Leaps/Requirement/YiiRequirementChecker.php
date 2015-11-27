@@ -11,14 +11,14 @@ if (version_compare(PHP_VERSION, '4.3', '<')) {
 }
 
 /**
- * YiiRequirementChecker allows checking, if current system meets the requirements for running the Yii application.
+ * LeapsRequirementChecker allows checking, if current system meets the requirements for running the Leaps application.
  * This class allows rendering of the check report for the web and console application interface.
  *
  * Example:
  *
  * ~~~php
- * require_once('path/to/YiiRequirementChecker.php');
- * $requirementsChecker = new YiiRequirementChecker();
+ * require_once('path/to/LeapsRequirementChecker.php');
+ * $requirementsChecker = new LeapsRequirementChecker();
  * $requirements = array(
  *     array(
  *         'name' => 'PHP Some Extension',
@@ -28,7 +28,7 @@ if (version_compare(PHP_VERSION, '4.3', '<')) {
  *         'memo' => 'PHP extension "some_extension" required',
  *     ),
  * );
- * $requirementsChecker->checkYii()->check($requirements)->render();
+ * $requirementsChecker->checkLeaps()->check($requirements)->render();
  * ~~~
  *
  * If you wish to render the report with your own representation, use [[getResult()]] instead of [[render()]]
@@ -46,7 +46,7 @@ if (version_compare(PHP_VERSION, '4.3', '<')) {
  * );
  * ~~~
  *
- * Note: this class definition does not match ordinary Yii style, because it should match PHP 4.3
+ * Note: this class definition does not match ordinary Leaps style, because it should match PHP 4.3
  * and should not use features from newer PHP versions!
  *
  * @property array|null $result the check results, this property is for internal usage only.
@@ -54,7 +54,7 @@ if (version_compare(PHP_VERSION, '4.3', '<')) {
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 2.0
  */
-class YiiRequirementChecker
+class LeapsRequirementChecker
 {
     /**
      * Check the given requirements, collecting results into internal field.
@@ -107,8 +107,8 @@ class YiiRequirementChecker
     }
 
     /**
-     * Performs the check for the Yii core requirements.
-     * @return YiiRequirementChecker self instance.
+     * Performs the check for the Leaps core requirements.
+     * @return LeapsRequirementChecker self instance.
      */
     function checkLeaps()
     {

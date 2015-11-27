@@ -1,8 +1,8 @@
 <?php
 
-namespace yiiunit\data\validators\models;
+namespace leapsunit\data\validators\models;
 
-use yii\base\Model;
+use Leaps\Base\Model;
 
 class FakedValidationModel extends Model
 {

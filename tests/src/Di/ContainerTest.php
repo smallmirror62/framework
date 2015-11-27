@@ -1,18 +1,18 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\di;
+namespace leapsunit\src\di;
 
 use yii\di\Container;
 use yii\di\Instance;
-use yiiunit\framework\di\stubs\Bar;
-use yiiunit\framework\di\stubs\Foo;
-use yiiunit\framework\di\stubs\Qux;
-use yiiunit\TestCase;
+use leapsunit\src\di\stubs\Bar;
+use leapsunit\src\di\stubs\Foo;
+use leapsunit\src\di\stubs\Qux;
+use leapsunit\TestCase;
 
 
 /**

@@ -1,15 +1,15 @@
 <?php
 
-namespace yiiunit\framework\console\controllers;
+namespace leapsunit\src\Console\Controller;
 
-use Yii;
-use yii\console\controllers\MigrateController;
-use yii\db\Migration;
-use yii\db\Query;
-use yiiunit\TestCase;
+use Leaps;
+use Leaps\Console\Controller\MigrateController;
+use Leaps\Db\Migration;
+use Leaps\Db\Query;
+use leapsunit\TestCase;
 
 /**
- * Unit test for [[\yii\console\controllers\MigrateController]].
+ * Unit test for [[\Leaps\Console\Controller\MigrateController]].
  * @see MigrateController
  *
  * @group console
@@ -26,7 +26,7 @@ class MigrateControllerTest extends TestCase
         $this->mockApplication([
             'components' => [
                 'db' => [
-                    'class' => 'yii\db\Connection',
+                    'class' => 'Leaps\Db\Connection',
                     'dsn' => 'sqlite::memory:',
                 ],
             ],

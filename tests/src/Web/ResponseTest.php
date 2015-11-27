@@ -1,14 +1,14 @@
 <?php
 
-namespace yiiunit\framework\web;
+namespace leapsunit\src\web;
 
-use Yii;
-use yii\helpers\StringHelper;
+use Leaps;
+use Leaps\Helper\StringHelper;
 
 /**
  * @group web
  */
-class ResponseTest extends \yiiunit\TestCase
+class ResponseTest extends \leapsunit\TestCase
 {
     /**
      * @var \yii\web\Response
@@ -38,7 +38,7 @@ class ResponseTest extends \yiiunit\TestCase
      */
     public function testSendFileRanges($rangeHeader, $expectedHeader, $length, $expectedContent)
     {
-        $dataFile = \Yii::getAlias('@yiiunit/data/web/data.txt');
+        $dataFile = \Leaps::getAlias('@leapsunit/data/web/data.txt');
         $fullContent = file_get_contents($dataFile);
         $_SERVER['HTTP_RANGE'] = 'bytes=' . $rangeHeader;
         ob_start();
@@ -73,7 +73,7 @@ class ResponseTest extends \yiiunit\TestCase
     {
         $this->setExpectedException('yii\web\HttpException');
 
-        $dataFile = \Yii::getAlias('@yiiunit/data/web/data.txt');
+        $dataFile = \Leaps::getAlias('@leapsunit/data/web/data.txt');
         $_SERVER['HTTP_RANGE'] = 'bytes=' . $rangeHeader;
         $this->response->sendFile($dataFile);
     }

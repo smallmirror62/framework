@@ -1,7 +1,7 @@
 <?php
-namespace yiiunit\framework\web;
+namespace leapsunit\src\web;
 
-use yii\base\Object;
+use Leaps\Base\Object;
 
 class Post extends Object
 {

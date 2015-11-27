@@ -1,5 +1,5 @@
 <?php
-namespace yiiunit\framework\rbac;
+namespace leapsunit\src\rbac;
 
 /**
  * SqliteManagerTest

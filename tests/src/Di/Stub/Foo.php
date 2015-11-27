@@ -1,13 +1,13 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\di\stubs;
+namespace leapsunit\src\di\stubs;
 
-use yii\base\Object;
+use Leaps\Base\Object;
 
 /**
  * @author Qiang Xue <qiang.xue@gmail.com>

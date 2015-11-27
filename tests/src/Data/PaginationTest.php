@@ -1,9 +1,9 @@
 <?php
 
-namespace yiiunit\framework\data;
+namespace leapsunit\src\Data;
 
-use yii\data\Pagination;
-use yiiunit\TestCase;
+use Leaps\Data\Pagination;
+use leapsunit\TestCase;
 
 class PaginationTest extends TestCase
 {

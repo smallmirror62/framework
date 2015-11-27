@@ -1,14 +1,14 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\web\stubs;
+namespace leapsunit\src\web\stubs;
 
-use yii\base\Object;
-use yiiunit\framework\di\stubs\QuxInterface;
+use Leaps\Base\Object;
+use leapsunit\src\di\stubs\QuxInterface;
 
 /**
  * @author Misbahul D Munir <misbahuldmunir@gmail.com>

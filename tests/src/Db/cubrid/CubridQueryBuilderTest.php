@@ -1,9 +1,9 @@
 <?php
 
-namespace yiiunit\framework\db\cubrid;
+namespace leapsunit\src\db\cubrid;
 
-use yii\db\Schema;
-use yiiunit\framework\db\QueryBuilderTest;
+use Leaps\Db\Schema;
+use leapsunit\src\db\QueryBuilderTest;
 
 /**
  * @group db

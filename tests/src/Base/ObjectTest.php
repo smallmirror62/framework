@@ -1,8 +1,8 @@
 <?php
-namespace yiiunit\framework\base;
+namespace leapsunit\src\base;
 
-use yii\base\Object;
-use yiiunit\TestCase;
+use Leaps\Base\Object;
+use leapsunit\TestCase;
 
 /**
  * @group base
@@ -61,7 +61,7 @@ class ObjectTest extends TestCase
     public function testGetProperty()
     {
         $this->assertTrue('default' === $this->object->Text);
-        $this->setExpectedException('yii\base\UnknownPropertyException');
+        $this->setExpectedException('Leaps\Base\UnknownPropertyException');
         $value2 = $this->object->Caption;
     }
 
@@ -70,13 +70,13 @@ class ObjectTest extends TestCase
         $value = 'new value';
         $this->object->Text = $value;
         $this->assertEquals($value, $this->object->Text);
-        $this->setExpectedException('yii\base\UnknownPropertyException');
+        $this->setExpectedException('Leaps\Base\UnknownPropertyException');
         $this->object->NewMember = $value;
     }
 
     public function testSetReadOnlyProperty()
     {
-        $this->setExpectedException('yii\base\InvalidCallException');
+        $this->setExpectedException('Leaps\Base\InvalidCallException');
         $this->object->object = 'test';
     }
 
@@ -106,13 +106,13 @@ class ObjectTest extends TestCase
 
     public function testUnsetReadOnlyProperty()
     {
-        $this->setExpectedException('yii\base\InvalidCallException');
+        $this->setExpectedException('Leaps\Base\InvalidCallException');
         unset($this->object->object);
     }
 
     public function testCallUnknownMethod()
     {
-        $this->setExpectedException('yii\base\UnknownMethodException');
+        $this->setExpectedException('Leaps\Base\UnknownMethodException');
         $this->object->unknownMethod();
     }
 
@@ -149,8 +149,8 @@ class ObjectTest extends TestCase
     public function testReadingWriteOnlyProperty()
     {
         $this->setExpectedException(
-            'yii\base\InvalidCallException',
-            'Getting write-only property: yiiunit\framework\base\NewObject::writeOnly'
+            'Leaps\Base\InvalidCallException',
+            'Getting write-only property: leapsunit\src\base\NewObject::writeOnly'
         );
         $this->object->writeOnly;
     }

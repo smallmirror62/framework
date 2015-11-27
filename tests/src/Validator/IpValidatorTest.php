@@ -1,10 +1,10 @@
 <?php
-namespace yiiunit\framework\validators;
+namespace leapsunit\src\validators;
 
 use yii\validators\IpValidator;
 use yii\validators\ValidationAsset;
-use yiiunit\data\validators\models\FakedValidationModel;
-use yiiunit\TestCase;
+use leapsunit\data\validators\models\FakedValidationModel;
+use leapsunit\TestCase;
 
 /**
  * @group validators
@@ -23,7 +23,7 @@ class IpValidatorTest extends TestCase
 
     public function testInitException()
     {
-        $this->setExpectedException('yii\base\InvalidConfigException',
+        $this->setExpectedException('Leaps\Base\InvalidConfigException',
             'Both IPv4 and IPv6 checks can not be disabled at the same time');
         new IpValidator(['ipv4' => false, 'ipv6' => false]);
     }

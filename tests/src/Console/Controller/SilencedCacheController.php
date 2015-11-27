@@ -1,8 +1,8 @@
 <?php
-namespace yiiunit\framework\console\controllers;
+namespace leapsunit\src\Console\Controller;
 
 
-use yii\console\controllers\CacheController;
+use Leaps\Console\Controller\CacheController;
 
 
 /**

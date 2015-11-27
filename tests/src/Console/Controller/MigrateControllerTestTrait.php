@@ -1,11 +1,11 @@
 <?php
 
-namespace yiiunit\framework\console\controllers;
+namespace leapsunit\src\Console\Controller;
 
-use Yii;
-use yii\console\controllers\BaseMigrateController;
-use yii\helpers\FileHelper;
-use yiiunit\TestCase;
+use Leaps;
+use Leaps\Console\Controller\BaseMigrateController;
+use Leaps\Helper\FileHelper;
+use leapsunit\TestCase;
 
 /**
  * This trait provides unit tests shared by the different migration controllers implementations
@@ -30,7 +30,7 @@ trait MigrateControllerTestTrait
 
     public function setUpMigrationPath()
     {
-        $this->migrationPath = Yii::getAlias('@yiiunit/runtime/test_migrations');
+        $this->migrationPath = Leaps::getAlias('@leapsunit/runtime/test_migrations');
         FileHelper::createDirectory($this->migrationPath);
         if (!file_exists($this->migrationPath)) {
             $this->markTestIncomplete('Unit tests runtime directory should have writable permissions!');
@@ -174,7 +174,7 @@ CODE;
         $code = <<<CODE
 <?php
 
-use yii\db\Migration;
+use Leaps\Db\Migration;
 
 class {$class} extends Migration
 {
@@ -219,7 +219,7 @@ CODE;
         $code = <<<CODE
 <?php
 
-use yii\db\Migration;
+use Leaps\Db\Migration;
 
 class {$class} extends Migration
 {
@@ -250,7 +250,7 @@ CODE;
         $code = <<<CODE
 <?php
 
-use yii\db\Migration;
+use Leaps\Db\Migration;
 
 class {$class} extends Migration
 {
@@ -279,7 +279,7 @@ CODE;
         $code = <<<CODE
 <?php
 
-use yii\db\Migration;
+use Leaps\Db\Migration;
 
 class {$class} extends Migration
 {
@@ -312,7 +312,7 @@ CODE;
         $code = <<<CODE
 <?php
 
-use yii\db\Migration;
+use Leaps\Db\Migration;
 
 class {$class} extends Migration
 {
@@ -341,7 +341,7 @@ CODE;
         $code = <<<CODE
 <?php
 
-use yii\db\Migration;
+use Leaps\Db\Migration;
 
 class {$class} extends Migration
 {
@@ -371,7 +371,7 @@ CODE;
         $code = <<<CODE
 <?php
 
-use yii\db\Migration;
+use Leaps\Db\Migration;
 
 class {$class} extends Migration
 {
@@ -406,7 +406,7 @@ CODE;
         $code = <<<CODE
 <?php
 
-use yii\db\Migration;
+use Leaps\Db\Migration;
 
 class {$class} extends Migration
 {
@@ -442,7 +442,7 @@ CODE;
         $code = <<<CODE
 <?php
 
-use yii\db\Migration;
+use Leaps\Db\Migration;
 
 class {$class} extends Migration
 {
@@ -474,7 +474,7 @@ CODE;
         $code = <<<CODE
 <?php
 
-use yii\db\Migration;
+use Leaps\Db\Migration;
 
 class {$class} extends Migration
 {
@@ -509,7 +509,7 @@ CODE;
         $code = <<<CODE
 <?php
 
-use yii\db\Migration;
+use Leaps\Db\Migration;
 
 class {$class} extends Migration
 {

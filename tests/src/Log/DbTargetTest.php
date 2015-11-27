@@ -1,12 +1,12 @@
 <?php
-namespace yiiunit\framework\log;
+namespace leapsunit\src\log;
 
-use Yii;
-use yii\db\Connection;
-use yii\db\Query;
+use Leaps;
+use Leaps\Db\Connection;
+use Leaps\Db\Query;
 use yii\log\Logger;
-use yiiunit\framework\console\controllers\EchoMigrateController;
-use yiiunit\TestCase;
+use leapsunit\src\Console\Controller\EchoMigrateController;
+use leapsunit\TestCase;
 
 /**
  * @group log
@@ -25,10 +25,10 @@ abstract class DbTargetTest extends TestCase
 
     protected static function runConsoleAction($route, $params = [])
     {
-        if (Yii::$app === null) {
-            new \yii\console\Application([
+        if (Leaps::$app === null) {
+            new \Leaps\Console\Application([
                 'id' => 'Migrator',
-                'basePath' => '@yiiunit',
+                'basePath' => '@leapsunit',
                 'controllerMap' => [
                     'migrate' => EchoMigrateController::className(),
                 ],
@@ -48,9 +48,9 @@ abstract class DbTargetTest extends TestCase
         }
 
         ob_start();
-        $result = Yii::$app->runAction($route, $params);
+        $result = Leaps::$app->runAction($route, $params);
         echo "Result is " . $result;
-        if ($result !== \yii\console\Controller::EXIT_CODE_NORMAL) {
+        if ($result !== \Leaps\Console\Controller::EXIT_CODE_NORMAL) {
             ob_end_flush();
         } else {
             ob_end_clean();
@@ -77,7 +77,7 @@ abstract class DbTargetTest extends TestCase
         if (static::$db) {
             static::$db->close();
         }
-        Yii::$app = null;
+        Leaps::$app = null;
         parent::tearDownAfterClass();
     }
 
@@ -88,10 +88,10 @@ abstract class DbTargetTest extends TestCase
     }
 
     /**
-     * @throws \yii\base\InvalidParamException
-     * @throws \yii\db\Exception
-     * @throws \yii\base\InvalidConfigException
-     * @return \yii\db\Connection
+     * @throws \Leaps\Base\InvalidParamException
+     * @throws \Leaps\Db\Exception
+     * @throws \Leaps\Base\InvalidConfigException
+     * @return \Leaps\Db\Connection
      */
     public static function getConnection()
     {
@@ -119,7 +119,7 @@ abstract class DbTargetTest extends TestCase
      */
     public function testTimestamp()
     {
-        $logger = Yii::getLogger();
+        $logger = Leaps::getLogger();
 
         $time = 1424865393.0105;
 

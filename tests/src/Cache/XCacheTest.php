@@ -1,7 +1,7 @@
 <?php
-namespace yiiunit\framework\caching;
+namespace leapsunit\src\Cache;
 
-use yii\caching\XCache;
+use Leaps\Cache\XCache;
 
 /**
  * Class for testing xcache backend

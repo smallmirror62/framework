@@ -1,11 +1,11 @@
 <?php
-namespace yiiunit\framework\db\sqlite;
+namespace leapsunit\src\db\sqlite;
 
-use yii\db\Connection;
-use yii\db\Transaction;
-use yiiunit\framework\db\ConnectionTest;
-use yiiunit\data\ar\ActiveRecord;
-use yiiunit\data\ar\Customer;
+use Leaps\Db\Connection;
+use Leaps\Db\Transaction;
+use leapsunit\src\db\ConnectionTest;
+use leapsunit\data\ar\ActiveRecord;
+use leapsunit\data\ar\Customer;
 
 /**
  * @group db
@@ -118,10 +118,10 @@ class SqliteConnectionTest extends ConnectionTest
     {
         $databases = self::getParam('databases');
         $fixture = $databases[$this->driverName]['fixture'];
-        $basePath = \Yii::getAlias('@yiiunit/runtime');
+        $basePath = \Leaps::getAlias('@leapsunit/runtime');
 
         $config = [
-            'class' => 'yii\db\Connection',
+            'class' => 'Leaps\Db\Connection',
             'dsn' => "sqlite:$basePath/yii2test.sq3",
         ];
         $this->prepareDatabase($config, $fixture)->close();
@@ -140,13 +140,13 @@ class SqliteConnectionTest extends ConnectionTest
             $config['slaves'][] = $slave;
         }
 
-        return \Yii::createObject($config);
+        return \Leaps::createObject($config);
     }
 
     public function testAliasDbPath()
     {
         $config = [
-            'dsn' => "sqlite:@yiiunit/runtime/yii2aliastest.sq3",
+            'dsn' => "sqlite:@leapsunit/runtime/yii2aliastest.sq3",
         ];
         $connection = new Connection($config);
         $connection->open();

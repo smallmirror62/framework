@@ -1,16 +1,16 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\build\controllers;
+namespace Leaps\Build\controllers;
 
-use Yii;
-use yii\console\Controller;
-use yii\helpers\Console;
-use yii\helpers\VarDumper;
+use Leaps;
+use Leaps\Console\Controller;
+use Leaps\Helper\Console;
+use Leaps\Helper\VarDumper;
 
 /**
  * MimeTypeController generates a map of file extensions to MIME types
@@ -19,7 +19,7 @@ use yii\helpers\VarDumper;
  * http://svn.apache.org/viewvc/httpd/httpd/trunk/docs/conf/mime.types?view=markup
  *
  * This file has been placed in the public domain for unlimited redistribution,
- * so we can use it and ship it with Yii.
+ * so we can use it and ship it with Leaps.
  *
  * @author Carsten Brandt <mail@cebe.cc>
  * @since 2.0
@@ -32,7 +32,7 @@ class MimeTypeController extends Controller
     public function actionIndex($outFile = null)
     {
         if ($outFile === null) {
-            $outFile = Yii::getAlias('@yii/helpers/mimeTypes.php');
+            $outFile = Leaps::getAlias('@leaps/Helper/mimeTypes.php');
         }
         $this->stdout('downloading mime-type file from apache httpd repository...');
         if ($content = file_get_contents('http://svn.apache.org/viewvc/httpd/httpd/trunk/docs/conf/mime.types?view=co')) {

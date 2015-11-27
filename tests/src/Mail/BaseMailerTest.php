@@ -1,13 +1,13 @@
 <?php
 
-namespace yiiunit\framework\mail;
+namespace leapsunit\src\mail;
 
-use Yii;
-use yii\base\View;
+use Leaps;
+use Leaps\Base\View;
 use yii\mail\BaseMailer;
 use yii\mail\BaseMessage;
-use yii\helpers\FileHelper;
-use yiiunit\TestCase;
+use Leaps\Helper\FileHelper;
+use leapsunit\TestCase;
 
 /**
  * @group mail
@@ -40,7 +40,7 @@ class BaseMailerTest extends TestCase
      */
     protected function getTestFilePath()
     {
-        return Yii::getAlias('@yiiunit/runtime') . DIRECTORY_SEPARATOR . basename(get_class($this)) . '_' . getmypid();
+        return Leaps::getAlias('@leapsunit/runtime') . DIRECTORY_SEPARATOR . basename(get_class($this)) . '_' . getmypid();
     }
 
     /**
@@ -59,7 +59,7 @@ class BaseMailerTest extends TestCase
      */
     protected function getTestMailComponent()
     {
-        return Yii::$app->get('mailer');
+        return Leaps::$app->get('mailer');
     }
 
     // Tests :
@@ -272,7 +272,7 @@ TEXT
         $this->assertFalse($mailer->useFileTransport);
         $this->assertEquals('@runtime/mail', $mailer->fileTransportPath);
 
-        $mailer->fileTransportPath = '@yiiunit/runtime/mail';
+        $mailer->fileTransportPath = '@leapsunit/runtime/mail';
         $mailer->useFileTransport = true;
         $mailer->fileTransportCallback = function () {
             return 'message.txt';
@@ -283,7 +283,7 @@ TEXT
             ->setSubject('test subject')
             ->setTextBody('text body' . microtime(true));
         $this->assertTrue($mailer->send($message));
-        $file = Yii::getAlias($mailer->fileTransportPath) . '/message.txt';
+        $file = Leaps::getAlias($mailer->fileTransportPath) . '/message.txt';
         $this->assertTrue(is_file($file));
         $this->assertEquals($message->toString(), file_get_contents($file));
     }
@@ -292,7 +292,7 @@ TEXT
     {
         $message = new Message();
 
-        $mailerMock = $this->getMockBuilder('yiiunit\framework\mail\Mailer')->setMethods(['beforeSend', 'afterSend'])->getMock();
+        $mailerMock = $this->getMockBuilder('leapsunit\src\mail\Mailer')->setMethods(['beforeSend', 'afterSend'])->getMock();
         $mailerMock->expects($this->once())->method('beforeSend')->with($message)->will($this->returnValue(true));
         $mailerMock->expects($this->once())->method('afterSend')->with($message, true);
         $mailerMock->send($message);
@@ -304,7 +304,7 @@ TEXT
  */
 class Mailer extends BaseMailer
 {
-    public $messageClass = 'yiiunit\framework\mail\Message';
+    public $messageClass = 'leapsunit\src\mail\Message';
     public $sentMessages = [];
 
     protected function sendMessage($message)

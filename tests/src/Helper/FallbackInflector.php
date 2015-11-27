@@ -1,10 +1,10 @@
 <?php
 
 
-namespace yiiunit\framework\helpers;
+namespace leapsunit\src\helpers;
 
 
-use yii\helpers\BaseInflector;
+use Leaps\Helper\BaseInflector;
 
 /**
  * Forces Inflector::slug to use PHP even if intl is available

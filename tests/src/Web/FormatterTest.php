@@ -1,12 +1,12 @@
 <?php
 
 
-namespace yiiunit\framework\web;
+namespace leapsunit\src\web;
 
 use yii\web\Response;
 use yii\web\ResponseFormatterInterface;
 
-abstract class FormatterTest extends \yiiunit\TestCase
+abstract class FormatterTest extends \leapsunit\TestCase
 {
     /**
      * @var Response

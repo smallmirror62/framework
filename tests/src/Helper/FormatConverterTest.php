@@ -1,12 +1,12 @@
 <?php
 
-namespace yiiunit\framework\helpers;
+namespace leapsunit\src\helpers;
 
-use Yii;
-use yii\helpers\FormatConverter;
+use Leaps;
+use Leaps\Helper\FormatConverter;
 use yii\i18n\Formatter;
-use yiiunit\framework\i18n\IntlTestHelper;
-use yiiunit\TestCase;
+use leapsunit\src\i18n\IntlTestHelper;
+use leapsunit\TestCase;
 
 /**
  * @group helpers

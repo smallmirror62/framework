@@ -1,11 +1,11 @@
 <?php
 
-namespace yiiunit\framework\i18n;
+namespace leapsunit\src\i18n;
 
 use NumberFormatter;
 use yii\i18n\Formatter;
-use Yii;
-use yiiunit\TestCase;
+use Leaps;
+use leapsunit\TestCase;
 
 /**
  * @group i18n
@@ -79,7 +79,7 @@ class FormatterNumberTest extends TestCase
     public function testIntlAsInteger($config)
     {
         // configure formatter with different configs that should not affect integer format
-        Yii::configure($this->formatter, $config);
+        Leaps::configure($this->formatter, $config);
         $this->testAsInteger();
     }
 
@@ -104,7 +104,7 @@ class FormatterNumberTest extends TestCase
     }
 
     /**
-     * @expectedException \yii\base\InvalidParamException
+     * @expectedException \Leaps\Base\InvalidParamException
      */
     public function testAsIntegerException()
     {
@@ -112,7 +112,7 @@ class FormatterNumberTest extends TestCase
     }
 
     /**
-     * @expectedException \yii\base\InvalidParamException
+     * @expectedException \Leaps\Base\InvalidParamException
      */
     public function testAsIntegerException2()
     {

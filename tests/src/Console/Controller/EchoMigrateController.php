@@ -1,7 +1,7 @@
 <?php
-namespace yiiunit\framework\console\controllers;
+namespace leapsunit\src\Console\Controller;
 
-use yii\console\controllers\MigrateController;
+use Leaps\Console\Controller\MigrateController;
 
 /**
  * MigrateController that writes output via echo instead of using output stream. Allows us to buffer it.

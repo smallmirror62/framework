@@ -1,9 +1,9 @@
 <?php
 
-namespace yiiunit\framework\db\pgsql;
+namespace leapsunit\src\db\pgsql;
 
-use yii\db\Schema;
-use yiiunit\framework\db\QueryBuilderTest;
+use Leaps\Db\Schema;
+use leapsunit\src\db\QueryBuilderTest;
 
 /**
  * @group db

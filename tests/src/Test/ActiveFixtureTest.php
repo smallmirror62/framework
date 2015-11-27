@@ -1,22 +1,22 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\test;
+namespace leapsunit\src\test;
 
 use yii\test\ActiveFixture;
-use yiiunit\data\ar\ActiveRecord;
+use leapsunit\data\ar\ActiveRecord;
 use yii\test\FixtureTrait;
 use yii\test\InitDbFixture;
-use yiiunit\data\ar\Customer;
-use yiiunit\framework\db\DatabaseTestCase;
+use leapsunit\data\ar\Customer;
+use leapsunit\src\db\DatabaseTestCase;
 
 class CustomerFixture extends ActiveFixture
 {
-    public $modelClass = 'yiiunit\data\ar\Customer';
+    public $modelClass = 'leapsunit\data\ar\Customer';
 }
 
 class MyDbTestCase
@@ -58,7 +58,7 @@ class ActiveFixtureTest extends DatabaseTestCase
     public function setUp()
     {
         parent::setUp();
-        \Yii::$app->set('db', $this->getConnection());
+        \Leaps::$app->set('db', $this->getConnection());
         ActiveRecord::$db = $this->getConnection();
     }
 

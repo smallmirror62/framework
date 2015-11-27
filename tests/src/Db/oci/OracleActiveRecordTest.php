@@ -1,9 +1,9 @@
 <?php
-namespace yiiunit\framework\db\oci;
+namespace leapsunit\src\db\oci;
 
-use yiiunit\framework\db\ActiveRecordTest;
-use yiiunit\data\ar\DefaultPk;
-use yiiunit\data\ar\Type;
+use leapsunit\src\db\ActiveRecordTest;
+use leapsunit\data\ar\DefaultPk;
+use leapsunit\data\ar\Type;
 
 /**
  * @group db
@@ -71,7 +71,7 @@ class OracleActiveRecordTest extends ActiveRecordTest
 
     public function testFindAsArray()
     {
-        /* @var $customerClass \yii\db\ActiveRecordInterface */
+        /* @var $customerClass \Leaps\Db\ActiveRecordInterface */
         $customerClass = $this->getCustomerClass();
 
         // asArray

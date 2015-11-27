@@ -1,7 +1,7 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
@@ -12,7 +12,7 @@ use Leaps\Console\Exception;
 use Leaps\Helper\FileHelper;
 
 /**
- * Creates a class map for the core Yii classes.
+ * Creates a class map for the core Leaps classes.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
@@ -22,8 +22,8 @@ class ClassmapController extends Controller
     public $defaultAction = 'create';
 
     /**
-     * Creates a class map for the core Yii classes.
-     * @param string $root    the root path of Yii framework. Defaults to YII2_PATH.
+     * Creates a class map for the core Leaps classes.
+     * @param string $root    the root path of Leaps framework. Defaults to YII2_PATH.
      * @param string $mapFile the file to contain the class map. Defaults to YII2_PATH . '/classes.php'.
      */
     public function actionCreate($root = null, $mapFile = null)
@@ -74,7 +74,7 @@ class ClassmapController extends Controller
  * Do not modify it directly.
  *
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 

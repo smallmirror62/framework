@@ -1,8 +1,8 @@
 <?php
-namespace yiiunit\framework\db;
+namespace leapsunit\src\db;
 
-use yii\db\Connection;
-use yiiunit\TestCase as TestCase;
+use Leaps\Db\Connection;
+use leapsunit\TestCase as TestCase;
 
 abstract class DatabaseTestCase extends TestCase
 {
@@ -40,7 +40,7 @@ abstract class DatabaseTestCase extends TestCase
     /**
      * @param  boolean $reset whether to clean up the test database
      * @param  boolean $open  whether to open and populate test database
-     * @return \yii\db\Connection
+     * @return \Leaps\Db\Connection
      */
     public function getConnection($reset = true, $open = true)
     {
@@ -65,10 +65,10 @@ abstract class DatabaseTestCase extends TestCase
     public function prepareDatabase($config, $fixture, $open = true)
     {
         if (!isset($config['class'])) {
-            $config['class'] = 'yii\db\Connection';
+            $config['class'] = 'Leaps\Db\Connection';
         }
-        /* @var $db \yii\db\Connection */
-        $db = \Yii::createObject($config);
+        /* @var $db \Leaps\Db\Connection */
+        $db = \Leaps::createObject($config);
         if (!$open) {
             return $db;
         }

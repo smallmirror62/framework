@@ -1,6 +1,6 @@
 <?php
 
-namespace yiiunit\data\console\controllers\fixtures;
+namespace leapsunit\data\console\controllers\fixtures;
 
 use yii\test\Fixture;
 

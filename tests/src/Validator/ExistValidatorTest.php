@@ -1,16 +1,16 @@
 <?php
 
-namespace yiiunit\framework\validators;
+namespace leapsunit\src\validators;
 
-use Yii;
-use yii\base\Exception;
+use Leaps;
+use Leaps\Base\Exception;
 use yii\validators\ExistValidator;
-use yiiunit\data\ar\ActiveRecord;
-use yiiunit\data\ar\Order;
-use yiiunit\data\ar\OrderItem;
-use yiiunit\data\validators\models\ValidatorTestMainModel;
-use yiiunit\data\validators\models\ValidatorTestRefModel;
-use yiiunit\framework\db\DatabaseTestCase;
+use leapsunit\data\ar\ActiveRecord;
+use leapsunit\data\ar\Order;
+use leapsunit\data\ar\OrderItem;
+use leapsunit\data\validators\models\ValidatorTestMainModel;
+use leapsunit\data\validators\models\ValidatorTestRefModel;
+use leapsunit\src\db\DatabaseTestCase;
 
 /**
  * @group validators
@@ -33,7 +33,7 @@ class ExistValidatorTest extends DatabaseTestCase
             $val->validate('ref');
             $this->fail('Exception should have been thrown at this time');
         } catch (Exception $e) {
-            $this->assertInstanceOf('yii\base\InvalidConfigException', $e);
+            $this->assertInstanceOf('Leaps\Base\InvalidConfigException', $e);
             $this->assertEquals('The "targetClass" property must be set.', $e->getMessage());
         }
         // combine to save the time creating a new db-fixture set (likely ~5 sec)
@@ -42,7 +42,7 @@ class ExistValidatorTest extends DatabaseTestCase
             $val->validate('ref');
             $this->fail('Exception should have been thrown at this time');
         } catch (Exception $e) {
-            $this->assertInstanceOf('yii\base\InvalidConfigException', $e);
+            $this->assertInstanceOf('Leaps\Base\InvalidConfigException', $e);
             $this->assertEquals('The "targetAttribute" property must be configured as a string.', $e->getMessage());
         }
     }

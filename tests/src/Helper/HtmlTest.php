@@ -1,11 +1,11 @@
 <?php
 
-namespace yiiunit\framework\helpers;
+namespace leapsunit\src\helpers;
 
-use Yii;
-use yii\base\Model;
-use yii\helpers\Html;
-use yiiunit\TestCase;
+use Leaps;
+use Leaps\Base\Model;
+use Leaps\Helper\Html;
+use leapsunit\TestCase;
 
 /**
  * @group helpers
@@ -865,13 +865,13 @@ EOD;
      */
     public function testCsrfDisable()
     {
-        Yii::$app->request->enableCsrfValidation = true;
-        Yii::$app->request->cookieValidationKey = 'foobar';
+        Leaps::$app->request->enableCsrfValidation = true;
+        Leaps::$app->request->cookieValidationKey = 'foobar';
 
         $csrfForm = Html::beginForm('/index.php', 'post', ['id' => 'mycsrfform']);
         $this->assertEquals(
             '<form id="mycsrfform" action="/index.php" method="post">'
-            . "\n" . '<input type="hidden" name="_csrf" value="' . Yii::$app->request->getCsrfToken() . '">',
+            . "\n" . '<input type="hidden" name="_csrf" value="' . Leaps::$app->request->getCsrfToken() . '">',
             $csrfForm
         );
 

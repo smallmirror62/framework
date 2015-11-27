@@ -1,12 +1,12 @@
 <?php
 
-namespace yiiunit\framework\db;
+namespace leapsunit\src\db;
 
-use yii\caching\FileCache;
-use yii\db\Connection;
-use yii\db\DataReader;
-use yii\db\Expression;
-use yii\db\Schema;
+use Leaps\Cache\FileCache;
+use Leaps\Db\Connection;
+use Leaps\Db\DataReader;
+use Leaps\Db\Expression;
+use Leaps\Db\Schema;
 
 /**
  * @group db
@@ -75,7 +75,7 @@ class CommandTest extends DatabaseTestCase
         $this->assertEquals(1, $command->queryScalar());
 
         $command = $db->createCommand('bad SQL');
-        $this->setExpectedException('\yii\db\Exception');
+        $this->setExpectedException('\Leaps\Db\Exception');
         $command->execute();
     }
 
@@ -136,7 +136,7 @@ class CommandTest extends DatabaseTestCase
         $this->assertFalse($command->queryScalar());
 
         $command = $db->createCommand('bad SQL');
-        $this->setExpectedException('\yii\db\Exception');
+        $this->setExpectedException('\Leaps\Db\Exception');
         $command->query();
     }
 
@@ -434,7 +434,7 @@ SQL;
 
     public function testIntegrityViolation()
     {
-        $this->setExpectedException('\yii\db\IntegrityException');
+        $this->setExpectedException('\Leaps\Db\IntegrityException');
 
         $db = $this->getConnection();
 
@@ -458,7 +458,7 @@ SQL;
     {
         $db = $this->getConnection();
         $db->enableQueryCache = true;
-        $db->queryCache = new FileCache(['cachePath' => '@yiiunit/runtime/cache']);
+        $db->queryCache = new FileCache(['cachePath' => '@leapsunit/runtime/cache']);
         $command = $db->createCommand('SELECT [[name]] FROM {{customer}} WHERE [[id]] = :id');
 
         $this->assertEquals('user1', $command->bindValue(':id', 1)->queryScalar());

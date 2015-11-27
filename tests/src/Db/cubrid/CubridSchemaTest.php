@@ -1,8 +1,8 @@
 <?php
-namespace yiiunit\framework\db\cubrid;
+namespace leapsunit\src\db\cubrid;
 
-use yii\db\Expression;
-use yiiunit\framework\db\SchemaTest;
+use Leaps\Db\Expression;
+use leapsunit\src\db\SchemaTest;
 
 /**
  * @group db

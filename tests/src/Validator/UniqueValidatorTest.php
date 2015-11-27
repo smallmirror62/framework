@@ -1,16 +1,16 @@
 <?php
 
-namespace yiiunit\framework\validators;
+namespace leapsunit\src\validators;
 
 use yii\validators\UniqueValidator;
-use Yii;
-use yiiunit\data\ar\ActiveRecord;
-use yiiunit\data\ar\Order;
-use yiiunit\data\ar\OrderItem;
-use yiiunit\data\validators\models\FakedValidationModel;
-use yiiunit\data\validators\models\ValidatorTestMainModel;
-use yiiunit\data\validators\models\ValidatorTestRefModel;
-use yiiunit\framework\db\DatabaseTestCase;
+use Leaps;
+use leapsunit\data\ar\ActiveRecord;
+use leapsunit\data\ar\Order;
+use leapsunit\data\ar\OrderItem;
+use leapsunit\data\validators\models\FakedValidationModel;
+use leapsunit\data\validators\models\ValidatorTestMainModel;
+use leapsunit\data\validators\models\ValidatorTestRefModel;
+use leapsunit\src\db\DatabaseTestCase;
 
 /**
  * @group validators
@@ -84,7 +84,7 @@ class UniqueValidatorTest extends DatabaseTestCase
 
     public function testValidateAttributeAttributeNotInTableException()
     {
-        $this->setExpectedException('yii\db\Exception');
+        $this->setExpectedException('Leaps\Db\Exception');
         $val = new UniqueValidator();
         $m = new ValidatorTestMainModel();
         $val->validateAttribute($m, 'testMainVal');

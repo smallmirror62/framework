@@ -1,8 +1,8 @@
 <?php
-namespace yiiunit\data\ar;
+namespace leapsunit\data\ar;
 
-use yii\db\ActiveQuery;
-use yiiunit\framework\db\ActiveRecordTest;
+use Leaps\Db\ActiveQuery;
+use leapsunit\src\db\ActiveRecordTest;
 
 /**
  * Class Customer

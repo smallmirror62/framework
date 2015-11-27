@@ -1,17 +1,17 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\di;
+namespace leapsunit\src\di;
 
-use yii\base\Component;
-use yii\db\Connection;
+use Leaps\Base\Component;
+use Leaps\Db\Connection;
 use yii\di\Container;
 use yii\di\Instance;
-use yiiunit\TestCase;
+use leapsunit\TestCase;
 
 /**
  * @author Qiang Xue <qiang.xue@gmail.com>
@@ -35,15 +35,15 @@ class InstanceTest extends TestCase
     {
         $container = new Container;
         $container->set('db', [
-            'class' => 'yii\db\Connection',
+            'class' => 'Leaps\Db\Connection',
             'dsn' => 'test',
         ]);
 
-        $this->assertTrue(Instance::ensure('db', 'yii\db\Connection', $container) instanceof Connection);
-        $this->assertTrue(Instance::ensure(new Connection, 'yii\db\Connection', $container) instanceof Connection);
+        $this->assertTrue(Instance::ensure('db', 'Leaps\Db\Connection', $container) instanceof Connection);
+        $this->assertTrue(Instance::ensure(new Connection, 'Leaps\Db\Connection', $container) instanceof Connection);
         $this->assertTrue(Instance::ensure([
-            'class' => 'yii\db\Connection',
+            'class' => 'Leaps\Db\Connection',
             'dsn' => 'test',
-        ], 'yii\db\Connection', $container) instanceof Connection);
+        ], 'Leaps\Db\Connection', $container) instanceof Connection);
     }
 }

@@ -2,11 +2,11 @@
 
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\data\ar;
+namespace leapsunit\data\ar;
 
 /**
  * Class Animal
@@ -39,7 +39,7 @@ class Animal extends ActiveRecord
     /**
      * 
      * @param type $row
-     * @return \yiiunit\data\ar\Animal
+     * @return \leapsunit\data\ar\Animal
      */
     public static function instantiate($row)
     {

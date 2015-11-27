@@ -1,21 +1,21 @@
 <?php
 
-namespace yiiunit\framework\web;
+namespace leapsunit\src\web;
 
-use Yii;
-use yii\caching\FileCache;
+use Leaps;
+use Leaps\Cache\FileCache;
 use yii\web\CacheSession;
 
 /**
  * @group web
  */
-class CacheSessionTest extends \yiiunit\TestCase
+class CacheSessionTest extends \leapsunit\TestCase
 {
     protected function setUp()
     {
         parent::setUp();
         $this->mockApplication();
-        Yii::$app->set('cache', new FileCache());
+        Leaps::$app->set('cache', new FileCache());
     }
 
     public function testCacheSession()

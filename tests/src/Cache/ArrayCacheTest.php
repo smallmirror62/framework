@@ -1,8 +1,8 @@
 <?php
 
-namespace yiiunit\framework\caching;
+namespace leapsunit\src\Cache;
 
-use yii\caching\ArrayCache;
+use Leaps\Cache\ArrayCache;
 
 /**
  * Class for testing file cache backend

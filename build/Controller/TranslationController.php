@@ -1,16 +1,16 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\build\controllers;
+namespace Leaps\Build\controllers;
 
 use DirectoryIterator;
-use Yii;
-use yii\console\Controller;
-use yii\helpers\Html;
+use Leaps;
+use Leaps\Console\Controller;
+use Leaps\Helper\Html;
 
 /**
  * TranslationController handles tasks related to framework translations.

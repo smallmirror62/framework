@@ -1,9 +1,9 @@
 <?php
-namespace yiiunit\framework\caching;
+namespace leapsunit\src\Cache;
 
-use yiiunit\TestCase;
-use yii\caching\FileCache;
-use yii\caching\TagDependency;
+use leapsunit\TestCase;
+use Leaps\Cache\FileCache;
+use Leaps\Cache\TagDependency;
 
 /**
  * @group caching
@@ -12,7 +12,7 @@ class TagDependencyTest extends TestCase
 {
     public function testInvalidate()
     {
-        $cache = new FileCache(['cachePath' => '@yiiunit/runtime/cache']);
+        $cache = new FileCache(['cachePath' => '@leapsunit/runtime/cache']);
 
         // single tag test
         $cache->set('a1', 11, 0, new TagDependency(['tags' => 't1']));

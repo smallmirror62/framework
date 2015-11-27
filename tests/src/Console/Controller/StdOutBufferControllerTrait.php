@@ -1,9 +1,9 @@
 <?php
 
-namespace yiiunit\framework\console\controllers;
+namespace leapsunit\src\Console\Controller;
 
 /**
- * StdOutBufferControllerTrait is a trait, which can be applied to [[yii\console\Controller]],
+ * StdOutBufferControllerTrait is a trait, which can be applied to [[Leaps\Console\Controller]],
  * allowing to store all output into internal buffer instead of direct sending it to 'stdout'
  */
 trait StdOutBufferControllerTrait

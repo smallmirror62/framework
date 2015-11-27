@@ -1,7 +1,7 @@
 <?php
-namespace yiiunit\framework\db\cubrid;
+namespace leapsunit\src\db\cubrid;
 
-use yiiunit\framework\db\QueryTest;
+use leapsunit\src\db\QueryTest;
 
 /**
  * @group db

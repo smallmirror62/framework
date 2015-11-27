@@ -1,9 +1,9 @@
 <?php
 
-namespace yiiunit\framework\db;
+namespace leapsunit\src\db;
 
-use yii\db\Connection;
-use yii\db\Transaction;
+use Leaps\Db\Connection;
+use Leaps\Db\Transaction;
 
 /**
  * @group db
@@ -39,7 +39,7 @@ class ConnectionTest extends DatabaseTestCase
 
         $connection = new Connection;
         $connection->dsn = 'unknown::memory:';
-        $this->setExpectedException('yii\db\Exception');
+        $this->setExpectedException('Leaps\Db\Exception');
         $connection->open();
     }
 
@@ -49,7 +49,7 @@ class ConnectionTest extends DatabaseTestCase
         $connection->open();
         $serialized = serialize($connection);
         $unserialized = unserialize($serialized);
-        $this->assertInstanceOf('yii\db\Connection', $unserialized);
+        $this->assertInstanceOf('Leaps\Db\Connection', $unserialized);
 
         $this->assertEquals(123, $unserialized->createCommand("SELECT 123")->queryScalar());
     }

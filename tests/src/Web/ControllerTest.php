@@ -1,18 +1,18 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\web;
+namespace leapsunit\src\web;
 
-use Yii;
-use yiiunit\TestCase;
-use yiiunit\framework\di\stubs\Qux;
-use yiiunit\framework\web\stubs\Bar;
-use yiiunit\framework\web\stubs\OtherQux;
-use yii\base\InlineAction;
+use Leaps;
+use leapsunit\TestCase;
+use leapsunit\src\di\stubs\Qux;
+use leapsunit\src\web\stubs\Bar;
+use leapsunit\src\web\stubs\OtherQux;
+use Leaps\Base\InlineAction;
 
 /**
  * @group web
@@ -35,16 +35,16 @@ class ControllerTest extends TestCase
             ]
         ]);
 
-        $controller = new FakeController('fake', Yii::$app);
+        $controller = new FakeController('fake', Leaps::$app);
         $aksi1 = new InlineAction('aksi1', $controller, 'actionAksi1');
         $aksi2 = new InlineAction('aksi2', $controller, 'actionAksi2');
         $aksi3 = new InlineAction('aksi3', $controller, 'actionAksi3');
 
-        Yii::$container->set('yiiunit\framework\di\stubs\QuxInterface', [
+        Leaps::$container->set('leapsunit\src\di\stubs\QuxInterface', [
             'class' => Qux::className(),
             'a' => 'D426'
         ]);
-        Yii::$container->set(Bar::className(),[
+        Leaps::$container->set(Bar::className(),[
             'foo' => 'independent'
         ]);
         
@@ -52,21 +52,21 @@ class ControllerTest extends TestCase
 
         list($bar, $fromGet, $other) = $controller->bindActionParams($aksi1, $params);
         $this->assertTrue($bar instanceof Bar);
-        $this->assertNotEquals($bar, Yii::$app->barBelongApp);
+        $this->assertNotEquals($bar, Leaps::$app->barBelongApp);
         $this->assertEquals('independent', $bar->foo);
         $this->assertEquals('from query params', $fromGet);
         $this->assertEquals('default', $other);
 
         list($barBelongApp, $qux) = $controller->bindActionParams($aksi2, $params);
         $this->assertTrue($barBelongApp instanceof Bar);
-        $this->assertEquals($barBelongApp, Yii::$app->barBelongApp);
+        $this->assertEquals($barBelongApp, Leaps::$app->barBelongApp);
         $this->assertEquals('belong_app', $barBelongApp->foo);
         $this->assertTrue($qux instanceof Qux);
         $this->assertEquals('D426', $qux->a);
 
         list($quxApp) = $controller->bindActionParams($aksi3, $params);
         $this->assertTrue($quxApp instanceof OtherQux);
-        $this->assertEquals($quxApp, Yii::$app->quxApp);
+        $this->assertEquals($quxApp, Leaps::$app->quxApp);
         $this->assertEquals('belong_app', $quxApp->b);
 
         $result = $controller->runAction('aksi4', $params);

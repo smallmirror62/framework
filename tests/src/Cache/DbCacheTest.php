@@ -1,8 +1,8 @@
 <?php
 
-namespace yiiunit\framework\caching;
+namespace leapsunit\src\Cache;
 
-use yii\caching\DbCache;
+use Leaps\Cache\DbCache;
 
 /**
  * Class for testing file cache backend
@@ -35,14 +35,14 @@ class DbCacheTest extends CacheTestCase
 
     /**
      * @param  boolean            $reset whether to clean up the test database
-     * @return \yii\db\Connection
+     * @return \Leaps\Db\Connection
      */
     public function getConnection($reset = true)
     {
         if ($this->_connection === null) {
             $databases = self::getParam('databases');
             $params = $databases['mysql'];
-            $db = new \yii\db\Connection;
+            $db = new \Leaps\Db\Connection;
             $db->dsn = $params['dsn'];
             $db->username = $params['username'];
             $db->password = $params['password'];

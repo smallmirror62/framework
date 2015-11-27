@@ -12,7 +12,7 @@
 <body>
 <div class="container">
     <div class="header">
-        <h1>Yii Application Requirement Checker</h1>
+        <h1>Leaps Application Requirement Checker</h1>
     </div>
     <hr>
 
@@ -26,8 +26,8 @@
         </p>
         <p>
         There are two kinds of requirements being checked. Mandatory requirements are those that have to be met
-        to allow Yii to work as expected. There are also some optional requirements being checked which will
-        show you a warning when they do not meet. You can use Yii framework without them but some specific
+        to allow Leaps to work as expected. There are also some optional requirements being checked which will
+        show you a warning when they do not meet. You can use Leaps framework without them but some specific
         functionality may be not available in this case.
         </p>
 

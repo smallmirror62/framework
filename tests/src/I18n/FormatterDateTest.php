@@ -1,10 +1,10 @@
 <?php
 
-namespace yiiunit\framework\i18n;
+namespace leapsunit\src\i18n;
 
 use yii\i18n\Formatter;
-use Yii;
-use yiiunit\TestCase;
+use Leaps;
+use leapsunit\TestCase;
 use DateTime;
 use DateInterval;
 
@@ -45,7 +45,7 @@ class FormatterDateTest extends TestCase
         $this->assertSame(date('M j, Y', $value), $this->formatter->format($value, 'date'));
         $this->assertSame(date('M j, Y', $value), $this->formatter->format($value, 'DATE'));
         $this->assertSame(date('Y/m/d', $value), $this->formatter->format($value, ['date', 'php:Y/m/d']));
-        $this->setExpectedException('\yii\base\InvalidParamException');
+        $this->setExpectedException('\Leaps\Base\InvalidParamException');
         $this->assertSame(date('Y-m-d', $value), $this->formatter->format($value, 'data'));
     }
 
@@ -447,7 +447,7 @@ class FormatterDateTest extends TestCase
     {
         return [
             ['2015-01-01 00:00:00', '2014-13-01 00:00:00'],
-            [false, 'asdfg', 'yii\base\InvalidParamException'],
+            [false, 'asdfg', 'Leaps\Base\InvalidParamException'],
 //            [(string)strtotime('now'), 'now'], // fails randomly
         ];
     }

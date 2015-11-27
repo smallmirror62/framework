@@ -1,6 +1,6 @@
 <?php
 
-namespace yii\caching;
+namespace Leaps\Cache;
 
 /**
  * Mock for the time() function for caching classes
@@ -8,7 +8,7 @@ namespace yii\caching;
  */
 function time()
 {
-    return \yiiunit\framework\caching\CacheTestCase::$time ?: \time();
+    return \leapsunit\src\Cache\CacheTestCase::$time ?: \time();
 }
 
 /**
@@ -18,13 +18,13 @@ function time()
  */
 function microtime($float = false)
 {
-    return \yiiunit\framework\caching\CacheTestCase::$microtime ?: \microtime($float);
+    return \leapsunit\src\Cache\CacheTestCase::$microtime ?: \microtime($float);
 }
 
-namespace yiiunit\framework\caching;
+namespace leapsunit\src\Cache;
 
-use yii\caching\Cache;
-use yiiunit\TestCase;
+use Leaps\Cache\Cache;
+use leapsunit\TestCase;
 
 /**
  * Base class for testing cache backends

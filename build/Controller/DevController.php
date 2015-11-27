@@ -1,7 +1,7 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
@@ -262,7 +262,7 @@ class DevController extends Controller
     /**
      * Creates symlinks to freamework and extension sources for the application
      * @param string $dir application directory
-     * @param string $base Yii sources base directory
+     * @param string $base Leaps sources base directory
      *
      * @return int
      */

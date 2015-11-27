@@ -1,16 +1,16 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\build\controllers;
+namespace Leaps\Build\controllers;
 
-use Yii;
-use yii\console\Controller;
-use yii\helpers\Console;
-use yii\helpers\FileHelper;
+use Leaps;
+use Leaps\Console\Controller;
+use Leaps\Helper\Console;
+use Leaps\Helper\FileHelper;
 
 /**
  * PhpDocController is there to help maintaining PHPDoc annotation in class files
@@ -116,7 +116,7 @@ class PhpDocController extends Controller
             $extensionPath = "$root/extensions";
             foreach (scandir($extensionPath) as $extension) {
                 if (ctype_alpha($extension) && is_dir($extensionPath . '/' . $extension)) {
-                    Yii::setAlias("@yii/$extension", "$extensionPath/$extension");
+                    Leaps::setAlias("@yii/$extension", "$extensionPath/$extension");
                 }
             }
 
@@ -134,8 +134,8 @@ class PhpDocController extends Controller
                 '/extensions/gii/components/DiffRendererHtmlInline.php',
                 '/extensions/gii/generators/extension/default/*',
                 '/extensions/twig/TwigSimpleFileLoader.php',
-                '/framework/BaseYii.php',
-                '/framework/Yii.php',
+                '/src/Kernel.php',
+                '/src/Leaps.php',
                 'assets/',
                 'tests/',
                 'vendor/',
@@ -195,7 +195,7 @@ class PhpDocController extends Controller
                 "<?php",
                 "/**",
                 " * @link http://www.yiiframework.com/",
-                " * @copyright Copyright (c) 2008 Yii Software LLC",
+                " * @copyright Copyright (c) 2008 Leaps Software LLC",
                 " * @license http://www.yiiframework.com/license/",
                 " */",
                 "",
@@ -378,7 +378,7 @@ class PhpDocController extends Controller
             $this->stderr("[ERR] Unable to create ReflectionClass for class: $className loaded class is not from file: $file\n", Console::FG_RED);
         }
 
-        if (!$ref->isSubclassOf('yii\base\Object') && $className != 'yii\base\Object') {
+        if (!$ref->isSubclassOf('Leaps\Base\Object') && $className != 'Leaps\Base\Object') {
             $this->stderr("[INFO] Skipping class $className as it is not a subclass of yii\\base\\Object.\n", Console::FG_BLUE, Console::BOLD);
 
             return false;

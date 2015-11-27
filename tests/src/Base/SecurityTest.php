@@ -1,13 +1,13 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\base;
+namespace leapsunit\src\base;
 
-use yiiunit\TestCase;
+use leapsunit\TestCase;
 
 /**
  * @group base
@@ -123,7 +123,7 @@ class SecurityTest extends TestCase
      * Generates test vectors like this:
      *   [key/password, plaintext, ciphertext]
      * The output can then be used for testing compatibility of data encrypted in one
-     * version of Yii and decrypted in another
+     * version of Leaps and decrypted in another
      */
     public function notestGenerateVectors()
     {
@@ -208,7 +208,7 @@ TEXT;
 
     public function dataProviderEncryptByKeyCompat()
     {
-        // these ciphertexts generated using Yii 2.0.2 which is based on mcrypt.
+        // these ciphertexts generated using Leaps 2.0.2 which is based on mcrypt.
         $mcrypt = [
             [
                 'b86b7529a525d148cc73798da528d8a0',
@@ -519,7 +519,7 @@ TEXT;
 
     public function dataProviderEncryptByPasswordCompat()
     {
-        // these ciphertexts generated using Yii 2.0.2 which is based on mcrypt.
+        // these ciphertexts generated using Leaps 2.0.2 which is based on mcrypt.
         $mcrypt = [
             [
                 'LtogIEhy59ve0Huy',

@@ -1,16 +1,16 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\build\controllers;
+namespace Leaps\Build\controllers;
 
-use Yii;
-use yii\base\Exception;
-use yii\console\Controller;
-use yii\helpers\ArrayHelper;
+use Leaps;
+use Leaps\Base\Exception;
+use Leaps\Console\Controller;
+use Leaps\Helper\ArrayHelper;
 
 /**
  * ReleaseController is there to help preparing releases
@@ -37,7 +37,7 @@ class ReleaseController extends Controller
         $this->closeChangelogs($what, $version);
         $this->composerSetStability($what, $version);
         if (in_array('framework', $what)) {
-            $this->updateYiiVersion($version);
+            $this->updateLeapsVersion($version);
         }
     }
 
@@ -54,7 +54,7 @@ class ReleaseController extends Controller
         $this->openChangelogs($what, $nextVersion);
         $this->composerSetStability($what, 'dev');
         if (in_array('framework', $what)) {
-            $this->updateYiiVersion($devVersion);
+            $this->updateLeapsVersion($devVersion);
         }
     }
 
@@ -211,12 +211,12 @@ class ReleaseController extends Controller
         );
     }
 
-    protected function updateYiiVersion($version)
+    protected function updateLeapsVersion($version)
     {
         $this->sed(
             '/function getVersion\(\)\n    \{\n        return \'(.+?)\';/',
             "function getVersion()\n    {\n        return '$version';",
-            YII2_PATH . '/BaseYii.php');
+            YII2_PATH . '/BaseLeaps.php');
     }
 
     protected function sed($pattern, $replace, $files)

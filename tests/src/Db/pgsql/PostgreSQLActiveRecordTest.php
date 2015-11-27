@@ -1,14 +1,14 @@
 <?php
 
-namespace yiiunit\framework\db\pgsql;
+namespace leapsunit\src\db\pgsql;
 
-use yii\behaviors\TimestampBehavior;
-use yii\db\pgsql\Schema;
-use yiiunit\data\ar\ActiveRecord;
-use yiiunit\data\ar\DefaultPk;
-use yiiunit\framework\ar\ActiveRecordTestTrait;
-use yiiunit\framework\db\ActiveRecordTest;
-use yiiunit\TestCase;
+use Leaps\Behaviors\TimestampBehavior;
+use Leaps\Db\pgsql\Schema;
+use leapsunit\data\ar\ActiveRecord;
+use leapsunit\data\ar\DefaultPk;
+use leapsunit\src\ar\ActiveRecordTestTrait;
+use leapsunit\src\db\ActiveRecordTest;
+use leapsunit\TestCase;
 
 /**
  * @group db
@@ -20,7 +20,7 @@ class PostgreSQLActiveRecordTest extends ActiveRecordTest
 
     public function testBooleanAttribute()
     {
-        /* @var $customerClass \yii\db\ActiveRecordInterface */
+        /* @var $customerClass \Leaps\Db\ActiveRecordInterface */
         $customerClass = $this->getCustomerClass();
         /* @var $this TestCase|ActiveRecordTestTrait */
         $customer = new $customerClass();
@@ -47,7 +47,7 @@ class PostgreSQLActiveRecordTest extends ActiveRecordTest
 
     public function testFindAsArray()
     {
-        /* @var $customerClass \yii\db\ActiveRecordInterface */
+        /* @var $customerClass \Leaps\Db\ActiveRecordInterface */
         $customerClass = $this->getCustomerClass();
 
         // asArray

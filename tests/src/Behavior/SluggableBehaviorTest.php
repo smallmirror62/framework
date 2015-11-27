@@ -1,15 +1,15 @@
 <?php
 
-namespace yiiunit\framework\behaviors;
+namespace leapsunit\src\Behavior;
 
-use Yii;
-use yiiunit\TestCase;
-use yii\db\Connection;
-use yii\db\ActiveRecord;
-use yii\behaviors\SluggableBehavior;
+use Leaps;
+use leapsunit\TestCase;
+use Leaps\Db\Connection;
+use Leaps\Db\ActiveRecord;
+use Leaps\Behavior\SluggableBehavior;
 
 /**
- * Unit test for [[\yii\behaviors\SluggableBehavior]].
+ * Unit test for [[\Leaps\Behaviors\SluggableBehavior]].
  * @see SluggableBehavior
  *
  * @group behaviors
@@ -33,7 +33,7 @@ class SluggableBehaviorTest extends TestCase
         $this->mockApplication([
             'components' => [
                 'db' => [
-                    'class' => '\yii\db\Connection',
+                    'class' => '\Leaps\Db\Connection',
                     'dsn' => 'sqlite::memory:',
                 ]
             ]
@@ -45,12 +45,12 @@ class SluggableBehaviorTest extends TestCase
             'slug' => 'string',
             'category_id' => 'integer',
         ];
-        Yii::$app->getDb()->createCommand()->createTable('test_slug', $columns)->execute();
+        Leaps::$app->getDb()->createCommand()->createTable('test_slug', $columns)->execute();
     }
 
     public function tearDown()
     {
-        Yii::$app->getDb()->close();
+        Leaps::$app->getDb()->close();
         parent::tearDown();
     }
 

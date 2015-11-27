@@ -1,12 +1,12 @@
 <?php
-namespace yiiunit\framework\rbac;
+namespace leapsunit\src\rbac;
 
-use Yii;
-use yii\console\Application;
-use yii\console\Controller;
-use yii\db\Connection;
+use Leaps;
+use Leaps\Console\Application;
+use Leaps\Console\Controller;
+use Leaps\Db\Connection;
 use yii\rbac\DbManager;
-use yiiunit\framework\console\controllers\EchoMigrateController;
+use leapsunit\src\Console\Controller\EchoMigrateController;
 
 /**
  * DbManagerTestCase
@@ -23,10 +23,10 @@ abstract class DbManagerTestCase extends ManagerTestCase
 
     protected static function runConsoleAction($route, $params = [])
     {
-        if (Yii::$app === null) {
+        if (Leaps::$app === null) {
             new Application([
                 'id' => 'Migrator',
-                'basePath' => '@yiiunit',
+                'basePath' => '@leapsunit',
                 'controllerMap' => [
                     'migrate' => EchoMigrateController::className(),
                 ],
@@ -38,7 +38,7 @@ abstract class DbManagerTestCase extends ManagerTestCase
         }
 
         ob_start();
-        $result = Yii::$app->runAction($route, $params);
+        $result = Leaps::$app->runAction($route, $params);
         echo "Result is " . $result;
         if ($result !== Controller::EXIT_CODE_NORMAL) {
             ob_end_flush();
@@ -67,7 +67,7 @@ abstract class DbManagerTestCase extends ManagerTestCase
         if (static::$db) {
             static::$db->close();
         }
-        Yii::$app = null;
+        Leaps::$app = null;
         parent::tearDownAfterClass();
     }
 
@@ -84,10 +84,10 @@ abstract class DbManagerTestCase extends ManagerTestCase
     }
 
     /**
-     * @throws \yii\base\InvalidParamException
-     * @throws \yii\db\Exception
-     * @throws \yii\base\InvalidConfigException
-     * @return \yii\db\Connection
+     * @throws \Leaps\Base\InvalidParamException
+     * @throws \Leaps\Db\Exception
+     * @throws \Leaps\Base\InvalidConfigException
+     * @return \Leaps\Db\Connection
      */
     public static function getConnection()
     {

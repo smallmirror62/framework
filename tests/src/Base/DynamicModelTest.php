@@ -1,14 +1,14 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\base;
+namespace leapsunit\src\base;
 
-use yii\base\DynamicModel;
-use yiiunit\TestCase;
+use Leaps\Base\DynamicModel;
+use leapsunit\TestCase;
 
 /**
  *
@@ -74,7 +74,7 @@ class DynamicModelTest extends TestCase
         $model = new DynamicModel(compact('name', 'email'));
         $this->assertEquals($email, $model->email);
         $this->assertEquals($name, $model->name);
-        $this->setExpectedException('yii\base\UnknownPropertyException');
+        $this->setExpectedException('Leaps\Base\UnknownPropertyException');
         $age = $model->age;
     }
 }

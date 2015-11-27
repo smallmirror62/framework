@@ -1,7 +1,7 @@
 <?php
-namespace yiiunit\framework\db\mssql;
+namespace leapsunit\src\db\mssql;
 
-use yiiunit\framework\data\ActiveDataProviderTest;
+use leapsunit\src\data\ActiveDataProviderTest;
 
 /**
  * @group db

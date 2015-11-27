@@ -1,10 +1,10 @@
 <?php
 
-namespace yiiunit\framework\db\pgsql;
+namespace leapsunit\src\db\pgsql;
 
-use yii\db\Expression;
-use yii\db\pgsql\Schema;
-use yiiunit\framework\db\SchemaTest;
+use Leaps\Db\Expression;
+use Leaps\Db\pgsql\Schema;
+use leapsunit\src\db\SchemaTest;
 
 /**
  * @group db

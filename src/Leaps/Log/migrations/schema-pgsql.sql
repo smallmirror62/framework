@@ -7,7 +7,7 @@
  *
  * @author Alexander Makarov <sam@rmcreative.ru>
  * @link http://www.yiiframework.com/
- * @copyright 2008 Yii Software LLC
+ * @copyright 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  * @since 2.0.1
  */

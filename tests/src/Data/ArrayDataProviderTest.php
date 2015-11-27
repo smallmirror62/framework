@@ -1,9 +1,9 @@
 <?php
 
-namespace yiiunit\framework\data;
+namespace leapsunit\src\Data;
 
-use yii\data\ArrayDataProvider;
-use yiiunit\TestCase;
+use Leaps\Data\ArrayDataProvider;
+use leapsunit\TestCase;
 
 /**
  * @group data
@@ -179,4 +179,4 @@ class ArrayDataProviderTest extends TestCase
         $dataProvider = new ArrayDataProvider(['allModels' => $mixedArray, 'pagination' => $pagination]);
         $this->assertEquals(['key1', 9], $dataProvider->getKeys());
     }
-} 
+}

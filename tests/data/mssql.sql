@@ -137,8 +137,8 @@ CREATE TABLE [dbo].[document] (
 
 CREATE VIEW [dbo].[animal_view] AS SELECT * FROM [dbo].[animal];
 
-INSERT INTO [dbo].[animal] (type) VALUES ('yiiunit\data\ar\Cat');
-INSERT INTO [dbo].[animal] (type) VALUES ('yiiunit\data\ar\Dog');
+INSERT INTO [dbo].[animal] (type) VALUES ('leapsunit\data\ar\Cat');
+INSERT INTO [dbo].[animal] (type) VALUES ('leapsunit\data\ar\Dog');
 
 INSERT INTO [dbo].[profile] ([description]) VALUES ('profile customer 1');
 INSERT INTO [dbo].[profile] ([description]) VALUES ('profile customer 3');
@@ -150,8 +150,8 @@ INSERT INTO [dbo].[customer] ([email], [name], [address], [status], [profile_id]
 INSERT INTO [dbo].[category] ([name]) VALUES ('Books');
 INSERT INTO [dbo].[category] ([name]) VALUES ('Movies');
 
-INSERT INTO [dbo].[item] ([name], [category_id]) VALUES ('Agile Web Application Development with Yii1.1 and PHP5', 1);
-INSERT INTO [dbo].[item] ([name], [category_id]) VALUES ('Yii 1.1 Application Development Cookbook', 1);
+INSERT INTO [dbo].[item] ([name], [category_id]) VALUES ('Agile Web Application Development with Leaps1.1 and PHP5', 1);
+INSERT INTO [dbo].[item] ([name], [category_id]) VALUES ('Leaps 1.1 Application Development Cookbook', 1);
 INSERT INTO [dbo].[item] ([name], [category_id]) VALUES ('Ice Age', 2);
 INSERT INTO [dbo].[item] ([name], [category_id]) VALUES ('Toy Story', 2);
 INSERT INTO [dbo].[item] ([name], [category_id]) VALUES ('Cars', 2);
@@ -178,7 +178,7 @@ INSERT INTO [dbo].[order_item_with_null_fk] ([order_id], [item_id], [quantity], 
 INSERT INTO [dbo].[order_item_with_null_fk] ([order_id], [item_id], [quantity], [subtotal]) VALUES (2, 3, 1, 8.0);
 INSERT INTO [dbo].[order_item_with_null_fk] ([order_id], [item_id], [quantity], [subtotal]) VALUES (3, 2, 1, 40.0);
 
-INSERT INTO [dbo].[document] ([title], [content], [version]) VALUES ('Yii 2.0 guide', 'This is Yii 2.0 guide', 0);
+INSERT INTO [dbo].[document] ([title], [content], [version]) VALUES ('Leaps 2.0 guide', 'This is Leaps 2.0 guide', 0);
 
 /* bit test, see https://github.com/yiisoft/yii2/issues/9006 */
 

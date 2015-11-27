@@ -1,24 +1,24 @@
 <?php
-namespace yiiunit\framework\db;
+namespace leapsunit\src\db;
 
-use yiiunit\data\ar\ActiveRecord;
-use yiiunit\data\ar\BitValues;
-use yiiunit\data\ar\Category;
-use yiiunit\data\ar\Customer;
-use yiiunit\data\ar\Document;
-use yiiunit\data\ar\NullValues;
-use yiiunit\data\ar\OrderItem;
-use yiiunit\data\ar\Order;
-use yiiunit\data\ar\Item;
-use yiiunit\data\ar\OrderItemWithNullFK;
-use yiiunit\data\ar\OrderWithNullFK;
-use yiiunit\data\ar\Profile;
-use yiiunit\data\ar\Type;
-use yiiunit\framework\ar\ActiveRecordTestTrait;
-use yiiunit\framework\db\cubrid\CubridActiveRecordTest;
-use yiiunit\data\ar\Animal;
-use yiiunit\data\ar\Cat;
-use yiiunit\data\ar\Dog;
+use leapsunit\data\ar\ActiveRecord;
+use leapsunit\data\ar\BitValues;
+use leapsunit\data\ar\Category;
+use leapsunit\data\ar\Customer;
+use leapsunit\data\ar\Document;
+use leapsunit\data\ar\NullValues;
+use leapsunit\data\ar\OrderItem;
+use leapsunit\data\ar\Order;
+use leapsunit\data\ar\Item;
+use leapsunit\data\ar\OrderItemWithNullFK;
+use leapsunit\data\ar\OrderWithNullFK;
+use leapsunit\data\ar\Profile;
+use leapsunit\data\ar\Type;
+use leapsunit\src\ar\ActiveRecordTestTrait;
+use leapsunit\src\db\cubrid\CubridActiveRecordTest;
+use leapsunit\data\ar\Animal;
+use leapsunit\data\ar\Cat;
+use leapsunit\data\ar\Dog;
 
 /**
  * @group db
@@ -612,13 +612,13 @@ class ActiveRecordTest extends DatabaseTestCase
 
     public function testUnlinkAllViaTable()
     {
-        /* @var $orderClass \yii\db\ActiveRecordInterface */
+        /* @var $orderClass \Leaps\Db\ActiveRecordInterface */
         $orderClass = $this->getOrderClass();
-        /* @var $orderItemClass \yii\db\ActiveRecordInterface */
+        /* @var $orderItemClass \Leaps\Db\ActiveRecordInterface */
         $orderItemClass = $this->getOrderItemClass();
-        /* @var $itemClass \yii\db\ActiveRecordInterface */
+        /* @var $itemClass \Leaps\Db\ActiveRecordInterface */
         $itemClass = $this->getItemClass();
-        /* @var $orderItemsWithNullFKClass \yii\db\ActiveRecordInterface */
+        /* @var $orderItemsWithNullFKClass \Leaps\Db\ActiveRecordInterface */
         $orderItemsWithNullFKClass = $this->getOrderItemWithNullFKmClass();
 
         // via table with delete
@@ -734,7 +734,7 @@ class ActiveRecordTest extends DatabaseTestCase
         $record = Document::findOne(1);
         $record->content = 'Rewrite attempt content';
         $record->version = 0;
-        $this->setExpectedException('yii\db\StaleObjectException');
+        $this->setExpectedException('Leaps\Db\StaleObjectException');
         $record->save(false);
     }
 

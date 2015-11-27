@@ -8,7 +8,7 @@
 namespace Leaps\Web;
 
 /**
- * This asset bundle provides the base javascript files for the Yii Framework.
+ * This asset bundle provides the base javascript files for the Leaps Framework.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0

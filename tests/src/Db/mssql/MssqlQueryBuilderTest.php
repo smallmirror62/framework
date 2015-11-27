@@ -1,9 +1,9 @@
 <?php
 
-namespace yiiunit\framework\db\mssql;
+namespace leapsunit\src\db\mssql;
 
-use yiiunit\framework\db\QueryBuilderTest;
-use yii\db\Query;
+use leapsunit\src\db\QueryBuilderTest;
+use Leaps\Db\Query;
 
 /**
  * @group db

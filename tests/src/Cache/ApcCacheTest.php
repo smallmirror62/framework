@@ -1,7 +1,7 @@
 <?php
-namespace yiiunit\framework\caching;
+namespace leapsunit\src\Cache;
 
-use yii\caching\ApcCache;
+use Leaps\Cache\ApcCache;
 
 /**
  * Class for testing APC cache backend

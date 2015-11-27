@@ -1,9 +1,9 @@
 <?php
-namespace yiiunit\framework\web;
+namespace leapsunit\src\web;
 
 use yii\web\Request;
 use yii\web\UrlManager;
-use yiiunit\TestCase;
+use leapsunit\TestCase;
 
 /**
  * @group web

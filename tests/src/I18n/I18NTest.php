@@ -1,16 +1,16 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\i18n;
+namespace leapsunit\src\i18n;
 
-use yii\base\Event;
+use Leaps\Base\Event;
 use yii\i18n\I18N;
 use yii\i18n\PhpMessageSource;
-use yiiunit\TestCase;
+use leapsunit\TestCase;
 
 /**
  * @author Carsten Brandt <mail@cebe.cc>
@@ -31,7 +31,7 @@ class I18NTest extends TestCase
         $this->i18n = new I18N([
             'translations' => [
                 'test' => new PhpMessageSource([
-                    'basePath' => '@yiiunit/data/i18n/messages',
+                    'basePath' => '@leapsunit/data/i18n/messages',
                 ])
             ]
         ]);
@@ -59,7 +59,7 @@ class I18NTest extends TestCase
         $i18n = new I18N([
             'translations' => [
                 '*' => new PhpMessageSource([
-                'basePath' => '@yiiunit/data/i18n/messages',
+                'basePath' => '@leapsunit/data/i18n/messages',
                     'fileMap' => [
                         'test' => 'test.php',
                         'foo' => 'test.php',
@@ -136,15 +136,15 @@ class I18NTest extends TestCase
 
     public function testUsingSourceLanguageForMissingTranslation()
     {
-        \Yii::$app->sourceLanguage = 'ru';
-        \Yii::$app->language = 'en';
+        \Leaps::$app->sourceLanguage = 'ru';
+        \Leaps::$app->language = 'en';
 
         $msg = '{n, plural, =0{Нет комментариев} =1{# комментарий} one{# комментарий} few{# комментария} many{# комментариев} other{# комментария}}';
-        $this->assertEquals('5 комментариев', \Yii::t('app', $msg, ['n' => 5]));
-        $this->assertEquals('3 комментария', \Yii::t('app', $msg, ['n' => 3]));
-        $this->assertEquals('1 комментарий', \Yii::t('app', $msg, ['n' => 1]));
-        $this->assertEquals('21 комментарий', \Yii::t('app', $msg, ['n' => 21]));
-        $this->assertEquals('Нет комментариев', \Yii::t('app', $msg, ['n' => 0]));
+        $this->assertEquals('5 комментариев', \Leaps::t('app', $msg, ['n' => 5]));
+        $this->assertEquals('3 комментария', \Leaps::t('app', $msg, ['n' => 3]));
+        $this->assertEquals('1 комментарий', \Leaps::t('app', $msg, ['n' => 1]));
+        $this->assertEquals('21 комментарий', \Leaps::t('app', $msg, ['n' => 21]));
+        $this->assertEquals('Нет комментариев', \Leaps::t('app', $msg, ['n' => 0]));
     }
 
     /**

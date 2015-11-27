@@ -1,14 +1,14 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\web;
+namespace leapsunit\src\web;
 
 use yii\web\Request;
-use yiiunit\TestCase;
+use leapsunit\TestCase;
 
 /**
  * @group web

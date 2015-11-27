@@ -1,13 +1,13 @@
 <?php
 
-namespace yiiunit\framework\widgets;
+namespace leapsunit\src\widgets;
 
 use yii\widgets\Spaceless;
 
 /**
  * @group widgets
  */
-class SpacelessTest extends \yiiunit\TestCase
+class SpacelessTest extends \leapsunit\TestCase
 {
     public function testWidget()
     {

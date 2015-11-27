@@ -4,7 +4,7 @@
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @author Alexander Kochetov <creocoder@gmail.com>
  * @link http://www.yiiframework.com/
- * @copyright 2008 Yii Software LLC
+ * @copyright 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  * @since 2.0
  */

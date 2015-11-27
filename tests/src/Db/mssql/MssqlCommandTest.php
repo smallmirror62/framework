@@ -1,9 +1,9 @@
 <?php
 
-namespace yiiunit\framework\db\mssql;
+namespace leapsunit\src\db\mssql;
 
-use yii\db\Schema;
-use yiiunit\framework\db\CommandTest;
+use Leaps\Db\Schema;
+use leapsunit\src\db\CommandTest;
 
 /**
  * @group db

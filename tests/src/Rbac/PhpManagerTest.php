@@ -8,7 +8,7 @@ namespace yii\rbac;
  */
 function filemtime($file)
 {
-    return \yiiunit\framework\rbac\PhpManagerTest::$filemtime ?: \filemtime($file);
+    return \leapsunit\src\rbac\PhpManagerTest::$filemtime ?: \filemtime($file);
 }
 
 /**
@@ -17,12 +17,12 @@ function filemtime($file)
  */
 function time()
 {
-    return \yiiunit\framework\rbac\PhpManagerTest::$time ?: \time();
+    return \leapsunit\src\rbac\PhpManagerTest::$time ?: \time();
 }
 
-namespace yiiunit\framework\rbac;
+namespace leapsunit\src\rbac;
 
-use Yii;
+use Leaps;
 
 /**
  * @group rbac
@@ -35,17 +35,17 @@ class PhpManagerTest extends ManagerTestCase
 
     protected function getItemFile()
     {
-        return Yii::$app->getRuntimePath() . '/rbac-items.php';
+        return Leaps::$app->getRuntimePath() . '/rbac-items.php';
     }
 
     protected function getAssignmentFile()
     {
-        return Yii::$app->getRuntimePath() . '/rbac-assignments.php';
+        return Leaps::$app->getRuntimePath() . '/rbac-assignments.php';
     }
 
     protected function getRuleFile()
     {
-        return Yii::$app->getRuntimePath() . '/rbac-rules.php';
+        return Leaps::$app->getRuntimePath() . '/rbac-rules.php';
     }
 
     protected function removeDataFiles()
@@ -129,7 +129,7 @@ class PhpManagerTest extends ManagerTestCase
     }
 
     /**
-     * @expectedException \yii\base\InvalidParamException
+     * @expectedException \Leaps\Base\InvalidParamException
      */
     public function testOverwriteName()
     {

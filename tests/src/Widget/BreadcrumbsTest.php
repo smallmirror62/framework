@@ -1,8 +1,8 @@
 <?php
 
-namespace yiiunit\framework\widgets;
+namespace leapsunit\src\widgets;
 
-use Yii;
+use Leaps;
 use yii\widgets\Breadcrumbs;
 
 /**
@@ -10,7 +10,7 @@ use yii\widgets\Breadcrumbs;
  *
  * @group widgets
  */
-class BreadcrumbsTest extends \yiiunit\TestCase
+class BreadcrumbsTest extends \leapsunit\TestCase
 {
     private $breadcrumbs;
 
@@ -88,7 +88,7 @@ class BreadcrumbsTest extends \yiiunit\TestCase
     {
         $link = ['url' => 'http://localhost/yii2'];
         $method = $this->reflectMethod();
-        $this->setExpectedException('yii\base\InvalidConfigException');
+        $this->setExpectedException('Leaps\Base\InvalidConfigException');
         $method->invoke($this->breadcrumbs, $link, $this->breadcrumbs->itemTemplate);
     }
 

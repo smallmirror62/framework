@@ -1,10 +1,10 @@
 <?php
 
-namespace yiiunit\framework\helpers;
+namespace leapsunit\src\helpers;
 
-use Yii;
-use yii\helpers\Inflector;
-use yiiunit\TestCase;
+use Leaps;
+use Leaps\Helper\Inflector;
+use leapsunit\TestCase;
 
 /**
  * @group helpers

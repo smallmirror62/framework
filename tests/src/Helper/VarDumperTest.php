@@ -1,8 +1,8 @@
 <?php
-namespace yiiunit\framework\helpers;
+namespace leapsunit\src\helpers;
 
-use yii\helpers\VarDumper;
-use yiiunit\TestCase;
+use Leaps\Helper\VarDumper;
+use leapsunit\TestCase;
 
 /**
  * @group helpers

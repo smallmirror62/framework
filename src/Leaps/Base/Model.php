@@ -124,7 +124,7 @@ class Model extends Service implements IteratorAggregate, ArrayAccess, Arrayable
      * can be accessed as `$this->$attribute`. Note the `$` before `attribute`; this is taking the value of the variable
      * `$attribute` and using it as the name of the property to access.
      *
-     * Yii also provides a set of [[Validator::builtInValidators|built-in validators]].
+     * Leaps also provides a set of [[Validator::builtInValidators|built-in validators]].
      * Each one has an alias name which can be used when specifying a validation rule.
      *
      * Below are some examples:

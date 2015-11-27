@@ -6,7 +6,7 @@
 echo "\nLeaps Application Requirement Checker\n\n";
 
 echo "This script checks if your server configuration meets the requirements\n";
-echo "for running Yii application.\n";
+echo "for running Leaps application.\n";
 echo "It checks if the server is running the right version of PHP,\n";
 echo "if appropriate PHP extensions have been loaded, and if php.ini file settings are correct.\n";
 

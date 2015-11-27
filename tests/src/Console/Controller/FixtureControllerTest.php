@@ -1,14 +1,14 @@
 <?php
 
-namespace yiiunit\framework\console\controllers;
+namespace leapsunit\src\Console\Controller;
 
-use Yii;
-use yiiunit\TestCase;
-use yiiunit\data\console\controllers\fixtures\FixtureStorage;
-use yii\console\controllers\FixtureController;
+use Leaps;
+use leapsunit\TestCase;
+use leapsunit\data\console\controllers\fixtures\FixtureStorage;
+use Leaps\Console\Controller\FixtureController;
 
 /**
- * Unit test for [[\yii\console\controllers\FixtureController]].
+ * Unit test for [[\Leaps\Console\Controller\FixtureController]].
  * @see FixtureController
  *
  * @group console
@@ -17,7 +17,7 @@ class FixtureControllerTest extends TestCase
 {
 
     /**
-     * @var \yiiunit\framework\console\controllers\FixtureConsoledController
+     * @var \leapsunit\src\Console\Controller\FixtureConsoledController
      */
     private $_fixtureController;
 
@@ -25,11 +25,11 @@ class FixtureControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->_fixtureController = Yii::createObject([
-            'class' => 'yiiunit\framework\console\controllers\FixtureConsoledController',
+        $this->_fixtureController = Leaps::createObject([
+            'class' => 'leapsunit\src\Console\Controller\FixtureConsoledController',
             'interactive' => false,
             'globalFixtures' => [],
-            'namespace' => 'yiiunit\data\console\controllers\fixtures',
+            'namespace' => 'leapsunit\data\console\controllers\fixtures',
         ],[null, null]); //id and module are null
     }
 
@@ -44,7 +44,7 @@ class FixtureControllerTest extends TestCase
     public function testLoadGlobalFixture()
     {
         $this->_fixtureController->globalFixtures = [
-            '\yiiunit\data\console\controllers\fixtures\Global'
+            '\leapsunit\data\console\controllers\fixtures\Global'
         ];
 
         $this->_fixtureController->actionLoad('First');
@@ -56,7 +56,7 @@ class FixtureControllerTest extends TestCase
     public function testUnloadGlobalFixture()
     {
         $this->_fixtureController->globalFixtures = [
-            '\yiiunit\data\console\controllers\fixtures\Global'
+            '\leapsunit\data\console\controllers\fixtures\Global'
         ];
 
         FixtureStorage::$globalFixturesData[] = 'some seeded global fixture data';
@@ -160,7 +160,7 @@ class FixtureControllerTest extends TestCase
     }
 
     /**
-     * @expectedException \yii\console\Exception
+     * @expectedException \Leaps\Console\Exception
      */
     public function testNoFixturesWereFoundInLoad()
     {
@@ -168,7 +168,7 @@ class FixtureControllerTest extends TestCase
     }
 
     /**
-     * @expectedException \yii\console\Exception
+     * @expectedException \Leaps\Console\Exception
      */
     public function testNoFixturesWereFoundInUnload()
     {

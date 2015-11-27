@@ -3,15 +3,15 @@
  * @author Carsten Brandt <mail@cebe.cc>
  */
 
-namespace yiiunit\framework\web;
+namespace leapsunit\src\web;
 
-use yii\helpers\FileHelper;
+use Leaps\Helper\FileHelper;
 use yii\web\AssetConverter;
 
 /**
  * @group web
  */
-class AssetConverterTest extends \yiiunit\TestCase
+class AssetConverterTest extends \leapsunit\TestCase
 {
     /**
      * @var string temporary files path
@@ -22,7 +22,7 @@ class AssetConverterTest extends \yiiunit\TestCase
     {
         parent::setUp();
         $this->mockApplication();
-        $this->tmpPath = \Yii::$app->runtimePath . '/assetConverterTest_' . getmypid();
+        $this->tmpPath = \Leaps::$app->runtimePath . '/assetConverterTest_' . getmypid();
         if (!is_dir($this->tmpPath)) {
             mkdir($this->tmpPath, 0777, true);
         }
@@ -45,7 +45,7 @@ class AssetConverterTest extends \yiiunit\TestCase
 <?php
 
 echo "Hello World!\n";
-echo "Hello Yii!";
+echo "Hello Leaps!";
 EOF
         );
 
@@ -54,7 +54,7 @@ EOF
         $this->assertEquals('test.txt', $converter->convert('test.php', $tmpPath));
 
         $this->assertTrue(file_exists($tmpPath . '/test.txt'), 'Failed asserting that asset output file exists.');
-        $this->assertEquals("Hello World!\nHello Yii!", file_get_contents($tmpPath . '/test.txt'));
+        $this->assertEquals("Hello World!\nHello Leaps!", file_get_contents($tmpPath . '/test.txt'));
     }
 
     /**

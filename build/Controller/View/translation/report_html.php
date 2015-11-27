@@ -1,6 +1,6 @@
 <?php
 
-use yii\helpers\Html;
+use Leaps\Helper\Html;
 
 ?><!doctype html>
 <html>

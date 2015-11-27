@@ -1,7 +1,7 @@
 <?php
 namespace yii\tests\unit\framework\db\pgsql;
 
-use yiiunit\framework\db\CommandTest;
+use leapsunit\src\db\CommandTest;
 
 /**
  * @group db

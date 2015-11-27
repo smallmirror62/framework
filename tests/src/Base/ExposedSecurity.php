@@ -1,8 +1,8 @@
 <?php
-namespace yiiunit\framework\base;
+namespace leapsunit\src\base;
 
 
-use yii\base\Security;
+use Leaps\Base\Security;
 
 /**
  * ExposedSecurity exposes protected methods for direct testing

@@ -40,7 +40,7 @@ class I18N extends Service
 	 *      This property may be modified on the fly by extensions who want to have their own message sources
 	 *      registered under their own namespaces.
 	 *
-	 *      The category "leaps" and "app" are always defined. The former refers to the messages used in the Yii core
+	 *      The category "leaps" and "app" are always defined. The former refers to the messages used in the Leaps core
 	 *      framework code, while the latter refers to the default message category for custom application code.
 	 *      By default, both of these categories use [[PhpMessageSource]] and the corresponding message files are
 	 *      stored under "@Leaps/Message" and "@app/messages", respectively.

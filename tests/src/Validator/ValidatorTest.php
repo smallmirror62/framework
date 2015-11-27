@@ -1,13 +1,13 @@
 <?php
 
-namespace yiiunit\framework\validators;
+namespace leapsunit\src\validators;
 
 use yii\validators\BooleanValidator;
 use yii\validators\InlineValidator;
 use yii\validators\NumberValidator;
-use yiiunit\data\validators\models\FakedValidationModel;
-use yiiunit\data\validators\TestValidator;
-use yiiunit\TestCase;
+use leapsunit\data\validators\models\FakedValidationModel;
+use leapsunit\data\validators\TestValidator;
+use leapsunit\TestCase;
 
 /**
  * @group validators
@@ -180,7 +180,7 @@ class ValidatorTest extends TestCase
     public function testValidateValue()
     {
         $this->setExpectedException(
-            'yii\base\NotSupportedException',
+            'Leaps\Base\NotSupportedException',
             TestValidator::className() . ' does not support validateValue().'
         );
         $val = new TestValidator();

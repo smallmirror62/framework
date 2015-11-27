@@ -1,8 +1,8 @@
 <?php
 
-namespace yiiunit\data\ar;
+namespace leapsunit\data\ar;
 
-use yii\db\ActiveQuery;
+use Leaps\Db\ActiveQuery;
 
 /**
  * CustomerQuery

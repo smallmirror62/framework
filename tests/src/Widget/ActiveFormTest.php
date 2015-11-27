@@ -3,15 +3,15 @@
  * @author Carsten Brandt <mail@cebe.cc>
  */
 
-namespace yiiunit\framework\widgets;
+namespace leapsunit\src\widgets;
 
-use yii\base\DynamicModel;
+use Leaps\Base\DynamicModel;
 use yii\widgets\ActiveForm;
 
 /**
  * @group widgets
  */
-class ActiveFormTest extends \yiiunit\TestCase
+class ActiveFormTest extends \leapsunit\TestCase
 {
     protected function setUp()
     {

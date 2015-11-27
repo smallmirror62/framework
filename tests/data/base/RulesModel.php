@@ -1,7 +1,7 @@
 <?php
-namespace yiiunit\data\base;
+namespace leapsunit\data\base;
 
-use yii\base\Model;
+use Leaps\Base\Model;
 
 /**
  * model to test different rules combinations in ModelTest

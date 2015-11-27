@@ -1,10 +1,10 @@
 <?php
 
-namespace yiiunit\framework\validators;
+namespace leapsunit\src\validators;
 
 use yii\validators\EachValidator;
-use yiiunit\data\validators\models\FakedValidationModel;
-use yiiunit\TestCase;
+use leapsunit\data\validators\models\FakedValidationModel;
+use leapsunit\TestCase;
 
 /**
  * @group validators

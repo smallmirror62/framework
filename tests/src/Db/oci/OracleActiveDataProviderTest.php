@@ -1,9 +1,9 @@
 <?php
-namespace yiiunit\framework\db\oci;
+namespace leapsunit\src\db\oci;
 
-use yiiunit\framework\data\ActiveDataProviderTest;
+use leapsunit\src\data\ActiveDataProviderTest;
 use yii\data\ActiveDataProvider;
-use yiiunit\data\ar\Order;
+use leapsunit\data\ar\Order;
 
 /**
  * @group db

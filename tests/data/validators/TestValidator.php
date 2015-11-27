@@ -1,6 +1,6 @@
 <?php
 
-namespace yiiunit\data\validators;
+namespace leapsunit\data\validators;
 
 use yii\validators\Validator;
 

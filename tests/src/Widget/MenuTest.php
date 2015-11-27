@@ -1,13 +1,13 @@
 <?php
 
-namespace yiiunit\framework\widgets;
+namespace leapsunit\src\widgets;
 
 use yii\widgets\Menu;
 
 /**
  * @group widgets
  */
-class MenuTest extends \yiiunit\TestCase
+class MenuTest extends \leapsunit\TestCase
 {
     protected function setUp()
     {

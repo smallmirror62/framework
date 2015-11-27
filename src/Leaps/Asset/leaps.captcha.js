@@ -1,10 +1,10 @@
 /**
- * Yii Captcha widget.
+ * Leaps Captcha widget.
  *
  * This is the JavaScript widget used by the Leaps\Captcha\Captcha widget.
  *
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0

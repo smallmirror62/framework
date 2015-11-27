@@ -1,7 +1,7 @@
 <?php
-namespace yiiunit\framework\validators\ExistValidatorDriverTests;
+namespace leapsunit\src\validators\ExistValidatorDriverTests;
 
-use yiiunit\framework\validators\ExistValidatorTest;
+use leapsunit\src\validators\ExistValidatorTest;
 
 /**
  * @group validators

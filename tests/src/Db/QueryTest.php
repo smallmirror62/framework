@@ -1,8 +1,8 @@
 <?php
 
-namespace yiiunit\framework\db;
+namespace leapsunit\src\db;
 
-use yii\db\Query;
+use Leaps\Db\Query;
 
 /**
  * @group db

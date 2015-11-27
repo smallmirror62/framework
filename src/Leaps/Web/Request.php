@@ -93,7 +93,7 @@ class Request extends \Leaps\Base\Request
 
     /**
      * @var boolean whether to enable CSRF (Cross-Site Request Forgery) validation. Defaults to true.
-     * When CSRF validation is enabled, forms submitted to an Yii Web application must be originated
+     * When CSRF validation is enabled, forms submitted to an Leaps Web application must be originated
      * from the same application. If not, a 400 HTTP exception will be raised.
      *
      * Note, this feature requires that the user client accepts cookie. Also, to use this feature,

@@ -1,11 +1,11 @@
 <?php
 
-namespace yiiunit\framework\db\pgsql;
+namespace leapsunit\src\db\pgsql;
 
-use yii\db\pgsql\Schema;
-use yii\db\Query;
-use yiiunit\framework\db\QueryTest;
-use yiiunit\framework\db\SchemaTest;
+use Leaps\Db\pgsql\Schema;
+use Leaps\Db\Query;
+use leapsunit\src\db\QueryTest;
+use leapsunit\src\db\SchemaTest;
 
 /**
  * @group db

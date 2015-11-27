@@ -1,15 +1,15 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\web;
+namespace leapsunit\src\web;
 
 use yii\web\Controller;
-use yiiunit\framework\di\stubs\QuxInterface;
-use yiiunit\framework\web\stubs\Bar;
+use leapsunit\src\di\stubs\QuxInterface;
+use leapsunit\src\web\stubs\Bar;
 use yii\validators\EmailValidator;
 
 /**

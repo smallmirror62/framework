@@ -1,17 +1,17 @@
 <?php
 
-namespace yiiunit\framework\widgets;
+namespace leapsunit\src\widgets;
 
-use Yii;
+use Leaps;
 use yii\data\ActiveDataProvider;
-use yii\db\Connection;
-use yii\db\Query;
+use Leaps\Db\Connection;
+use Leaps\Db\Query;
 use yii\widgets\Breadcrumbs;
 use yii\widgets\LinkSorter;
 use yii\widgets\ListView;
-use yiiunit\data\ar\ActiveRecord;
-use yiiunit\data\ar\Order;
-use yiiunit\framework\db\DatabaseTestCase;
+use leapsunit\data\ar\ActiveRecord;
+use leapsunit\data\ar\Order;
+use leapsunit\src\db\DatabaseTestCase;
 
 /**
  * @group widgets

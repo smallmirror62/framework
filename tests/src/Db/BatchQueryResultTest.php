@@ -1,17 +1,17 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\db;
+namespace leapsunit\src\db;
 
-use Yii;
-use yiiunit\data\ar\ActiveRecord;
-use yii\db\Query;
-use yii\db\BatchQueryResult;
-use yiiunit\data\ar\Customer;
+use Leaps;
+use leapsunit\data\ar\ActiveRecord;
+use Leaps\Db\Query;
+use Leaps\Db\BatchQueryResult;
+use leapsunit\data\ar\Customer;
 
 /**
  * @group db

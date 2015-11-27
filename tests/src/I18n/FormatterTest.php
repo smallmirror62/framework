@@ -1,10 +1,10 @@
 <?php
 
-namespace yiiunit\framework\i18n;
+namespace leapsunit\src\i18n;
 
 use yii\i18n\Formatter;
-use Yii;
-use yiiunit\TestCase;
+use Leaps;
+use leapsunit\TestCase;
 
 /**
  * Test for basic formatter functions
@@ -47,7 +47,7 @@ class FormatterTest extends TestCase
         $this->assertSame(date('M j, Y', $value), $this->formatter->format($value, 'date'));
         $this->assertSame(date('M j, Y', $value), $this->formatter->format($value, 'DATE'));
         $this->assertSame(date('Y/m/d', $value), $this->formatter->format($value, ['date', 'php:Y/m/d']));
-        $this->setExpectedException('\yii\base\InvalidParamException');
+        $this->setExpectedException('\Leaps\Base\InvalidParamException');
         $this->assertSame(date('Y-m-d', $value), $this->formatter->format($value, 'data'));
     }
 

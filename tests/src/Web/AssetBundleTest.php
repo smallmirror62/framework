@@ -5,9 +5,9 @@
  * @author Carsten Brandt <mail@cebe.cc>
  */
 
-namespace yiiunit\framework\web;
+namespace leapsunit\src\web;
 
-use Yii;
+use Leaps;
 use yii\web\View;
 use yii\web\AssetBundle;
 use yii\web\AssetManager;
@@ -15,15 +15,15 @@ use yii\web\AssetManager;
 /**
  * @group web
  */
-class AssetBundleTest extends \yiiunit\TestCase
+class AssetBundleTest extends \leapsunit\TestCase
 {
     protected function setUp()
     {
         parent::setUp();
         $this->mockApplication();
 
-        Yii::setAlias('@testWeb', '/');
-        Yii::setAlias('@testWebRoot', '@yiiunit/data/web');
+        Leaps::setAlias('@testWeb', '/');
+        Leaps::setAlias('@testWebRoot', '@leapsunit/data/web');
     }
 
     protected function getView()
@@ -44,13 +44,13 @@ class AssetBundleTest extends \yiiunit\TestCase
         $this->assertEmpty($view->assetBundles);
         TestSimpleAsset::register($view);
         $this->assertEquals(1, count($view->assetBundles));
-        $this->assertArrayHasKey('yiiunit\\framework\\web\\TestSimpleAsset', $view->assetBundles);
-        $this->assertTrue($view->assetBundles['yiiunit\\framework\\web\\TestSimpleAsset'] instanceof AssetBundle);
+        $this->assertArrayHasKey('leapsunit\\framework\\web\\TestSimpleAsset', $view->assetBundles);
+        $this->assertTrue($view->assetBundles['leapsunit\\framework\\web\\TestSimpleAsset'] instanceof AssetBundle);
 
         $expected = <<<EOF
 123<script src="/js/jquery.js"></script>4
 EOF;
-        $this->assertEquals($expected, $view->renderFile('@yiiunit/data/views/rawlayout.php'));
+        $this->assertEquals($expected, $view->renderFile('@leapsunit/data/views/rawlayout.php'));
     }
 
     public function testSimpleDependency()
@@ -60,18 +60,18 @@ EOF;
         $this->assertEmpty($view->assetBundles);
         TestAssetBundle::register($view);
         $this->assertEquals(3, count($view->assetBundles));
-        $this->assertArrayHasKey('yiiunit\\framework\\web\\TestAssetBundle', $view->assetBundles);
-        $this->assertArrayHasKey('yiiunit\\framework\\web\\TestJqueryAsset', $view->assetBundles);
-        $this->assertArrayHasKey('yiiunit\\framework\\web\\TestAssetLevel3', $view->assetBundles);
-        $this->assertTrue($view->assetBundles['yiiunit\\framework\\web\\TestAssetBundle'] instanceof AssetBundle);
-        $this->assertTrue($view->assetBundles['yiiunit\\framework\\web\\TestJqueryAsset'] instanceof AssetBundle);
-        $this->assertTrue($view->assetBundles['yiiunit\\framework\\web\\TestAssetLevel3'] instanceof AssetBundle);
+        $this->assertArrayHasKey('leapsunit\\framework\\web\\TestAssetBundle', $view->assetBundles);
+        $this->assertArrayHasKey('leapsunit\\framework\\web\\TestJqueryAsset', $view->assetBundles);
+        $this->assertArrayHasKey('leapsunit\\framework\\web\\TestAssetLevel3', $view->assetBundles);
+        $this->assertTrue($view->assetBundles['leapsunit\\framework\\web\\TestAssetBundle'] instanceof AssetBundle);
+        $this->assertTrue($view->assetBundles['leapsunit\\framework\\web\\TestJqueryAsset'] instanceof AssetBundle);
+        $this->assertTrue($view->assetBundles['leapsunit\\framework\\web\\TestAssetLevel3'] instanceof AssetBundle);
 
         $expected = <<<EOF
 1<link href="/files/cssFile.css" rel="stylesheet">23<script src="/js/jquery.js"></script>
 <script src="/files/jsFile.js"></script>4
 EOF;
-        $this->assertEqualsWithoutLE($expected, $view->renderFile('@yiiunit/data/views/rawlayout.php'));
+        $this->assertEqualsWithoutLE($expected, $view->renderFile('@leapsunit/data/views/rawlayout.php'));
     }
 
     public function positionProvider()
@@ -93,7 +93,7 @@ EOF;
     {
         $view = $this->getView();
 
-        $view->getAssetManager()->bundles['yiiunit\\framework\\web\\TestAssetBundle'] = [
+        $view->getAssetManager()->bundles['leapsunit\\framework\\web\\TestAssetBundle'] = [
             'jsOptions' => [
                 'position' => $pos,
             ],
@@ -105,20 +105,20 @@ EOF;
         }
         TestAssetBundle::register($view);
         $this->assertEquals(3, count($view->assetBundles));
-        $this->assertArrayHasKey('yiiunit\\framework\\web\\TestAssetBundle', $view->assetBundles);
-        $this->assertArrayHasKey('yiiunit\\framework\\web\\TestJqueryAsset', $view->assetBundles);
-        $this->assertArrayHasKey('yiiunit\\framework\\web\\TestAssetLevel3', $view->assetBundles);
+        $this->assertArrayHasKey('leapsunit\\framework\\web\\TestAssetBundle', $view->assetBundles);
+        $this->assertArrayHasKey('leapsunit\\framework\\web\\TestJqueryAsset', $view->assetBundles);
+        $this->assertArrayHasKey('leapsunit\\framework\\web\\TestAssetLevel3', $view->assetBundles);
 
-        $this->assertTrue($view->assetBundles['yiiunit\\framework\\web\\TestAssetBundle'] instanceof AssetBundle);
-        $this->assertTrue($view->assetBundles['yiiunit\\framework\\web\\TestJqueryAsset'] instanceof AssetBundle);
-        $this->assertTrue($view->assetBundles['yiiunit\\framework\\web\\TestAssetLevel3'] instanceof AssetBundle);
+        $this->assertTrue($view->assetBundles['leapsunit\\framework\\web\\TestAssetBundle'] instanceof AssetBundle);
+        $this->assertTrue($view->assetBundles['leapsunit\\framework\\web\\TestJqueryAsset'] instanceof AssetBundle);
+        $this->assertTrue($view->assetBundles['leapsunit\\framework\\web\\TestAssetLevel3'] instanceof AssetBundle);
 
-        $this->assertArrayHasKey('position', $view->assetBundles['yiiunit\\framework\\web\\TestAssetBundle']->jsOptions);
-        $this->assertEquals($pos, $view->assetBundles['yiiunit\\framework\\web\\TestAssetBundle']->jsOptions['position']);
-        $this->assertArrayHasKey('position', $view->assetBundles['yiiunit\\framework\\web\\TestJqueryAsset']->jsOptions);
-        $this->assertEquals($pos, $view->assetBundles['yiiunit\\framework\\web\\TestJqueryAsset']->jsOptions['position']);
-        $this->assertArrayHasKey('position', $view->assetBundles['yiiunit\\framework\\web\\TestAssetLevel3']->jsOptions);
-        $this->assertEquals($pos, $view->assetBundles['yiiunit\\framework\\web\\TestAssetLevel3']->jsOptions['position']);
+        $this->assertArrayHasKey('position', $view->assetBundles['leapsunit\\framework\\web\\TestAssetBundle']->jsOptions);
+        $this->assertEquals($pos, $view->assetBundles['leapsunit\\framework\\web\\TestAssetBundle']->jsOptions['position']);
+        $this->assertArrayHasKey('position', $view->assetBundles['leapsunit\\framework\\web\\TestJqueryAsset']->jsOptions);
+        $this->assertEquals($pos, $view->assetBundles['leapsunit\\framework\\web\\TestJqueryAsset']->jsOptions['position']);
+        $this->assertArrayHasKey('position', $view->assetBundles['leapsunit\\framework\\web\\TestAssetLevel3']->jsOptions);
+        $this->assertEquals($pos, $view->assetBundles['leapsunit\\framework\\web\\TestAssetLevel3']->jsOptions['position']);
 
         switch ($pos) {
             case View::POS_HEAD:
@@ -142,7 +142,7 @@ EOF;
 EOF;
             break;
         }
-        $this->assertEqualsWithoutLE($expected, $view->renderFile('@yiiunit/data/views/rawlayout.php'));
+        $this->assertEqualsWithoutLE($expected, $view->renderFile('@leapsunit/data/views/rawlayout.php'));
     }
 
     public function positionProvider2()
@@ -162,12 +162,12 @@ EOF;
     {
         $view = $this->getView();
 
-        $view->getAssetManager()->bundles['yiiunit\\framework\\web\\TestAssetBundle'] = [
+        $view->getAssetManager()->bundles['leapsunit\\framework\\web\\TestAssetBundle'] = [
             'jsOptions' => [
                 'position' => $pos - 1,
             ],
         ];
-        $view->getAssetManager()->bundles['yiiunit\\framework\\web\\TestJqueryAsset'] = [
+        $view->getAssetManager()->bundles['leapsunit\\framework\\web\\TestJqueryAsset'] = [
             'jsOptions' => [
                 'position' => $pos,
             ],
@@ -194,15 +194,15 @@ EOF;
         $this->assertEmpty($view->assetBundles);
         TestSimpleAsset::register($view);
         $this->assertEquals(1, count($view->assetBundles));
-        $this->assertArrayHasKey('yiiunit\\framework\\web\\TestSimpleAsset', $view->assetBundles);
-        $this->assertTrue($view->assetBundles['yiiunit\\framework\\web\\TestSimpleAsset'] instanceof AssetBundle);
+        $this->assertArrayHasKey('leapsunit\\framework\\web\\TestSimpleAsset', $view->assetBundles);
+        $this->assertTrue($view->assetBundles['leapsunit\\framework\\web\\TestSimpleAsset'] instanceof AssetBundle);
         // register TestJqueryAsset which also has the jquery.js
         TestJqueryAsset::register($view);
 
         $expected = <<<EOF
 123<script src="/js/jquery.js"></script>4
 EOF;
-        $this->assertEquals($expected, $view->renderFile('@yiiunit/data/views/rawlayout.php'));
+        $this->assertEquals($expected, $view->renderFile('@leapsunit/data/views/rawlayout.php'));
     }
 
     public function testPerFileOptions()
@@ -218,7 +218,7 @@ EOF;
 <link href="/screen_and_print.css" rel="stylesheet" media="screen, print" hreflang="en">23<script src="/normal.js" charset="utf-8"></script>
 <script src="/defered.js" charset="utf-8" defer></script>4
 EOF;
-        $this->assertEquals($expected, $view->renderFile('@yiiunit/data/views/rawlayout.php'));
+        $this->assertEquals($expected, $view->renderFile('@leapsunit/data/views/rawlayout.php'));
     }
 }
 
@@ -242,7 +242,7 @@ class TestAssetBundle extends AssetBundle
         'jsFile.js',
     ];
     public $depends = [
-        'yiiunit\\framework\\web\\TestJqueryAsset'
+        'leapsunit\\framework\\web\\TestJqueryAsset'
     ];
 }
 
@@ -254,7 +254,7 @@ class TestJqueryAsset extends AssetBundle
         'jquery.js',
     ];
     public $depends = [
-        'yiiunit\\framework\\web\\TestAssetLevel3'
+        'leapsunit\\framework\\web\\TestAssetLevel3'
     ];
 }
 
@@ -272,7 +272,7 @@ class TestAssetCircleA extends AssetBundle
         'jquery.js',
     ];
     public $depends = [
-        'yiiunit\\framework\\web\\TestAssetCircleB'
+        'leapsunit\\framework\\web\\TestAssetCircleB'
     ];
 }
 
@@ -284,7 +284,7 @@ class TestAssetCircleB extends AssetBundle
         'jquery.js',
     ];
     public $depends = [
-        'yiiunit\\framework\\web\\TestAssetCircleA'
+        'leapsunit\\framework\\web\\TestAssetCircleA'
     ];
 }
 

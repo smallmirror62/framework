@@ -2,8 +2,8 @@
 
 // override information about intl
 
-namespace yiiunit\framework\i18n {
-    use yiiunit\TestCase;
+namespace leapsunit\src\i18n {
+    use leapsunit\TestCase;
 
     class IntlTestHelper {
         public static $enableIntl;
@@ -35,7 +35,7 @@ namespace yiiunit\framework\i18n {
 }
 
 namespace yii\i18n {
-    use yiiunit\framework\i18n\IntlTestHelper;
+    use leapsunit\src\i18n\IntlTestHelper;
 
     if (!function_exists('yii\i18n\extension_loaded')) {
         function extension_loaded($name)
@@ -48,10 +48,10 @@ namespace yii\i18n {
     }
 }
 
-namespace yii\helpers {
-    use yiiunit\framework\i18n\IntlTestHelper;
+namespace Leaps\Helper {
+    use leapsunit\src\i18n\IntlTestHelper;
 
-    if (!function_exists('yii\helpers\extension_loaded')) {
+    if (!function_exists('Leaps\Helper\extension_loaded')) {
         function extension_loaded($name)
         {
             if ($name === 'intl' && IntlTestHelper::$enableIntl !== null) {
@@ -63,7 +63,7 @@ namespace yii\helpers {
 }
 
 namespace yii\validators {
-    use yiiunit\framework\i18n\IntlTestHelper;
+    use leapsunit\src\i18n\IntlTestHelper;
 
     if (!function_exists('yii\validators\extension_loaded')) {
         function extension_loaded($name)

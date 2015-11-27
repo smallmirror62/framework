@@ -2,17 +2,17 @@
  * leaps JavaScript module.
  *
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
 
 /**
- * leaps is the root module for all Yii JavaScript modules.
+ * leaps is the root module for all Leaps JavaScript modules.
  * It implements a mechanism of organizing JavaScript code in modules through the function "leaps.initModule()".
  *
- * Each module should be named as "x.y.z", where "x" stands for the root module (for the Yii core code, this is "yii").
+ * Each module should be named as "x.y.z", where "x" stands for the root module (for the Leaps core code, this is "yii").
  *
  * A module may be structured as follows:
  *

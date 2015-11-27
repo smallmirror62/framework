@@ -1,12 +1,12 @@
 <?php
 
-namespace yiiunit\framework\filters\auth;
+namespace leapsunit\src\filters\auth;
 
-use Yii;
+use Leaps;
 use yii\filters\auth\AuthMethod;
 use yii\filters\auth\CompositeAuth;
 use yii\rest\Controller;
-use yiiunit\framework\web\UserIdentity;
+use leapsunit\src\web\UserIdentity;
 
 /**
  * @author Ezekiel Fernandez <ezekiel_p_fernandez@yahoo.com>
@@ -72,7 +72,7 @@ class TestController extends Controller
 /**
  * @group filters
  */
-class CompositeAuthTest extends \yiiunit\TestCase
+class CompositeAuthTest extends \leapsunit\TestCase
 {
     protected function setUp()
     {
@@ -98,7 +98,7 @@ class CompositeAuthTest extends \yiiunit\TestCase
     public function testCallingRunWithCompleteRoute()
     {
         /** @var TestController $controller */
-        $controller = Yii::$app->createController('test')[0];
+        $controller = Leaps::$app->createController('test')[0];
         $this->assertEquals('success', $controller->run('test/d'));
     }
 
@@ -108,14 +108,14 @@ class CompositeAuthTest extends \yiiunit\TestCase
     public function testRunAction()
     {
         /** @var TestController $controller */
-        $controller = Yii::$app->createController('test')[0];
+        $controller = Leaps::$app->createController('test')[0];
         $this->assertEquals('success', $controller->run('b'));
     }
 
     public function testRunButWithActionIdOnly()
     {
         /** @var TestController $controller */
-        $controller = Yii::$app->createController('test')[0];
+        $controller = Leaps::$app->createController('test')[0];
         $this->assertEquals('success', $controller->run('c'));
     }
 }

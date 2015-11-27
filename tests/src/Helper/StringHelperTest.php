@@ -1,8 +1,8 @@
 <?php
-namespace yiiunit\framework\helpers;
+namespace leapsunit\src\helpers;
 
-use yii\helpers\StringHelper;
-use yiiunit\TestCase;
+use Leaps\Helper\StringHelper;
+use leapsunit\TestCase;
 
 /**
  * StringHelperTest

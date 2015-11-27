@@ -1,14 +1,14 @@
 <?php
 
-namespace yiiunit\framework\filters;
+namespace leapsunit\src\filters;
 
-use Yii;
+use Leaps;
 use yii\filters\HttpCache;
 
 /**
  * @group filters
  */
-class HttpCacheTest extends \yiiunit\TestCase
+class HttpCacheTest extends \leapsunit\TestCase
 {
     protected function setUp()
     {
@@ -68,7 +68,7 @@ class HttpCacheTest extends \yiiunit\TestCase
             return '';
         };
         $httpCache->beforeAction(null);
-        $response = Yii::$app->getResponse();
+        $response = Leaps::$app->getResponse();
 
         $this->assertTrue($response->getHeaders()->offsetExists('ETag'));
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace yiiunit\framework\console\controllers;
+namespace leapsunit\src\Console\Controller;
 
-use Yii;
-use yiiunit\TestCase;
-use yii\console\controllers\CacheController;
+use Leaps;
+use leapsunit\TestCase;
+use Leaps\Console\Controller\CacheController;
 
 /**
- * Unit test for [[\yii\console\controllers\CacheController]].
+ * Unit test for [[\Leaps\Console\Controller\CacheController]].
  * @see CacheController
  *
  * @group console
@@ -26,8 +26,8 @@ class CacheControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->_cacheController = Yii::createObject([
-            'class' => 'yiiunit\framework\console\controllers\SilencedCacheController',
+        $this->_cacheController = Leaps::createObject([
+            'class' => 'leapsunit\src\Console\Controller\SilencedCacheController',
             'interactive' => false,
         ],[null, null]); //id and module are null
 
@@ -42,11 +42,11 @@ class CacheControllerTest extends TestCase
 
         $this->mockApplication([
             'components' => [
-                'firstCache' => 'yii\caching\ArrayCache',
-                'secondCache' => 'yii\caching\ArrayCache',
+                'firstCache' => 'Leaps\Cache\ArrayCache',
+                'secondCache' => 'Leaps\Cache\ArrayCache',
                 'session' => 'yii\web\CacheSession', // should be ignored at `actionFlushAll()`
                 'db' => [
-                    'class' => isset($config['class']) ? $config['class'] : 'yii\db\Connection',
+                    'class' => isset($config['class']) ? $config['class'] : 'Leaps\Db\Connection',
                     'dsn' => $config['dsn'],
                     'username' => isset($config['username']) ? $config['username'] : null,
                     'password' => isset($config['password']) ? $config['password'] : null,
@@ -57,11 +57,11 @@ class CacheControllerTest extends TestCase
         ]);
 
         if(isset($config['fixture'])) {
-            Yii::$app->db->open();
+            Leaps::$app->db->open();
             $lines = explode(';', file_get_contents($config['fixture']));
             foreach ($lines as $line) {
                 if (trim($line) !== '') {
-                    Yii::$app->db->pdo->exec($line);
+                    Leaps::$app->db->pdo->exec($line);
                 }
             }
         }
@@ -69,27 +69,27 @@ class CacheControllerTest extends TestCase
 
     public function testFlushOne()
     {
-        Yii::$app->firstCache->set('firstKey', 'firstValue');
-        Yii::$app->firstCache->set('secondKey', 'secondValue');
-        Yii::$app->secondCache->set('thirdKey', 'thirdValue');
+        Leaps::$app->firstCache->set('firstKey', 'firstValue');
+        Leaps::$app->firstCache->set('secondKey', 'secondValue');
+        Leaps::$app->secondCache->set('thirdKey', 'thirdValue');
 
         $this->_cacheController->actionFlush('firstCache');
 
-        $this->assertFalse(Yii::$app->firstCache->get('firstKey'),'first cache data should be flushed');
-        $this->assertFalse(Yii::$app->firstCache->get('secondKey'),'first cache data should be flushed');
-        $this->assertEquals('thirdValue', Yii::$app->secondCache->get('thirdKey'), 'second cache data should not be flushed');
+        $this->assertFalse(Leaps::$app->firstCache->get('firstKey'),'first cache data should be flushed');
+        $this->assertFalse(Leaps::$app->firstCache->get('secondKey'),'first cache data should be flushed');
+        $this->assertEquals('thirdValue', Leaps::$app->secondCache->get('thirdKey'), 'second cache data should not be flushed');
     }
 
     public function testClearSchema()
     {
-        $schema = Yii::$app->db->schema;
-        Yii::$app->db->createCommand()->createTable('test_schema_cache', ['id' => 'pk'])->execute();
+        $schema = Leaps::$app->db->schema;
+        Leaps::$app->db->createCommand()->createTable('test_schema_cache', ['id' => 'pk'])->execute();
         $noCacheSchemas = $schema->getTableSchemas('', true);
         $cacheSchema = $schema->getTableSchemas('', false);
 
         $this->assertEquals($noCacheSchemas, $cacheSchema, 'Schema should not be modified.');
 
-        Yii::$app->db->createCommand()->dropTable('test_schema_cache')->execute();
+        Leaps::$app->db->createCommand()->dropTable('test_schema_cache')->execute();
         $noCacheSchemas = $schema->getTableSchemas('', true);
         $this->assertNotEquals($noCacheSchemas, $cacheSchema, 'Schemas should be different.');
 
@@ -101,28 +101,28 @@ class CacheControllerTest extends TestCase
 
     public function testFlushBoth()
     {
-        Yii::$app->firstCache->set('firstKey', 'firstValue');
-        Yii::$app->firstCache->set('secondKey', 'secondValue');
-        Yii::$app->secondCache->set('thirdKey', 'secondValue');
+        Leaps::$app->firstCache->set('firstKey', 'firstValue');
+        Leaps::$app->firstCache->set('secondKey', 'secondValue');
+        Leaps::$app->secondCache->set('thirdKey', 'secondValue');
 
         $this->_cacheController->actionFlush('firstCache', 'secondCache');
 
-        $this->assertFalse(Yii::$app->firstCache->get('firstKey'),'first cache data should be flushed');
-        $this->assertFalse(Yii::$app->firstCache->get('secondKey'),'first cache data should be flushed');
-        $this->assertFalse(Yii::$app->secondCache->get('thirdKey'), 'second cache data should be flushed');
+        $this->assertFalse(Leaps::$app->firstCache->get('firstKey'),'first cache data should be flushed');
+        $this->assertFalse(Leaps::$app->firstCache->get('secondKey'),'first cache data should be flushed');
+        $this->assertFalse(Leaps::$app->secondCache->get('thirdKey'), 'second cache data should be flushed');
     }
 
     public function testNotFoundFlush()
     {
-        Yii::$app->firstCache->set('firstKey', 'firstValue');
+        Leaps::$app->firstCache->set('firstKey', 'firstValue');
 
         $this->_cacheController->actionFlush('notExistingCache');
 
-        $this->assertEquals('firstValue', Yii::$app->firstCache->get('firstKey'), 'first cache data should not be flushed');
+        $this->assertEquals('firstValue', Leaps::$app->firstCache->get('firstKey'), 'first cache data should not be flushed');
     }
 
     /**
-     * @expectedException \yii\console\Exception
+     * @expectedException \Leaps\Console\Exception
      */
     public function testNothingToFlushException()
     {
@@ -131,13 +131,13 @@ class CacheControllerTest extends TestCase
 
     public function testFlushAll()
     {
-        Yii::$app->firstCache->set('firstKey', 'firstValue');
-        Yii::$app->secondCache->set('thirdKey', 'secondValue');
+        Leaps::$app->firstCache->set('firstKey', 'firstValue');
+        Leaps::$app->secondCache->set('thirdKey', 'secondValue');
 
         $this->_cacheController->actionFlushAll();
 
-        $this->assertFalse(Yii::$app->firstCache->get('firstKey'),'first cache data should be flushed');
-        $this->assertFalse(Yii::$app->secondCache->get('thirdKey'), 'second cache data should be flushed');
+        $this->assertFalse(Leaps::$app->firstCache->get('firstKey'),'first cache data should be flushed');
+        $this->assertFalse(Leaps::$app->secondCache->get('thirdKey'), 'second cache data should be flushed');
     }
 
 }

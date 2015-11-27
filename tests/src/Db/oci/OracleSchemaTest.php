@@ -1,10 +1,10 @@
 <?php
 
-namespace yiiunit\framework\db\oci;
+namespace leapsunit\src\db\oci;
 
-use yii\db\Expression;
-use yii\db\oci\Schema;
-use yiiunit\framework\db\SchemaTest;
+use Leaps\Db\Expression;
+use Leaps\Db\oci\Schema;
+use leapsunit\src\db\SchemaTest;
 
 /**
  * @group db

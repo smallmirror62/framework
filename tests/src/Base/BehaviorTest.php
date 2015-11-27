@@ -1,16 +1,16 @@
 <?php
 
-namespace yiiunit\framework\base;
+namespace leapsunit\src\Base;
 
-use yii\base\Behavior;
-use yii\base\Component;
-use yiiunit\TestCase;
+use Leaps\Base\Behavior;
+use Leaps\Base\Service;
+use leapsunit\TestCase;
 
-class BarClass extends Component
+class BarClass extends Service
 {
 }
 
-class FooClass extends Component
+class FooClass extends Service
 {
     public function behaviors()
     {
@@ -98,7 +98,7 @@ class BehaviorTest extends TestCase
     {
         $bar = new BarClass();
         $behavior = new BarBehavior();
-        $this->setExpectedException('yii\base\UnknownMethodException');
+        $this->setExpectedException('Leaps\Base\UnknownMethodException');
 
         $this->assertFalse($bar->hasMethod('nomagicBehaviorMethod'));
         $bar->attachBehavior('bar', $behavior);

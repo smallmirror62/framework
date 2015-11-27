@@ -1,12 +1,12 @@
 <?php
 
-namespace yiiunit\framework\rbac;
+namespace leapsunit\src\rbac;
 
 use yii\rbac\Item;
 use yii\rbac\Permission;
 use yii\rbac\PhpManager;
 use yii\rbac\Role;
-use yiiunit\TestCase;
+use leapsunit\TestCase;
 
 /**
  * ManagerTestCase

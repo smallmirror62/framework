@@ -1,10 +1,10 @@
 <?php
 
-namespace yiiunit\framework\db;
+namespace leapsunit\src\db;
 
-use yii\caching\FileCache;
-use yii\db\Expression;
-use yii\db\Schema;
+use Leaps\Cache\FileCache;
+use Leaps\Db\Expression;
+use Leaps\Db\Schema;
 
 /**
  * @group db
@@ -36,7 +36,7 @@ class SchemaTest extends DatabaseTestCase
         $tables = $schema->getTableSchemas();
         $this->assertEquals(count($schema->getTableNames()), count($tables));
         foreach ($tables as $table) {
-            $this->assertInstanceOf('yii\db\TableSchema', $table);
+            $this->assertInstanceOf('Leaps\Db\TableSchema', $table);
         }
     }
 

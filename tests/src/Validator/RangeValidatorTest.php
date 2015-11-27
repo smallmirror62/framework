@@ -1,10 +1,10 @@
 <?php
 
-namespace yiiunit\framework\validators;
+namespace leapsunit\src\validators;
 
 use yii\validators\RangeValidator;
-use yiiunit\data\validators\models\FakedValidationModel;
-use yiiunit\TestCase;
+use leapsunit\data\validators\models\FakedValidationModel;
+use leapsunit\TestCase;
 
 /**
  * @group validators
@@ -19,7 +19,7 @@ class RangeValidatorTest extends TestCase
 
     public function testInitException()
     {
-        $this->setExpectedException('yii\base\InvalidConfigException', 'The "range" property must be set.');
+        $this->setExpectedException('Leaps\Base\InvalidConfigException', 'The "range" property must be set.');
         new RangeValidator(['range' => 'not an array']);
     }
 

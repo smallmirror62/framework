@@ -1,8 +1,8 @@
 <?php
-namespace yiiunit\framework\db\oci;
+namespace leapsunit\src\db\oci;
 
-use yiiunit\framework\db\QueryTest;
-use yii\db\Query;
+use leapsunit\src\db\QueryTest;
+use Leaps\Db\Query;
 
 /**
  * @group db

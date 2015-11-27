@@ -1,41 +1,41 @@
 <?php
 /**
- * These are the Yii core requirements for the [[YiiRequirementChecker]] instance.
- * These requirements are mandatory for any Yii application.
+ * These are the Leaps core requirements for the [[LeapsRequirementChecker]] instance.
+ * These requirements are mandatory for any Leaps application.
  */
 
-/* @var $this YiiRequirementChecker */
+/* @var $this LeapsRequirementChecker */
 return array(
     array(
         'name' => 'PHP version',
         'mandatory' => true,
         'condition' => version_compare(PHP_VERSION, '5.4.0', '>='),
-        'by' => '<a href="http://www.yiiframework.com">Yii Framework</a>',
+        'by' => '<a href="http://www.yiiframework.com">Leaps Framework</a>',
         'memo' => 'PHP 5.4.0 or higher is required.',
     ),
     array(
         'name' => 'Reflection extension',
         'mandatory' => true,
         'condition' => class_exists('Reflection', false),
-        'by' => '<a href="http://www.yiiframework.com">Yii Framework</a>',
+        'by' => '<a href="http://www.yiiframework.com">Leaps Framework</a>',
     ),
     array(
         'name' => 'PCRE extension',
         'mandatory' => true,
         'condition' => extension_loaded('pcre'),
-        'by' => '<a href="http://www.yiiframework.com">Yii Framework</a>',
+        'by' => '<a href="http://www.yiiframework.com">Leaps Framework</a>',
     ),
     array(
         'name' => 'SPL extension',
         'mandatory' => true,
         'condition' => extension_loaded('SPL'),
-        'by' => '<a href="http://www.yiiframework.com">Yii Framework</a>',
+        'by' => '<a href="http://www.yiiframework.com">Leaps Framework</a>',
     ),
     array(
         'name' => 'Ctype extension',
         'mandatory' => true,
         'condition' => extension_loaded('ctype'),
-        'by' => '<a href="http://www.yiiframework.com">Yii Framework</a>'
+        'by' => '<a href="http://www.yiiframework.com">Leaps Framework</a>'
     ),
     array(
         'name' => 'MBString extension',

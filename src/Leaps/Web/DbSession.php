@@ -179,7 +179,7 @@ class DbSession extends MultiFieldSession
             }
         } catch (\Exception $e) {
             $exception = ErrorHandler::convertExceptionToString($e);
-            // its too late to use Yii logging here
+            // its too late to use Leaps logging here
             error_log($exception);
             echo $exception;
 

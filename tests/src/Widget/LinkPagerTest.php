@@ -1,6 +1,6 @@
 <?php
 
-namespace yiiunit\framework\widgets;
+namespace leapsunit\src\widgets;
 
 use yii\data\Pagination;
 use yii\widgets\LinkPager;
@@ -8,7 +8,7 @@ use yii\widgets\LinkPager;
 /**
  * @group widgets
  */
-class LinkPagerTest extends \yiiunit\TestCase
+class LinkPagerTest extends \leapsunit\TestCase
 {
     protected function setUp()
     {

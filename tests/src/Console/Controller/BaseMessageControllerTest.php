@@ -1,14 +1,14 @@
 <?php
-namespace yiiunit\framework\console\controllers;
+namespace leapsunit\src\Console\Controller;
 
-use Yii;
-use yii\helpers\FileHelper;
-use yii\helpers\VarDumper;
-use yiiunit\TestCase;
-use yii\console\controllers\MessageController;
+use Leaps;
+use Leaps\Helper\FileHelper;
+use Leaps\Helper\VarDumper;
+use leapsunit\TestCase;
+use Leaps\Console\Controller\MessageController;
 
 /**
- * Base for [[\yii\console\controllers\MessageController]] unit tests.
+ * Base for [[\Leaps\Console\Controller\MessageController]] unit tests.
  * @see MessageController
  */
 abstract class BaseMessageControllerTest extends TestCase
@@ -20,12 +20,12 @@ abstract class BaseMessageControllerTest extends TestCase
     public function setUp()
     {
         $this->mockApplication();
-        $this->sourcePath = Yii::getAlias('@yiiunit/runtime/test_source');
+        $this->sourcePath = Leaps::getAlias('@leapsunit/runtime/test_source');
         FileHelper::createDirectory($this->sourcePath, 0777);
         if (!file_exists($this->sourcePath)) {
             $this->markTestIncomplete('Unit tests runtime directory should have writable permissions!');
         }
-        $this->configFileName = Yii::getAlias('@yiiunit/runtime') . DIRECTORY_SEPARATOR . 'message_controller_test_config.php';
+        $this->configFileName = Leaps::getAlias('@leapsunit/runtime') . DIRECTORY_SEPARATOR . 'message_controller_test_config.php';
     }
 
     public function tearDown()
@@ -138,7 +138,7 @@ abstract class BaseMessageControllerTest extends TestCase
     {
         $category = 'test.category1';
         $message = 'test message';
-        $sourceFileContent = "Yii::t('{$category}', '{$message}');";
+        $sourceFileContent = "Leaps::t('{$category}', '{$message}');";
         $this->createSourceFile($sourceFileContent);
 
         $this->saveConfigFile($this->getConfig());
@@ -155,7 +155,7 @@ abstract class BaseMessageControllerTest extends TestCase
     {
         $category = 'test_category2';
         $message = 'test message';
-        $sourceFileContent = "Yii::t('{$category}', '{$message}')";
+        $sourceFileContent = "Leaps::t('{$category}', '{$message}')";
         $this->createSourceFile($sourceFileContent);
 
         $this->saveConfigFile($this->getConfig());
@@ -180,8 +180,8 @@ abstract class BaseMessageControllerTest extends TestCase
         );
 
         $newMessage = 'test new message';
-        $sourceFileContent = "Yii::t('{$category}', '{$existingMessage}');";
-        $sourceFileContent .= "Yii::t('{$category}', '{$newMessage}');";
+        $sourceFileContent = "Leaps::t('{$category}', '{$existingMessage}');";
+        $sourceFileContent .= "Leaps::t('{$category}', '{$newMessage}');";
         $this->createSourceFile($sourceFileContent);
 
         $this->saveConfigFile($this->getConfig());
@@ -205,7 +205,7 @@ abstract class BaseMessageControllerTest extends TestCase
         $obsoleteTranslation = 'obsolete translation';
         $this->saveMessages([$obsoleteMessage => $obsoleteTranslation], $category);
 
-        $sourceFileContent = "Yii::t('{$category}', 'any new message');";
+        $sourceFileContent = "Leaps::t('{$category}', 'any new message');";
         $this->createSourceFile($sourceFileContent);
 
         $this->saveConfigFile($this->getConfig(['removeUnused' => false]));
@@ -228,7 +228,7 @@ abstract class BaseMessageControllerTest extends TestCase
         $obsoleteTranslation = 'obsolete translation';
         $this->saveMessages([$obsoleteMessage => $obsoleteTranslation], $category);
 
-        $sourceFileContent = "Yii::t('{$category}', 'any new message');";
+        $sourceFileContent = "Leaps::t('{$category}', 'any new message');";
         $this->createSourceFile($sourceFileContent);
 
         $this->saveConfigFile($this->getConfig(['removeUnused' => true]));
@@ -256,9 +256,9 @@ abstract class BaseMessageControllerTest extends TestCase
         ], $category);
 
         $newMessage = 'test new message';
-        $sourceFileContent = "Yii::t('{$category}', '{$zeroMessage}')";
-        $sourceFileContent .= "Yii::t('{$category}', '{$falseMessage}')";
-        $sourceFileContent .= "Yii::t('{$category}', '{$newMessage}')";
+        $sourceFileContent = "Leaps::t('{$category}', '{$zeroMessage}')";
+        $sourceFileContent .= "Leaps::t('{$category}', '{$falseMessage}')";
+        $sourceFileContent .= "Leaps::t('{$category}', '{$newMessage}')";
         $this->createSourceFile($sourceFileContent);
 
         $this->saveConfigFile($this->getConfig());
@@ -277,7 +277,7 @@ abstract class BaseMessageControllerTest extends TestCase
         $category = 'test_category6';
 
         $translators = [
-            'Yii::t',
+            'Leaps::t',
             'Custom::translate',
         ];
 
@@ -316,7 +316,7 @@ abstract class BaseMessageControllerTest extends TestCase
         $this->saveConfigFile($this->getConfig(['removeUnused' => true]));
 
         // Generate initial translation
-        $sourceFileContent = "Yii::t('{$category1}', '{$message1}'); Yii::t('{$category2}', '{$message2}');";
+        $sourceFileContent = "Leaps::t('{$category1}', '{$message1}'); Leaps::t('{$category2}', '{$message2}');";
         $source = $this->createSourceFile($sourceFileContent);
         $out = $this->runMessageControllerAction('extract', [$this->configFileName]);
         unlink($source);
@@ -329,7 +329,7 @@ abstract class BaseMessageControllerTest extends TestCase
         $this->assertArrayNotHasKey($message3, $messages2, "message3 found in category2. Command output:\n\n" . $out);
 
         // Change source code, run translation again
-        $sourceFileContent = "Yii::t('{$category1}', '{$message1}'); Yii::t('{$category2}', '{$message3}');";
+        $sourceFileContent = "Leaps::t('{$category1}', '{$message1}'); Leaps::t('{$category2}', '{$message3}');";
         $source = $this->createSourceFile($sourceFileContent);
         $out .= "\n" . $this->runMessageControllerAction('extract', [$this->configFileName]);
         unlink($source);
@@ -353,7 +353,7 @@ abstract class BaseMessageControllerTest extends TestCase
         $this->saveConfigFile($this->getConfig(['ignoreCategories' => ['category2']]));
 
         // Generate initial translation
-        $sourceFileContent = "Yii::t('{$category1}', '{$message1}'); Yii::t('{$category2}', '{$message2}');";
+        $sourceFileContent = "Leaps::t('{$category1}', '{$message1}'); Leaps::t('{$category2}', '{$message2}');";
         $source = $this->createSourceFile($sourceFileContent);
         $out = $this->runMessageControllerAction('extract', [$this->configFileName]);
         unlink($source);
@@ -366,7 +366,7 @@ abstract class BaseMessageControllerTest extends TestCase
         $this->assertArrayNotHasKey($message3, $messages2, "message3 found in category2. Command output:\n\n" . $out);
 
         // Change source code, run translation again
-        $sourceFileContent = "Yii::t('{$category1}', '{$message1}'); Yii::t('{$category2}', '{$message3}');";
+        $sourceFileContent = "Leaps::t('{$category1}', '{$message1}'); Leaps::t('{$category2}', '{$message3}');";
         $source = $this->createSourceFile($sourceFileContent);
         $out .= "\n" . $this->runMessageControllerAction('extract', [$this->configFileName]);
         unlink($source);
@@ -388,7 +388,7 @@ abstract class BaseMessageControllerTest extends TestCase
         $category = 'test.category1';
         $mainMessage = 'main message';
         $nestedMessage = 'nested message';
-        $sourceFileContent = "Yii::t('{$category}', '{$mainMessage}', ['param' => Yii::t('{$category}', '{$nestedMessage}')]);";
+        $sourceFileContent = "Leaps::t('{$category}', '{$mainMessage}', ['param' => Leaps::t('{$category}', '{$nestedMessage}')]);";
         $this->createSourceFile($sourceFileContent);
 
         $this->saveConfigFile($this->getConfig());

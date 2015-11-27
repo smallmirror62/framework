@@ -1,9 +1,9 @@
 <?php
 
-namespace yiiunit\framework\filters\stubs;
+namespace leapsunit\src\filters\stubs;
 
-use yii\base\Component;
-use yii\base\NotSupportedException;
+use Leaps\Base\Component;
+use Leaps\Base\NotSupportedException;
 use yii\web\IdentityInterface;
 
 /**

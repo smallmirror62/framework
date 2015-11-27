@@ -46,7 +46,7 @@ class UrlManager extends Service
 	 *
 	 * @var boolean whether to enable pretty URLs. Instead of putting all parameters in the query
 	 *      string part of a URL, pretty URLs allow using path info to represent some of the parameters
-	 *      and can thus produce more user-friendly URLs, such as "/news/Yii-is-released", instead of
+	 *      and can thus produce more user-friendly URLs, such as "/news/Leaps-is-released", instead of
 	 *      "/index.php?r=news/view&id=100".
 	 */
 	public $enablePrettyUrl = false;

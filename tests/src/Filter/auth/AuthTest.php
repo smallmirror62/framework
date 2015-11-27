@@ -1,22 +1,22 @@
 <?php
 
-namespace yiiunit\framework\filters\auth;
+namespace leapsunit\src\filters\auth;
 
-use Yii;
+use Leaps;
 use yii\filters\auth\HttpBasicAuth;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\auth\QueryParamAuth;
-use yii\helpers\ArrayHelper;
+use Leaps\Helper\ArrayHelper;
 use yii\rest\Controller;
 use yii\web\UnauthorizedHttpException;
-use yiiunit\framework\filters\stubs\UserIdentity;
+use leapsunit\src\filters\stubs\UserIdentity;
 
 /**
  * @group filters
  * @author Dmitry Naumenko <d.naumenko.a@gmail.com>
  * @since 2.0.7
  */
-class AuthTest extends \yiiunit\TestCase
+class AuthTest extends \leapsunit\TestCase
 {
     protected function setUp()
     {
@@ -53,7 +53,7 @@ class AuthTest extends \yiiunit\TestCase
     public function authOnly($token, $login, $filter, $action)
     {
         /** @var TestAuthController $controller */
-        $controller = Yii::$app->createController('test-auth')[0];
+        $controller = Leaps::$app->createController('test-auth')[0];
         $controller->authenticatorConfig = ArrayHelper::merge($filter, ['only' => [$action]]);
         try {
             $this->assertEquals($login, $controller->run($action));
@@ -65,7 +65,7 @@ class AuthTest extends \yiiunit\TestCase
     public function authOptional($token, $login, $filter, $action)
     {
         /** @var TestAuthController $controller */
-        $controller = Yii::$app->createController('test-auth')[0];
+        $controller = Leaps::$app->createController('test-auth')[0];
         $controller->authenticatorConfig = ArrayHelper::merge($filter, ['optional' => [$action]]);
         try {
             $this->assertEquals($login, $controller->run($action));
@@ -77,7 +77,7 @@ class AuthTest extends \yiiunit\TestCase
     public function authExcept($token, $login, $filter, $action)
     {
         /** @var TestAuthController $controller */
-        $controller = Yii::$app->createController('test-auth')[0];
+        $controller = Leaps::$app->createController('test-auth')[0];
         $controller->authenticatorConfig = ArrayHelper::merge($filter, ['except' => ['other']]);
         try {
             $this->assertEquals($login, $controller->run($action));
@@ -134,7 +134,7 @@ class AuthTest extends \yiiunit\TestCase
      * @dataProvider tokenProvider
      */
     public function testHttpBearerAuth($token, $login) {
-        Yii::$app->request->headers->set('Authorization', "Bearer $token");
+        Leaps::$app->request->headers->set('Authorization', "Bearer $token");
         $filter = ['class' => HttpBearerAuth::className()];
         $this->authOnly($token, $login, $filter, 'bearer-auth');
         $this->authOptional($token, $login, $filter, 'bearer-auth');
@@ -159,16 +159,16 @@ class TestAuthController extends Controller
 
     public function actionBasicAuth()
     {
-        return Yii::$app->user->id;
+        return Leaps::$app->user->id;
     }
 
     public function actionBearerAuth()
     {
-        return Yii::$app->user->id;
+        return Leaps::$app->user->id;
     }
 
     public function actionQueryParamAuth()
     {
-        return Yii::$app->user->id;
+        return Leaps::$app->user->id;
     }
 }

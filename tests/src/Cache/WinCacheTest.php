@@ -1,7 +1,7 @@
 <?php
-namespace yiiunit\framework\caching;
+namespace leapsunit\src\Cache;
 
-use yii\caching\WinCache;
+use Leaps\Cache\WinCache;
 
 /**
  * Class for testing wincache backend

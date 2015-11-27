@@ -1,16 +1,16 @@
 <?php
 
-namespace yiiunit\framework\behaviors;
+namespace leapsunit\src\Behavior;
 
-use Yii;
-use yii\db\Expression;
-use yiiunit\TestCase;
-use yii\db\Connection;
-use yii\db\ActiveRecord;
-use yii\behaviors\TimestampBehavior;
+use Leaps;
+use Leaps\Db\Expression;
+use leapsunit\TestCase;
+use Leaps\Db\Connection;
+use Leaps\Db\ActiveRecord;
+use Leaps\Behavior\TimestampBehavior;
 
 /**
- * Unit test for [[\yii\behaviors\TimestampBehavior]].
+ * Unit test for [[\Leaps\Behaviors\TimestampBehavior]].
  * @see TimestampBehavior
  *
  * @group behaviors
@@ -32,9 +32,9 @@ class TimestampBehaviorTest extends TestCase
     public function setUp()
     {
         $this->mockApplication([
-            'components' => [
+            'services' => [
                 'db' => [
-                    'class' => '\yii\db\Connection',
+                    'class' => '\Leaps\Db\Connection',
                     'dsn' => 'sqlite::memory:',
                 ]
             ]
@@ -45,19 +45,19 @@ class TimestampBehaviorTest extends TestCase
             'created_at' => 'integer NOT NULL',
             'updated_at' => 'integer',
         ];
-        Yii::$app->getDb()->createCommand()->createTable('test_auto_timestamp', $columns)->execute();
+        Leaps::$app->getDb()->createCommand()->createTable('test_auto_timestamp', $columns)->execute();
 
         $columns = [
             'id' => 'pk',
             'created_at' => 'string NOT NULL',
             'updated_at' => 'string',
         ];
-        Yii::$app->getDb()->createCommand()->createTable('test_auto_timestamp_string', $columns)->execute();
+        Leaps::$app->getDb()->createCommand()->createTable('test_auto_timestamp_string', $columns)->execute();
     }
 
     public function tearDown()
     {
-        Yii::$app->getDb()->close();
+        Leaps::$app->getDb()->close();
         parent::tearDown();
     }
 
@@ -118,7 +118,7 @@ class TimestampBehaviorTest extends TestCase
         ActiveRecordTimestamp::$tableName = 'test_auto_timestamp_string';
         ActiveRecordTimestamp::$behaviors = [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'className' => TimestampBehavior::className(),
                 'value' => $expression,
             ],
         ];
@@ -141,7 +141,7 @@ class TimestampBehaviorTest extends TestCase
         ActiveRecordTimestamp::$tableName = 'test_auto_timestamp_string';
         ActiveRecordTimestamp::$behaviors = [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'className' => TimestampBehavior::className(),
                 'value' => new Expression("strftime('%Y')"),
             ],
         ];

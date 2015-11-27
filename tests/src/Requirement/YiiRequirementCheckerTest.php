@@ -1,19 +1,19 @@
 <?php
 
-require_once(__DIR__.'/../../../framework/requirements/YiiRequirementChecker.php');
+require_once(__DIR__.'/../../../framework/requirements/LeapsRequirementChecker.php');
 
-use yiiunit\TestCase;
+use leapsunit\TestCase;
 
 /**
- * Test case for [[YiiRequirementChecker]].
- * @see YiiRequirementChecker
+ * Test case for [[LeapsRequirementChecker]].
+ * @see LeapsRequirementChecker
  * @group requirements
  */
-class YiiRequirementCheckerTest extends TestCase
+class LeapsRequirementCheckerTest extends TestCase
 {
     public function testCheck()
     {
-        $requirementsChecker = new YiiRequirementChecker();
+        $requirementsChecker = new LeapsRequirementChecker();
 
         $requirements = [
             'requirementPass' => [
@@ -63,7 +63,7 @@ class YiiRequirementCheckerTest extends TestCase
      */
     public function testCheckEval()
     {
-        $requirementsChecker = new YiiRequirementChecker();
+        $requirementsChecker = new LeapsRequirementChecker();
 
         $requirements = [
             'requirementPass' => [
@@ -97,7 +97,7 @@ class YiiRequirementCheckerTest extends TestCase
      */
     public function testCheckChained()
     {
-        $requirementsChecker = new YiiRequirementChecker();
+        $requirementsChecker = new LeapsRequirementChecker();
 
         $requirements1 = [
             [
@@ -133,7 +133,7 @@ class YiiRequirementCheckerTest extends TestCase
             $this->markTestSkipped('Can not test this on HHVM.');
         }
 
-        $requirementsChecker = new YiiRequirementChecker();
+        $requirementsChecker = new LeapsRequirementChecker();
 
         $this->assertFalse($requirementsChecker->checkPhpExtensionVersion('some_unexisting_php_extension', '0.1'), 'No fail while checking unexisting extension!');
         $this->assertTrue($requirementsChecker->checkPhpExtensionVersion('pdo', '1.0'), 'Unable to check PDO version!');
@@ -164,7 +164,7 @@ class YiiRequirementCheckerTest extends TestCase
      */
     public function testGetByteSize($verboseValue, $expectedByteSize)
     {
-        $requirementsChecker = new YiiRequirementChecker();
+        $requirementsChecker = new LeapsRequirementChecker();
 
         $this->assertEquals($expectedByteSize, $requirementsChecker->getByteSize($verboseValue), "Wrong byte size for '{$verboseValue}'!");
     }
@@ -195,7 +195,7 @@ class YiiRequirementCheckerTest extends TestCase
      */
     public function testCompareByteSize($a, $b, $compare, $expectedComparisonResult)
     {
-        $requirementsChecker = new YiiRequirementChecker();
+        $requirementsChecker = new LeapsRequirementChecker();
         $this->assertEquals($expectedComparisonResult, $requirementsChecker->compareByteSize($a, $b, $compare), "Wrong compare '{$a}{$compare}{$b}'");
     }
 }

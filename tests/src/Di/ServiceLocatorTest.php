@@ -1,15 +1,15 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\di;
+namespace leapsunit\src\di;
 
-use yii\base\Object;
+use Leaps\Base\Object;
 use yii\di\ServiceLocator;
-use yiiunit\TestCase;
+use leapsunit\TestCase;
 
 class Creator
 {

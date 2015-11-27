@@ -1,7 +1,7 @@
 <?php
-namespace yiiunit\framework\caching;
+namespace leapsunit\src\Cache;
 
-use yii\caching\MemCache;
+use Leaps\Cache\MemCache;
 
 /**
  * Class for testing memcached cache backend

@@ -39,7 +39,7 @@ trait ActiveRelationTrait
      * @var array the columns of the primary and foreign tables that establish a relation.
      * The array keys must be columns of the table for this relation, and the array values
      * must be the corresponding columns from the primary table.
-     * Do not prefix or quote the column names as this will be done automatically by Yii.
+     * Do not prefix or quote the column names as this will be done automatically by Leaps.
      * This property is only used in relational context.
      */
     public $link;

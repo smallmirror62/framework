@@ -9,20 +9,20 @@ namespace yii\web;
  */
 function time()
 {
-    return \yiiunit\framework\web\UserTest::$time ?: \time();
+    return \leapsunit\src\web\UserTest::$time ?: \time();
 }
 
-namespace yiiunit\framework\web;
+namespace leapsunit\src\web;
 
-use yii\base\NotSupportedException;
-use yii\base\Component;
+use Leaps\Base\NotSupportedException;
+use Leaps\Base\Component;
 use yii\rbac\PhpManager;
 use yii\web\IdentityInterface;
 use yii\web\UrlManager;
 use yii\web\UrlRule;
 use yii\web\Request;
-use Yii;
-use yiiunit\TestCase;
+use Leaps;
+use leapsunit\TestCase;
 
 /**
  * @group web
@@ -37,7 +37,7 @@ class UserTest extends TestCase
 
     protected function tearDown()
     {
-        Yii::$app->session->removeAll();
+        Leaps::$app->session->removeAll();
         static::$time = null;
         parent::tearDown();
     }
@@ -64,33 +64,33 @@ class UserTest extends TestCase
         ];
         $this->mockWebApplication($appConfig);
 
-        $am = Yii::$app->authManager;
+        $am = Leaps::$app->authManager;
         $am->removeAll();
         $am->add($role = $am->createPermission('rUser'));
         $am->add($perm = $am->createPermission('doSomething'));
         $am->addChild($role, $perm);
         $am->assign($role, 'user1');
 
-        Yii::$app->session->removeAll();
+        Leaps::$app->session->removeAll();
         static::$time = \time();
-        Yii::$app->user->login(UserIdentity::findIdentity('user1'));
+        Leaps::$app->user->login(UserIdentity::findIdentity('user1'));
 
-//        print_r(Yii::$app->session);
+//        print_r(Leaps::$app->session);
 //        print_r($_SESSION);
 
         $this->mockWebApplication($appConfig);
-        $this->assertFalse(Yii::$app->user->isGuest);
-        $this->assertTrue(Yii::$app->user->can('doSomething'));
+        $this->assertFalse(Leaps::$app->user->isGuest);
+        $this->assertTrue(Leaps::$app->user->can('doSomething'));
 
         static::$time += 5;
         $this->mockWebApplication($appConfig);
-        $this->assertFalse(Yii::$app->user->isGuest);
-        $this->assertTrue(Yii::$app->user->can('doSomething'));
+        $this->assertFalse(Leaps::$app->user->isGuest);
+        $this->assertTrue(Leaps::$app->user->can('doSomething'));
 
         static::$time += 11;
         $this->mockWebApplication($appConfig);
-        $this->assertTrue(Yii::$app->user->isGuest);
-        $this->assertFalse(Yii::$app->user->can('doSomething'));
+        $this->assertTrue(Leaps::$app->user->isGuest);
+        $this->assertFalse(Leaps::$app->user->can('doSomething'));
 
     }
 

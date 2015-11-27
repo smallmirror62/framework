@@ -1,19 +1,19 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\test;
+namespace leapsunit\src\test;
 
 use yii\test\Fixture;
 use yii\test\FixtureTrait;
-use yiiunit\TestCase;
+use leapsunit\TestCase;
 
 class Fixture1 extends Fixture
 {
-    public $depends = ['yiiunit\framework\test\Fixture2'];
+    public $depends = ['leapsunit\src\test\Fixture2'];
 
     public function load()
     {
@@ -28,7 +28,7 @@ class Fixture1 extends Fixture
 
 class Fixture2 extends Fixture
 {
-    public $depends = ['yiiunit\framework\test\Fixture3'];
+    public $depends = ['leapsunit\src\test\Fixture3'];
     public function load()
     {
         MyTestCase::$load .= '2';

@@ -1,13 +1,13 @@
 <?php
-namespace yiiunit\framework\console\controllers;
+namespace leapsunit\src\Console\Controller;
 
 
-use Yii;
-use yii\helpers\FileHelper;
-use yii\i18n\GettextPoFile;
+use Leaps;
+use Leaps\Helper\FileHelper;
+use Leaps\I18n\GettextPoFile;
 
 /**
- * Tests that [[\yii\console\controllers\MessageController]] works as expected with PO message format.
+ * Tests that [[\Leaps\Console\Controller\MessageController]] works as expected with PO message format.
  */
 class POMessageControllerTest extends BaseMessageControllerTest
 {
@@ -22,7 +22,7 @@ class POMessageControllerTest extends BaseMessageControllerTest
             $this->markTestSkipped('POMessageControllerTest can not run on HHVM because it relies on saving and re-including PHP files which is not supported by HHVM.');
         }
 
-        $this->messagePath = Yii::getAlias('@yiiunit/runtime/test_messages');
+        $this->messagePath = Leaps::getAlias('@leapsunit/runtime/test_messages');
         FileHelper::createDirectory($this->messagePath, 0777);
     }
 

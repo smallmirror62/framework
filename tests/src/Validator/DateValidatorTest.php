@@ -1,12 +1,12 @@
 <?php
 
-namespace yiiunit\framework\validators;
+namespace leapsunit\src\validators;
 
 use DateTime;
 use yii\validators\DateValidator;
-use yiiunit\data\validators\models\FakedValidationModel;
-use yiiunit\framework\i18n\IntlTestHelper;
-use yiiunit\TestCase;
+use leapsunit\data\validators\models\FakedValidationModel;
+use leapsunit\src\i18n\IntlTestHelper;
+use leapsunit\TestCase;
 use IntlDateFormatter;
 
 /**

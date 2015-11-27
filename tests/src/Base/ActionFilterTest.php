@@ -2,10 +2,10 @@
 
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
-namespace leapsunit\framework\base;
+namespace leapsunit\src\Base;
 
 use Leaps;
 use leapsunit\TestCase;

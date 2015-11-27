@@ -1,11 +1,11 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\data\ar;
+namespace leapsunit\data\ar;
 
 /**
  * ActiveRecord is ...
@@ -13,7 +13,7 @@ namespace yiiunit\data\ar;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class ActiveRecord extends \yii\db\ActiveRecord
+class ActiveRecord extends \Leaps\Db\ActiveRecord
 {
     public static $db;
 

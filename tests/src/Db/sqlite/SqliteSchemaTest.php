@@ -1,7 +1,7 @@
 <?php
-namespace yiiunit\framework\db\sqlite;
+namespace leapsunit\src\db\sqlite;
 
-use yiiunit\framework\db\SchemaTest;
+use leapsunit\src\db\SchemaTest;
 
 /**
  * @group db

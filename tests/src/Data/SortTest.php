@@ -1,15 +1,15 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\data;
+namespace leapsunit\src\Data;
 
-use yii\web\UrlManager;
-use yiiunit\TestCase;
-use yii\data\Sort;
+use Leaps\Web\UrlManager;
+use leapsunit\TestCase;
+use Leaps\Data\Sort;
 
 /**
  * @author Qiang Xue <qiang.xue@gmail.com>

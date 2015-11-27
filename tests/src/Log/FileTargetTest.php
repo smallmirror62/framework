@@ -3,13 +3,13 @@
  * @author Carsten Brandt <mail@cebe.cc>
  */
 
-namespace yiiunit\framework\log;
+namespace leapsunit\src\log;
 
-use yii\helpers\FileHelper;
+use Leaps\Helper\FileHelper;
 use yii\log\Dispatcher;
 use yii\log\Logger;
-use Yii;
-use yiiunit\TestCase;
+use Leaps;
+use leapsunit\TestCase;
 
 /**
  * @group log
@@ -35,7 +35,7 @@ class FileTargetTest extends TestCase
      */
     public function testRotate($rotateByCopy)
     {
-        $logFile = Yii::getAlias('@yiiunit/runtime/log/filetargettest.log');
+        $logFile = Leaps::getAlias('@leapsunit/runtime/log/filetargettest.log');
         FileHelper::removeDirectory(dirname($logFile));
         mkdir(dirname($logFile), 0777, true);
 

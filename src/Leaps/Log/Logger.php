@@ -18,7 +18,7 @@ use Leaps\Base\Service;
  *
  * A Logger instance can be accessed via `Leaps::getLogger()`. You can call the method [[log()]] to record a single log message.
  * For convenience, a set of shortcut methods are provided for logging messages of various severity levels
- * via the [[Yii]] class:
+ * via the [[Leaps]] class:
  *
  * - [[Leaps::trace()]]
  * - [[Leaps::error()]]

@@ -1,7 +1,7 @@
 <?php
-namespace yiiunit\framework\caching;
+namespace leapsunit\src\Cache;
 
-use yii\caching\FileCache;
+use Leaps\Cache\FileCache;
 
 /**
  * Class for testing file cache backend
@@ -17,7 +17,7 @@ class FileCacheTest extends CacheTestCase
     protected function getCacheInstance()
     {
         if ($this->_cacheInstance === null) {
-            $this->_cacheInstance = new FileCache(['cachePath' => '@yiiunit/runtime/cache']);
+            $this->_cacheInstance = new FileCache(['cachePath' => '@leapsunit/runtime/cache']);
         }
 
         return $this->_cacheInstance;

@@ -82,7 +82,7 @@ if (method_exists($this, 'beginPage')) {
     </div>
     <?php
     if (method_exists($this, 'endBody')) {
-        $this->endBody(); // to allow injecting code into body (mostly by Yii Debug Toolbar)
+        $this->endBody(); // to allow injecting code into body (mostly by Leaps Debug Toolbar)
     }
     ?>
 </body>

@@ -1,12 +1,12 @@
 <?php
 
-namespace yiiunit\framework\validators;
+namespace leapsunit\src\validators;
 
 use yii\validators\FileValidator;
 use yii\web\UploadedFile;
-use Yii;
-use yiiunit\data\validators\models\FakedValidationModel;
-use yiiunit\TestCase;
+use Leaps;
+use leapsunit\data\validators\models\FakedValidationModel;
+use leapsunit\TestCase;
 
 /**
  * @group validators
@@ -223,7 +223,7 @@ class FileValidatorTest extends TestCase
                 continue;
             }
             $name = isset($param['name']) ? $param['name'] : $rndString();
-            $tempName = \Yii::getAlias('@yiiunit/runtime/validators/file/tmp/') . $name;
+            $tempName = \Leaps::getAlias('@leapsunit/runtime/validators/file/tmp/') . $name;
             if (is_readable($tempName)) {
                 $size = filesize($tempName);
             } else {
@@ -300,7 +300,7 @@ class FileValidatorTest extends TestCase
         $val = new FileValidator();
         $val->validateAttribute($m, 'attr_err_part');
         $this->assertTrue($m->hasErrors('attr_err_part'));
-        $this->assertSame(Yii::t('yii', 'File upload failed.'), current($m->getErrors('attr_err_part')));
+        $this->assertSame(Leaps::t('yii', 'File upload failed.'), current($m->getErrors('attr_err_part')));
     }
 
     public function testValidateAttributeType()
@@ -345,7 +345,7 @@ class FileValidatorTest extends TestCase
         $val = new FileValidator();
         $val->validateAttribute($m, 'attr_err_part');
         $this->assertTrue($m->hasErrors('attr_err_part'));
-        $this->assertSame(Yii::t('yii', 'File upload failed.'), current($m->getErrors('attr_err_part')));
+        $this->assertSame(Leaps::t('yii', 'File upload failed.'), current($m->getErrors('attr_err_part')));
     }
 
     public function testValidateAttributeErrCantWrite()
@@ -354,7 +354,7 @@ class FileValidatorTest extends TestCase
         $val = new FileValidator();
         $val->validateAttribute($m, 'attr_err_write');
         $this->assertTrue($m->hasErrors('attr_err_write'));
-        $this->assertSame(Yii::t('yii', 'File upload failed.'), current($m->getErrors('attr_err_write')));
+        $this->assertSame(Leaps::t('yii', 'File upload failed.'), current($m->getErrors('attr_err_write')));
     }
 
     public function testValidateAttributeErrExtension()
@@ -363,7 +363,7 @@ class FileValidatorTest extends TestCase
         $val = new FileValidator();
         $val->validateAttribute($m, 'attr_err_ext');
         $this->assertTrue($m->hasErrors('attr_err_ext'));
-        $this->assertSame(Yii::t('yii', 'File upload failed.'), current($m->getErrors('attr_err_ext')));
+        $this->assertSame(Leaps::t('yii', 'File upload failed.'), current($m->getErrors('attr_err_ext')));
     }
 
     public function testValidateAttributeErrNoTmpDir()
@@ -372,6 +372,6 @@ class FileValidatorTest extends TestCase
         $val = new FileValidator();
         $val->validateAttribute($m, 'attr_err_tmp');
         $this->assertTrue($m->hasErrors('attr_err_tmp'));
-        $this->assertSame(Yii::t('yii', 'File upload failed.'), current($m->getErrors('attr_err_tmp')));
+        $this->assertSame(Leaps::t('yii', 'File upload failed.'), current($m->getErrors('attr_err_tmp')));
     }
 }

@@ -1,8 +1,8 @@
 <?php
-namespace yiiunit\framework\db\pgsql;
+namespace leapsunit\src\db\pgsql;
 
-use yii\db\Transaction;
-use yiiunit\framework\db\ConnectionTest;
+use Leaps\Db\Transaction;
+use leapsunit\src\db\ConnectionTest;
 
 /**
  * @group db

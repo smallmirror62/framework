@@ -1,11 +1,11 @@
 <?php
 
-namespace yiiunit\framework\rest;
+namespace leapsunit\src\rest;
 
 use yii\web\UrlManager;
 use yii\rest\UrlRule;
 use yii\web\Request;
-use yiiunit\TestCase;
+use leapsunit\TestCase;
 
 /**
  * @group rest

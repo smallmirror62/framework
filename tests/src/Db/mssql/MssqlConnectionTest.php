@@ -1,8 +1,8 @@
 <?php
 
-namespace yiiunit\framework\db\mssql;
+namespace leapsunit\src\db\mssql;
 
-use yiiunit\framework\db\ConnectionTest;
+use leapsunit\src\db\ConnectionTest;
 
 /**
  * @group db

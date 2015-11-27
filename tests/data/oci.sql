@@ -251,8 +251,8 @@ END;
 
 /* TRIGGERS */
 
-INSERT INTO "animal" ("type") VALUES ('yiiunit\data\ar\Cat');
-INSERT INTO "animal" ("type") VALUES ('yiiunit\data\ar\Dog');
+INSERT INTO "animal" ("type") VALUES ('leapsunit\data\ar\Cat');
+INSERT INTO "animal" ("type") VALUES ('leapsunit\data\ar\Dog');
 
 
 INSERT INTO "profile" ("description") VALUES ('profile customer 1');
@@ -265,8 +265,8 @@ INSERT INTO "customer" ("email", "name", "address", "status", "bool_status", "pr
 INSERT INTO "category" ("name") VALUES ('Books');
 INSERT INTO "category" ("name") VALUES ('Movies');
 
-INSERT INTO "item" ("name", "category_id") VALUES ('Agile Web Application Development with Yii1.1 and PHP5', 1);
-INSERT INTO "item" ("name", "category_id") VALUES ('Yii 1.1 Application Development Cookbook', 1);
+INSERT INTO "item" ("name", "category_id") VALUES ('Agile Web Application Development with Leaps1.1 and PHP5', 1);
+INSERT INTO "item" ("name", "category_id") VALUES ('Leaps 1.1 Application Development Cookbook', 1);
 INSERT INTO "item" ("name", "category_id") VALUES ('Ice Age', 2);
 INSERT INTO "item" ("name", "category_id") VALUES ('Toy Story', 2);
 INSERT INTO "item" ("name", "category_id") VALUES ('Cars', 2);
@@ -293,7 +293,7 @@ INSERT INTO "order_item_with_null_fk" ("order_id", "item_id", "quantity", "subto
 INSERT INTO "order_item_with_null_fk" ("order_id", "item_id", "quantity", "subtotal") VALUES (2, 3, 1, 8.0);
 INSERT INTO "order_item_with_null_fk" ("order_id", "item_id", "quantity", "subtotal") VALUES (3, 2, 1, 40.0);
 
-INSERT INTO "document" ("title", "content", "version") VALUES ('Yii 2.0 guide', 'This is Yii 2.0 guide', 0);
+INSERT INTO "document" ("title", "content", "version") VALUES ('Leaps 2.0 guide', 'This is Leaps 2.0 guide', 0);
 
 INSERT INTO "validator_main" ("id", "field1") VALUES (1, 'just a string1');
 INSERT INTO "validator_main" ("id", "field1") VALUES (2, 'just a string2');

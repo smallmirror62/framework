@@ -1,13 +1,13 @@
 <?php
-namespace yiiunit\framework\console\controllers;
+namespace leapsunit\src\Console\Controller;
 
 
-use Yii;
-use yii\helpers\FileHelper;
-use yii\helpers\VarDumper;
+use Leaps;
+use Leaps\Helper\FileHelper;
+use Leaps\Helper\VarDumper;
 
 /**
- * Tests that [[\yii\console\controllers\MessageController]] works as expected with PHP message format.
+ * Tests that [[\Leaps\Console\Controller\MessageController]] works as expected with PHP message format.
  */
 class PHPMessageControllerTest extends BaseMessageControllerTest
 {
@@ -16,7 +16,7 @@ class PHPMessageControllerTest extends BaseMessageControllerTest
     public function setUp()
     {
         parent::setUp();
-        $this->messagePath = Yii::getAlias('@yiiunit/runtime/test_messages');
+        $this->messagePath = Leaps::getAlias('@leapsunit/runtime/test_messages');
         FileHelper::createDirectory($this->messagePath, 0777);
     }
 

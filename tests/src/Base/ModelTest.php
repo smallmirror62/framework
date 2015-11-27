@@ -1,13 +1,13 @@
 <?php
 
-namespace yiiunit\framework\base;
+namespace leapsunit\src\base;
 
-use yii\base\Model;
-use yiiunit\data\base\RulesModel;
-use yiiunit\TestCase;
-use yiiunit\data\base\Speaker;
-use yiiunit\data\base\Singer;
-use yiiunit\data\base\InvalidRulesModel;
+use Leaps\Base\Model;
+use leapsunit\data\base\RulesModel;
+use leapsunit\TestCase;
+use leapsunit\data\base\Speaker;
+use leapsunit\data\base\Singer;
+use leapsunit\data\base\InvalidRulesModel;
 
 /**
  * @group base
@@ -344,7 +344,7 @@ class ModelTest extends TestCase
 
     public function testCreateValidators()
     {
-        $this->setExpectedException('yii\base\InvalidConfigException', 'Invalid validation rule: a rule must specify both attribute names and validator type.');
+        $this->setExpectedException('Leaps\Base\InvalidConfigException', 'Invalid validation rule: a rule must specify both attribute names and validator type.');
 
         $invalid = new InvalidRulesModel();
         $invalid->createValidators();

@@ -1,10 +1,10 @@
 <?php
 
-namespace yiiunit\framework\validators;
+namespace leapsunit\src\validators;
 
 use yii\validators\FilterValidator;
-use yiiunit\data\validators\models\FakedValidationModel;
-use yiiunit\TestCase;
+use leapsunit\data\validators\models\FakedValidationModel;
+use leapsunit\TestCase;
 
 /**
  * @group validators
@@ -19,7 +19,7 @@ class FilterValidatorTest extends TestCase
 
     public function testAssureExceptionOnInit()
     {
-        $this->setExpectedException('yii\base\InvalidConfigException');
+        $this->setExpectedException('Leaps\Base\InvalidConfigException');
         new FilterValidator();
     }
 

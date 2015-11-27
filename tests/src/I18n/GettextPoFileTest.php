@@ -1,9 +1,9 @@
 <?php
 
-namespace yiiunit\framework\i18n;
+namespace leapsunit\src\i18n;
 
 use yii\i18n\GettextPoFile;
-use yiiunit\TestCase;
+use leapsunit\TestCase;
 
 /**
  * @group i18n

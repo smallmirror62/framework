@@ -1,7 +1,7 @@
 <?php
-namespace yiiunit\framework\caching;
+namespace leapsunit\src\Cache;
 
-use yii\caching\ZendDataCache;
+use Leaps\Cache\ZendDataCache;
 
 /**
  * Class for testing Zend cache backend

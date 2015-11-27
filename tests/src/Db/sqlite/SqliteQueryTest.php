@@ -1,8 +1,8 @@
 <?php
-namespace yiiunit\framework\db\sqlite;
+namespace leapsunit\src\db\sqlite;
 
-use yii\db\Query;
-use yiiunit\framework\db\QueryTest;
+use Leaps\Db\Query;
+use leapsunit\src\db\QueryTest;
 
 /**
  * @group db

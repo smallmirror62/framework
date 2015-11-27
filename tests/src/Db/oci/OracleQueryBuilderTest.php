@@ -1,9 +1,9 @@
 <?php
 
-namespace yiiunit\framework\db\oci;
+namespace leapsunit\src\db\oci;
 
-use yii\db\oci\Schema;
-use yiiunit\framework\db\QueryBuilderTest;
+use Leaps\Db\oci\Schema;
+use leapsunit\src\db\QueryBuilderTest;
 
 /**
  * @group db

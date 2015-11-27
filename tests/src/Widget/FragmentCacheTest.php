@@ -1,23 +1,23 @@
 <?php
 
-namespace yiiunit\framework\widgets;
+namespace leapsunit\src\widgets;
 
-use Yii;
-use yii\caching\ArrayCache;
-use yii\base\View;
+use Leaps;
+use Leaps\Cache\ArrayCache;
+use Leaps\Base\View;
 use yii\widgets\Breadcrumbs;
 
 /**
  * @group widgets
  * @group caching
  */
-class FragmentCacheTest extends \yiiunit\TestCase
+class FragmentCacheTest extends \leapsunit\TestCase
 {
     protected function setUp()
     {
         parent::setUp();
         $this->mockWebApplication();
-        Yii::$app->set('cache', [
+        Leaps::$app->set('cache', [
             'class' => ArrayCache::className(),
         ]);
     }

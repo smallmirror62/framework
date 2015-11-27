@@ -1,9 +1,9 @@
 <?php
 
-namespace yiiunit\framework\validators;
+namespace leapsunit\src\validators;
 
 use yii\validators\DefaultValueValidator;
-use yiiunit\TestCase;
+use leapsunit\TestCase;
 
 /**
  * @group validators

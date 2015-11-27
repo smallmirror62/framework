@@ -1,6 +1,6 @@
 <?php
 
-namespace yiiunit\data\ar;
+namespace leapsunit\data\ar;
 
 /**
  * Class Item

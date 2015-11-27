@@ -1,12 +1,12 @@
 <?php
 
-namespace yiiunit\framework\web;
+namespace leapsunit\src\web;
 
-use Yii;
-use yii\db\Connection;
-use yii\db\Query;
+use Leaps;
+use Leaps\Db\Connection;
+use Leaps\Db\Query;
 use yii\web\DbSession;
-use yiiunit\TestCase;
+use leapsunit\TestCase;
 
 /**
  * @group db
@@ -17,11 +17,11 @@ class DbSessionTest extends TestCase
     {
         parent::setUp();
         $this->mockApplication();
-        Yii::$app->set('db', [
+        Leaps::$app->set('db', [
             'class' => Connection::className(),
             'dsn' => 'sqlite::memory:',
         ]);
-        Yii::$app->db->createCommand()->createTable('session', [
+        Leaps::$app->db->createCommand()->createTable('session', [
             'id' => 'string',
             'expire' => 'integer',
             'data' => 'text',

@@ -1,10 +1,10 @@
 <?php
-namespace yiiunit\framework\validators;
+namespace leapsunit\src\validators;
 
-use yii\base\InvalidConfigException;
+use Leaps\Base\InvalidConfigException;
 use yii\validators\CompareValidator;
-use yiiunit\data\validators\models\FakedValidationModel;
-use yiiunit\TestCase;
+use leapsunit\data\validators\models\FakedValidationModel;
+use leapsunit\TestCase;
 
 /**
  * @group validators
@@ -19,7 +19,7 @@ class CompareValidatorTest extends TestCase
 
     public function testValidateValueException()
     {
-        $this->setExpectedException('yii\base\InvalidConfigException');
+        $this->setExpectedException('Leaps\Base\InvalidConfigException');
         $val = new CompareValidator;
         $val->validate('val');
     }

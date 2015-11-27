@@ -1,10 +1,10 @@
 <?php
 
-namespace yiiunit\framework\db\sqlite;
+namespace leapsunit\src\db\sqlite;
 
-use yii\db\Query;
-use yii\db\Schema;
-use yiiunit\framework\db\QueryBuilderTest;
+use Leaps\Db\Query;
+use Leaps\Db\Schema;
+use leapsunit\src\db\QueryBuilderTest;
 
 /**
  * @group db
@@ -84,7 +84,7 @@ class SqliteQueryBuilderTest extends QueryBuilderTest
 
     public function testAddDropPrimaryKey()
     {
-        $this->setExpectedException('yii\base\NotSupportedException');
+        $this->setExpectedException('Leaps\Base\NotSupportedException');
         parent::testAddDropPrimaryKey();
     }
 

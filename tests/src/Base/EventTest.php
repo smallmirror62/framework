@@ -1,15 +1,15 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
+ * @copyright Copyright (c) 2008 Leaps Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\base;
+namespace leapsunit\src\base;
 
-use yii\base\Component;
-use yii\base\Event;
-use yiiunit\TestCase;
+use Leaps\Base\Service;
+use Leaps\Base\Event;
+use leapsunit\TestCase;
 
 /**
  * @author Qiang Xue <qiang.xue@gmail.com>
@@ -75,7 +75,7 @@ class EventTest extends TestCase
     }
 }
 
-class ActiveRecord extends Component
+class ActiveRecord extends Service
 {
     public function save()
     {

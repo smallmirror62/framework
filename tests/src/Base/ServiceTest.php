@@ -1,10 +1,10 @@
 <?php
-namespace yiiunit\framework\base;
+namespace leapsunit\src\base;
 
-use yii\base\Behavior;
-use yii\base\Component;
-use yii\base\Event;
-use yiiunit\TestCase;
+use Leaps\Base\Behavior;
+use Leaps\Base\Component;
+use Leaps\Base\Event;
+use leapsunit\TestCase;
 
 function globalEventHandler($event)
 {
@@ -20,7 +20,7 @@ function globalEventHandler2($event)
 /**
  * @group base
  */
-class ComponentTest extends TestCase
+class ServiceTest extends TestCase
 {
     /**
      * @var NewComponent
@@ -96,7 +96,7 @@ class ComponentTest extends TestCase
     public function testGetProperty()
     {
         $this->assertTrue('default' === $this->component->Text);
-        $this->setExpectedException('yii\base\UnknownPropertyException');
+        $this->setExpectedException('Leaps\Base\UnknownPropertyException');
         $value2 = $this->component->Caption;
     }
 
@@ -105,7 +105,7 @@ class ComponentTest extends TestCase
         $value = 'new value';
         $this->component->Text = $value;
         $this->assertEquals($value, $this->component->Text);
-        $this->setExpectedException('yii\base\UnknownPropertyException');
+        $this->setExpectedException('Leaps\Base\UnknownPropertyException');
         $this->component->NewMember = $value;
     }
 
@@ -130,7 +130,7 @@ class ComponentTest extends TestCase
 
     public function testCallUnknownMethod()
     {
-        $this->setExpectedException('yii\base\UnknownMethodException');
+        $this->setExpectedException('Leaps\Base\UnknownMethodException');
         $this->component->unknownMethod();
     }
 
@@ -150,7 +150,7 @@ class ComponentTest extends TestCase
 
     public function testUnsetReadonly()
     {
-        $this->setExpectedException('yii\base\InvalidCallException');
+        $this->setExpectedException('Leaps\Base\InvalidCallException');
         unset($this->component->object);
     }
 
@@ -221,7 +221,7 @@ class ComponentTest extends TestCase
     public function testStopEvent()
     {
         $component = new NewComponent;
-        $component->on('click', 'yiiunit\framework\base\globalEventHandler2');
+        $component->on('click', 'leapsunit\src\base\globalEventHandler2');
         $component->on('click', [$this->component, 'myEventHandler']);
         $component->raiseEvent();
         $this->assertTrue($component->eventHandled);
@@ -244,7 +244,7 @@ class ComponentTest extends TestCase
 
         $this->assertSame($behavior, $component->detachBehavior('a'));
         $this->assertFalse($component->hasProperty('p'));
-        $this->setExpectedException('yii\base\UnknownMethodException');
+        $this->setExpectedException('Leaps\Base\UnknownMethodException');
         $component->test();
 
         $p = 'as b';
@@ -306,8 +306,8 @@ class ComponentTest extends TestCase
     public function testSetReadOnlyProperty()
     {
         $this->setExpectedException(
-            '\yii\base\InvalidCallException',
-            'Setting read-only property: yiiunit\framework\base\NewComponent::object'
+            '\Leaps\Base\InvalidCallException',
+            'Setting read-only property: leapsunit\src\base\NewComponent::object'
         );
         $this->component->object = 'z';
     }
@@ -320,9 +320,9 @@ class ComponentTest extends TestCase
         $this->component->attachBehaviors([
             'a' => $behavior,
         ]);
-        $this->component->p = 'Yii is cool.';
+        $this->component->p = 'Leaps is cool.';
 
-        $this->assertSame('Yii is cool.', $this->component->getBehavior('a')->p);
+        $this->assertSame('Leaps is cool.', $this->component->getBehavior('a')->p);
     }
 
     public function testSettingBehaviorWithSetter()
@@ -337,8 +337,8 @@ class ComponentTest extends TestCase
     public function testWriteOnlyProperty()
     {
         $this->setExpectedException(
-            '\yii\base\InvalidCallException',
-            'Getting write-only property: yiiunit\framework\base\NewComponent::writeOnly'
+            '\Leaps\Base\InvalidCallException',
+            'Getting write-only property: leapsunit\src\base\NewComponent::writeOnly'
         );
         $this->component->writeOnly;
     }
@@ -355,7 +355,7 @@ class ComponentTest extends TestCase
     }
 }
 
-class NewComponent extends Component
+class NewComponent extends Service
 {
     private $_object = null;
     private $_text = 'default';
@@ -437,7 +437,7 @@ class NewBehavior extends Behavior
     }
 }
 
-class NewComponent2 extends Component
+class NewComponent2 extends Service
 {
     public $a;
     public $b;

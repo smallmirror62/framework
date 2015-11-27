@@ -1,10 +1,10 @@
 <?php
 
-use yii\helpers\FileHelper;
-use yiiunit\TestCase;
+use Leaps\Helper\FileHelper;
+use leapsunit\TestCase;
 
 /**
- * Unit test for [[yii\helpers\FileHelper]]
+ * Unit test for [[Leaps\Helper\FileHelper]]
  * @see FileHelper
  * @group helpers
  */
@@ -17,7 +17,7 @@ class FileHelperTest extends TestCase
 
     public function setUp()
     {
-        $this->testFilePath = Yii::getAlias('@yiiunit/runtime') . DIRECTORY_SEPARATOR . get_class($this);
+        $this->testFilePath = Leaps::getAlias('@leapsunit/runtime') . DIRECTORY_SEPARATOR . get_class($this);
         $this->createDir($this->testFilePath);
         if (!file_exists($this->testFilePath)) {
             $this->markTestIncomplete('Unit tests runtime directory should have writable permissions!');

@@ -1,11 +1,11 @@
 <?php
 
-namespace yiiunit\framework\mail;
+namespace leapsunit\src\mail;
 
-use Yii;
+use Leaps;
 use yii\mail\BaseMailer;
 use yii\mail\BaseMessage;
-use yiiunit\TestCase;
+use leapsunit\TestCase;
 
 /**
  * @group mail
@@ -36,7 +36,7 @@ class BaseMessageTest extends TestCase
      */
     protected function getMailer()
     {
-        return Yii::$app->get('mailer');
+        return Leaps::$app->get('mailer');
     }
 
     // Tests :
@@ -62,7 +62,7 @@ class BaseMessageTest extends TestCase
  */
 class TestMailer extends BaseMailer
 {
-    public $messageClass = 'yiiunit\framework\mail\TestMessage';
+    public $messageClass = 'leapsunit\src\mail\TestMessage';
     public $sentMessages = [];
 
     protected function sendMessage($message)
