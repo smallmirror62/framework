@@ -34,14 +34,14 @@ class UrlValidatorTest extends TestCase
     public function testValidateValueWithDefaultScheme()
     {
         $val = new UrlValidator(['defaultScheme' => 'https']);
-        $this->assertTrue($val->validate('yiiframework.com'));
-        $this->assertTrue($val->validate('http://yiiframework.com'));
+        $this->assertTrue($val->validate('tintsoft.com'));
+        $this->assertTrue($val->validate('http://tintsoft.com'));
     }
 
     public function testValidateValueWithoutScheme()
     {
         $val = new UrlValidator(['pattern' => '/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)/i']);
-        $this->assertTrue($val->validate('yiiframework.com'));
+        $this->assertTrue($val->validate('tintsoft.com'));
     }
 
     public function testValidateWithCustomScheme()
@@ -54,9 +54,9 @@ class UrlValidatorTest extends TestCase
         $this->assertTrue($val->validate('google.de'));
         $this->assertTrue($val->validate('http://google.de'));
         $this->assertTrue($val->validate('https://google.de'));
-        $this->assertFalse($val->validate('htp://yiiframework.com'));
+        $this->assertFalse($val->validate('htp://tintsoft.com'));
         // relative urls not supported
-        $this->assertFalse($val->validate('//yiiframework.com'));
+        $this->assertFalse($val->validate('//tintsoft.com'));
     }
 
     public function testValidateWithIdn()

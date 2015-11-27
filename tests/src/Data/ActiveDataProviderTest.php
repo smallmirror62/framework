@@ -13,7 +13,7 @@ use leapsunit\data\Ar\Order;
 use leapsunit\data\Ar\Customer;
 use Leaps\Data\ActiveDataProvider;
 use leapsunit\data\Ar\ActiveRecord;
-use leapsunit\src\db\DatabaseTestCase;
+use leapsunit\src\Db\DatabaseTestCase;
 
 /**
  * @author Qiang Xue <qiang.xue@gmail.com>

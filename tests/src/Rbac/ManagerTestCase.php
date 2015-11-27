@@ -4,7 +4,7 @@ namespace leapsunit\src\Rbac;
 
 use Leaps\Rbac\Item;
 use Leaps\Rbac\Permission;
-use Leaps\Rbac\PhpManager;
+
 use Leaps\Rbac\Role;
 use leapsunit\TestCase;
 

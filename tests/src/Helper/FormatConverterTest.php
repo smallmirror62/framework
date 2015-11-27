@@ -2,7 +2,6 @@
 
 namespace leapsunit\src\Helper;
 
-use Leaps;
 use Leaps\Helper\FormatConverter;
 use Leaps\I18n\Formatter;
 use leapsunit\src\I18n\IntlTestHelper;

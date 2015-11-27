@@ -10,7 +10,7 @@ use leapsunit\data\Ar\OrderItem;
 use leapsunit\data\Validator\Model\FakedValidationModel;
 use leapsunit\data\Validator\Model\ValidatorTestMainModel;
 use leapsunit\data\Validator\Model\ValidatorTestRefModel;
-use leapsunit\src\db\DatabaseTestCase;
+use leapsunit\src\Db\DatabaseTestCase;
 
 /**
  * @group validators

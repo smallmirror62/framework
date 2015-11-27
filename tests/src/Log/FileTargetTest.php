@@ -3,11 +3,11 @@
  * @author Carsten Brandt <mail@cebe.cc>
  */
 
-namespace leapsunit\src\log;
+namespace leapsunit\src\Log;
 
 use Leaps\Helper\FileHelper;
-use yii\log\Dispatcher;
-use yii\log\Logger;
+use Leaps\Log\Dispatcher;
+use Leaps\Log\Logger;
 use Leaps;
 use leapsunit\TestCase;
 
@@ -44,7 +44,7 @@ class FileTargetTest extends TestCase
             'logger' => $logger,
             'targets' => [
                 'file' => [
-                    'class' => 'yii\log\FileTarget',
+                    'className' => 'Leaps\Log\FileTarget',
                     'logFile' => $logFile,
                     'levels' => ['warning'],
                     'maxFileSize' => 1024, // 1 MB

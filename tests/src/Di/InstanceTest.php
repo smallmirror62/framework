@@ -7,7 +7,7 @@
 
 namespace leapsunit\src\di;
 
-use Leaps\Base\Component;
+use Leaps\Base\Service;
 use Leaps\Db\Connection;
 use Leaps\Di\Container;
 use Leaps\Di\Instance;
@@ -22,12 +22,12 @@ class InstanceTest extends TestCase
     public function testOf()
     {
         $container = new Container;
-        $className = Component::className();
+        $className = Service::className();
         $instance = Instance::of($className);
 
         $this->assertTrue($instance instanceof Instance);
-        $this->assertTrue($instance->get($container) instanceof Component);
-        $this->assertTrue(Instance::ensure($instance, $className, $container) instanceof Component);
+        $this->assertTrue($instance->get($container) instanceof Service);
+        $this->assertTrue(Instance::ensure($instance, $className, $container) instanceof Service);
         $this->assertTrue($instance->get($container) !== Instance::ensure($instance, $className, $container));
     }
 
@@ -35,14 +35,14 @@ class InstanceTest extends TestCase
     {
         $container = new Container;
         $container->set('db', [
-            'class' => 'Leaps\Db\Connection',
+            'className' => 'Leaps\Db\Connection',
             'dsn' => 'test',
         ]);
 
         $this->assertTrue(Instance::ensure('db', 'Leaps\Db\Connection', $container) instanceof Connection);
         $this->assertTrue(Instance::ensure(new Connection, 'Leaps\Db\Connection', $container) instanceof Connection);
         $this->assertTrue(Instance::ensure([
-            'class' => 'Leaps\Db\Connection',
+            'className' => 'Leaps\Db\Connection',
             'dsn' => 'test',
         ], 'Leaps\Db\Connection', $container) instanceof Connection);
     }

@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace leapsunit\src\di;
+namespace leapsunit\src\Di;
 
 use Leaps\Base\Object;
 use Leaps\Di\ServiceLocator;

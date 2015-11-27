@@ -2,7 +2,7 @@
 
 namespace leapsunit\src\Validator;
 
-use DateTime;
+
 use Leaps\Validator\DateValidator;
 use leapsunit\data\Validator\Model\FakedValidationModel;
 use leapsunit\src\I18n\IntlTestHelper;
@@ -63,7 +63,7 @@ class DateValidatorTest extends TestCase
 
         $this->mockApplication([
             'language' => 'de-DE',
-            'components' => [
+            'services' => [
                 'formatter' => [
                     'dateFormat' => 'short',
                 ]

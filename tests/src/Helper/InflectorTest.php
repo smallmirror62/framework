@@ -2,7 +2,6 @@
 
 namespace leapsunit\src\Helper;
 
-use Leaps;
 use Leaps\Helper\Inflector;
 use leapsunit\TestCase;
 

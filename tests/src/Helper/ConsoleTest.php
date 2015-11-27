@@ -2,7 +2,6 @@
 
 namespace leapsunit\src\Helper;
 
-use Leaps;
 use Leaps\Helper\Console;
 use leapsunit\TestCase;
 

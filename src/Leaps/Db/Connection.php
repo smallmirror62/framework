@@ -265,16 +265,16 @@ class Connection extends Service
      * [[Schema]] class to support DBMS that is not supported by Leaps.
      */
     public $schemaMap = [
-        'pgsql' => 'Leaps\Db\pgsql\Schema', // PostgreSQL
+        'pgsql' => 'Leaps\Db\Pgsql\Schema', // PostgreSQL
         'mysqli' => 'Leaps\Db\mysql\Schema', // MySQL
         'mysql' => 'Leaps\Db\mysql\Schema', // MySQL
-        'sqlite' => 'Leaps\Db\sqlite\Schema', // sqlite 3
-        'sqlite2' => 'Leaps\Db\sqlite\Schema', // sqlite 2
+        'sqlite' => 'Leaps\Db\Sqlite\Schema', // sqlite 3
+        'sqlite2' => 'Leaps\Db\Sqlite\Schema', // sqlite 2
         'sqlsrv' => 'Leaps\Db\mssql\Schema', // newer MSSQL driver on MS Windows hosts
         'oci' => 'Leaps\Db\oci\Schema', // Oracle driver
         'mssql' => 'Leaps\Db\mssql\Schema', // older MSSQL driver on MS Windows hosts
         'dblib' => 'Leaps\Db\mssql\Schema', // dblib drivers on GNU/Linux (and maybe other OSes) hosts
-        'cubrid' => 'Leaps\Db\cubrid\Schema', // CUBRID
+        'cubrid' => 'Leaps\Db\Cubrid\Schema', // CUBRID
     ];
     /**
      * @var string Custom PDO wrapper class. If not set, it will use "PDO" or "Leaps\Db\mssql\PDO" when MSSQL is used.

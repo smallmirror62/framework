@@ -3,11 +3,11 @@
  * @author Carsten Brandt <mail@cebe.cc>
  */
 
-namespace leapsunit\src\log;
+namespace leapsunit\src\Log;
 
-use yii\log\Dispatcher;
-use yii\log\Logger;
-use yii\log\Target;
+use Leaps\Log\Dispatcher;
+use Leaps\Log\Logger;
+use Leaps\Log\Target;
 use leapsunit\TestCase;
 
 /**

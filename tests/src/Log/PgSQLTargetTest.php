@@ -1,7 +1,7 @@
 <?php
 
 
-namespace leapsunit\src\log;
+namespace leapsunit\src\Log;
 
 
 class PgSQLTargetTest extends DbTargetTest

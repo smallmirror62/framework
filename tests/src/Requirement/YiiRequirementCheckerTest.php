@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__.'/../../../framework/requirements/LeapsRequirementChecker.php');
+require_once(__DIR__.'/../../../src/Requirement/LeapsRequirementChecker.php');
 
 use leapsunit\TestCase;
 

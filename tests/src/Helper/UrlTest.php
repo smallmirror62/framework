@@ -17,15 +17,15 @@ class UrlTest extends TestCase
     {
         parent::setUp();
         $this->mockApplication([
-            'components' => [
+            'services' => [
                 'request' => [
-                    'class' => 'Leaps\Web\Request',
+                    'className' => 'Leaps\Web\Request',
                     'scriptUrl' => '/base/index.php',
                     'hostInfo' => 'http://example.com/',
                     'url' => '/base/index.php&r=site%2Fcurrent&id=42'
                 ],
                 'urlManager' => [
-                    'class' => 'Leaps\Web\UrlManager',
+                    'className' => 'Leaps\Web\UrlManager',
                     'baseUrl' => '/base',
                     'scriptUrl' => '/base/index.php',
                     'hostInfo' => 'http://example.com/',

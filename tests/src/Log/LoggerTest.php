@@ -3,9 +3,9 @@
  * @author Carsten Brandt <mail@cebe.cc>
  */
 
-namespace leapsunit\src\log;
+namespace leapsunit\src\Log;
 
-use yii\log\Logger;
+use Leaps\Log\Logger;
 use leapsunit\TestCase;
 
 /**
