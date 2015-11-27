@@ -40,6 +40,7 @@ use Leaps\Console\Controller;
  */
 class HelpController extends Controller
 {
+
 	/**
 	 * Displays available commands or the detailed information
 	 * about a particular command.
@@ -58,10 +59,10 @@ class HelpController extends Controller
 				throw new Exception ( "No help for unknown command \"$name\"." );
 			}
 
-			list ( $controller, $actionID ) = $result;
+			list( $controller, $actionID ) = $result;
 
 			$actions = $this->getActions ( $controller );
-			if ($actionID !== '' || count ( $actions ) === 1 && $actions [0] === $controller->defaultAction) {
+			if ($actionID !== '' || count ( $actions ) === 1 && $actions[0] === $controller->defaultAction) {
 				$this->getSubCommandHelp ( $controller, $actionID );
 			} else {
 				$this->getCommandHelp ( $controller );
@@ -96,12 +97,12 @@ class HelpController extends Controller
 
 			$result = Leaps::$app->createController ( $command );
 			if ($result !== false) {
-				list ( $controller, $actionID ) = $result;
+				list( $controller, $actionID ) = $result;
 				/** @var Controller $controller */
 				$description = $controller->getHelpSummary ();
 			}
 
-			$descriptions [$command] = $description;
+			$descriptions[$command] = $description;
 		}
 
 		return $descriptions;
@@ -119,8 +120,8 @@ class HelpController extends Controller
 		$class = new \ReflectionClass ( $controller );
 		foreach ( $class->getMethods () as $method ) {
 			$name = $method->getName ();
-			if ($name !== 'actions' && $name != 'runAction' && $name != 'beforeAction' && $name != 'afterAction' && $name != 'createAction' && $method->isPublic () && ! $method->isStatic () &&strpos ( substr ( $name, - 6 ),'Action') === 0) {
-				$actions[] = Inflector::camel2id ( substr ( $name,0 ,-6 ), '-', true );
+			if ($name !== 'actions' && $name != 'runAction' && $name != 'beforeAction' && $name != 'afterAction' && $name != 'createAction' && $method->isPublic () && ! $method->isStatic () && strpos ( substr ( $name, - 6 ), 'Action' ) === 0) {
+				$actions[] = Inflector::camel2id ( substr ( $name, 0, - 6 ), '-', true );
 			}
 		}
 		sort ( $actions );
@@ -140,7 +141,7 @@ class HelpController extends Controller
 
 		$commands = [ ];
 		foreach ( array_keys ( $module->controllerMap ) as $id ) {
-			$commands [] = $prefix . $id;
+			$commands[] = $prefix . $id;
 		}
 
 		foreach ( $module->getModules () as $id => $child ) {
@@ -148,7 +149,7 @@ class HelpController extends Controller
 				continue;
 			}
 			foreach ( $this->getModuleCommands ( $child ) as $command ) {
-				$commands [] = $command;
+				$commands[] = $command;
 			}
 		}
 
@@ -159,7 +160,7 @@ class HelpController extends Controller
 				if (! empty ( $file ) && substr_compare ( $file, 'Controller.php', - 14, 14 ) === 0) {
 					$controllerClass = $module->controllerNamespace . '\\' . substr ( basename ( $file ), 0, - 4 );
 					if ($this->validateControllerClass ( $controllerClass )) {
-						$commands [] = $prefix . Inflector::camel2id ( substr ( basename ( $file ), 0, - 14 ) );
+						$commands[] = $prefix . Inflector::camel2id ( substr ( basename ( $file ), 0, - 14 ) );
 					}
 				}
 			}
@@ -198,7 +199,7 @@ class HelpController extends Controller
 				$result = Leaps::$app->createController ( $command );
 				if ($result !== false) {
 					/** @var $controller Controller */
-					list ( $controller, $actionID ) = $result;
+					list( $controller, $actionID ) = $result;
 					$actions = $this->getActions ( $controller );
 					if (! empty ( $actions )) {
 						$prefix = $controller->getUniqueId ();
@@ -224,7 +225,7 @@ class HelpController extends Controller
 
 				$result = Leaps::$app->createController ( $command );
 				if ($result !== false) {
-					list ( $controller, $actionID ) = $result;
+					list( $controller, $actionID ) = $result;
 					$actions = $this->getActions ( $controller );
 					if (! empty ( $actions )) {
 						$prefix = $controller->getUniqueId ();
@@ -331,7 +332,7 @@ class HelpController extends Controller
 
 		$args = $controller->getActionArgsHelp ( $action );
 		foreach ( $args as $name => $arg ) {
-			if ($arg ['required']) {
+			if ($arg['required']) {
 				$this->stdout ( ' <' . $name . '>', Console::FG_CYAN );
 			} else {
 				$this->stdout ( ' [' . $name . ']', Console::FG_CYAN );
@@ -339,10 +340,10 @@ class HelpController extends Controller
 		}
 
 		$options = $controller->getActionOptionsHelp ( $action );
-		$options [\Leaps\Console\Application::OPTION_APPCONFIG] = [
-			'type' => 'string',
-			'default' => null,
-			'comment' => "custom application configuration file path.\nIf not set, default application configuration is used."
+		$options[\Leaps\Console\Application::OPTION_APPCONFIG] = [
+			'type'=> 'string',
+			'default'=> null,
+			'comment'=> "custom application configuration file path.\nIf not set, default application configuration is used."
 		];
 		ksort ( $options );
 
@@ -353,14 +354,14 @@ class HelpController extends Controller
 
 		if (! empty ( $args )) {
 			foreach ( $args as $name => $arg ) {
-				$this->stdout ( $this->formatOptionHelp ( '- ' . $this->ansiFormat ( $name, Console::FG_CYAN ), $arg ['required'], $arg ['type'], $arg ['default'], $arg ['comment'] ) . "\n\n" );
+				$this->stdout ( $this->formatOptionHelp ( '- ' . $this->ansiFormat ( $name, Console::FG_CYAN ), $arg['required'], $arg['type'], $arg['default'], $arg['comment'] ) . "\n\n" );
 			}
 		}
 
 		if (! empty ( $options )) {
 			$this->stdout ( "\nOPTIONS\n\n", Console::BOLD );
 			foreach ( $options as $name => $option ) {
-				$this->stdout ( $this->formatOptionHelp ( $this->ansiFormat ( '--' . $name, Console::FG_RED, empty ( $option ['required'] ) ? Console::FG_RED : Console::BOLD ), ! empty ( $option ['required'] ), $option ['type'], $option ['default'], $option ['comment'] ) . "\n\n" );
+				$this->stdout ( $this->formatOptionHelp ( $this->ansiFormat ( '--' . $name, Console::FG_RED, empty ( $option['required'] ) ? Console::FG_RED : Console::BOLD ), ! empty ( $option['required'] ), $option['type'], $option['default'], $option['comment'] ) . "\n\n" );
 			}
 		}
 	}

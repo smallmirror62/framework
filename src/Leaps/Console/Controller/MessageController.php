@@ -45,7 +45,7 @@ class MessageController extends Controller
 	 * @var string controller default action ID.
 	 */
 	public $defaultAction = 'extract';
-	
+
 	/**
 	 * Creates a configuration file for the "extract" command.
 	 *
@@ -57,7 +57,7 @@ class MessageController extends Controller
 	 * @return integer CLI exit code
 	 * @throws Exception on failure.
 	 */
-	public function actionConfig($filePath)
+	public function ConfigAction($filePath)
 	{
 		$filePath = Leaps::getAlias ( $filePath );
 		if (file_exists ( $filePath )) {
@@ -69,7 +69,7 @@ class MessageController extends Controller
 		$this->stdout ( "Configuration file template created at '{$filePath}'.\n\n", Console::FG_GREEN );
 		return self::EXIT_CODE_NORMAL;
 	}
-	
+
 	/**
 	 * Extracts messages to be translated from source code.
 	 *
@@ -81,41 +81,41 @@ class MessageController extends Controller
 	 *        this file and then customize it for your needs.
 	 * @throws Exception on failure.
 	 */
-	public function actionExtract($configFile)
+	public function ExtractAction($configFile)
 	{
 		$configFile = Leaps::getAlias ( $configFile );
 		if (! is_file ( $configFile )) {
 			throw new Exception ( "The configuration file does not exist: $configFile" );
 		}
-		
-		$config = array_merge ( [ 
+
+		$config = array_merge ( [
 			'translator' => 'Leaps::t',
 			'overwrite' => false,
 			'removeUnused' => false,
 			'markUnused' => true,
 			'sort' => false,
 			'format' => 'php',
-			'ignoreCategories' => [ ] 
+			'ignoreCategories' => [ ]
 		], require ($configFile) );
-		
+
 		if (! isset ( $config ['sourcePath'], $config ['languages'] )) {
 			throw new Exception ( 'The configuration file must specify "sourcePath" and "languages".' );
 		}
 		if (! is_dir ( $config ['sourcePath'] )) {
 			throw new Exception ( "The source path {$config['sourcePath']} is not a valid directory." );
 		}
-		if (empty ( $config ['format'] ) || ! in_array ( $config ['format'], [ 
+		if (empty ( $config ['format'] ) || ! in_array ( $config ['format'], [
 			'php',
 			'po',
 			'pot',
-			'db' 
+			'db'
 		] )) {
 			throw new Exception ( 'Format should be either "php", "po", "pot" or "db".' );
 		}
-		if (in_array ( $config ['format'], [ 
+		if (in_array ( $config ['format'], [
 			'php',
 			'po',
-			'pot' 
+			'pot'
 		] )) {
 			if (! isset ( $config ['messagePath'] )) {
 				throw new Exception ( 'The configuration file must specify "messagePath".' );
@@ -126,16 +126,16 @@ class MessageController extends Controller
 		if (empty ( $config ['languages'] )) {
 			throw new Exception ( "Languages cannot be empty." );
 		}
-		
+
 		$files = FileHelper::findFiles ( realpath ( $config ['sourcePath'] ), $config );
-		
+
 		$messages = [ ];
 		foreach ( $files as $file ) {
 			$messages = array_merge_recursive ( $messages, $this->extractMessages ( $file, $config ['translator'], $config ['ignoreCategories'] ) );
 		}
-		if (in_array ( $config ['format'], [ 
+		if (in_array ( $config ['format'], [
 			'php',
-			'po' 
+			'po'
 		] )) {
 			foreach ( $config ['languages'] as $language ) {
 				$dir = $config ['messagePath'] . DIRECTORY_SEPARATOR . $language;
@@ -162,7 +162,7 @@ class MessageController extends Controller
 			$this->saveMessagesToPOT ( $messages, $config ['messagePath'], $catalog );
 		}
 	}
-	
+
 	/**
 	 * Saves messages to database
 	 *
@@ -178,21 +178,21 @@ class MessageController extends Controller
 	{
 		$q = new \Leaps\Db\Query ();
 		$current = [ ];
-		
-		foreach ( $q->select ( [ 
+
+		foreach ( $q->select ( [
 			'id',
 			'category',
-			'message' 
+			'message'
 		] )->from ( $sourceMessageTable )->all () as $row ) {
 			$current [$row ['category']] [$row ['id']] = $row ['message'];
 		}
-		
+
 		$new = [ ];
 		$obsolete = [ ];
-		
+
 		foreach ( $messages as $category => $msgs ) {
 			$msgs = array_unique ( $msgs );
-			
+
 			if (isset ( $current [$category] )) {
 				$new [$category] = array_diff ( $msgs, $current [$category] );
 				$obsolete += array_diff ( $current [$category], $msgs );
@@ -200,11 +200,11 @@ class MessageController extends Controller
 				$new [$category] = $msgs;
 			}
 		}
-		
+
 		foreach ( array_diff ( array_keys ( $current ), array_keys ( $messages ) ) as $category ) {
 			$obsolete += $current [$category];
 		}
-		
+
 		if (! $removeUnused) {
 			foreach ( $obsolete as $pk => $m ) {
 				if (mb_substr ( $m, 0, 2 ) === '@@' && mb_substr ( $m, - 2 ) === '@@') {
@@ -212,53 +212,53 @@ class MessageController extends Controller
 				}
 			}
 		}
-		
+
 		$obsolete = array_keys ( $obsolete );
 		$this->stdout ( "Inserting new messages..." );
 		$savedFlag = false;
-		
+
 		foreach ( $new as $category => $msgs ) {
 			foreach ( $msgs as $m ) {
 				$savedFlag = true;
-				$lastPk = $db->schema->insert ( $sourceMessageTable, [ 
+				$lastPk = $db->schema->insert ( $sourceMessageTable, [
 					'category' => $category,
-					'message' => $m 
+					'message' => $m
 				] );
 				foreach ( $languages as $language ) {
-					$db->createCommand ()->insert ( $messageTable, [ 
+					$db->createCommand ()->insert ( $messageTable, [
 						'id' => $lastPk ['id'],
-						'language' => $language 
+						'language' => $language
 					] )->execute ();
 				}
 			}
 		}
-		
+
 		$this->stdout ( $savedFlag ? "saved.\n" : "Nothing new...skipped.\n" );
 		$this->stdout ( $removeUnused ? "Deleting obsoleted messages..." : "Updating obsoleted messages..." );
-		
+
 		if (empty ( $obsolete )) {
 			$this->stdout ( "Nothing obsoleted...skipped.\n" );
 		} else {
 			if ($removeUnused) {
-				$db->createCommand ()->delete ( $sourceMessageTable, [ 
+				$db->createCommand ()->delete ( $sourceMessageTable, [
 					'in',
 					'id',
-					$obsolete 
+					$obsolete
 				] )->execute ();
 				$this->stdout ( "deleted.\n" );
 			} elseif ($markUnused) {
-				$db->createCommand ()->update ( $sourceMessageTable, [ 
-					'message' => new \Leaps\Db\Expression ( "CONCAT('@@',message,'@@')" ) 
-				], [ 
+				$db->createCommand ()->update ( $sourceMessageTable, [
+					'message' => new \Leaps\Db\Expression ( "CONCAT('@@',message,'@@')" )
+				], [
 					'in',
 					'id',
-					$obsolete 
+					$obsolete
 				] )->execute ();
 				$this->stdout ( "updated.\n" );
 			}
 		}
 	}
-	
+
 	/**
 	 * Extracts messages from a file
 	 *
@@ -270,11 +270,11 @@ class MessageController extends Controller
 	 */
 	protected function extractMessages($fileName, $translator, $ignoreCategories = [])
 	{
-		$coloredFileName = Console::ansiFormat ( $fileName, [ 
-			Console::FG_CYAN 
+		$coloredFileName = Console::ansiFormat ( $fileName, [
+			Console::FG_CYAN
 		] );
 		$this->stdout ( "Extracting messages from $coloredFileName...\n" );
-		
+
 		$subject = file_get_contents ( $fileName );
 		$messages = [ ];
 		foreach ( ( array ) $translator as $currentTranslator ) {
@@ -283,12 +283,12 @@ class MessageController extends Controller
 			$tokens = token_get_all ( $subject );
 			$messages = array_merge_recursive ( $messages, $this->extractMessagesFromTokens ( $tokens, $translatorTokens, $ignoreCategories ) );
 		}
-		
+
 		$this->stdout ( "\n" );
-		
+
 		return $messages;
 	}
-	
+
 	/**
 	 * Extracts messages from a parsed PHP tokens list.
 	 *
@@ -304,7 +304,7 @@ class MessageController extends Controller
 		$matchedTokensCount = 0;
 		$buffer = [ ];
 		$pendingParenthesisCount = 0;
-		
+
 		foreach ( $tokens as $token ) {
 			// finding out translator call
 			if ($matchedTokensCount < $translatorTokensCount) {
@@ -315,25 +315,25 @@ class MessageController extends Controller
 				}
 			} elseif ($matchedTokensCount === $translatorTokensCount) {
 				// translator found
-				
+
 				// end of function call
 				if ($this->tokensEqual ( ')', $token )) {
 					$pendingParenthesisCount --;
-					
+
 					if ($pendingParenthesisCount === 0) {
 						// end of translator call or end of something that we can't extract
 						if (isset ( $buffer [0] [0], $buffer [1], $buffer [2] [0] ) && $buffer [0] [0] === T_CONSTANT_ENCAPSED_STRING && $buffer [1] === ',' && $buffer [2] [0] === T_CONSTANT_ENCAPSED_STRING) {
 							// is valid call we can extract
 							$category = stripcslashes ( $buffer [0] [1] );
 							$category = mb_substr ( $category, 1, mb_strlen ( $category ) - 2 );
-							
+
 							if (! in_array ( $category, $ignoreCategories, true )) {
 								$message = stripcslashes ( $buffer [2] [1] );
 								$message = mb_substr ( $message, 1, mb_strlen ( $message ) - 2 );
-								
+
 								$messages [$category] [] = $message;
 							}
-							
+
 							$nestedTokens = array_slice ( $buffer, 3 );
 							if (count ( $nestedTokens ) > $translatorTokensCount) {
 								// search for possible nested translator calls
@@ -341,15 +341,15 @@ class MessageController extends Controller
 							}
 						} else {
 							// invalid call or dynamic call we can't extract
-							$line = Console::ansiFormat ( $this->getLine ( $buffer ), [ 
-								Console::FG_CYAN 
+							$line = Console::ansiFormat ( $this->getLine ( $buffer ), [
+								Console::FG_CYAN
 							] );
-							$skipping = Console::ansiFormat ( 'Skipping line', [ 
-								Console::FG_YELLOW 
+							$skipping = Console::ansiFormat ( 'Skipping line', [
+								Console::FG_YELLOW
 							] );
 							$this->stdout ( "$skipping $line. Make sure both category and message are static strings.\n" );
 						}
-						
+
 						// prepare for the next match
 						$matchedTokensCount = 0;
 						$pendingParenthesisCount = 0;
@@ -363,19 +363,19 @@ class MessageController extends Controller
 						$buffer [] = $token;
 					}
 					$pendingParenthesisCount ++;
-				} elseif (isset ( $token [0] ) && ! in_array ( $token [0], [ 
+				} elseif (isset ( $token [0] ) && ! in_array ( $token [0], [
 					T_WHITESPACE,
-					T_COMMENT 
+					T_COMMENT
 				] )) {
 					// ignore comments and whitespaces
 					$buffer [] = $token;
 				}
 			}
 		}
-		
+
 		return $messages;
 	}
-	
+
 	/**
 	 * Finds out if two PHP tokens are equal
 	 *
@@ -393,7 +393,7 @@ class MessageController extends Controller
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Finds out a line of the first non-char PHP token found
 	 *
@@ -410,7 +410,7 @@ class MessageController extends Controller
 		}
 		return 'unknown';
 	}
-	
+
 	/**
 	 * Writes messages into PHP files
 	 *
@@ -428,14 +428,14 @@ class MessageController extends Controller
 			$path = dirname ( $file );
 			FileHelper::createDirectory ( $path );
 			$msgs = array_values ( array_unique ( $msgs ) );
-			$coloredFileName = Console::ansiFormat ( $file, [ 
-				Console::FG_CYAN 
+			$coloredFileName = Console::ansiFormat ( $file, [
+				Console::FG_CYAN
 			] );
 			$this->stdout ( "Saving messages to $coloredFileName...\n" );
 			$this->saveMessagesCategoryToPHP ( $msgs, $file, $overwrite, $removeUnused, $sort, $category, $markUnused );
 		}
 	}
-	
+
 	/**
 	 * Writes category messages into PHP file
 	 *
@@ -499,7 +499,7 @@ class MessageController extends Controller
 			}
 			ksort ( $merged );
 		}
-		
+
 		$array = VarDumper::export ( $merged );
 		$content = <<<EOD
 <?php
@@ -523,11 +523,11 @@ class MessageController extends Controller
 return $array;
 
 EOD;
-		
+
 		file_put_contents ( $fileName, $content );
 		$this->stdout ( "Translation saved.\n\n", Console::FG_GREEN );
 	}
-	
+
 	/**
 	 * Writes messages into PO file
 	 *
@@ -544,25 +544,25 @@ EOD;
 		$file = str_replace ( "\\", '/', "$dirName/$catalog.po" );
 		FileHelper::createDirectory ( dirname ( $file ) );
 		$this->stdout ( "Saving messages to $file...\n" );
-		
+
 		$poFile = new GettextPoFile ();
-		
+
 		$merged = [ ];
 		$todos = [ ];
-		
+
 		$hasSomethingToWrite = false;
 		foreach ( $messages as $category => $msgs ) {
 			$notTranslatedYet = [ ];
 			$msgs = array_values ( array_unique ( $msgs ) );
-			
+
 			if (is_file ( $file )) {
 				$existingMessages = $poFile->load ( $file, $category );
-				
+
 				sort ( $msgs );
 				ksort ( $existingMessages );
 				if (array_keys ( $existingMessages ) == $msgs) {
 					$this->stdout ( "Nothing new in \"$category\" category...\n" );
-					
+
 					sort ( $msgs );
 					foreach ( $msgs as $message ) {
 						$merged [$category . chr ( 4 ) . $message] = $existingMessages [$message];
@@ -570,7 +570,7 @@ EOD;
 					ksort ( $merged );
 					continue;
 				}
-				
+
 				// merge existing message translations with new message translations
 				foreach ( $msgs as $message ) {
 					if (array_key_exists ( $message, $existingMessages ) && $existingMessages [$message] !== '') {
@@ -581,12 +581,12 @@ EOD;
 				}
 				ksort ( $merged );
 				sort ( $notTranslatedYet );
-				
+
 				// collect not yet translated messages
 				foreach ( $notTranslatedYet as $message ) {
 					$todos [$category . chr ( 4 ) . $message] = '';
 				}
-				
+
 				// add obsolete unused messages
 				foreach ( $existingMessages as $message => $translation ) {
 					if (! $removeUnused && ! isset ( $merged [$category . chr ( 4 ) . $message] ) && ! isset ( $todos [$category . chr ( 4 ) . $message] )) {
@@ -597,12 +597,12 @@ EOD;
 						}
 					}
 				}
-				
+
 				$merged = array_merge ( $todos, $merged );
 				if ($sort) {
 					ksort ( $merged );
 				}
-				
+
 				if ($overwrite === false) {
 					$file .= '.merged';
 				}
@@ -623,7 +623,7 @@ EOD;
 			$this->stdout ( "Nothing to save.\n", Console::FG_GREEN );
 		}
 	}
-	
+
 	/**
 	 * Writes messages into POT file
 	 *
@@ -637,15 +637,15 @@ EOD;
 		$file = str_replace ( "\\", '/', "$dirName/$catalog.pot" );
 		FileHelper::createDirectory ( dirname ( $file ) );
 		$this->stdout ( "Saving messages to $file...\n" );
-		
+
 		$poFile = new GettextPoFile ();
-		
+
 		$merged = [ ];
-		
+
 		$hasSomethingToWrite = false;
 		foreach ( $messages as $category => $msgs ) {
 			$msgs = array_values ( array_unique ( $msgs ) );
-			
+
 			sort ( $msgs );
 			foreach ( $msgs as $message ) {
 				$merged [$category . chr ( 4 ) . $message] = '';

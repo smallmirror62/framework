@@ -688,7 +688,7 @@ EOD;
 	 * @return integer CLI exit code
 	 * @throws \Leaps\Console\Exception on failure.
 	 */
-	public function actionTemplate($configFile)
+	public function TemplateAction($configFile)
 	{
 		$jsCompressor = VarDumper::export ( $this->jsCompressor );
 		$cssCompressor = VarDumper::export ( $this->cssCompressor );

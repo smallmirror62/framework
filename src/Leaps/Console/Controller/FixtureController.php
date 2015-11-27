@@ -91,7 +91,7 @@ class FixtureController extends Controller
 	 *
 	 * @throws Exception if the specified fixture does not exist.
 	 */
-	public function actionLoad()
+	public function LoadAction()
 	{
 		$fixturesInput = func_get_args ();
 		if ($fixturesInput === [ ]) {
@@ -169,7 +169,7 @@ class FixtureController extends Controller
 	 *
 	 * @throws Exception if the specified fixture does not exist.
 	 */
-	public function actionUnload()
+	public function UnloadAction()
 	{
 		$fixturesInput = func_get_args ();
 		$filtered = $this->filterFixtures ( $fixturesInput );

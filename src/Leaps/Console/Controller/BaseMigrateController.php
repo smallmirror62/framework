@@ -28,7 +28,7 @@ abstract class BaseMigrateController extends Controller
 	 * The name of the dummy migration that marks the beginning of the whole migration history.
 	 */
 	const BASE_MIGRATION = 'm000000_000000_base';
-	
+
 	/**
 	 *
 	 * @var string the default command action.
@@ -47,20 +47,20 @@ abstract class BaseMigrateController extends Controller
 	 *      or a file path.
 	 */
 	public $templateFile;
-	
+
 	/**
 	 * @inheritdoc
 	 */
 	public function options($actionID)
 	{
-		return array_merge ( parent::options ( $actionID ), [ 
-			'migrationPath' 
+		return array_merge ( parent::options ( $actionID ), [
+			'migrationPath'
 		], // global for all actions
-($actionID == 'create') ? [ 
-			'templateFile' 
+($actionID == 'create') ? [
+			'templateFile'
 		] : [ ] ); // action create
 	}
-	
+
 	/**
 	 * This method is invoked right before an action is to be executed (after all possible filters.)
 	 * It checks the existence of the [[migrationPath]].
@@ -80,16 +80,16 @@ abstract class BaseMigrateController extends Controller
 				FileHelper::createDirectory ( $path );
 			}
 			$this->migrationPath = $path;
-			
+
 			$version = Leaps::getVersion ();
 			$this->stdout ( "Leaps Migration Tool (based on Leaps v{$version})\n\n" );
-			
+
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Upgrades the application by applying new migrations.
 	 * For example,
@@ -101,48 +101,48 @@ abstract class BaseMigrateController extends Controller
 	 *
 	 * @param integer $limit the number of new migrations to be applied. If 0, it means
 	 *        applying all available new migrations.
-	 *       
+	 *
 	 * @return integer the status of the action execution. 0 means normal, other values mean abnormal.
 	 */
-	public function actionUp($limit = 0)
+	public function UpAction($limit = 0)
 	{
 		$migrations = $this->getNewMigrations ();
 		if (empty ( $migrations )) {
 			$this->stdout ( "No new migration found. Your system is up-to-date.\n", Console::FG_GREEN );
-			
+
 			return self::EXIT_CODE_NORMAL;
 		}
-		
+
 		$total = count ( $migrations );
 		$limit = ( int ) $limit;
 		if ($limit > 0) {
 			$migrations = array_slice ( $migrations, 0, $limit );
 		}
-		
+
 		$n = count ( $migrations );
 		if ($n === $total) {
 			$this->stdout ( "Total $n new " . ($n === 1 ? 'migration' : 'migrations') . " to be applied:\n", Console::FG_YELLOW );
 		} else {
 			$this->stdout ( "Total $n out of $total new " . ($total === 1 ? 'migration' : 'migrations') . " to be applied:\n", Console::FG_YELLOW );
 		}
-		
+
 		foreach ( $migrations as $migration ) {
 			$this->stdout ( "\t$migration\n" );
 		}
 		$this->stdout ( "\n" );
-		
+
 		if ($this->confirm ( 'Apply the above ' . ($n === 1 ? 'migration' : 'migrations') . "?" )) {
 			foreach ( $migrations as $migration ) {
 				if (! $this->migrateUp ( $migration )) {
 					$this->stdout ( "\nMigration failed. The rest of the migrations are canceled.\n", Console::FG_RED );
-					
+
 					return self::EXIT_CODE_ERROR;
 				}
 			}
 			$this->stdout ( "\nMigrated up successfully.\n", Console::FG_GREEN );
 		}
 	}
-	
+
 	/**
 	 * Downgrades the application by reverting old migrations.
 	 * For example,
@@ -156,10 +156,10 @@ abstract class BaseMigrateController extends Controller
 	 * @param integer $limit the number of migrations to be reverted. Defaults to 1,
 	 *        meaning the last applied migration will be reverted.
 	 * @throws Exception if the number of the steps specified is less than 1.
-	 *        
+	 *
 	 * @return integer the status of the action execution. 0 means normal, other values mean abnormal.
 	 */
-	public function actionDown($limit = 1)
+	public function DownAction($limit = 1)
 	{
 		if ($limit === 'all') {
 			$limit = null;
@@ -169,36 +169,36 @@ abstract class BaseMigrateController extends Controller
 				throw new Exception ( "The step argument must be greater than 0." );
 			}
 		}
-		
+
 		$migrations = $this->getMigrationHistory ( $limit );
-		
+
 		if (empty ( $migrations )) {
 			$this->stdout ( "No migration has been done before.\n", Console::FG_YELLOW );
-			
+
 			return self::EXIT_CODE_NORMAL;
 		}
-		
+
 		$migrations = array_keys ( $migrations );
-		
+
 		$n = count ( $migrations );
 		$this->stdout ( "Total $n " . ($n === 1 ? 'migration' : 'migrations') . " to be reverted:\n", Console::FG_YELLOW );
 		foreach ( $migrations as $migration ) {
 			$this->stdout ( "\t$migration\n" );
 		}
 		$this->stdout ( "\n" );
-		
+
 		if ($this->confirm ( 'Revert the above ' . ($n === 1 ? 'migration' : 'migrations') . "?" )) {
 			foreach ( $migrations as $migration ) {
 				if (! $this->migrateDown ( $migration )) {
 					$this->stdout ( "\nMigration failed. The rest of the migrations are canceled.\n", Console::FG_RED );
-					
+
 					return self::EXIT_CODE_ERROR;
 				}
 			}
 			$this->stdout ( "\nMigrated down successfully.\n", Console::FG_GREEN );
 		}
 	}
-	
+
 	/**
 	 * Redoes the last few migrations.
 	 *
@@ -214,10 +214,10 @@ abstract class BaseMigrateController extends Controller
 	 * @param integer $limit the number of migrations to be redone. Defaults to 1,
 	 *        meaning the last applied migration will be redone.
 	 * @throws Exception if the number of the steps specified is less than 1.
-	 *        
+	 *
 	 * @return integer the status of the action execution. 0 means normal, other values mean abnormal.
 	 */
-	public function actionRedo($limit = 1)
+	public function RedoAction($limit = 1)
 	{
 		if ($limit === 'all') {
 			$limit = null;
@@ -227,43 +227,43 @@ abstract class BaseMigrateController extends Controller
 				throw new Exception ( "The step argument must be greater than 0." );
 			}
 		}
-		
+
 		$migrations = $this->getMigrationHistory ( $limit );
-		
+
 		if (empty ( $migrations )) {
 			$this->stdout ( "No migration has been done before.\n", Console::FG_YELLOW );
-			
+
 			return self::EXIT_CODE_NORMAL;
 		}
-		
+
 		$migrations = array_keys ( $migrations );
-		
+
 		$n = count ( $migrations );
 		$this->stdout ( "Total $n " . ($n === 1 ? 'migration' : 'migrations') . " to be redone:\n", Console::FG_YELLOW );
 		foreach ( $migrations as $migration ) {
 			$this->stdout ( "\t$migration\n" );
 		}
 		$this->stdout ( "\n" );
-		
+
 		if ($this->confirm ( 'Redo the above ' . ($n === 1 ? 'migration' : 'migrations') . "?" )) {
 			foreach ( $migrations as $migration ) {
 				if (! $this->migrateDown ( $migration )) {
 					$this->stdout ( "\nMigration failed. The rest of the migrations are canceled.\n", Console::FG_RED );
-					
+
 					return self::EXIT_CODE_ERROR;
 				}
 			}
 			foreach ( array_reverse ( $migrations ) as $migration ) {
 				if (! $this->migrateUp ( $migration )) {
 					$this->stdout ( "\nMigration failed. The rest of the migrations migrations are canceled.\n", Console::FG_RED );
-					
+
 					return self::EXIT_CODE_ERROR;
 				}
 			}
 			$this->stdout ( "\nMigration redone successfully.\n", Console::FG_GREEN );
 		}
 	}
-	
+
 	/**
 	 * Upgrades or downgrades till the specified version.
 	 *
@@ -287,7 +287,7 @@ abstract class BaseMigrateController extends Controller
 	 *        string.
 	 * @throws Exception if the version argument is invalid.
 	 */
-	public function actionTo($version)
+	public function ToAction($version)
 	{
 		if (preg_match ( '/^m?(\d{6}_\d{6})(_.*?)?$/', $version, $matches )) {
 			$this->migrateToVersion ( 'm' . $matches [1] );
@@ -299,7 +299,7 @@ abstract class BaseMigrateController extends Controller
 			throw new Exception ( "The version argument must be either a timestamp (e.g. 101129_185401),\n the full name of a migration (e.g. m101129_185401_create_user_table),\n a UNIX timestamp (e.g. 1392853000), or a datetime string parseable\nby the strtotime() function (e.g. 2014-02-15 13:00:50)." );
 		}
 	}
-	
+
 	/**
 	 * Modifies the migration history to the specified version.
 	 *
@@ -315,7 +315,7 @@ abstract class BaseMigrateController extends Controller
 	 * @return integer CLI exit code
 	 * @throws Exception if the version argument is invalid or the version cannot be found.
 	 */
-	public function actionMark($version)
+	public function MarkAction($version)
 	{
 		$originalVersion = $version;
 		if (preg_match ( '/^m?(\d{6}_\d{6})(_.*?)?$/', $version, $matches )) {
@@ -323,7 +323,7 @@ abstract class BaseMigrateController extends Controller
 		} else {
 			throw new Exception ( "The version argument must be either a timestamp (e.g. 101129_185401)\nor the full name of a migration (e.g. m101129_185401_create_user_table)." );
 		}
-		
+
 		// try mark up
 		$migrations = $this->getNewMigrations ();
 		foreach ( $migrations as $i => $migration ) {
@@ -334,11 +334,11 @@ abstract class BaseMigrateController extends Controller
 					}
 					$this->stdout ( "The migration history is set at $originalVersion.\nNo actual migration was performed.\n", Console::FG_GREEN );
 				}
-				
+
 				return self::EXIT_CODE_NORMAL;
 			}
 		}
-		
+
 		// try mark down
 		$migrations = array_keys ( $this->getMigrationHistory ( null ) );
 		foreach ( $migrations as $i => $migration ) {
@@ -353,14 +353,14 @@ abstract class BaseMigrateController extends Controller
 						$this->stdout ( "The migration history is set at $originalVersion.\nNo actual migration was performed.\n", Console::FG_GREEN );
 					}
 				}
-				
+
 				return self::EXIT_CODE_NORMAL;
 			}
 		}
-		
+
 		throw new Exception ( "Unable to find the version '$originalVersion'." );
 	}
-	
+
 	/**
 	 * Displays the migration history.
 	 *
@@ -377,7 +377,7 @@ abstract class BaseMigrateController extends Controller
 	 *        If it is "all", the whole migration history will be displayed.
 	 * @throws \leaps \console\Exception if invalid limit value passed
 	 */
-	public function actionHistory($limit = 10)
+	public function HistoryAction($limit = 10)
 	{
 		if ($limit === 'all') {
 			$limit = null;
@@ -387,9 +387,9 @@ abstract class BaseMigrateController extends Controller
 				throw new Exception ( "The limit must be greater than 0." );
 			}
 		}
-		
+
 		$migrations = $this->getMigrationHistory ( $limit );
-		
+
 		if (empty ( $migrations )) {
 			$this->stdout ( "No migration has been done before.\n", Console::FG_YELLOW );
 		} else {
@@ -404,7 +404,7 @@ abstract class BaseMigrateController extends Controller
 			}
 		}
 	}
-	
+
 	/**
 	 * Displays the un-applied new migrations.
 	 *
@@ -421,7 +421,7 @@ abstract class BaseMigrateController extends Controller
 	 *        If it is `all`, all available new migrations will be displayed.
 	 * @throws \leaps \console\Exception if invalid limit value passed
 	 */
-	public function actionNew($limit = 10)
+	public function NewAction($limit = 10)
 	{
 		if ($limit === 'all') {
 			$limit = null;
@@ -431,9 +431,9 @@ abstract class BaseMigrateController extends Controller
 				throw new Exception ( "The limit must be greater than 0." );
 			}
 		}
-		
+
 		$migrations = $this->getNewMigrations ();
-		
+
 		if (empty ( $migrations )) {
 			$this->stdout ( "No new migrations found. Your system is up-to-date.\n", Console::FG_GREEN );
 		} else {
@@ -444,13 +444,13 @@ abstract class BaseMigrateController extends Controller
 			} else {
 				$this->stdout ( "Found $n new " . ($n === 1 ? 'migration' : 'migrations') . ":\n", Console::FG_YELLOW );
 			}
-			
+
 			foreach ( $migrations as $migration ) {
 				$this->stdout ( "\t" . $migration . "\n" );
 			}
 		}
 	}
-	
+
 	/**
 	 * Creates a new migration.
 	 *
@@ -466,24 +466,24 @@ abstract class BaseMigrateController extends Controller
 	 *        letters, digits and/or underscores.
 	 * @throws Exception if the name argument is invalid.
 	 */
-	public function actionCreate($name)
+	public function CreateAction($name)
 	{
 		if (! preg_match ( '/^\w+$/', $name )) {
 			throw new Exception ( "The migration name should contain letters, digits and/or underscore characters only." );
 		}
-		
+
 		$name = 'm' . gmdate ( 'ymd_His' ) . '_' . $name;
 		$file = $this->migrationPath . DIRECTORY_SEPARATOR . $name . '.php';
-		
+
 		if ($this->confirm ( "Create new migration '$file'?" )) {
-			$content = $this->renderFile ( Leaps::getAlias ( $this->templateFile ), [ 
-				'className' => $name 
+			$content = $this->renderFile ( Leaps::getAlias ( $this->templateFile ), [
+				'className' => $name
 			] );
 			file_put_contents ( $file, $content );
 			$this->stdout ( "New migration created successfully.\n", Console::FG_GREEN );
 		}
 	}
-	
+
 	/**
 	 * Upgrades with the specified migration class.
 	 *
@@ -495,7 +495,7 @@ abstract class BaseMigrateController extends Controller
 		if ($class === self::BASE_MIGRATION) {
 			return true;
 		}
-		
+
 		$this->stdout ( "*** applying $class\n", Console::FG_YELLOW );
 		$start = microtime ( true );
 		$migration = $this->createMigration ( $class );
@@ -503,16 +503,16 @@ abstract class BaseMigrateController extends Controller
 			$this->addMigrationHistory ( $class );
 			$time = microtime ( true ) - $start;
 			$this->stdout ( "*** applied $class (time: " . sprintf ( "%.3f", $time ) . "s)\n\n", Console::FG_GREEN );
-			
+
 			return true;
 		} else {
 			$time = microtime ( true ) - $start;
 			$this->stdout ( "*** failed to apply $class (time: " . sprintf ( "%.3f", $time ) . "s)\n\n", Console::FG_RED );
-			
+
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Downgrades with the specified migration class.
 	 *
@@ -524,7 +524,7 @@ abstract class BaseMigrateController extends Controller
 		if ($class === self::BASE_MIGRATION) {
 			return true;
 		}
-		
+
 		$this->stdout ( "*** reverting $class\n", Console::FG_YELLOW );
 		$start = microtime ( true );
 		$migration = $this->createMigration ( $class );
@@ -532,16 +532,16 @@ abstract class BaseMigrateController extends Controller
 			$this->removeMigrationHistory ( $class );
 			$time = microtime ( true ) - $start;
 			$this->stdout ( "*** reverted $class (time: " . sprintf ( "%.3f", $time ) . "s)\n\n", Console::FG_GREEN );
-			
+
 			return true;
 		} else {
 			$time = microtime ( true ) - $start;
 			$this->stdout ( "*** failed to revert $class (time: " . sprintf ( "%.3f", $time ) . "s)\n\n", Console::FG_RED );
-			
+
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Creates a new migration instance.
 	 *
@@ -552,10 +552,10 @@ abstract class BaseMigrateController extends Controller
 	{
 		$file = $this->migrationPath . DIRECTORY_SEPARATOR . $class . '.php';
 		require_once ($file);
-		
+
 		return new $class ();
 	}
-	
+
 	/**
 	 * Migrates to the specified apply time in the past.
 	 *
@@ -574,7 +574,7 @@ abstract class BaseMigrateController extends Controller
 			$this->actionDown ( $count );
 		}
 	}
-	
+
 	/**
 	 * Migrates to the certain version.
 	 *
@@ -585,17 +585,17 @@ abstract class BaseMigrateController extends Controller
 	protected function migrateToVersion($version)
 	{
 		$originalVersion = $version;
-		
+
 		// try migrate up
 		$migrations = $this->getNewMigrations ();
 		foreach ( $migrations as $i => $migration ) {
 			if (strpos ( $migration, $version . '_' ) === 0) {
 				$this->actionUp ( $i + 1 );
-				
+
 				return self::EXIT_CODE_NORMAL;
 			}
 		}
-		
+
 		// try migrate down
 		$migrations = array_keys ( $this->getMigrationHistory ( null ) );
 		foreach ( $migrations as $i => $migration ) {
@@ -605,14 +605,14 @@ abstract class BaseMigrateController extends Controller
 				} else {
 					$this->actionDown ( $i );
 				}
-				
+
 				return self::EXIT_CODE_NORMAL;
 			}
 		}
-		
+
 		throw new Exception ( "Unable to find the version '$originalVersion'." );
 	}
-	
+
 	/**
 	 * Returns the migrations that are not applied.
 	 *
@@ -624,7 +624,7 @@ abstract class BaseMigrateController extends Controller
 		foreach ( $this->getMigrationHistory ( null ) as $version => $time ) {
 			$applied [substr ( $version, 1, 13 )] = true;
 		}
-		
+
 		$migrations = [ ];
 		$handle = opendir ( $this->migrationPath );
 		while ( ($file = readdir ( $handle )) !== false ) {
@@ -638,10 +638,10 @@ abstract class BaseMigrateController extends Controller
 		}
 		closedir ( $handle );
 		sort ( $migrations );
-		
+
 		return $migrations;
 	}
-	
+
 	/**
 	 * Returns the migration history.
 	 *
@@ -649,14 +649,14 @@ abstract class BaseMigrateController extends Controller
 	 * @return array the migration history
 	 */
 	abstract protected function getMigrationHistory($limit);
-	
+
 	/**
 	 * Adds new migration entry to the history.
 	 *
 	 * @param string $version migration version name.
 	 */
 	abstract protected function addMigrationHistory($version);
-	
+
 	/**
 	 * Removes existing migration from the history.
 	 *
