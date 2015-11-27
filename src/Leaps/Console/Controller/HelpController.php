@@ -49,7 +49,7 @@ class HelpController extends Controller
 	 * @return integer the exit status
 	 * @throws Exception if the command for help is unknown
 	 */
-	public function actionIndex($command = null)
+	public function IndexAction($command = null)
 	{
 		if ($command !== null) {
 			$result = Leaps::$app->createController ( $command );
@@ -119,8 +119,8 @@ class HelpController extends Controller
 		$class = new \ReflectionClass ( $controller );
 		foreach ( $class->getMethods () as $method ) {
 			$name = $method->getName ();
-			if ($name !== 'actions' && $method->isPublic () && ! $method->isStatic () && strpos ( $name, 'action' ) === 0) {
-				$actions [] = Inflector::camel2id ( substr ( $name, 6 ), '-', true );
+			if ($name !== 'actions' && $name != 'runAction' && $name != 'beforeAction' && $name != 'afterAction' && $name != 'createAction' && $method->isPublic () && ! $method->isStatic () &&strpos ( substr ( $name, - 6 ),'Action') === 0) {
+				$actions[] = Inflector::camel2id ( substr ( $name,0 ,-6 ), '-', true );
 			}
 		}
 		sort ( $actions );

@@ -34,8 +34,8 @@ use Leaps\Di\ServiceLocator;
  * @property array $modules The modules (indexed by their IDs).
  * @property string $uniqueId The unique ID of the module. This property is read-only.
  * @property string $viewPath The root directory of view files. Defaults to "[[basePath]]/views".
- *          
- *          
+ *
+ *
  */
 class Module extends ServiceLocator
 {
@@ -48,7 +48,7 @@ class Module extends ServiceLocator
 	 * @event ActionEvent an event raised after executing a controller action.
 	 */
 	const EVENT_AFTER_ACTION = 'afterAction';
-	
+
 	/**
 	 *
 	 * @var array custom module parameters (name => value).
@@ -80,7 +80,7 @@ class Module extends ServiceLocator
 	 *      If the latter, the array must contain a 'className' element which specifies
 	 *      the controller's fully qualified class name, and the rest of the name-value pairs
 	 *      in the array are used to initialize the corresponding controller properties. For example,
-	 *     
+	 *
 	 *      ~~~
 	 *      [
 	 *      'account' => 'App\Controller\UserController',
@@ -97,11 +97,11 @@ class Module extends ServiceLocator
 	 * @var string the namespace that controller classes are in.
 	 *      This namespace will be used to load controller classes by prepending it to the controller
 	 *      class name.
-	 *     
+	 *
 	 *      If not set, it will use the `controllers` sub-namespace under the namespace of this module.
 	 *      For example, if the namespace of this module is "foo\bar", then the default
 	 *      controller namespace would be "foo\bar\controllers".
-	 *     
+	 *
 	 *      See also the [guide section on autoloading](guide:concept-autoloading) to learn more about
 	 *      defining namespaces and how classes are loaded.
 	 */
@@ -115,7 +115,7 @@ class Module extends ServiceLocator
 	 *      [[Controller::defaultAction]].
 	 */
 	public $defaultRoute = 'default';
-	
+
 	/**
 	 *
 	 * @var string the root directory of the module.
@@ -136,7 +136,7 @@ class Module extends ServiceLocator
 	 * @var array child modules of this module
 	 */
 	private $_modules = [ ];
-	
+
 	/**
 	 * Constructor.
 	 *
@@ -150,7 +150,7 @@ class Module extends ServiceLocator
 		$this->module = $parent;
 		parent::__construct ( $config );
 	}
-	
+
 	/**
 	 * Returns the currently requested instance of this module class.
 	 * If the module class is not currently requested, null will be returned.
@@ -163,7 +163,7 @@ class Module extends ServiceLocator
 		$class = get_called_class ();
 		return isset ( Leaps::$app->loadedModules [$class] ) ? Leaps::$app->loadedModules [$class] : null;
 	}
-	
+
 	/**
 	 * Sets the currently requested instance of this module class.
 	 *
@@ -178,7 +178,7 @@ class Module extends ServiceLocator
 			Leaps::$app->loadedModules [get_class ( $instance )] = $instance;
 		}
 	}
-	
+
 	/**
 	 * Initializes the module.
 	 *
@@ -197,7 +197,7 @@ class Module extends ServiceLocator
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns an ID that uniquely identifies this module among all modules within the current application.
 	 * Note that if the module is an application, an empty string will be returned.
@@ -208,7 +208,7 @@ class Module extends ServiceLocator
 	{
 		return $this->module ? ltrim ( $this->module->getUniqueId () . '/' . $this->id, '/' ) : $this->id;
 	}
-	
+
 	/**
 	 * Returns the root directory of the module.
 	 * It defaults to the directory containing the module class file.
@@ -221,10 +221,10 @@ class Module extends ServiceLocator
 			$class = new \ReflectionClass ( $this );
 			$this->_basePath = dirname ( $class->getFileName () );
 		}
-		
+
 		return $this->_basePath;
 	}
-	
+
 	/**
 	 * Sets the root directory of the module.
 	 * This method can only be invoked at the beginning of the constructor.
@@ -242,7 +242,7 @@ class Module extends ServiceLocator
 			throw new InvalidParamException ( "The directory does not exist: $path" );
 		}
 	}
-	
+
 	/**
 	 * Returns the directory that contains the controller classes according to [[controllerNamespace]].
 	 * Note that in order for this method to return a value, you must define
@@ -255,7 +255,7 @@ class Module extends ServiceLocator
 	{
 		return Leaps::getAlias ( '@' . str_replace ( '\\', '/', $this->controllerNamespace ) );
 	}
-	
+
 	/**
 	 * Returns the directory that contains the view files for this module.
 	 *
@@ -269,7 +269,7 @@ class Module extends ServiceLocator
 			return $this->_viewPath = $this->getBasePath () . DIRECTORY_SEPARATOR . 'View';
 		}
 	}
-	
+
 	/**
 	 * Sets the directory that contains the view files.
 	 *
@@ -280,7 +280,7 @@ class Module extends ServiceLocator
 	{
 		$this->_viewPath = Leaps::getAlias ( $path );
 	}
-	
+
 	/**
 	 * Returns the directory that contains layout view files for this module.
 	 *
@@ -294,7 +294,7 @@ class Module extends ServiceLocator
 			return $this->_layoutPath = $this->getViewPath () . DIRECTORY_SEPARATOR . 'Layout';
 		}
 	}
-	
+
 	/**
 	 * Sets the directory that contains the layout files.
 	 *
@@ -305,7 +305,7 @@ class Module extends ServiceLocator
 	{
 		$this->_layoutPath = Leaps::getAlias ( $path );
 	}
-	
+
 	/**
 	 * Defines path aliases.
 	 * This method calls [[Leaps::setAlias()]] to register the path aliases.
@@ -317,7 +317,7 @@ class Module extends ServiceLocator
 	 * @param array $aliases list of path aliases to be defined. The array keys are alias names
 	 *        (must start with '@') and the array values are the corresponding paths or aliases.
 	 *        For example,
-	 *       
+	 *
 	 *        ~~~
 	 *        [
 	 *        '@models' => '@app/models', // an existing alias
@@ -331,7 +331,7 @@ class Module extends ServiceLocator
 			Leaps::setAlias ( $name, $alias );
 		}
 	}
-	
+
 	/**
 	 * Checks whether the child module of the specified ID exists.
 	 * This method supports checking the existence of both child and grand child modules.
@@ -345,13 +345,13 @@ class Module extends ServiceLocator
 		if (($pos = strpos ( $id, '/' )) !== false) {
 			// sub-module
 			$module = $this->getModule ( substr ( $id, 0, $pos ) );
-			
+
 			return $module === null ? false : $module->hasModule ( substr ( $id, $pos + 1 ) );
 		} else {
 			return isset ( $this->_modules [$id] );
 		}
 	}
-	
+
 	/**
 	 * Retrieves the child module of the specified ID.
 	 * This method supports retrieving both child modules and grand child modules.
@@ -367,35 +367,35 @@ class Module extends ServiceLocator
 		if (($pos = strpos ( $id, '/' )) !== false) {
 			// sub-module
 			$module = $this->getModule ( substr ( $id, 0, $pos ) );
-			
+
 			return $module === null ? null : $module->getModule ( substr ( $id, $pos + 1 ), $load );
 		}
-		
+
 		if (isset ( $this->_modules [$id] )) {
 			if ($this->_modules [$id] instanceof Module) {
 				return $this->_modules [$id];
 			} elseif ($load) {
 				Leaps::trace ( "Loading module: $id", __METHOD__ );
 				/* @var $module Module */
-				$module = Leaps::createObject ( $this->_modules [$id], [ 
+				$module = Leaps::createObject ( $this->_modules [$id], [
 					$id,
-					$this 
+					$this
 				] );
 				$module->setInstance ( $module );
 				return $this->_modules [$id] = $module;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Adds a sub-module to this module.
 	 *
 	 * @param string $id module ID
 	 * @param Module|array|null $module the sub-module to be added to this module. This can
 	 *        be one of the following:
-	 *       
+	 *
 	 *        - a [[Module]] object
 	 *        - a configuration array: when [[getModule()]] is called initially, the array
 	 *        will be used to instantiate the sub-module
@@ -409,7 +409,7 @@ class Module extends ServiceLocator
 			$this->_modules [$id] = $module;
 		}
 	}
-	
+
 	/**
 	 * Returns the sub-modules in this module.
 	 *
@@ -427,13 +427,13 @@ class Module extends ServiceLocator
 					$modules [] = $module;
 				}
 			}
-			
+
 			return $modules;
 		} else {
 			return $this->_modules;
 		}
 	}
-	
+
 	/**
 	 * Registers sub-modules in the current module.
 	 *
@@ -464,7 +464,7 @@ class Module extends ServiceLocator
 			$this->_modules [$id] = $module;
 		}
 	}
-	
+
 	/**
 	 * Runs a controller action specified by a route.
 	 * This method parses the specified route and creates the corresponding child module(s), controller and action
@@ -486,14 +486,14 @@ class Module extends ServiceLocator
 			Leaps::$app->controller = $controller;
 			$result = $controller->runAction ( $actionID, $params );
 			Leaps::$app->controller = $oldController;
-			
+
 			return $result;
 		} else {
 			$id = $this->getUniqueId ();
 			throw new InvalidRouteException ( 'Unable to resolve the request "' . ($id === '' ? $route : $id . '/' . $route) . '".' );
 		}
 	}
-	
+
 	/**
 	 * Creates a controller instance based on the given route.
 	 *
@@ -521,53 +521,53 @@ class Module extends ServiceLocator
 		if ($route === '') {
 			$route = $this->defaultRoute;
 		}
-		
+
 		// double slashes or leading/ending slashes may cause substr problem
 		$route = trim ( $route, '/' );
 		if (strpos ( $route, '//' ) !== false) {
 			return false;
 		}
-		
+
 		if (strpos ( $route, '/' ) !== false) {
 			list ( $id, $route ) = explode ( '/', $route, 2 );
 		} else {
 			$id = $route;
 			$route = '';
 		}
-		
+
 		// module and controller map take precedence
 		if (isset ( $this->controllerMap [$id] )) {
-			$controller = Leaps::createObject ( $this->controllerMap [$id], [ 
+			$controller = Leaps::createObject ( $this->controllerMap [$id], [
 				$id,
-				$this 
+				$this
 			] );
-			return [ 
+			return [
 				$controller,
-				$route 
+				$route
 			];
 		}
 		$module = $this->getModule ( $id );
 		if ($module !== null) {
 			return $module->createController ( $route );
 		}
-		
+
 		if (($pos = strrpos ( $route, '/' )) !== false) {
 			$id .= '/' . substr ( $route, 0, $pos );
 			$route = substr ( $route, $pos + 1 );
 		}
-		
+
 		$controller = $this->createControllerByID ( $id );
 		if ($controller === null && $route !== '') {
 			$controller = $this->createControllerByID ( $id . '/' . $route );
 			$route = '';
 		}
-		
-		return $controller === null ? false : [ 
+
+		return $controller === null ? false : [
 			$controller,
-			$route 
+			$route
 		];
 	}
-	
+
 	/**
 	 * Creates a controller based on the given controller ID.
 	 *
@@ -591,24 +591,24 @@ class Module extends ServiceLocator
 			$prefix = substr ( $id, 0, $pos + 1 );
 			$className = substr ( $id, $pos + 1 );
 		}
-		
+
 		if (! preg_match ( '%^[a-z][a-z0-9\\-_]*$%', $className )) {
 			return null;
 		}
 		if ($prefix !== '' && ! preg_match ( '%^[a-z0-9_/]+$%i', $prefix )) {
 			return null;
 		}
-		
+
 		$className = str_replace ( ' ', '', ucwords ( str_replace ( '-', ' ', $className ) ) ) . 'Controller';
 		$className = ltrim ( $this->controllerNamespace . '\\' . str_replace ( '/', '\\', $prefix ) . $className, '\\' );
 		if (strpos ( $className, '-' ) !== false || ! class_exists ( $className )) {
 			return null;
 		}
-		
+
 		if (is_subclass_of ( $className, 'Leaps\Base\Controller' )) {
-			$controller = Leaps::createObject ( $className, [ 
+			$controller = Leaps::createObject ( $className, [
 				$id,
-				$this 
+				$this
 			] );
 			return get_class ( $controller ) === $className ? $controller : null;
 		} elseif (LEAPS_DEBUG) {
@@ -617,7 +617,7 @@ class Module extends ServiceLocator
 			return null;
 		}
 	}
-	
+
 	/**
 	 * This method is invoked right before an action within this module is executed.
 	 *
@@ -651,7 +651,7 @@ class Module extends ServiceLocator
 		$this->trigger ( self::EVENT_BEFORE_ACTION, $event );
 		return $event->isValid;
 	}
-	
+
 	/**
 	 * This method is invoked right after an action within this module is executed.
 	 *

@@ -42,7 +42,7 @@ use Leaps\Console\Controller;
  *
  * @property \Leaps\Web\AssetManager $assetManager Asset manager instance. Note that the type of this property
  *           differs in getter and setter. See [[getAssetManager()]] and [[setAssetManager()]] for details.
- *          
+ *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
@@ -63,7 +63,7 @@ class AssetController extends Controller
 	 * @var array list of asset bundles, which represents output compressed files.
 	 *      You can specify the name of the output compressed file using 'css' and 'js' keys:
 	 *      For example:
-	 *     
+	 *
 	 *      ~~~
 	 *      'app\config\AllAsset' => [
 	 *      'js' => 'js/all-{hash}.js',
@@ -71,15 +71,15 @@ class AssetController extends Controller
 	 *      'depends' => [ ... ],
 	 *      ]
 	 *      ~~~
-	 *     
+	 *
 	 *      File names can contain placeholder "{hash}", which will be filled by the hash of the resulting file.
-	 *     
+	 *
 	 *      You may specify several target bundles in order to compress different groups of assets.
 	 *      In this case you should use 'depends' key to specify, which bundles should be covered with particular
 	 *      target bundle. You may leave 'depends' to be empty for single bundle, which will compress all remaining
 	 *      bundles in this case.
 	 *      For example:
-	 *     
+	 *
 	 *      ~~~
 	 *      'allShared' => [
 	 *      'js' => 'js/all-shared-{hash}.js',
@@ -112,7 +112,7 @@ class AssetController extends Controller
 	 *      If a string, it is treated as shell command template, which should contain
 	 *      placeholders {from} - source file name - and {to} - output file name.
 	 *      Otherwise, it is treated as PHP callback, which should perform the compression.
-	 *     
+	 *
 	 *      Default value relies on usage of "Closure Compiler"
 	 * @see https://developers.google.com/closure/compiler/
 	 */
@@ -123,19 +123,19 @@ class AssetController extends Controller
 	 *      If a string, it is treated as shell command template, which should contain
 	 *      placeholders {from} - source file name - and {to} - output file name.
 	 *      Otherwise, it is treated as PHP callback, which should perform the compression.
-	 *     
+	 *
 	 *      Default value relies on usage of "YUI Compressor"
 	 * @see https://github.com/yui/yuicompressor/
 	 */
 	public $cssCompressor = 'java -jar yuicompressor.jar --type css {from} -o {to}';
-	
+
 	/**
 	 *
 	 * @var array|\Leaps\Web\AssetManager [[\Leaps\Web\AssetManager]] instance or its array configuration, which will be used
 	 *      for assets processing.
 	 */
 	private $_assetManager = [ ];
-	
+
 	/**
 	 * Returns the asset manager instance.
 	 *
@@ -157,10 +157,10 @@ class AssetController extends Controller
 			}
 			$this->_assetManager = Leaps::createObject ( $options );
 		}
-		
+
 		return $this->_assetManager;
 	}
-	
+
 	/**
 	 * Sets asset manager instance or configuration.
 	 *
@@ -174,7 +174,7 @@ class AssetController extends Controller
 		}
 		$this->_assetManager = $assetManager;
 	}
-	
+
 	/**
 	 * Combines and compresses the asset files according to the given configuration.
 	 * During the process new asset bundle configuration file will be created.
@@ -183,7 +183,7 @@ class AssetController extends Controller
 	 * @param string $configFile configuration file name.
 	 * @param string $bundleFile output asset bundles configuration file name.
 	 */
-	public function actionCompress($configFile, $bundleFile)
+	public function CompressAction($configFile, $bundleFile)
 	{
 		$this->loadConfiguration ( $configFile );
 		$bundles = $this->loadBundles ( $this->bundles );
@@ -198,11 +198,11 @@ class AssetController extends Controller
 			}
 			$this->stdout ( "\n" );
 		}
-		
+
 		$targets = $this->adjustDependency ( $targets, $bundles );
 		$this->saveTargets ( $targets, $bundleFile );
 	}
-	
+
 	/**
 	 * Applies configuration from the given file to self instance.
 	 *
@@ -219,10 +219,10 @@ class AssetController extends Controller
 				throw new Exception ( "Unknown configuration option: $name" );
 			}
 		}
-		
+
 		$this->getAssetManager (); // check if asset manager configuration is correct
 	}
-	
+
 	/**
 	 * Creates full list of source asset bundles.
 	 *
@@ -232,7 +232,7 @@ class AssetController extends Controller
 	protected function loadBundles($bundles)
 	{
 		$this->stdout ( "Collecting source bundles information...\n" );
-		
+
 		$am = $this->getAssetManager ();
 		$result = [ ];
 		foreach ( $bundles as $name ) {
@@ -241,10 +241,10 @@ class AssetController extends Controller
 		foreach ( $result as $bundle ) {
 			$this->loadDependency ( $bundle, $result );
 		}
-		
+
 		return $result;
 	}
-	
+
 	/**
 	 * Loads asset bundle dependencies recursively.
 	 *
@@ -266,7 +266,7 @@ class AssetController extends Controller
 			}
 		}
 	}
-	
+
 	/**
 	 * Creates full list of output asset bundles.
 	 *
@@ -283,7 +283,7 @@ class AssetController extends Controller
 			$this->registerBundle ( $bundles, $name, $registered );
 		}
 		$bundleOrders = array_combine ( array_keys ( $registered ), range ( 0, count ( $bundles ) - 1 ) );
-		
+
 		// fill up the target which has empty 'depends'.
 		$referenced = [ ];
 		foreach ( $targets as $name => $target ) {
@@ -306,7 +306,7 @@ class AssetController extends Controller
 		if (isset ( $all )) {
 			$targets [$all] ['depends'] = array_diff ( array_keys ( $registered ), array_keys ( $referenced ) );
 		}
-		
+
 		// adjust the 'depends' order for each target according to the dependency order of bundles
 		// create an AssetBundle object for each target
 		foreach ( $targets as $name => $target ) {
@@ -329,10 +329,10 @@ class AssetController extends Controller
 			}
 			$targets [$name] = Leaps::createObject ( $target );
 		}
-		
+
 		return $targets;
 	}
-	
+
 	/**
 	 * Builds output asset bundle.
 	 *
@@ -355,32 +355,32 @@ class AssetController extends Controller
 				throw new Exception ( "Unknown bundle: '{$name}'" );
 			}
 		}
-		
+
 		if (empty ( $inputFiles )) {
 			$target->$type = [ ];
 		} else {
 			FileHelper::createDirectory ( $target->basePath, $this->getAssetManager ()->dirMode );
-			$tempFile = $target->basePath . '/' . strtr ( $target->$type, [ 
-				'{hash}' => 'temp' 
+			$tempFile = $target->basePath . '/' . strtr ( $target->$type, [
+				'{hash}' => 'temp'
 			] );
-			
+
 			if ($type === 'js') {
 				$this->compressJsFiles ( $inputFiles, $tempFile );
 			} else {
 				$this->compressCssFiles ( $inputFiles, $tempFile );
 			}
-			
-			$targetFile = strtr ( $target->$type, [ 
-				'{hash}' => md5_file ( $tempFile ) 
+
+			$targetFile = strtr ( $target->$type, [
+				'{hash}' => md5_file ( $tempFile )
 			] );
 			$outputFile = $target->basePath . '/' . $targetFile;
 			rename ( $tempFile, $outputFile );
-			$target->$type = [ 
-				$targetFile 
+			$target->$type = [
+				$targetFile
 			];
 		}
 	}
-	
+
 	/**
 	 * Adjust dependencies between asset bundles in the way source bundles begin to depend on output ones.
 	 *
@@ -391,14 +391,14 @@ class AssetController extends Controller
 	protected function adjustDependency($targets, $bundles)
 	{
 		$this->stdout ( "Creating new bundle configuration...\n" );
-		
+
 		$map = [ ];
 		foreach ( $targets as $name => $target ) {
 			foreach ( $target->depends as $bundle ) {
 				$map [$bundle] = $name;
 			}
 		}
-		
+
 		foreach ( $targets as $name => $target ) {
 			$depends = [ ];
 			foreach ( $target->depends as $bn ) {
@@ -409,28 +409,28 @@ class AssetController extends Controller
 			unset ( $depends [$name] );
 			$target->depends = array_keys ( $depends );
 		}
-		
+
 		// detect possible circular dependencies
 		foreach ( $targets as $name => $target ) {
 			$registered = [ ];
 			$this->registerBundle ( $targets, $name, $registered );
 		}
-		
+
 		foreach ( $map as $bundle => $target ) {
 			$sourceBundle = $bundles [$bundle];
 			$depends = $sourceBundle->depends;
 			if (! $this->isBundleExternal ( $sourceBundle )) {
 				$depends [] = $target;
 			}
-			$targets [$bundle] = Leaps::createObject ( [ 
+			$targets [$bundle] = Leaps::createObject ( [
 				'className' => strpos ( $bundle, '\\' ) !== false ? $bundle : 'Leaps\\Web\\AssetBundle',
-				'depends' => $depends 
+				'depends' => $depends
 			] );
 		}
-		
+
 		return $targets;
 	}
-	
+
 	/**
 	 * Registers asset bundles including their dependencies.
 	 *
@@ -453,7 +453,7 @@ class AssetController extends Controller
 			throw new Exception ( "A circular dependency is detected for target '{$name}': " . $this->composeCircularDependencyTrace ( $name, $registered ) . "." );
 		}
 	}
-	
+
 	/**
 	 * Saves new asset bundles configuration.
 	 *
@@ -466,22 +466,22 @@ class AssetController extends Controller
 		$array = [ ];
 		foreach ( $targets as $name => $target ) {
 			if (isset ( $this->targets [$name] )) {
-				$array [$name] = [ 
+				$array [$name] = [
 					'className' => get_class ( $target ),
 					'basePath' => $this->targets [$name] ['basePath'],
 					'baseUrl' => $this->targets [$name] ['baseUrl'],
 					'js' => $target->js,
-					'css' => $target->css 
+					'css' => $target->css
 				];
 			} else {
 				if ($this->isBundleExternal ( $target )) {
 					$array [$name] = $this->composeBundleConfig ( $target );
 				} else {
-					$array [$name] = [ 
+					$array [$name] = [
 						'sourcePath' => null,
 						'js' => [ ],
 						'css' => [ ],
-						'depends' => $target->depends 
+						'depends' => $target->depends
 					];
 				}
 			}
@@ -502,7 +502,7 @@ EOD;
 		}
 		$this->stdout ( "Output bundle configuration created at '{$bundleFile}'.\n", Console::FG_GREEN );
 	}
-	
+
 	/**
 	 * Compresses given JavaScript files and combines them into the single one.
 	 *
@@ -519,9 +519,9 @@ EOD;
 		if (is_string ( $this->jsCompressor )) {
 			$tmpFile = $outputFile . '.tmp';
 			$this->combineJsFiles ( $inputFiles, $tmpFile );
-			$this->stdout ( shell_exec ( strtr ( $this->jsCompressor, [ 
+			$this->stdout ( shell_exec ( strtr ( $this->jsCompressor, [
 				'{from}' => escapeshellarg ( $tmpFile ),
-				'{to}' => escapeshellarg ( $outputFile ) 
+				'{to}' => escapeshellarg ( $outputFile )
 			] ) ) );
 			@unlink ( $tmpFile );
 		} else {
@@ -532,7 +532,7 @@ EOD;
 		}
 		$this->stdout ( "  JavaScript files compressed into '{$outputFile}'.\n" );
 	}
-	
+
 	/**
 	 * Compresses given CSS files and combines them into the single one.
 	 *
@@ -549,9 +549,9 @@ EOD;
 		if (is_string ( $this->cssCompressor )) {
 			$tmpFile = $outputFile . '.tmp';
 			$this->combineCssFiles ( $inputFiles, $tmpFile );
-			$this->stdout ( shell_exec ( strtr ( $this->cssCompressor, [ 
+			$this->stdout ( shell_exec ( strtr ( $this->cssCompressor, [
 				'{from}' => escapeshellarg ( $tmpFile ),
-				'{to}' => escapeshellarg ( $outputFile ) 
+				'{to}' => escapeshellarg ( $outputFile )
 			] ) ) );
 			@unlink ( $tmpFile );
 		} else {
@@ -562,7 +562,7 @@ EOD;
 		}
 		$this->stdout ( "  CSS files compressed into '{$outputFile}'.\n" );
 	}
-	
+
 	/**
 	 * Combines JavaScript files into a single one.
 	 *
@@ -580,7 +580,7 @@ EOD;
 			throw new Exception ( "Unable to write output JavaScript file '{$outputFile}'." );
 		}
 	}
-	
+
 	/**
 	 * Combines CSS files into a single one.
 	 *
@@ -599,7 +599,7 @@ EOD;
 			throw new Exception ( "Unable to write output CSS file '{$outputFile}'." );
 		}
 	}
-	
+
 	/**
 	 * Adjusts CSS content allowing URL references pointing to the original resources.
 	 *
@@ -612,7 +612,7 @@ EOD;
 	{
 		$inputFilePath = str_replace ( '\\', '/', $inputFilePath );
 		$outputFilePath = str_replace ( '\\', '/', $outputFilePath );
-		
+
 		$sharedPathParts = [ ];
 		$inputFilePathParts = explode ( '/', $inputFilePath );
 		$inputFilePathPartsCount = count ( $inputFilePathParts );
@@ -626,7 +626,7 @@ EOD;
 			}
 		}
 		$sharedPath = implode ( '/', $sharedPathParts );
-		
+
 		$inputFileRelativePath = trim ( str_replace ( $sharedPath, '', $inputFilePath ), '/' );
 		$outputFileRelativePath = trim ( str_replace ( $sharedPath, '', $outputFilePath ), '/' );
 		if (empty ( $inputFileRelativePath )) {
@@ -639,26 +639,26 @@ EOD;
 		} else {
 			$outputFileRelativePathParts = explode ( '/', $outputFileRelativePath );
 		}
-		
+
 		$callback = function ($matches) use($inputFileRelativePathParts, $outputFileRelativePathParts)
 		{
 			$fullMatch = $matches [0];
 			$inputUrl = $matches [1];
-			
+
 			if (strpos ( $inputUrl, '/' ) === 0 || preg_match ( '/^https?:\/\//is', $inputUrl ) || preg_match ( '/^data:/is', $inputUrl )) {
 				return $fullMatch;
 			}
 			if ($inputFileRelativePathParts === $outputFileRelativePathParts) {
 				return $fullMatch;
 			}
-			
+
 			if (empty ( $outputFileRelativePathParts )) {
 				$outputUrlParts = [ ];
 			} else {
 				$outputUrlParts = array_fill ( 0, count ( $outputFileRelativePathParts ), '..' );
 			}
 			$outputUrlParts = array_merge ( $outputUrlParts, $inputFileRelativePathParts );
-			
+
 			if (strpos ( $inputUrl, '/' ) !== false) {
 				$inputUrlParts = explode ( '/', $inputUrl );
 				foreach ( $inputUrlParts as $key => $inputUrlPart ) {
@@ -672,15 +672,15 @@ EOD;
 				$outputUrlParts [] = $inputUrl;
 			}
 			$outputUrl = implode ( '/', $outputUrlParts );
-			
+
 			return str_replace ( $inputUrl, $outputUrl, $fullMatch );
 		};
-		
+
 		$cssContent = preg_replace_callback ( '/url\(["\']?([^)^"^\']*)["\']?\)/is', $callback, $cssContent );
-		
+
 		return $cssContent;
 	}
-	
+
 	/**
 	 * Creates template of configuration file for [[actionCompress]].
 	 *
@@ -692,7 +692,7 @@ EOD;
 	{
 		$jsCompressor = VarDumper::export ( $this->jsCompressor );
 		$cssCompressor = VarDumper::export ( $this->cssCompressor );
-		
+
 		$template = <<<EOD
 <?php
 /**
@@ -743,7 +743,7 @@ EOD;
 			return self::EXIT_CODE_NORMAL;
 		}
 	}
-	
+
 	/**
 	 * Returns canonicalized absolute pathname.
 	 * Unlike regular `realpath()` this method does not expand symlinks and does not check path existence.
@@ -753,12 +753,12 @@ EOD;
 	 */
 	private function findRealPath($path)
 	{
-		$path = str_replace ( [ 
+		$path = str_replace ( [
 			'/',
-			'\\' 
+			'\\'
 		], DIRECTORY_SEPARATOR, $path );
 		$pathParts = explode ( DIRECTORY_SEPARATOR, $path );
-		
+
 		$realPathParts = [ ];
 		foreach ( $pathParts as $pathPart ) {
 			if ($pathPart === '..') {
@@ -769,7 +769,7 @@ EOD;
 		}
 		return implode ( DIRECTORY_SEPARATOR, $realPathParts );
 	}
-	
+
 	/**
 	 *
 	 * @param AssetBundle $bundle
@@ -779,7 +779,7 @@ EOD;
 	{
 		return (empty ( $bundle->sourcePath ) && empty ( $bundle->basePath ));
 	}
-	
+
 	/**
 	 *
 	 * @param AssetBundle $bundle asset bundle instance.
@@ -791,7 +791,7 @@ EOD;
 		$config ['className'] = get_class ( $bundle );
 		return $config;
 	}
-	
+
 	/**
 	 * Composes trace info for bundle circular dependency.
 	 *
