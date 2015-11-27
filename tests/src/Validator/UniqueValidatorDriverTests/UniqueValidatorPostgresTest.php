@@ -1,8 +1,8 @@
 <?php
 
-namespace leapsunit\src\validators\UniqueValidatorDriverTests;
+namespace leapsunit\src\Validator\UniqueValidatorDriverTests;
 
-use leapsunit\src\validators\UniqueValidatorTest;
+use leapsunit\src\Validator\UniqueValidatorTest;
 
 /**
  * @group validators

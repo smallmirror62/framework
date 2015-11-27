@@ -1,8 +1,8 @@
 <?php
 
-namespace leapsunit\src\validators;
+namespace leapsunit\src\Validator;
 
-use yii\validators\RangeValidator;
+use Leaps\Validator\RangeValidator;
 use leapsunit\data\validators\models\FakedValidationModel;
 use leapsunit\TestCase;
 

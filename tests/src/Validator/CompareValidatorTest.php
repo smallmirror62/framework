@@ -1,8 +1,8 @@
 <?php
-namespace leapsunit\src\validators;
+namespace leapsunit\src\Validator;
 
 use Leaps\Base\InvalidConfigException;
-use yii\validators\CompareValidator;
+use Leaps\Validator\CompareValidator;
 use leapsunit\data\validators\models\FakedValidationModel;
 use leapsunit\TestCase;
 

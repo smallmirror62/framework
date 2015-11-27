@@ -1,8 +1,8 @@
 <?php
 
-namespace leapsunit\src\validators;
+namespace leapsunit\src\Validator;
 
-use yii\validators\FileValidator;
+use Leaps\Validator\FileValidator;
 use yii\web\UploadedFile;
 use Leaps;
 use leapsunit\data\validators\models\FakedValidationModel;

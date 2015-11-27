@@ -1,10 +1,10 @@
 <?php
 
-namespace leapsunit\src\validators;
+namespace leapsunit\src\Validator;
 
 use Leaps;
 use Leaps\Base\Exception;
-use yii\validators\ExistValidator;
+use Leaps\Validator\ExistValidator;
 use leapsunit\data\ar\ActiveRecord;
 use leapsunit\data\ar\Order;
 use leapsunit\data\ar\OrderItem;

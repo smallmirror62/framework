@@ -1,10 +1,10 @@
 <?php
 
-namespace leapsunit\src\validators;
+namespace leapsunit\src\Validator;
 
-use yii\validators\BooleanValidator;
-use yii\validators\InlineValidator;
-use yii\validators\NumberValidator;
+use Leaps\Validator\BooleanValidator;
+use Leaps\Validator\InlineValidator;
+use Leaps\Validator\NumberValidator;
 use leapsunit\data\validators\models\FakedValidationModel;
 use leapsunit\data\validators\TestValidator;
 use leapsunit\TestCase;

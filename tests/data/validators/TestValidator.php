@@ -2,7 +2,7 @@
 
 namespace leapsunit\data\validators;
 
-use yii\validators\Validator;
+use Leaps\Validator\Validator;
 
 class TestValidator extends Validator
 {

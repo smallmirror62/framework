@@ -1,8 +1,8 @@
 <?php
 
-namespace leapsunit\src\validators;
+namespace leapsunit\src\Validator;
 
-use yii\validators\UniqueValidator;
+use Leaps\Validator\UniqueValidator;
 use Leaps;
 use leapsunit\data\ar\ActiveRecord;
 use leapsunit\data\ar\Order;

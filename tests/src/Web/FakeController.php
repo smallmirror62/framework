@@ -10,7 +10,7 @@ namespace leapsunit\src\web;
 use yii\web\Controller;
 use leapsunit\src\di\stubs\QuxInterface;
 use leapsunit\src\web\stubs\Bar;
-use yii\validators\EmailValidator;
+use Leaps\Validator\EmailValidator;
 
 /**
  * @author Misbahul D Munir <misbahuldmunir@gmail.com>

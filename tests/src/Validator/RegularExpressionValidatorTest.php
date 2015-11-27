@@ -1,8 +1,8 @@
 <?php
 
-namespace leapsunit\src\validators;
+namespace leapsunit\src\Validator;
 
-use yii\validators\RegularExpressionValidator;
+use Leaps\Validator\RegularExpressionValidator;
 use leapsunit\data\validators\models\FakedValidationModel;
 use leapsunit\TestCase;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace leapsunit\src\validators;
+namespace leapsunit\src\Validator;
 
 use DateTime;
-use yii\validators\DateValidator;
+use Leaps\Validator\DateValidator;
 use leapsunit\data\validators\models\FakedValidationModel;
 use leapsunit\src\i18n\IntlTestHelper;
 use leapsunit\TestCase;

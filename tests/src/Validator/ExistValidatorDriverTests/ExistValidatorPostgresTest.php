@@ -1,7 +1,7 @@
 <?php
-namespace leapsunit\src\validators\ExistValidatorDriverTests;
+namespace leapsunit\src\Validator\ExistValidatorDriverTests;
 
-use leapsunit\src\validators\ExistValidatorTest;
+use leapsunit\src\Validator\ExistValidatorTest;
 
 /**
  * @group validators

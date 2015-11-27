@@ -1,8 +1,8 @@
 <?php
 
-namespace leapsunit\src\validators;
+namespace leapsunit\src\Validator;
 
-use yii\validators\NumberValidator;
+use Leaps\Validator\NumberValidator;
 use yii\web\View;
 use leapsunit\data\validators\models\FakedValidationModel;
 use leapsunit\TestCase;
@@ -177,7 +177,7 @@ class NumberValidatorTest extends TestCase
             'max' => 10,
         ]);
         $model = new FakedValidationModel();
-        $js = $val->clientValidateAttribute($model, 'attr_number', new View(['assetBundles' => ['yii\validators\ValidationAsset' => true]]));
+        $js = $val->clientValidateAttribute($model, 'attr_number', new View(['assetBundles' => ['Leaps\Validator\ValidationAsset' => true]]));
         $this->assertContains('"min":5', $js);
         $this->assertContains('"max":10', $js);
 
@@ -186,7 +186,7 @@ class NumberValidatorTest extends TestCase
             'max' => '10',
         ]);
         $model = new FakedValidationModel();
-        $js = $val->clientValidateAttribute($model, 'attr_number', new View(['assetBundles' => ['yii\validators\ValidationAsset' => true]]));
+        $js = $val->clientValidateAttribute($model, 'attr_number', new View(['assetBundles' => ['Leaps\Validator\ValidationAsset' => true]]));
         $this->assertContains('"min":5', $js);
         $this->assertContains('"max":10', $js);
 
@@ -195,7 +195,7 @@ class NumberValidatorTest extends TestCase
             'max' => 13.37,
         ]);
         $model = new FakedValidationModel();
-        $js = $val->clientValidateAttribute($model, 'attr_number', new View(['assetBundles' => ['yii\validators\ValidationAsset' => true]]));
+        $js = $val->clientValidateAttribute($model, 'attr_number', new View(['assetBundles' => ['Leaps\Validator\ValidationAsset' => true]]));
         $this->assertContains('"min":5.65', $js);
         $this->assertContains('"max":13.37', $js);
 
@@ -204,7 +204,7 @@ class NumberValidatorTest extends TestCase
             'max' => '13.37',
         ]);
         $model = new FakedValidationModel();
-        $js = $val->clientValidateAttribute($model, 'attr_number', new View(['assetBundles' => ['yii\validators\ValidationAsset' => true]]));
+        $js = $val->clientValidateAttribute($model, 'attr_number', new View(['assetBundles' => ['Leaps\Validator\ValidationAsset' => true]]));
         $this->assertContains('"min":5.65', $js);
         $this->assertContains('"max":13.37', $js);
     }

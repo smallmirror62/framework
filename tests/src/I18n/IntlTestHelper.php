@@ -62,10 +62,10 @@ namespace Leaps\Helper {
     }
 }
 
-namespace yii\validators {
+namespace Leaps\Validator {
     use leapsunit\src\i18n\IntlTestHelper;
 
-    if (!function_exists('yii\validators\extension_loaded')) {
+    if (!function_exists('Leaps\Validator\extension_loaded')) {
         function extension_loaded($name)
         {
             if ($name === 'intl' && IntlTestHelper::$enableIntl !== null) {

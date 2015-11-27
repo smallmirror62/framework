@@ -384,7 +384,7 @@ class ActiveFieldExtend extends ActiveField
     }
 }
 
-class TestValidator extends \yii\validators\Validator
+class TestValidator extends \Leaps\Validator\Validator
 {
 
     public function clientValidateAttribute($object, $attribute, $view)

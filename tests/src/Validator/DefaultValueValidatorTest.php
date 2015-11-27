@@ -1,8 +1,8 @@
 <?php
 
-namespace leapsunit\src\validators;
+namespace leapsunit\src\Validator;
 
-use yii\validators\DefaultValueValidator;
+use Leaps\Validator\DefaultValueValidator;
 use leapsunit\TestCase;
 
 /**

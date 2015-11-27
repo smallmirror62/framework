@@ -1,7 +1,7 @@
 <?php
-namespace leapsunit\src\validators;
+namespace leapsunit\src\Validator;
 
-use yii\validators\RequiredValidator;
+use Leaps\Validator\RequiredValidator;
 use leapsunit\data\validators\models\FakedValidationModel;
 use leapsunit\TestCase;
 
