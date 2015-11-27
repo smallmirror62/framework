@@ -1,6 +1,6 @@
 <?php
 
-namespace leapsunit\data\console\controllers\fixtures;
+namespace leapsunit\data\Console\Controller\Fixture;
 
 use Leaps\Test\Fixture;
 

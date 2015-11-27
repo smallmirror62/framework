@@ -1,5 +1,5 @@
 <?php
-namespace leapsunit\data\base;
+namespace leapsunit\data\Base;
 
 use Leaps\Base\Model;
 

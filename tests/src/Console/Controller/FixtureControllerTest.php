@@ -4,7 +4,7 @@ namespace leapsunit\src\Console\Controller;
 
 use Leaps;
 use leapsunit\TestCase;
-use leapsunit\data\console\controllers\fixtures\FixtureStorage;
+use leapsunit\data\Console\Controller\Fixture\FixtureStorage;
 use Leaps\Console\Controller\FixtureController;
 
 /**
@@ -29,7 +29,7 @@ class FixtureControllerTest extends TestCase
             'class' => 'leapsunit\src\Console\Controller\FixtureConsoledController',
             'interactive' => false,
             'globalFixtures' => [],
-            'namespace' => 'leapsunit\data\console\controllers\fixtures',
+            'namespace' => 'leapsunit\data\Console\Controller\Fixture',
         ],[null, null]); //id and module are null
     }
 
@@ -44,7 +44,7 @@ class FixtureControllerTest extends TestCase
     public function testLoadGlobalFixture()
     {
         $this->_fixtureController->globalFixtures = [
-            '\leapsunit\data\console\controllers\fixtures\Global'
+            '\leapsunit\data\Console\Controller\Fixture\Global'
         ];
 
         $this->_fixtureController->actionLoad('First');
@@ -56,7 +56,7 @@ class FixtureControllerTest extends TestCase
     public function testUnloadGlobalFixture()
     {
         $this->_fixtureController->globalFixtures = [
-            '\leapsunit\data\console\controllers\fixtures\Global'
+            '\leapsunit\data\Console\Controller\Fixture\Global'
         ];
 
         FixtureStorage::$globalFixturesData[] = 'some seeded global fixture data';

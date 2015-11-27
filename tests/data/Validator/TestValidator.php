@@ -1,6 +1,6 @@
 <?php
 
-namespace leapsunit\data\validators;
+namespace leapsunit\data\Validator;
 
 use Leaps\Validator\Validator;
 
