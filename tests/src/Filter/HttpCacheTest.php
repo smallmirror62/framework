@@ -3,7 +3,7 @@
 namespace leapsunit\src\filters;
 
 use Leaps;
-use yii\filters\HttpCache;
+use Leaps\Filter\HttpCache;
 
 /**
  * @group filters

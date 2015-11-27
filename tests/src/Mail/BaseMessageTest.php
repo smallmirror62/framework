@@ -1,60 +1,60 @@
 <?php
 
-namespace leapsunit\src\mail;
+namespace leapsunit\src\Mail;
 
 use Leaps;
-use yii\mail\BaseMailer;
-use yii\mail\BaseMessage;
 use leapsunit\TestCase;
+use Leaps\Mail\BaseMailer;
+use Leaps\Mail\BaseMessage;
 
 /**
  * @group mail
  */
 class BaseMessageTest extends TestCase
 {
-    public function setUp()
-    {
-        $this->mockApplication([
-            'components' => [
-                'mailer' => $this->createTestEmailComponent()
-            ]
-        ]);
-    }
 
-    /**
-     * @return Mailer test email component instance.
-     */
-    protected function createTestEmailComponent()
-    {
-        $component = new TestMailer();
+	public function setUp()
+	{
+		$this->mockApplication ( [
+			'services'=> [
+				'mailer'=> $this->createTestEmailComponent ()
+			]
+		] );
+	}
 
-        return $component;
-    }
+	/**
+	 * @return Mailer test email component instance.
+	 */
+	protected function createTestEmailComponent()
+	{
+		$component = new TestMailer ();
 
-    /**
-     * @return TestMailer mailer instance.
-     */
-    protected function getMailer()
-    {
-        return Leaps::$app->get('mailer');
-    }
+		return $component;
+	}
 
-    // Tests :
+	/**
+	 * @return TestMailer mailer instance.
+	 */
+	protected function getMailer()
+	{
+		return Leaps::$app->get ( 'mailer' );
+	}
 
-    public function testSend()
-    {
-        $mailer = $this->getMailer();
-        $message = $mailer->compose();
-        $message->send($mailer);
-        $this->assertEquals($message, $mailer->sentMessages[0], 'Unable to send message!');
-    }
+	// Tests :
+	public function testSend()
+	{
+		$mailer = $this->getMailer ();
+		$message = $mailer->compose ();
+		$message->send ( $mailer );
+		$this->assertEquals ( $message, $mailer->sentMessages[0], 'Unable to send message!' );
+	}
 
-    public function testToString()
-    {
-        $mailer = $this->getMailer();
-        $message = $mailer->compose();
-        $this->assertEquals($message->toString(), '' . $message);
-    }
+	public function testToString()
+	{
+		$mailer = $this->getMailer ();
+		$message = $mailer->compose ();
+		$this->assertEquals ( $message->toString (), '' . $message );
+	}
 }
 
 /**
@@ -62,13 +62,15 @@ class BaseMessageTest extends TestCase
  */
 class TestMailer extends BaseMailer
 {
-    public $messageClass = 'leapsunit\src\mail\TestMessage';
-    public $sentMessages = [];
 
-    protected function sendMessage($message)
-    {
-        $this->sentMessages[] = $message;
-    }
+	public $messageClass = 'leapsunit\src\Mail\TestMessage';
+
+	public $sentMessages = [ ];
+
+	protected function sendMessage($message)
+	{
+		$this->sentMessages[] = $message;
+	}
 }
 
 /**
@@ -76,78 +78,102 @@ class TestMailer extends BaseMailer
  */
 class TestMessage extends BaseMessage
 {
-    public $text;
-    public $html;
 
-    public function getCharset()
-    {
-        return '';
-    }
+	public $text;
 
-    public function setCharset($charset) {}
+	public $html;
 
-    public function getFrom()
-    {
-        return '';
-    }
+	public function getCharset()
+	{
+		return '';
+	}
 
-    public function setFrom($from) {}
+	public function setCharset($charset)
+	{
+	}
 
-    public function getReplyTo()
-    {
-        return '';
-    }
+	public function getFrom()
+	{
+		return '';
+	}
 
-    public function setReplyTo($replyTo) {}
+	public function setFrom($from)
+	{
+	}
 
-    public function getTo()
-    {
-        return '';
-    }
+	public function getReplyTo()
+	{
+		return '';
+	}
 
-    public function setTo($to) {}
+	public function setReplyTo($replyTo)
+	{
+	}
 
-    public function getCc()
-    {
-        return '';
-    }
+	public function getTo()
+	{
+		return '';
+	}
 
-    public function setCc($cc) {}
+	public function setTo($to)
+	{
+	}
 
-    public function getBcc()
-    {
-        return '';
-    }
+	public function getCc()
+	{
+		return '';
+	}
 
-    public function setBcc($bcc) {}
+	public function setCc($cc)
+	{
+	}
 
-    public function getSubject()
-    {
-        return '';
-    }
+	public function getBcc()
+	{
+		return '';
+	}
 
-    public function setSubject($subject) {}
+	public function setBcc($bcc)
+	{
+	}
 
-    public function setTextBody($text)
-    {
-        $this->text = $text;
-    }
+	public function getSubject()
+	{
+		return '';
+	}
 
-    public function setHtmlBody($html)
-    {
-        $this->html = $html;
-    }
+	public function setSubject($subject)
+	{
+	}
 
-    public function attachContent($content, array $options = []) {}
+	public function setTextBody($text)
+	{
+		$this->text = $text;
+	}
 
-    public function attach($fileName, array $options = []) {}
+	public function setHtmlBody($html)
+	{
+		$this->html = $html;
+	}
 
-    public function embed($fileName, array $options = []) {}
+	public function attachContent($content, array $options = [])
+	{
+	}
 
-    public function embedContent($content, array $options = []) {}
+	public function attach($fileName, array $options = [])
+	{
+	}
 
-    public function toString()
-    {
-        return get_class($this);
-    }
+	public function embed($fileName, array $options = [])
+	{
+	}
+
+	public function embedContent($content, array $options = [])
+	{
+	}
+
+	public function toString()
+	{
+		return get_class ( $this );
+	}
 }

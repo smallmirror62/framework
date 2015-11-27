@@ -1,10 +1,10 @@
 <?php
 
-namespace leapsunit\src\rest;
+namespace leapsunit\src\Rest;
 
-use yii\web\UrlManager;
-use yii\rest\UrlRule;
-use yii\web\Request;
+use Leaps\Web\UrlManager;
+use Leaps\Rest\UrlRule;
+use Leaps\Web\Request;
 use leapsunit\TestCase;
 
 /**

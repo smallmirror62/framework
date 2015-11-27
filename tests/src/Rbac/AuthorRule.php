@@ -1,7 +1,7 @@
 <?php
-namespace leapsunit\src\rbac;
+namespace leapsunit\src\Rbac;
 
-use yii\rbac\Rule;
+use Leaps\Rbac\Rule;
 
 /**
  * Checks if authorID matches userID passed via params

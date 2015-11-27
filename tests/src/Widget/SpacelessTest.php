@@ -1,8 +1,8 @@
 <?php
 
-namespace leapsunit\src\widgets;
+namespace leapsunit\src\Widget;
 
-use yii\widgets\Spaceless;
+use Leaps\Widget\Spaceless;
 
 /**
  * @group widgets

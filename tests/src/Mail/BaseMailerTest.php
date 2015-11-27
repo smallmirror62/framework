@@ -1,11 +1,11 @@
 <?php
 
-namespace leapsunit\src\mail;
+namespace leapsunit\src\Mail;
 
 use Leaps;
 use Leaps\Base\View;
-use yii\mail\BaseMailer;
-use yii\mail\BaseMessage;
+use Leaps\Mail\BaseMailer;
+use Leaps\Mail\BaseMessage;
 use Leaps\Helper\FileHelper;
 use leapsunit\TestCase;
 
