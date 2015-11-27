@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace leapsunit\src\console;
+namespace leapsunit\src\Console;
 
 use Leaps;
 use leapsunit\TestCase;
@@ -22,7 +22,7 @@ class ControllerTest extends TestCase
     public function testBindActionParams()
     {
         $this->mockApplication([
-            'components' => [
+            'services' => [
                 'barBelongApp' => [
                     'className' => Bar::className(),
                     'foo' => 'belong_app'
@@ -36,7 +36,7 @@ class ControllerTest extends TestCase
 
         $controller = new FakeController('fake', Leaps::$app);
 
-        Leaps::$container->set('leapsunit\src\di\stubs\QuxInterface', [
+        Leaps::$container->set('leapsunit\src\Di\Stub\QuxInterface', [
             'className' => Qux::className(),
             'a' => 'D426'
         ]);
@@ -87,7 +87,7 @@ class ControllerTest extends TestCase
         $this->assertEquals(['arg1', 'arg2', Leaps::$app->quxApp, 'arg3'], $result);
 
         $params = ['avaliable'];
-        $message = Leaps::t('yii', 'Missing required arguments: {params}', ['params' => implode(', ', ['missing'])]);
+        $message = Leaps::t('leaps', 'Missing required arguments: {params}', ['params' => implode(', ', ['missing'])]);
         $this->setExpectedException('Leaps\Console\Exception', $message);
         $result = $controller->runAction('aksi7', $params);
 

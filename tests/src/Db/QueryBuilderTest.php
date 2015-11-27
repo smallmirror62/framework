@@ -1,6 +1,6 @@
 <?php
 
-namespace leapsunit\src\db;
+namespace leapsunit\src\Db;
 
 use Leaps\Db\Expression;
 use Leaps\Db\Query;
